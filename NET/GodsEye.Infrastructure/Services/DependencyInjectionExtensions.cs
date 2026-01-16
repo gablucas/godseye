@@ -1,0 +1,58 @@
+﻿using GodsEye.Infrastructure.Persistence;
+using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.EntityFrameworkCore;
+using GodsEye.Application.Interfaces;
+using GodsEye.Infrastructure.GodsEye;
+using GodsEye.Domain.Interfaces.Repositories;
+using GodsEye.Infrastructure.Repositories;
+using GodsEye.Application.Interfaces.QueryRepositories;
+using GodsEye.Infrastructure.QuerieRepositories;
+
+
+namespace GodsEye.Infrastructure.Services
+{
+    public static class DependencyInjectionExtensions
+    {
+        public static void AddInfrastructure(this IServiceCollection services, IConfiguration configuration)
+        {
+            services.AddScoped<IFolderService, FolderService>();
+
+            services.AddScoped<IPersonRepository, PersonRepository>();
+            services.AddScoped<ICameraRepository, CameraRepository>();
+            services.AddScoped<ISectorRepository, SectorRepository>();
+            services.AddScoped<IEnvironmentMonitoringLogRepository, EnvironmentMonitoringLogRepository>();
+
+            services.AddScoped<ICameraQueryRepository, CameraQueryRepository>();
+            services.AddScoped<IPersonQueryRepository, PersonQueryRepository>();
+            services.AddScoped<ISectorQueryRepository, SectorQueryRepository>();
+            services.AddScoped<IGodsEyeQueryRepository, GodsEyeQueryRepository>();
+            services.AddScoped<IEnvironmentMonitoringQueryRepository, EnvironmentMonitoringQueryRepository>();
+            services.AddScoped<IIncidentRecordingLogRepository, IncidentRecordingLogRepository>();
+
+            services.AddDbContext<AppDbContext>(options =>
+            {
+                options.UseMySql(
+                    configuration.GetConnectionString("MySQLConnection"),
+                    new MySqlServerVersion(new Version(8, 0, 44))
+                );
+            });
+
+            services.AddHttpClient<IGodsEyeService, GodsEyeService>((sp, client) =>
+            {
+                var config = sp.GetRequiredService<IConfiguration>();
+                var baseUrl = config["GodsEye:BaseUrl"];
+
+                if (string.IsNullOrWhiteSpace(baseUrl))
+                    throw new InvalidOperationException("A URL de GodsEye não foi configurada.");
+
+                client.BaseAddress = new Uri(baseUrl);
+
+                client.DefaultRequestHeaders.Accept.Clear();
+                client.DefaultRequestHeaders.Accept.Add(
+                    new System.Net.Http.Headers.MediaTypeWithQualityHeaderValue("application/json")
+                );
+            });
+        }
+    }
+}

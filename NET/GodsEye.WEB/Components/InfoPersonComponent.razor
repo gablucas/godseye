@@ -1,0 +1,68 @@
+﻿@using GodsEye.Application.DTOs.Model
+
+<MudDialog>
+    <TitleContent>
+        Dialog Title
+    </TitleContent>
+
+
+    <DialogContent>
+        <MudGrid style="margin-bottom: 2rem">
+            <MudItem xs="2">
+                <MudImage Height="160" Style="border-radius: 7px" src=@($"https://localhost:7010/{Person.ImagePath}") />
+            </MudItem>
+            
+            <MudItem xs="10">
+                <div class="data-info">
+                    <div class="info-container">
+                        <span>Nome:</span>
+                        <span>@Person.Name</span>
+                    </div>
+
+                    <div class="info-container sectors">
+                        <span>Setores:</span>
+                        <div>
+                            @if (Person.Sectors.Count > 0)
+                            {
+                                foreach (var sec in Person.Sectors)
+                                {
+                                    <span>@sec.SectorName</span>
+                                }
+                            }
+                            else
+                            {
+                                <span>Nenhum setor</span>
+                            }
+                        </div>
+                    </div>
+
+                    <div class="actions">
+                        <MudButton Variant="Variant.Outlined" Color="Color.Success">
+                            Editar Informações
+                        </MudButton>
+                    </div>
+                </div>
+            </MudItem>
+
+
+                
+        </MudGrid>
+
+
+        <MudTable T="PersonLogModel" @ref="_mudTable" Items="@_log" Hover="true" Loading="@_loading" LoadingProgressColor="Color.Info" RowClass="cursor-pointer">
+            <HeaderContent>
+                <MudTh>Setor</MudTh>
+                <MudTh>Data/Hora</MudTh>
+            </HeaderContent>
+            <RowTemplate>
+                <MudTd DataLabel="Name">@context.Sector</MudTd>
+                <MudTd DataLabel="Connection">@context.CreatedAt</MudTd>
+            </RowTemplate>
+        </MudTable>
+    </DialogContent>
+
+
+    <DialogActions>
+        <MudButton OnClick="Cancel">Fechar</MudButton>
+    </DialogActions>
+</MudDialog>

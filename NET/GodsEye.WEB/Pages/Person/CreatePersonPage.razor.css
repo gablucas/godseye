@@ -1,0 +1,88 @@
+﻿
+.form-container {
+    display: grid;
+    gap: 24px;
+    padding: 12px;
+    border-radius: 14px;
+    border: 1px solid var(--gray-050);
+
+    position: relative;
+}
+
+.form-container .inputs-container {
+    display: grid;
+}
+
+.form-container .inputs-container .person-image {
+    display: grid;
+    justify-content: center;
+    margin-bottom: 24px;
+}
+
+.form-container .inputs-container .person-image .image-actions {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 24px;
+}
+
+.form-container .inputs-container .person-image .image-actions ::deep button {
+    padding: 24px;
+    width: 100%;
+}
+
+.form-container .inputs-container .person-image .image-preview {
+    display: flex;
+    flex-direction: column;
+    border-radius: 7px;
+}
+
+.form-container .inputs-container .person-image video {
+
+    width: 600px;
+    overflow: hidden;
+}
+
+.form-container .inputs-container .person-image .image-preview .btns-actions {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 24px;
+    
+}
+
+.form-container .inputs-container .person-image .image-preview {
+    display: flex;
+    gap: 24px;
+}
+
+.form-container .inputs-container .person-image .image-preview img {
+    height: 400px;
+    object-fit: contain; /* cover, contain ou fill */
+    border-radius: 7px;
+    border: 1px solid var(--gray-040);
+}
+
+.form-container .inputs-container .person-image .image-preview ::deep .back {
+    padding: 0px 48px;
+}
+
+
+.form-container ::deep .btn-submit {
+    display: block;
+    margin: 12px 0px;
+}
+
+.form-container .inputs-container .person-image ::deep .photo-actions {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.form-container .register-success {
+    display: flex;
+    gap: 12px;
+}
+
+.form-container .register-success img {
+    width: 300px;
+    border-radius: 7px;
+}

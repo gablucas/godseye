@@ -1,0 +1,43 @@
+﻿<MudNavMenu>
+    <MudNavLink Style="display: flex; justify-content: center; align-items: center;"><img class="logo" src="/logo.png" width="120px" /></MudNavLink>
+
+    <MudNavLink Href="/" Match="NavLinkMatch.All">Dashboard</MudNavLink>
+
+    <MudNavGroup Title="Cadastros" Expanded="true">
+        @* PESSOAS *@
+        <MudNavGroup Title="Pessoas" Expanded="false">
+            <MudNavLink Href="/pessoas" Match="NavLinkMatch.Prefix">Listar</MudNavLink>
+            <MudNavLink Href="/cadastrar-pessoa" Match="NavLinkMatch.Prefix">Cadastrar</MudNavLink>
+        </MudNavGroup>
+
+        @* SETORES *@
+        <MudNavGroup Title="Setores" Expanded="false">
+            <MudNavLink Href="/setores" Match="NavLinkMatch.Prefix">Listar</MudNavLink>
+            <MudNavLink Href="/cadastrar-setor" Match="NavLinkMatch.Prefix">Cadastrar</MudNavLink>
+        </MudNavGroup>
+
+        @* CAMERAS *@
+        <MudNavGroup Title="Cameras" Expanded="false">
+            <MudNavLink Href="/cameras" Match="NavLinkMatch.Prefix">Listar</MudNavLink>
+            <MudNavLink Href="/cadastrar-camera" Match="NavLinkMatch.Prefix">Cadastrar</MudNavLink>
+        </MudNavGroup>
+    </MudNavGroup>
+
+    @* CONTROLE DE AMBIENTES *@
+    <MudNavGroup Title="Controle de ambientes" Expanded="false" Style="border: none" Class="text-nowrap">
+        <MudNavLink Href="/controle-ambiente/dashboard" Match="NavLinkMatch.Prefix">Dashboard</MudNavLink>
+        <MudNavLink Href="/controle-ambiente/relatorios" Match="NavLinkMatch.Prefix">Relatórios</MudNavLink>
+        <MudNavLink Href="/controle-ambientes/configuracoes" Match="NavLinkMatch.Prefix">Configurações</MudNavLink>
+    </MudNavGroup>
+
+    @* CAPTURA DE INCIDENTES *@
+    <MudNavGroup Title="Captura de incidentes" Expanded="false" Style="border: none" Class="text-nowrap">
+        <MudNavLink Href="/captura-incidentes/dashboard" Match="NavLinkMatch.Prefix">Dashboard</MudNavLink>
+        <MudNavLink Href="/captura-incidentes/relatorios" Match="NavLinkMatch.Prefix">Relatórios</MudNavLink>
+        <MudNavLink Href="/captura-incidentes/configuracoes" Match="NavLinkMatch.Prefix">Configurações</MudNavLink>
+
+    </MudNavGroup>
+
+
+
+</MudNavMenu>

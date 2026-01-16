@@ -1,0 +1,15 @@
+fastapi
+uvicorn
+numpy<2.0
+opencv-python
+insightface
+onnxruntime-gpu
+pydantic
+python-multipart
+psutil
+python-dotenv
+loguru
+tzdata
+
+# Para usar com CPU
+#onnxruntime

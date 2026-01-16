@@ -1,0 +1,42 @@
+# =====================
+# .NET
+# =====================
+NET/**/bin/
+NET/**/obj/
+NET/**/.vs/
+NET/**/*.user
+NET/**/*.suo
+NET/**/*.cache
+NET/**/*.log
+NET/**/wwwroot/photos/
+
+# appsettings
+NET/**/appsettings.Development.json
+NET/**/appsettings.Local.json
+NET/**/appsettings.json
+
+# =====================
+# Python
+# =====================
+PYTHON/**/__pycache__/
+PYTHON/**/*.py[cod]
+PYTHON/clips/
+PYTHON/records/
+PYTHON/models/
+
+# Virtual env
+PYTHON/venv/
+PYTHON/.env/
+PYTHON/.venv/
+
+# =====================
+# RTSPTest
+# =====================
+RTSPTest/mediamtx*
+
+# =====================
+# Geral
+# =====================
+.env
+.DS_Store
+Thumbs.db

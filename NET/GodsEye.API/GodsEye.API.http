@@ -1,0 +1,6 @@
+@GodsEye.API_HostAddress = http://localhost:5198
+
+GET {{GodsEye.API_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###

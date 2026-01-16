@@ -1,0 +1,33 @@
+﻿@page "/setores";
+
+<PageTitle>Setores</PageTitle>
+
+<div class="page-title">
+    <h1>Setores</h1>
+    <p>Aqui você encontra uma lista de setores cadastrados em seu sistema</p>
+</div>
+
+<MudTable Items="@_sectors" Hover="true" Loading="@_loading" LoadingProgressColor="Color.Info">
+    <HeaderContent>
+        <MudTh>Nome</MudTh>
+        <MudTh>Cameras vinculadas</MudTh>
+    </HeaderContent>
+    <RowTemplate>
+        <MudTd DataLabel="Name">@context.Name</MudTd>
+        <MudTd DataLabel="Cameras">
+            @if (context.Cameras.Count > 0)
+            {
+                foreach (var cam in context.Cameras)
+                {
+                    <MudChip Color="Color.Info" T="string">@cam.CameraName</MudChip>
+                }
+            } 
+            else
+            {
+                <MudChip T="string">Sem cameras</MudChip>
+            }
+
+        </MudTd>
+
+    </RowTemplate>
+</MudTable>

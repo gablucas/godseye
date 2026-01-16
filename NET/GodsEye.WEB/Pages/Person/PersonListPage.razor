@@ -1,0 +1,36 @@
+﻿@page "/pessoas";
+@using GodsEye.Application.DTOs.Model
+
+<PageTitle>Pessoas</PageTitle>
+
+<div class="page-title">
+    <h1>Pessoas</h1>
+    <p>Aqui você encontra a lista de pessoas cadastradas em seu sistema</p>
+</div>
+
+
+<MudTable T="PersonModel" @ref="mudTable" Items="@_persons" Hover="true" Loading="@_loading" LoadingProgressColor="Color.Info" RowClass="cursor-pointer" RowClassFunc="@SelectedRowClassFunc" OnRowClick="RowClickEvent">
+    <HeaderContent>
+        <MudTh>Foto</MudTh>
+        <MudTh>Nome</MudTh>
+        <MudTh>Setor(es)</MudTh>
+    </HeaderContent>
+    <RowTemplate>
+        <MudTd DataLabel="Foto"><MudImage Height="140" Style="border-radius: 7px" src=@($"https://localhost:7010/{context.ImagePath}") /></MudTd>
+        <MudTd DataLabel="Nome">@context.Name</MudTd>
+        <MudTd DataLabel="Cameras">
+            @if (context.Sectors.Count > 0)
+            {
+                foreach (var sec in context.Sectors)
+                {
+                    <MudChip T="string" Color="Color.Info">@sec.SectorName</MudChip>
+                }
+            }
+            else
+            {
+                <MudChip T="string">Nenhum Setor</MudChip>
+            }
+
+        </MudTd>
+    </RowTemplate>
+</MudTable>

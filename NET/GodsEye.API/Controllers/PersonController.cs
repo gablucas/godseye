@@ -1,0 +1,75 @@
+using GodsEye.Application.UseCases.Person.Commands.CreatePerson;
+using GodsEye.Application.UseCases.Person.Queries.GetAllPersonEmbedding;
+using GodsEye.Application.UseCases.Person.Queries.GetAllPersonLogs;
+using GodsEye.Application.UseCases.Person.Queries.GetAllPersons;
+using GodsEye.Application.UseCases.Person.Queries.GetPersonLog;
+using MediatR;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
+using System.Text.Json;
+
+namespace GodsEye.API.Controllers
+{
+    [ApiController]
+    [Route("api/[controller]")]
+    public class PersonController : ControllerBase
+    {
+        private readonly IMediator _mediator;
+
+        public PersonController(IMediator mediator)
+        {
+            _mediator = mediator;
+        }
+
+        [AllowAnonymous]
+        [HttpPost]
+        [Consumes("multipart/form-data")]
+        public async Task<IActionResult> CreatePerson([FromForm] string Name, [FromForm] string Photo, [FromForm] IEnumerable<string> Sectors, CancellationToken cancellationToken)
+        {
+            if (string.IsNullOrWhiteSpace(Photo))
+                return BadRequest("Foto inválida.");
+
+            // Remove prefixo "data:image/png;base64,"
+            var base64 = Photo.Contains(",")
+                ? Photo.Split(",")[1]
+                : Photo;
+
+            var photoBytes = Convert.FromBase64String(base64);
+
+            var result = await _mediator.Send(new CreatePersonRequest(Name, photoBytes, Sectors));
+            return Ok(result);
+        }
+
+        [AllowAnonymous]
+        [HttpGet]
+        public async Task<IActionResult> GetAllPerson(CancellationToken cancellationToken)
+        {
+            var result = await _mediator.Send(new GetAllPersonRequest(), cancellationToken);
+            return Ok(result);
+        }
+
+        [AllowAnonymous]
+        [HttpGet("embedding")]
+        public async Task<IActionResult> GetAllPersonEmbedding(CancellationToken cancellationToken)
+        {
+            var result = await _mediator.Send(new GetAllPersonsEmbeddingRequest(), cancellationToken);
+            return Ok(result);
+        }
+
+        [AllowAnonymous]
+        [HttpGet("logs/{personId}")]
+        public async Task<IActionResult> GetPersonLogs([FromRoute] GetPersonLogRequest request, CancellationToken cancellationToken)
+        {
+            var result = await _mediator.Send(request, cancellationToken);
+            return Ok(result);
+        }
+
+        [AllowAnonymous]
+        [HttpGet("logs")]
+        public async Task<IActionResult> GetAllPersonsLog(CancellationToken cancellationToken)
+        {
+            var result = await _mediator.Send(new GetAllPersonLogsRequest(), cancellationToken);
+            return Ok(result);
+        }
+    }
+}

@@ -1,0 +1,17 @@
+﻿@page "/captura-incidentes/dashboard"
+@using GodsEye.Application.DTOs.Model
+
+<MudTable T="EnvironmentMonitoringModel" @ref="_mudTable" Items="@_log" Hover="true" Loading="@_loading" LoadingProgressColor="Color.Info" RowClass="cursor-pointer">
+    <HeaderContent>
+        <MudTh></MudTh>
+        <MudTh>Pessoa</MudTh>
+        <MudTh>Setor</MudTh>
+        <MudTh>Data/Hora</MudTh>
+    </HeaderContent>
+    <RowTemplate>
+        <MudTd DataLabel="PersonPhoto"><MudImage Height="160" Style="border-radius: 7px" src=@($"https://localhost:7010/{context.PersonPhoto}") /></MudTd>
+        <MudTd DataLabel="Person">@context.Person</MudTd>
+        <MudTd DataLabel="Name">@context.Sector</MudTd>
+        <MudTd DataLabel="Connection">@context.CreatedAt</MudTd>
+    </RowTemplate>
+</MudTable>

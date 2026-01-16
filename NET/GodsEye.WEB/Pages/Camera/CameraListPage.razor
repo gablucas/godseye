@@ -1,0 +1,34 @@
+﻿@page "/cameras";
+@using GodsEye.WEB.Components
+@using GodsEye.Application.DTOs.Model
+
+<PageTitle>Cameras</PageTitle>
+
+<div class="page-title">
+    <h1>Cameras</h1>
+    <p>Aqui você encontra a lista de cameras cadastradas em seu sistema</p>
+</div>
+
+<MudTable T="CameraModel" @ref="mudTable" Items="@_cameras" Hover="true" Loading="@_loading" LoadingProgressColor="Color.Info" RowClass="cursor-pointer" RowClassFunc="@SelectedRowClassFunc" OnRowClick="RowClickEvent">
+    <HeaderContent>
+        <MudTh>Nome</MudTh>
+        <MudTh>Conexão</MudTh>
+        <MudTh>Setor Vinculado</MudTh>
+    </HeaderContent>
+    <RowTemplate>
+        <MudTd DataLabel="Name">@context.Name</MudTd>
+        <MudTd DataLabel="Connection">@context.Connection</MudTd>
+        <MudTd DataLabel="Setor Vinculado">
+            @if (!string.IsNullOrEmpty(context.SectorName)) {
+                <MudChip T="string" Color="Color.Info">@context.SectorName</MudChip>
+            } else
+            {
+                <MudChip T="string">Nenhum setor</MudChip>
+            }
+        </MudTd>
+    </RowTemplate>
+</MudTable>
+
+<MudDialog>
+
+</MudDialog>
