@@ -22,13 +22,15 @@ namespace GodsEye.Infrastructure.Services
             services.AddScoped<ICameraRepository, CameraRepository>();
             services.AddScoped<ISectorRepository, SectorRepository>();
             services.AddScoped<IEnvironmentMonitoringLogRepository, EnvironmentMonitoringLogRepository>();
+            services.AddScoped<IIncidentRecordingLogRepository, IncidentRecordingLogRepository>();
 
             services.AddScoped<ICameraQueryRepository, CameraQueryRepository>();
             services.AddScoped<IPersonQueryRepository, PersonQueryRepository>();
             services.AddScoped<ISectorQueryRepository, SectorQueryRepository>();
             services.AddScoped<IGodsEyeQueryRepository, GodsEyeQueryRepository>();
             services.AddScoped<IEnvironmentMonitoringQueryRepository, EnvironmentMonitoringQueryRepository>();
-            services.AddScoped<IIncidentRecordingLogRepository, IncidentRecordingLogRepository>();
+            services.AddScoped<IIncidentRecordingQueryRepository, IncidentRecordingQueryRepository>();
+
 
             services.AddDbContext<AppDbContext>(options =>
             {

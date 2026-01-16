@@ -4,5 +4,5 @@ using MediatR;
 
 namespace GodsEye.Application.UseCases.IncidentRecording.Commands.CreateIncidentRecordingLog
 {
-    public sealed record CreateIncidentRecordingLogRequest(int cameraId, DateTime incidentTime) : IRequest<ApiResponse<ProcedureResult>>;
+    public sealed record CreateIncidentRecordingLogRequest(int cameraId) : IRequest<ApiResponse<ProcedureResult>>;
 }

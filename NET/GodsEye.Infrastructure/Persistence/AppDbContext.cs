@@ -26,6 +26,7 @@ namespace GodsEye.Infrastructure.Persistence
         public DbSet<CameraLogModel> CameraLogModel { get; set; }
         public DbSet<MonitoringDataModel> MonitoringDataModel { get; set; }
         public DbSet<EnvironmentMonitoringModel> EnvironmentMonitoringModel { get; set; }
+        public DbSet<IncidentRecordingModel> IncidentRecordingModel { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -45,6 +46,7 @@ namespace GodsEye.Infrastructure.Persistence
 
             modelBuilder.Entity<MonitoringDataModel>().HasNoKey().ToView(null);
             modelBuilder.Entity<EnvironmentMonitoringModel>().HasNoKey().ToView(null);
+            modelBuilder.Entity<IncidentRecordingModel>().HasNoKey().ToView(null);
 
         }
     }

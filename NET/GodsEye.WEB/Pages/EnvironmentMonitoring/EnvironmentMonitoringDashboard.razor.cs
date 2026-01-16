@@ -9,7 +9,7 @@ namespace GodsEye.WEB.Pages.EnvironmentMonitoring
     public partial class EnvironmentMonitoringDashboard
     {
         [Inject]
-        public EnvironmentMonitoringService environmentMonitoringService { get; set; }
+        public EnvironmentMonitoringWebService environmentMonitoringService { get; set; }
 
         [Inject]
         public SignalRService SignalR { get; set; }

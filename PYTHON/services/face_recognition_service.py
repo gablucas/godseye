@@ -1,5 +1,6 @@
 import insightface
 import numpy as np
+import os
 
 import onnxruntime as ort
 print(ort.get_available_providers())
@@ -8,6 +9,7 @@ class FaceModel:
     def __init__(self):
         self.app = insightface.app.FaceAnalysis(
             name="antelopev2",
+            root="C:/Users/Gab/Documents/Fabrica/GodsEye/PYTHON",
             providers=["CUDAExecutionProvider"]
         )
         self.app.prepare(ctx_id=0)

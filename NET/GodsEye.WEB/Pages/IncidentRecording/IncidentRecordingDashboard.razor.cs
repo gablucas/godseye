@@ -9,7 +9,7 @@ namespace GodsEye.WEB.Pages.IncidentRecording
     public partial class IncidentRecordingDashboard
     {
         [Inject]
-        public EnvironmentMonitoringService environmentMonitoringService { get; set; }
+        public IncidentRecordingWebService incidentRecordingWebService { get; set; }
 
         [Inject]
         public SignalRService SignalR { get; set; }
@@ -19,8 +19,8 @@ namespace GodsEye.WEB.Pages.IncidentRecording
 
         #region TABLE PARAMETERS
 
-        private List<EnvironmentMonitoringModel> _log = new();
-        private MudTable<EnvironmentMonitoringModel> _mudTable;
+        private List<IncidentRecordingModel> _log = new();
+        private MudTable<IncidentRecordingModel> _mudTable;
         private HubConnection? hubConnection;
         bool _loading;
 
@@ -31,16 +31,16 @@ namespace GodsEye.WEB.Pages.IncidentRecording
         {
             _loading = true;
 
-            var result = await environmentMonitoringService.GetAllLogs();
+            var result = await incidentRecordingWebService.GetAllLogs();
 
             if (result.Sucesso)
                 _log = result.Dados.ToList();
 
             _loading = false;
 
-            SignalR.Create("https://localhost:7010/environmentMonitoringHub");
+            SignalR.Create("https://localhost:7010/incidentRecordingHub");
 
-            SignalR.On<EnvironmentMonitoringModel>(
+            SignalR.On<IncidentRecordingModel>(
                 "ReceiveMessage",
                 log =>
                 {

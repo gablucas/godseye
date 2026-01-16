@@ -4,11 +4,11 @@ using System.Net.Http.Json;
 
 namespace GodsEye.WEB.Services
 {
-    public class EnvironmentMonitoringService
+    public class EnvironmentMonitoringWebService
     {
         private readonly HttpClient _http;
 
-        public EnvironmentMonitoringService(HttpClient http)
+        public EnvironmentMonitoringWebService(HttpClient http)
         {
             _http = http;
         }

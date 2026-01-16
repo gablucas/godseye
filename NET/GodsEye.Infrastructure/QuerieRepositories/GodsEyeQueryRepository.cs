@@ -17,7 +17,7 @@ namespace GodsEye.Infrastructure.QuerieRepositories
         public async Task<MonitoringDataModel> GetMonitoringData()
         {
             var result = await _context.MonitoringDataModel
-                .FromSqlRaw("CALL SP_ENVIRONMENT_MONITORING_GET_DATA()")
+                .FromSqlRaw("CALL SP_GODSEYE_GET_MONITORING_DATA()")
                 .ToListAsync();
 
             return result.FirstOrDefault() ?? new MonitoringDataModel();

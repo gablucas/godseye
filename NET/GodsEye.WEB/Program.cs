@@ -14,7 +14,8 @@ builder.Services.AddScoped<CameraService>();
 builder.Services.AddScoped<SectorService>();
 builder.Services.AddScoped<GodsEyeWebService>();
 builder.Services.AddScoped<SignalRService>();
-builder.Services.AddScoped<EnvironmentMonitoringService>();
+builder.Services.AddScoped<EnvironmentMonitoringWebService>();
+builder.Services.AddScoped<IncidentRecordingWebService>();
 
 
 builder.Services.AddMudServices();

@@ -13,11 +13,11 @@ namespace GodsEye.WEB.Services
             _http = http;
         }
 
-        public async Task<ApiResponse<IEnumerable<EnvironmentMonitoringModel>>> GetAllLogs()
+        public async Task<ApiResponse<IEnumerable<IncidentRecordingModel>>> GetAllLogs()
         {
-            var result = await _http.GetAsync($"api/environmentmonitoring");
+            var result = await _http.GetAsync($"api/incidentrecording");
 
-            var json = await result.Content.ReadFromJsonAsync<ApiResponse<IEnumerable<EnvironmentMonitoringModel>>>();
+            var json = await result.Content.ReadFromJsonAsync<ApiResponse<IEnumerable<IncidentRecordingModel>>>();
 
             return json!;
         }

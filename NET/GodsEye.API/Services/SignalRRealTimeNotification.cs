@@ -14,7 +14,14 @@ namespace GodsEye.API.Services
             _hub = hub;
         }
 
-        public async Task SendCreatedLog(EnvironmentMonitoringModel message)
+        public async Task SendEnvironmentMonitoringCreatedLog(EnvironmentMonitoringModel message)
+        {
+            await _hub.Clients.All.SendAsync(
+            "ReceiveMessage",
+            message);
+        }
+
+        public async Task SendIncidentRecordingCreatedLog(IncidentRecordingModel message)
         {
             await _hub.Clients.All.SendAsync(
             "ReceiveMessage",

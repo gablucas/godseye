@@ -38,7 +38,7 @@ namespace GodsEye.Infrastructure.QuerieRepositories
             var pPersonId = new MySqlParameter("@P_PERSON_ID", personId);
 
             var result = await _context.PersonLogModel
-                .FromSqlRaw("CALL SP_PERSON_GET_ENVIRONMENT_MONITORING_LOG(@P_PERSON_ID)", pPersonId)
+                .FromSqlRaw("CALL SP_PERSON_GET_ENVIRONMENT_MONITORING_LOG_BY_ID(@P_PERSON_ID)", pPersonId)
                 .ToListAsync(cancellationToken);
 
             return result;
