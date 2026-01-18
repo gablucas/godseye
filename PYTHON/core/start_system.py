@@ -10,6 +10,8 @@ def start_monitoring_system(app, face_model):
     data = app.state.godseye.get_all()
     monitor_manager = MonitorManager()
 
+    print("Iniciando sistema de monitoramento...")
+
     cameras, persons = validate_monitoring_data(data)
 
     ids = []

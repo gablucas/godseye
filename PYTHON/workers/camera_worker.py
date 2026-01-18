@@ -32,7 +32,9 @@ class CameraWorker:
         active_users_lock,
         capture_fps: float = 2.0,
         width: int = 1280,
-        height: int = 720
+        height: int = 720,
+        environment_monitoring: bool = False,
+        incident_recording: bool = False,
     ):
         self.face_model = face_model
         self.cameraId = cameraId
@@ -40,6 +42,8 @@ class CameraWorker:
         self.sectorId = sectorId
         self.matcher = matcher
         self.log_sender = log_sender
+        self.environment_monitoring = environment_monitoring
+        self.incident_recording = incident_recording
 
         self.running = False
         self.active_users = active_users
@@ -85,15 +89,31 @@ class CameraWorker:
 
     def capture_loop(self):
         while self.running:
+
+            # Se nenhuma funcionalidade estiver ativa, não cria FFmpeg
+            if not self.environment_monitoring and not self.incident_recording:
+                time.sleep(1)
+                continue
+
             process = ffmpeg_capture(
                 rtsp_url=self.url,
                 fps=self.capture_fps,
                 width=self.width,
-                height=self.height
+                height=self.height,
+                environment_monitoring=self.environment_monitoring,
+                record=self.incident_recording,
+                record_path=f"records/{self.cameraId}"
             )
 
             try:
                 while self.running:
+
+                    # 🔹 Se não estiver monitorando, NÃO lê frames
+                    # 🔹 FFmpeg continua rodando só para gravação
+                    if not self.environment_monitoring:
+                        time.sleep(0.2)
+                        continue
+
                     raw = process.stdout.read(self.frame_size)
 
                     if len(raw) != self.frame_size:
@@ -126,7 +146,7 @@ class CameraWorker:
                 time.sleep(2)  # evita loop agressivo
 
     def processing_loop(self):
-        while self.running:
+        while self.running and self.environment_monitoring:
             try:
                 frame = self.frame_queue.get(timeout=1)
             except:

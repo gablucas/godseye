@@ -27,14 +27,23 @@ async def lifespan(app: FastAPI):
 
     try:
         # PEGA OS DADOS INICIAIS
+
+        print("#1 - Buscando dados do GodsEye...")
         data = await load_godseye_data_from_api()
+        print("#1 - Requisição concluída.")
+
+        print("#2 - Vinculado dados ao estado global...")
         app.state.godseye.set(data)
-
-        # INICIA O SISTEMA
+        print("#2 - Dados vinculados.")
+        
+        print("#3 - Instanciando modelo de reconhecimento facial...")
         face_model = get_face_model()
-        start_monitoring_system(app, face_model)
+        print("#3 - Modelo instanciado.")
 
-        print("Monitoramento iniciado automaticamente")
+        print("#4 - Iniciando monitoramento automático...")
+        start_monitoring_system(app, face_model)
+        print("#4 - Monitoramento iniciado.")
+
 
     except Exception as e:
         print("Erro ao iniciar monitoramento:", e)
