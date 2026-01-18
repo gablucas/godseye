@@ -24,7 +24,7 @@
                 <MudTextField Label="Descrição" @bind-Value="CameraModel.Name" Required="true" RequiredError="O nome é obrigatório" T="string" For="@(() => CameraModel.Name)" Variant="Variant.Outlined" />
                 <MudTextField Label="Conexão" HelperText="IP de conexão para se conectar a camera" @bind-Value="CameraModel.Connection" T="string" Variant="Variant.Outlined" />
 
-                <MudSelect T="string" Clearable="true" Label="Selecione um setor" @bind-Value="CameraModel.SectorId" Required="true" Variant="Variant.Outlined">
+                <MudSelect T="string" Clearable="true" Label="Selecione um setor" @bind-Value="CameraModel.SectorId" Required="true" RequiredError="Selecione um setor" Variant="Variant.Outlined">
                     @foreach (var sector in _sectors)
                     {
                         <MudSelectItem T="string" Value="@sector.Id.ToString()">@sector.Name</MudSelectItem>
@@ -32,9 +32,40 @@
                 </MudSelect>
             </div>
 
-            <MudDivider />
+            <MudDivider Style="margin: 24px 0px" />
 
-            <MudButton OnClick="Submit" Disabled=@(!success) Class="btn-submit" Variant="Variant.Filled" Color="Color.Primary">Registrar</MudButton>
+            <MudText Typo="Typo.h6">Funcionalidades Disponíveis</MudText>
+            <MudText Typo="Typo.body2" Class="mb-4 mud-text-secondary"> Selecione no mínimo uma funcionalidade para esta camera</MudText>
+
+            <div class="feature-container">
+                @foreach (var feature in _features)
+                {
+                    <div class="feature">
+                        <MudCheckBox T="bool"
+                                        Value="@(CameraModel.Features.Contains(feature.Id))"
+                                        ValueChanged="@((bool isChecked) => OnFeatureToggled(feature.Id, isChecked))"
+                                        Label="@feature.Name"
+                                        Color="Color.Primary"
+                                        Dense="true"
+
+                                        />
+
+                        <MudText Typo="Typo.body2" Class="mud-text-secondary">
+                            @feature.Description
+                        </MudText>
+                    </div>
+                }
+            </div>
+
+            @if (!string.IsNullOrEmpty(featureError))
+            {
+                <MudText Color="Color.Error" Typo="Typo.caption">
+                    @featureError
+                </MudText>
+            }
+
+
+            <MudButton OnClick="Submit" Disabled=@(!success || !ValidateFeatures()) Class="btn-submit" Variant="Variant.Filled" Color="Color.Primary">Registrar</MudButton>
 
 
             @if (apiResponse is not null && !apiResponse.Sucesso)

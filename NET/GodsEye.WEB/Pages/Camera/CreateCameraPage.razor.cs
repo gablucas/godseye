@@ -18,6 +18,9 @@ namespace GodsEye.WEB.Pages.Camera
         [Inject]
         SectorService sectorService { get; set; }
 
+        [Inject]
+        FeatureWebService featureWebService { get; set; }
+
         #endregion
 
         #region FORM
@@ -25,8 +28,10 @@ namespace GodsEye.WEB.Pages.Camera
         MudForm form;
         private bool success;
         private string[] errors = { };
+        private string featureError;
         public CreateCameraForm CameraModel { get; set; } = new();
         IEnumerable<SectorModel> _sectors = Enumerable.Empty<SectorModel>();
+        IEnumerable<FeatureModel> _features = Enumerable.Empty<FeatureModel>();
 
         ApiResponse<ProcedureResult?>? apiResponse { get; set; } = null;
 
@@ -41,8 +46,14 @@ namespace GodsEye.WEB.Pages.Camera
             {
                 _sectors = response.Dados;
             }
-        }
 
+            var featureResponse = await featureWebService.GetAllAsync();
+            if (featureResponse is not null && featureResponse.Sucesso)
+            {
+                _features = featureResponse.Dados;
+            }
+
+        }
 
         private string GetSelectedCameraNames(List<string> ids)
         {
@@ -53,6 +64,38 @@ namespace GodsEye.WEB.Pages.Camera
             return string.Join(", ", names);
         }
 
+        private void OnFeatureToggled(int featureId, bool isChecked)
+        {
+
+            var list = CameraModel.Features.ToList();
+
+            if (isChecked)
+            {
+                if (!list.Contains(featureId))
+                    list.Add(featureId);
+            }
+            else
+            {
+                list.Remove(featureId);
+            }
+
+            CameraModel.Features = list;
+
+            ValidateFeatures();
+        }
+
+        private bool ValidateFeatures()
+        {
+            if (CameraModel.Features == null || !CameraModel.Features.Any())
+            {
+                featureError = "Selecione pelo menos uma funcionalidade";
+                success = false;
+            }
+
+            featureError = null;
+            return true;
+        }
+
 
         private void BackToRegister()
         {
@@ -61,6 +104,9 @@ namespace GodsEye.WEB.Pages.Camera
 
         private async Task Submit()
         {
+            if (!ValidateFeatures())
+                return;
+
             visible = true;
             apiResponse = await cameraService.CreateAsync(CameraModel);
             visible = false;

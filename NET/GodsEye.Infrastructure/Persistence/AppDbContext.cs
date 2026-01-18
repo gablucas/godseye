@@ -13,6 +13,7 @@ namespace GodsEye.Infrastructure.Persistence
         public DbSet<PersonEntity> Person { get; set; }
         public DbSet<CameraEntity> Camera { get; set; }
         public DbSet<SectorEntity> Sector { get; set; }
+        public DbSet<FeatureEntity> Feature { get; set; }
 
 
         // DTOS

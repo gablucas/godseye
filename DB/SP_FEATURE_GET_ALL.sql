@@ -1,0 +1,9 @@
+CREATE DEFINER=`root`@`localhost` PROCEDURE `SP_FEATURE_GET_ALL`()
+BEGIN
+	SELECT
+		F.ID,
+        F.NAME,
+        F.DESCRIPTION,
+        F.CREATED_AT AS CreatedAT
+    FROM FEATURE F;
+END

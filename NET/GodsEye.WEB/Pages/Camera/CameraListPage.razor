@@ -14,6 +14,7 @@
         <MudTh>Nome</MudTh>
         <MudTh>Conexão</MudTh>
         <MudTh>Setor Vinculado</MudTh>
+        <MudTh>Funcionalidades</MudTh>
     </HeaderContent>
     <RowTemplate>
         <MudTd DataLabel="Name">@context.Name</MudTd>
@@ -24,6 +25,20 @@
             } else
             {
                 <MudChip T="string">Nenhum setor</MudChip>
+            }
+        </MudTd>
+
+        <MudTd DataLabel="Funcionalidades">
+            @if (context.Features.Count > 0)
+            {
+                foreach (var feature in context.Features)
+                {
+                    <MudChip T="string" Color="Color.Info">@feature.FeatureName</MudChip>
+                }
+            }
+            else
+            {
+                <MudChip T="string">Nenhum Setor</MudChip>
             }
         </MudTd>
     </RowTemplate>

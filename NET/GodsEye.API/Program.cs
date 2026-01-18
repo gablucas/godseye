@@ -1,4 +1,3 @@
-using GodsEye.API.Extensions;
 using GodsEye.API.Hubs;
 using GodsEye.API.Middlewares;
 using GodsEye.API.Services;
@@ -17,6 +16,7 @@ builder.Services.AddSwaggerGen();
 builder.Services.AddAPI();
 builder.Services.AddInfrastructure(builder.Configuration);
 builder.Services.AddAplication();
+
 
 var app = builder.Build();
 

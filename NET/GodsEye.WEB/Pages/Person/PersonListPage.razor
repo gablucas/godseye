@@ -18,6 +18,7 @@
     <RowTemplate>
         <MudTd DataLabel="Foto"><MudImage Height="140" Style="border-radius: 7px" src=@($"https://localhost:7010/{context.ImagePath}") /></MudTd>
         <MudTd DataLabel="Nome">@context.Name</MudTd>
+
         <MudTd DataLabel="Cameras">
             @if (context.Sectors.Count > 0)
             {

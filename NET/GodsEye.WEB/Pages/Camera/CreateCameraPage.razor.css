@@ -13,6 +13,23 @@
     position: relative;
 }
 
+.form-container .feature-container {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.form-container .feature-container .feature {
+    display: flex;
+    align-items: center;
+    gap: 24px;
+    padding-top: 12px;
+    padding-bottom: 12px;
+    padding-left: 4px;
+    border-radius: 7px;
+    border: 1px solid var(--gray-050);
+}
+
 .form-container ::deep .btn-submit {
     display: block;
     margin: 12px 0px; 
