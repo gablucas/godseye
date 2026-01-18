@@ -10,6 +10,7 @@ psutil
 python-dotenv
 loguru
 tzdata
+httpx
 
 # Para usar com CPU
 #onnxruntime
