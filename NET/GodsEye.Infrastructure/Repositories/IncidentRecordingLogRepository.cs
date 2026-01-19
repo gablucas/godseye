@@ -15,9 +15,9 @@ namespace GodsEye.Infrastructure.Repositories
             _context = appDbContext;
         }
 
-        public async Task<ProcedureResult> Create(int cameraId, DateTime incidentTime)
+        public async Task<ProcedureResult> Create(string macAddress, DateTime incidentTime)
         {
-            var pCameraId = new MySqlParameter("@P_CAMERA_ID", cameraId);
+            var pMacAddress = new MySqlParameter("@P_MAC_ADDRESS", macAddress);
             var pIncidentTime = new MySqlParameter("@P_INCIDENT_TIME", incidentTime)
             {
                 DbType = System.Data.DbType.DateTime,
@@ -25,8 +25,8 @@ namespace GodsEye.Infrastructure.Repositories
 
             var result = await _context.ProcedureResult
                 .FromSqlRaw(
-                "CALL SP_INCIDENT_RECORDING_CREATE_LOG(@P_CAMERA_ID, @P_INCIDENT_TIME)",
-                pCameraId, pIncidentTime)
+                "CALL SP_INCIDENT_RECORDING_CREATE_LOG(@P_MAC_ADDRESS, @P_INCIDENT_TIME)",
+                pMacAddress, pIncidentTime)
                 .ToListAsync();
 
             return result.FirstOrDefault() ?? new ProcedureResult

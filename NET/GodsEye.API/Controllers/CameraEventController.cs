@@ -1,4 +1,6 @@
 ﻿using GodsEye.Application.DTOs.Model;
+using GodsEye.Application.UseCases.IncidentRecording.Commands.CreateIncidentRecordingLog;
+using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using System.Xml.Serialization;
 
@@ -8,8 +10,15 @@ namespace GodsEye.API.Controllers
     [Route("api/[controller]")]
     public class CameraEventController : Controller
     {
+        private readonly IMediator _mediator;
+
+        public CameraEventController(IMediator mediator)
+        {
+            _mediator = mediator;
+        }
+
         [HttpPost("hikvision")]
-        public async Task<IActionResult> ReceiveHikvisionEvent()
+        public async Task<IActionResult> ReceiveHikvisionEvent(CancellationToken cancellationToken)
         {
             if (!Request.HasFormContentType)
                 return BadRequest("Conteúdo não é multipart/form-data");
@@ -35,6 +44,8 @@ namespace GodsEye.API.Controllers
 
             var evento = (HikvisionEventNotificationAlert)
                 serializer.Deserialize(stringReader);
+
+            var result = await _mediator.Send(new CreateIncidentRecordingLogRequest(evento.MacAddress));
 
             // DEBUG
             Console.WriteLine($"ID Camera: {evento.ChannelID}");

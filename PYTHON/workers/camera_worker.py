@@ -66,7 +66,8 @@ class CameraWorker:
     def start(self):
         self.running = True
 
-        print(f"[OK] Monitorando câmera {self.cameraId} via FFmpeg")
+        print("########################################")
+        print(f"Iniciando servico com a camera {self.cameraId}")
 
         capture_thread = Thread(
             target=self.capture_loop,
@@ -153,7 +154,6 @@ class CameraWorker:
                 continue
 
             faces = self.face_model.get_faces(frame)
-
             for f in faces:
                 emb = f.normed_embedding
                 user_id, score = self.matcher.match(emb)

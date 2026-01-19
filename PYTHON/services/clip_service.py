@@ -6,9 +6,9 @@ from datetime import datetime, timedelta
 
 from core.video_index import VideoIndex
 
-PRE_EVENT_SECONDS = 10
-POST_EVENT_SECONDS = 50
-MAX_WAIT_SECONDS = 60  # quanto tempo esperar o pós-evento existir
+PRE_EVENT_SECONDS = 5
+POST_EVENT_SECONDS = 10
+MAX_WAIT_SECONDS = POST_EVENT_SECONDS + 10  # quanto tempo esperar o pós-evento existir
 
 
 class ClipService:
@@ -16,9 +16,8 @@ class ClipService:
     def __init__(self, video_index: VideoIndex):
         self.video_index = video_index
 
-    def generate_event_clip(self, camera_id: str) -> str:
+    def generate_event_clip(self, camera_id: str, event_time: datetime) -> str:
         # Tenta buscar o segmento o mais rápido possível
-        event_time = datetime.now()
         print(event_time)
 
         clip_start = event_time - timedelta(seconds=PRE_EVENT_SECONDS)
