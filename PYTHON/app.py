@@ -11,6 +11,9 @@ from core.godseyedata import GodsEyeData
 from core.godseyedata_loader import load_godseye_data_from_api
 from core.start_system import start_monitoring_system
 from core.video_index import VideoIndex
+from core.incident_processing import ProcessingIncident
+
+from services.clip_service import ClipService
 from services.monitoring_service import validate_monitoring_data
 from dependencies import get_face_model
 
@@ -27,7 +30,7 @@ async def lifespan(app: FastAPI):
 
     try:
         # PEGA OS DADOS INICIAIS
-
+        
         print("#1 - Buscando dados do GodsEye...")
         data = await load_godseye_data_from_api()
         print("#1 - Requisição concluída.")
@@ -35,6 +38,19 @@ async def lifespan(app: FastAPI):
         print("#2 - Vinculado dados ao estado global...")
         app.state.godseye.set(data)
         print("#2 - Dados vinculados.")
+
+        app.state.video_index.build()
+
+        print("\n========== VIDEO INDEX ANTES ==========")
+        for cam_id, segments in app.state.video_index.index.items():
+            print(f"\n📷 CÂMERA: {cam_id}")
+            print(f"   Total de segmentos: {len(segments)}")
+
+            for seg in segments[-5:]:  # mostra só os últimos 5
+                print(
+                    f"   ▶ {seg['start']} -> {seg['end']} | {seg['path']}"
+                )
+        print("=================================\n")
         
         print("#3 - Instanciando modelo de reconhecimento facial...")
         face_model = get_face_model()
@@ -44,6 +60,11 @@ async def lifespan(app: FastAPI):
         start_monitoring_system(app, face_model)
         print("#4 - Monitoramento iniciado.")
 
+        print("#5 - Iniciando processamento de incidencia")
+        clipService = ClipService(app.state.video_index)
+        incident_processor = ProcessingIncident(clipService)
+        await incident_processor.start()
+        print("#5 - Processamento de incidencia iniciado.")
 
     except Exception as e:
         print("Erro ao iniciar monitoramento:", e)

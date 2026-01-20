@@ -6,5 +6,6 @@ namespace GodsEye.Application.Interfaces.QueryRepositories
     {
         Task<IEnumerable<IncidentRecordingModel>> GetAll(CancellationToken cancellationToken);
         Task<IncidentRecordingModel> GetByLogId(int logId, CancellationToken cancellationToken);
+        Task<IncidentRecordingProcessModel?> GetToProcess(CancellationToken cancellationToken);
     }
 }

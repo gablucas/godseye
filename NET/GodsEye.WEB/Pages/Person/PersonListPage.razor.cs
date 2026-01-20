@@ -28,8 +28,8 @@ namespace GodsEye.WEB.Pages.Person
 
             var personsResult = await personService.GetAllAsync();
 
-            if (personsResult is not null && personsResult.Sucesso)
-                _persons = personsResult.Dados;
+            if (personsResult is not null && personsResult.Success)
+                _persons = personsResult.Data;
 
             _loading = false;
         }

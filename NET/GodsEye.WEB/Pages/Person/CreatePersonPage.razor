@@ -14,7 +14,7 @@
 
 <div class="form-container">
 
-    @if (apiResponse is null || (apiResponse is not null && !apiResponse.Sucesso))
+    @if (apiResponse is null || (apiResponse is not null && !apiResponse.Success))
     {
         <MudForm @ref="form" Model="PersonModel" @bind-IsValid="@success" @bind-Errors="@errors">
 
@@ -100,7 +100,7 @@
 
             @if(apiResponse != null)
             {
-                if(!apiResponse.Sucesso)
+                if(!apiResponse.Success)
                 {
                     <MudAlert Severity="Severity.Error" Variant="Variant.Outlined">Houve um erro ao cadastrar a pessoa, tente novamente mais tarde</MudAlert>
                 }
@@ -111,7 +111,7 @@
             </MudOverlay>
 
         </MudForm>
-    } else if (apiResponse is not null && apiResponse.Sucesso) {
+    } else if (apiResponse is not null && apiResponse.Success) {
         <MudAlert Severity="Severity.Success" Variant="Variant.Outlined">Pessoa cadastrada com sucesso!</MudAlert>
 
         <div class="register-success">

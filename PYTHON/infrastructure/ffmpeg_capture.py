@@ -6,6 +6,7 @@ def ffmpeg_capture(
     fps: float = 1.0,
     width: int = 1280,
     height: int = 720,
+    cameraId: int = 0,
     environment_monitoring: bool = False,
     record: bool = False,
     record_path: str | None = None
@@ -27,7 +28,7 @@ def ffmpeg_capture(
             "-segment_time", "10",
             "-reset_timestamps", "1",
             "-strftime", "1",
-            f"{record_path}/%Y%m%d_%H%M%S.mkv"
+            f"{record_path}/{cameraId}_%Y%m%d_%H%M%S.mkv"
         ]
 
     # ────── MONITORAMENTO (RAWVIDEO) ──────

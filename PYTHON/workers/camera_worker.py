@@ -101,6 +101,7 @@ class CameraWorker:
                 fps=self.capture_fps,
                 width=self.width,
                 height=self.height,
+                cameraId=self.cameraId,
                 environment_monitoring=self.environment_monitoring,
                 record=self.incident_recording,
                 record_path=f"records/{self.cameraId}"

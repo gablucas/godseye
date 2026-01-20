@@ -34,8 +34,8 @@ namespace GodsEye.WEB.Components
         {
             var result = await personService.GetLogs(Person.Id);
 
-            if (result.Sucesso)
-                _log = result.Dados;
+            if (result.Success)
+                _log = result.Data;
         }
 
     }

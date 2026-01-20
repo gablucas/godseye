@@ -34,5 +34,14 @@ namespace GodsEye.Infrastructure.QuerieRepositories
 
             return result.FirstOrDefault() ?? new IncidentRecordingModel();
         }
+
+        public async Task<IncidentRecordingProcessModel?> GetToProcess(CancellationToken cancellationToken)
+        {
+            var result = await _context.IncidentRecordingProcessModel
+                .FromSqlRaw("CALL SP_INCIDENT_RECORDING_GET_TO_PROCESS()")
+                .ToListAsync(cancellationToken);
+
+            return result.FirstOrDefault();
+        }
     }
 }

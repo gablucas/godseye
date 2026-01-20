@@ -42,15 +42,15 @@ namespace GodsEye.WEB.Pages.Camera
         protected override async Task OnInitializedAsync()
         {
             var response = await sectorService.GetAllAsync();
-            if (response is not null && response.Sucesso)
+            if (response is not null && response.Success)
             {
-                _sectors = response.Dados;
+                _sectors = response.Data;
             }
 
             var featureResponse = await featureWebService.GetAllAsync();
-            if (featureResponse is not null && featureResponse.Sucesso)
+            if (featureResponse is not null && featureResponse.Success)
             {
-                _features = featureResponse.Dados;
+                _features = featureResponse.Data;
             }
 
         }
@@ -111,7 +111,7 @@ namespace GodsEye.WEB.Pages.Camera
             apiResponse = await cameraService.CreateAsync(CameraModel);
             visible = false;
 
-            if (!apiResponse.Sucesso)
+            if (!apiResponse.Success)
                 Snackbar.Add("Houve um erro ao cadastrar a camera, tente novamente mais tarde", Severity.Error);
             else
                 Snackbar.Add("camera cadastrada com sucesso!", Severity.Success);

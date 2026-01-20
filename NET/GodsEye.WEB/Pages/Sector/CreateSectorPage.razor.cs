@@ -45,7 +45,7 @@ namespace GodsEye.WEB.Pages.Sector
             apiResponse = await sectorService.CreateAsync(SectorModel);
             visible = false;
 
-            if (!apiResponse.Sucesso)
+            if (!apiResponse.Success)
                 Snackbar.Add("Houve um erro ao cadastrar o setor, tente novamente mais tarde", Severity.Error);
             else
                 Snackbar.Add("Setor cadastrado com sucesso!", Severity.Success);

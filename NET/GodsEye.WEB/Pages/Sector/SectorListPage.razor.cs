@@ -19,8 +19,8 @@ namespace GodsEye.WEB.Pages.Sector
 
             var sectorsResult = await sectorService.GetAllAsync();
 
-            if (sectorsResult is not null && sectorsResult.Sucesso)
-                _sectors = sectorsResult.Dados;
+            if (sectorsResult is not null && sectorsResult.Success)
+                _sectors = sectorsResult.Data;
 
             _loading = false;
         }

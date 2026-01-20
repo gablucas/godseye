@@ -11,15 +11,19 @@ async def load_godseye_data_from_api():
             "https://localhost:7010/api/godseye"
         )
 
-    response.raise_for_status()
+    # Valida o status HTTP
+    #200, 201, etc → continua
+    #400, 401, 404, 500 → lança exceção automaticamente
+
+    response.raise_for_status() 
     result = response.json()
 
-    if result.get("sucesso") is not True:
+    if result.get("success") is not True:
         raise GodsEyeLoadError(
             "Não foi possível buscar os dados para monitoramento"
         )
 
-    result_data = result.get("dados")
+    result_data = result.get("data")
 
     if not result_data or "data" not in result_data:
         raise GodsEyeLoadError(

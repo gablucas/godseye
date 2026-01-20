@@ -58,9 +58,9 @@ namespace GodsEye.WEB.Pages.Person
             }
 
             var response = await sectorService.GetAllAsync();
-            if (response is not null && response.Sucesso)
+            if (response is not null && response.Success)
             {
-                _sectors = response.Dados;
+                _sectors = response.Data;
             }
         }
 
@@ -120,7 +120,7 @@ namespace GodsEye.WEB.Pages.Person
             apiResponse = await personService.CreateAsync(PersonModel);
             visible = false;
 
-            if (!apiResponse.Sucesso)
+            if (!apiResponse.Success)
                 Snackbar.Add("Houve um erro ao cadastrar a pessoa, tente novamente mais tarde", Severity.Error);
             else
                 Snackbar.Add("Pessoa cadastrada com sucesso!", Severity.Success);

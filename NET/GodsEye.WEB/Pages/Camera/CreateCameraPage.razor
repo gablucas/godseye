@@ -15,7 +15,7 @@
 
 <div class="form-container">
 
-    @if (apiResponse is null || (apiResponse is not null && !apiResponse.Sucesso))
+    @if (apiResponse is null || (apiResponse is not null && !apiResponse.Success))
     {
         <MudForm @ref="form" Model="CameraModel" @bind-IsValid="@success" @bind-Errors="@errors">
 
@@ -68,7 +68,7 @@
             <MudButton OnClick="Submit" Disabled=@(!success || !ValidateFeatures()) Class="btn-submit" Variant="Variant.Filled" Color="Color.Primary">Registrar</MudButton>
 
 
-            @if (apiResponse is not null && !apiResponse.Sucesso)
+            @if (apiResponse is not null && !apiResponse.Success)
             {
                 <MudAlert Severity="Severity.Error" Variant="Variant.Outlined">Houve um erro ao cadastrar a pessoa, tente novamente mais tarde</MudAlert>
             }
@@ -80,7 +80,7 @@
 
         </MudForm>
     }
-    else if (apiResponse is not null && apiResponse.Sucesso)
+    else if (apiResponse is not null && apiResponse.Success)
     {
         <MudAlert Severity="Severity.Success" Variant="Variant.Outlined">Camera cadastrada com sucesso!</MudAlert>
 

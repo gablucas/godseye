@@ -22,6 +22,7 @@ class VideoIndex:
                     continue
 
                 self.index[cam] = []
+                print("Indexando câmera:", cam)
 
                 for root, _, files in os.walk(cam_path):
                     for f in files:

@@ -41,15 +41,15 @@ namespace GodsEye.WEB.Components
         {
             var result = await CameraService.GetLogs(Camera.Id);
 
-            if (result.Sucesso)
-                _log = result.Dados;
+            if (result.Success)
+                _log = result.Data;
 
 
             var cam = await GodsEyeWebService.StartStream(Camera);
 
-            if (cam.Sucesso)
+            if (cam.Success)
             {
-                string fullUrl = $"http://localhost:8000/api{cam.Dados.Url}";
+                string fullUrl = $"http://localhost:8000/api{cam.Data.Url}";
                 await JS.InvokeVoidAsync("loadHlsVideo", "camera-player", fullUrl);
             }
         }

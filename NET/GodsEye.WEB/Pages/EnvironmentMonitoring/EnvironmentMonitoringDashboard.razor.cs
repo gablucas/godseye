@@ -33,8 +33,8 @@ namespace GodsEye.WEB.Pages.EnvironmentMonitoring
 
             var result = await environmentMonitoringService.GetAllLogs();
 
-            if (result.Sucesso)
-                _log = result.Dados.ToList();
+            if (result.Success)
+                _log = result.Data.ToList();
 
             _loading = false;
 

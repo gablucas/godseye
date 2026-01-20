@@ -8,7 +8,7 @@ from core.video_index import VideoIndex
 
 PRE_EVENT_SECONDS = 5
 POST_EVENT_SECONDS = 10
-MAX_WAIT_SECONDS = POST_EVENT_SECONDS + 10  # quanto tempo esperar o pós-evento existir
+MAX_WAIT_SECONDS = 60  # quanto tempo esperar o pós-evento existir
 
 
 class ClipService:
@@ -17,14 +17,25 @@ class ClipService:
         self.video_index = video_index
 
     def generate_event_clip(self, camera_id: str, event_time: datetime) -> str:
+        print("INDEX DO VIDEO")
+        print(self.video_index)
+
+
         # Tenta buscar o segmento o mais rápido possível
+        print("HORARIO DO EVENTO")
         print(event_time)
 
         clip_start = event_time - timedelta(seconds=PRE_EVENT_SECONDS)
-        duration = PRE_EVENT_SECONDS + POST_EVENT_SECONDS
+        print("CLIP START")
+        print(clip_start)
 
+        duration = PRE_EVENT_SECONDS + POST_EVENT_SECONDS
+        print("DURATION")
+        print(duration)
+
+        print("PEGAR SEGMENTOS...")
         # Tente encontrar o segmento
-        segments = self._get_segments(camera_id, clip_start, duration)
+        segments = self._get_segments(str(camera_id), clip_start, duration)
 
         os.makedirs("clips", exist_ok=True)
 

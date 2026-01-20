@@ -38,8 +38,8 @@ namespace GodsEye.WEB.Pages.Camera
 
             var camerasResult = await cameraService.GetAllAsync();
 
-            if (camerasResult is not null && camerasResult.Sucesso)
-                _cameras = camerasResult.Dados;
+            if (camerasResult is not null && camerasResult.Success)
+                _cameras = camerasResult.Data;
 
             _loading = false;
         }
