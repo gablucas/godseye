@@ -2,9 +2,9 @@
 {
     public enum IncidentStatusEnum
     {
-        Pending = 1,
-        Processing = 2,
-        Completed = 3,
-        Error = 4
+        Pendente = 1,
+        Processando = 2,
+        Completado = 3,
+        Erro = 4
     }
 }

@@ -6,7 +6,7 @@ import asyncio
 from datetime import datetime, timedelta
 from infrastructure.clip_frame_reader import ClipFrameReader
 from infrastructure.frame_capture import FrameCapture
-from schemas.incident_schema import IncidentResponse, UpdateIncidentRequest
+from schemas.incident_schema import IncidentResponse, PersonSeen, UpdateIncidentRequest
 from services.clip_service import ClipService
 from services.face_recognition_service import FaceModel
 from services.face_matcher_service import FaceMatcher
@@ -26,7 +26,7 @@ class ProcessingIncident():
         self.clip_service = clip_service
         self.face_model = face_model
         self.face_matcher = face_matcher
-        self.persons: list = []
+        self.persons: dict[int, dict] = {}
 
     async def start(self):
         while True:
@@ -40,7 +40,7 @@ class ProcessingIncident():
 
                 self.process_video(video_path=path)
 
-                update_request = UpdateIncidentRequest(id=incident.id, person_ids=self.persons, video_path=str(path))
+                update_request = UpdateIncidentRequest(id=incident.id, persons=list(self.persons.values()), video_path=str(path))
                 print(update_request)
                 
                 await self.done_incident(update_request)
@@ -70,7 +70,7 @@ class ProcessingIncident():
         async with httpx.AsyncClient(verify=False, timeout=10) as client:
             response = await client.put(
                 "https://localhost:7010/api/incidentrecording/process/done",
-                json=request.model_dump(by_alias=True)
+                json=request.model_dump(by_alias=True, mode="json")
             )
 
             response.raise_for_status()
@@ -134,6 +134,8 @@ class ProcessingIncident():
                 else:
                     video_time = frame_index / fps
 
+
+                print(video_time)
                 absolute_timestamp = video_start_time + timedelta(seconds=video_time)
 
                 print(f"[FRAME] {video_path.name} frame={frame_index} time={video_time:.2f}s")
@@ -164,8 +166,11 @@ class ProcessingIncident():
     def register_log(self, person_id, score, timestamp):
         if person_id in self.persons:
             return
-
-        self.persons.append(person_id)
+        
+        self.persons[person_id] = PersonSeen(
+            id=person_id,
+            first_seen=timestamp.isoformat()
+        )
 
 
     def parse_video_start_time(self, video_path: Path | str) -> datetime:

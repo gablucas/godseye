@@ -1,0 +1,20 @@
+﻿.container {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 24px;
+}
+
+.container .person {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    border: 1px solid var(--gray-050);
+    border-radius: 7px;
+    padding: 8px;
+}
+
+.container .person div {
+    display: flex;
+    gap: 8px;
+    align-items: center;
+}

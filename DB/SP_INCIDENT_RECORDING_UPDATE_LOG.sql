@@ -26,9 +26,24 @@ BEGIN
             UPDATE_AT = NOW()
         WHERE ID = P_LOG_ID;
 
-		INSERT INTO INCIDENT_RECORDING_LOG_PERSON (INCIDENT_RECORDING_LOG_ID, PERSON_ID)
-        SELECT P_LOG_ID, jt.id
-		FROM JSON_TABLE(P_PERSON_IDS_JSON, '$[*]' COLUMNS (id INT PATH '$')) jt;
+		INSERT INTO INCIDENT_RECORDING_LOG_PERSON 
+        (
+			INCIDENT_RECORDING_LOG_ID,
+			PERSON_ID, 
+			FIRST_SEEN
+        )
+        SELECT 
+			P_LOG_ID, 
+            jt.person_id, 
+            jt.first_seen
+		FROM JSON_TABLE(
+			P_PERSON_IDS_JSON, 
+            '$[*]' 
+            COLUMNS (
+				person_id INT PATH '$.PersonId',
+				first_seen DATETIME PATH '$.FirstSeen'
+            )
+		) jt;
 
     COMMIT;
 

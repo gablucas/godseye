@@ -73,6 +73,7 @@ async def lifespan(app: FastAPI):
 
         print("#6 - Iniciando processamento de incidencia")
         clip_service = ClipService(app.state.video_index)
+
         incident_processor = ProcessingIncident(
             clip_service=clip_service,
             face_model=face_model,

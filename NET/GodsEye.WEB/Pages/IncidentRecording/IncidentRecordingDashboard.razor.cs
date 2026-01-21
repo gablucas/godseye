@@ -1,4 +1,5 @@
 ﻿using GodsEye.Application.DTOs.Model;
+using GodsEye.WEB.Components;
 using GodsEye.WEB.Services;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.SignalR.Client;
@@ -17,15 +18,19 @@ namespace GodsEye.WEB.Pages.IncidentRecording
         [Inject]
         public NavigationManager Navigation { get; set; }
 
+        [Inject]
+        public IDialogService DialogService { get; set; }
+
         #region TABLE PARAMETERS
 
         private List<IncidentRecordingModel> _log = new();
-        private MudTable<IncidentRecordingModel> _mudTable;
+        private MudTable<IncidentRecordingModel> mudTable;
         private HubConnection? hubConnection;
         bool _loading;
+        private int? selectedId = null;
+        private int selectedRowNumber = -1;
 
         #endregion
-
 
         protected override async Task OnInitializedAsync()
         {
@@ -50,12 +55,40 @@ namespace GodsEye.WEB.Pages.IncidentRecording
 
                     InvokeAsync(() =>
                     {
-                        _mudTable?.ReloadServerData();
+                        mudTable?.ReloadServerData();
                         StateHasChanged();
                     });
                 });
 
             await SignalR.StartAsync();
         }
+
+        #region TABLE FUNCTIONS
+        private void RowClickEvent(TableRowClickEventArgs<IncidentRecordingModel> tableRowClickEventArgs)
+        {
+            var options = new DialogOptions { CloseOnEscapeKey = true, FullWidth = true, MaxWidth = MaxWidth.Large };
+            var parameters = new DialogParameters<InfoIncidentRecordingComponent> { { x => x.IncidentRecording, tableRowClickEventArgs.Item } };
+
+            DialogService.ShowAsync<InfoIncidentRecordingComponent>("Simple Dialog", parameters, options);
+        }
+
+        private string SelectedRowClassFunc(IncidentRecordingModel element, int rowNumber)
+        {
+            if (selectedRowNumber == rowNumber)
+            {
+                selectedRowNumber = -1;
+                return string.Empty;
+            }
+            else if (mudTable.SelectedItem != null && mudTable.SelectedItem.Equals(element))
+            {
+                selectedRowNumber = rowNumber;
+                return "selected";
+            }
+            else
+            {
+                return string.Empty;
+            }
+        }
+        #endregion
     }
 }

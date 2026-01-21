@@ -15,6 +15,7 @@ class VideoIndex:
     def build(self):
         with self.lock:
             self.index.clear()
+            self.known_files.clear()  # 🔴 IMPORTANTE
 
             for cam in os.listdir(self.base_dir):
                 cam_path = os.path.join(self.base_dir, cam)
@@ -22,12 +23,13 @@ class VideoIndex:
                     continue
 
                 self.index[cam] = []
-                print("Indexando câmera:", cam)
 
                 for root, _, files in os.walk(cam_path):
                     for f in files:
                         if not f.endswith(".mkv"):
                             continue
+
+                        full = os.path.join(root, f)
 
                         try:
                             name = f.replace(".mkv", "")
@@ -40,10 +42,12 @@ class VideoIndex:
                         end = start + timedelta(seconds=SEGMENT_SECONDS)
 
                         self.index[cam].append({
-                            "path": os.path.join(root, f),
+                            "path": full,
                             "start": start,
                             "end": end
                         })
+
+                        self.known_files.add(full)  # ✅ ESSENCIAL
 
                 self.index[cam].sort(key=lambda x: x["start"])
 
@@ -74,6 +78,8 @@ class VideoIndex:
 
                 self.index.setdefault(cam, [])
 
+                existing_starts = {seg["start"] for seg in self.index[cam]}
+
                 for root, _, files in os.walk(cam_path):
                     for f in files:
                         if not f.endswith(".mkv"):
@@ -90,6 +96,9 @@ class VideoIndex:
                             start = datetime.strptime(ts, "%Y%m%d_%H%M%S")
                         except:
                             continue
+
+                        if start in existing_starts:
+                            continue  # 🛑 evita duplicação lógica
 
                         end = start + timedelta(seconds=SEGMENT_SECONDS)
 

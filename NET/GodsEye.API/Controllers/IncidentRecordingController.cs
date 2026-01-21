@@ -3,7 +3,6 @@ using GodsEye.Application.UseCases.IncidentRecording.Commands.UpdateIncidentReco
 using GodsEye.Application.UseCases.IncidentRecording.Queries.GetAllIncidentRecordingLogs;
 using GodsEye.Application.UseCases.IncidentRecording.Queries.GetIncidentRecordingToProcessingLogs;
 using MediatR;
-using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace GodsEye.API.Controllers

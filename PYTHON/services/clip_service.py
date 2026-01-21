@@ -36,6 +36,8 @@ class ClipService:
         print("PEGAR SEGMENTOS...")
         # Tente encontrar o segmento
         segments = self._get_segments(str(camera_id), clip_start, duration)
+        print("SEGMENTOS ENCONTRADOS:")
+        print(segments)
 
         os.makedirs("clips", exist_ok=True)
 

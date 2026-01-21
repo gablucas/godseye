@@ -1,5 +1,7 @@
-﻿using GodsEye.Domain.DTOs.Result;
+﻿using GodsEye.Application.DTOs.Model;
+using GodsEye.Domain.DTOs.Result;
 using GodsEye.Domain.Interfaces.Repositories;
+using GodsEye.Domain.ValueObjects;
 using GodsEye.Infrastructure.Persistence;
 using Microsoft.EntityFrameworkCore;
 using MySqlConnector;
@@ -39,23 +41,23 @@ namespace GodsEye.Infrastructure.Repositories
             };
         }
 
-        public async Task<ProcedureResult> Update(int id, List<int> personIds, string videoPath)
+        public async Task<ProcedureResult> Update(int id, List<IncidentRecordingPersonVO> persons, string videoPath)
         {
             var pLogId = new MySqlParameter("@P_LOG_ID", id);
 
-            var personIdsJSON = JsonSerializer.Serialize(personIds);
+            var personsJSON = JsonSerializer.Serialize(persons);
 
-            var pPersonIds = new MySqlParameter("@P_PERSON_IDS_JSON", MySqlDbType.JSON)
+            var pPersons = new MySqlParameter("@P_PERSONS_JSON", MySqlDbType.JSON)
             {
-                Value = personIdsJSON
+                Value = personsJSON
             };
 
             var pVideoPath = new MySqlParameter("@P_VIDEO_PATH", videoPath);
 
             var result = await _context.ProcedureResult
                 .FromSqlRaw(
-                "CALL SP_INCIDENT_RECORDING_UPDATE_LOG(@P_LOG_ID, @P_PERSON_IDS_JSON, @P_VIDEO_PATH)",
-                pLogId, pPersonIds, pVideoPath)
+                "CALL SP_INCIDENT_RECORDING_UPDATE_LOG(@P_LOG_ID, @P_PERSONS_JSON, @P_VIDEO_PATH)",
+                pLogId, pPersons, pVideoPath)
                 .ToListAsync();
 
             return result.FirstOrDefault() ?? new ProcedureResult
