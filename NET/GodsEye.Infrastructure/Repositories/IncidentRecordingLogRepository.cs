@@ -3,6 +3,8 @@ using GodsEye.Domain.Interfaces.Repositories;
 using GodsEye.Infrastructure.Persistence;
 using Microsoft.EntityFrameworkCore;
 using MySqlConnector;
+using System;
+using System.Text.Json;
 
 namespace GodsEye.Infrastructure.Repositories
 {
@@ -37,15 +39,23 @@ namespace GodsEye.Infrastructure.Repositories
             };
         }
 
-        public async Task<ProcedureResult> Update(int id, int personId)
+        public async Task<ProcedureResult> Update(int id, List<int> personIds, string videoPath)
         {
             var pLogId = new MySqlParameter("@P_LOG_ID", id);
-            var pIncidentTime = new MySqlParameter("@P_INCIDENT_TIME", personId);
+
+            var personIdsJSON = JsonSerializer.Serialize(personIds);
+
+            var pPersonIds = new MySqlParameter("@P_PERSON_IDS_JSON", MySqlDbType.JSON)
+            {
+                Value = personIdsJSON
+            };
+
+            var pVideoPath = new MySqlParameter("@P_VIDEO_PATH", videoPath);
 
             var result = await _context.ProcedureResult
                 .FromSqlRaw(
-                "CALL SP_INCIDENT_RECORDING_UPDATE_LOG(@P_LOG_ID, @P_INCIDENT_TIME)",
-                pLogId, pIncidentTime)
+                "CALL SP_INCIDENT_RECORDING_UPDATE_LOG(@P_LOG_ID, @P_PERSON_IDS_JSON, @P_VIDEO_PATH)",
+                pLogId, pPersonIds, pVideoPath)
                 .ToListAsync();
 
             return result.FirstOrDefault() ?? new ProcedureResult

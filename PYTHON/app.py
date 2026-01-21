@@ -1,6 +1,8 @@
+import asyncio
 from fastapi import FastAPI
 from contextlib import asynccontextmanager
 from fastapi.middleware.cors import CORSMiddleware
+import numpy as np
 
 from api.face import router as face_router
 from api.monitor import router as monitor_router
@@ -13,7 +15,10 @@ from core.start_system import start_monitoring_system
 from core.video_index import VideoIndex
 from core.incident_processing import ProcessingIncident
 
+from domain.data_validation import MonitoringDataError
 from services.clip_service import ClipService
+from services.face_matcher_service import FaceMatcher
+from services.face_processor_service import FaceRecognitionProcessor
 from services.monitoring_service import validate_monitoring_data
 from dependencies import get_face_model
 
@@ -24,50 +29,65 @@ from dependencies import get_face_model
 @asynccontextmanager
 async def lifespan(app: FastAPI):
     # ===== STARTUP =====
-    app.state.godseye = GodsEyeData()
-    app.state.video_index = VideoIndex()
-    app.state.background_started = False
-
     try:
-        # PEGA OS DADOS INICIAIS
-        
+        app.state.godseye = GodsEyeData()
+        app.state.video_index = VideoIndex()
+        app.state.background_started = False
+
         print("#1 - Buscando dados do GodsEye...")
         data = await load_godseye_data_from_api()
-        print("#1 - Requisição concluída.")
 
-        print("#2 - Vinculado dados ao estado global...")
+        print("#2 - Validando dados...")
+        cameras, persons = validate_monitoring_data(data)
+
+        print("#3 - Construindo matcher...")
+        ids = [p["Id"] for p in persons]
+        embeddings = [p["Embedding"] for p in persons]
+        print(ids)
+        
+        emb_matrix = np.asarray(embeddings, dtype=np.float32)
+        matcher = FaceMatcher(ids=ids, emb_matrix=emb_matrix)
+
+        print("#4 - Instanciando modelo facial...")
+        face_model = get_face_model()
+
+        print("#5 - Criando FaceRecognitionProcessor...")
+        face_processor = FaceRecognitionProcessor(
+            face_model=face_model,
+            matcher=matcher
+        )
+
+        # guarda no estado global
+        app.state.face_model = face_model
+        app.state.face_matcher = matcher
+        app.state.face_processor = face_processor
+
+        print("#4 - Vinculado dados ao estado global...")
         app.state.godseye.set(data)
-        print("#2 - Dados vinculados.")
 
+        print("#5 - Construindo índice de vídeos...")
         app.state.video_index.build()
 
-        print("\n========== VIDEO INDEX ANTES ==========")
-        for cam_id, segments in app.state.video_index.index.items():
-            print(f"\n📷 CÂMERA: {cam_id}")
-            print(f"   Total de segmentos: {len(segments)}")
+        print("#5 - Iniciando monitoramento automático...")
+        # start_monitoring_system(app, face_model)
 
-            for seg in segments[-5:]:  # mostra só os últimos 5
-                print(
-                    f"   ▶ {seg['start']} -> {seg['end']} | {seg['path']}"
-                )
-        print("=================================\n")
-        
-        print("#3 - Instanciando modelo de reconhecimento facial...")
-        face_model = get_face_model()
-        print("#3 - Modelo instanciado.")
+        print("#6 - Iniciando processamento de incidencia")
+        clip_service = ClipService(app.state.video_index)
+        incident_processor = ProcessingIncident(
+            clip_service=clip_service,
+            face_model=face_model,
+            face_matcher=matcher
+        )
 
-        print("#4 - Iniciando monitoramento automático...")
-        start_monitoring_system(app, face_model)
-        print("#4 - Monitoramento iniciado.")
+        asyncio.create_task(incident_processor.start())
 
-        print("#5 - Iniciando processamento de incidencia")
-        clipService = ClipService(app.state.video_index)
-        incident_processor = ProcessingIncident(clipService)
-        await incident_processor.start()
-        print("#5 - Processamento de incidencia iniciado.")
+    except MonitoringDataError as e:
+        print("❌ Erro de validação:", e)
+        raise RuntimeError("Falha ao iniciar monitoramento")
 
     except Exception as e:
-        print("Erro ao iniciar monitoramento:", e)
+        print("🔥 Erro crítico no startup:", e)
+        raise
 
     yield
 

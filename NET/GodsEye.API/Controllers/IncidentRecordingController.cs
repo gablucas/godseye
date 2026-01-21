@@ -1,4 +1,5 @@
 ﻿using GodsEye.Application.UseCases.IncidentRecording.Commands.CreateIncidentRecordingLog;
+using GodsEye.Application.UseCases.IncidentRecording.Commands.UpdateIncidentRecordingLog;
 using GodsEye.Application.UseCases.IncidentRecording.Queries.GetAllIncidentRecordingLogs;
 using GodsEye.Application.UseCases.IncidentRecording.Queries.GetIncidentRecordingToProcessingLogs;
 using MediatR;
@@ -32,11 +33,17 @@ namespace GodsEye.API.Controllers
             return Ok(result);
         }
 
-        [AllowAnonymous]
         [HttpPost]
         public async Task<IActionResult> GenerateLog(CreateIncidentRecordingLogRequest request, CancellationToken cancellationToken)
         {
             var result = await _mediator.Send(request);
+            return Ok(result);
+        }
+
+        [HttpPut("process/done")]
+        public async Task<IActionResult> UpdateLog(UpdateIncidentRecordingLogRequest request, CancellationToken cancellationToken)
+        {
+            var result = await _mediator.Send(request); 
             return Ok(result);
         }
     }

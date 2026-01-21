@@ -9,7 +9,7 @@ class IncidentResponse(BaseModel):
 class UpdateIncidentRequest(BaseModel):
     id: int = Field(alias="incidentId")
     person_ids: list[int] = Field(alias="personIds")
-    videro_path: str = Field(alias="videoPath")
+    video_path: str = Field(alias="videoPath")
 
     model_config = {
         "populate_by_name": True

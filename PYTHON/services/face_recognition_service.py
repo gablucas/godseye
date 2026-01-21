@@ -1,6 +1,4 @@
 import insightface
-import numpy as np
-import os
 
 import onnxruntime as ort
 print(ort.get_available_providers())
