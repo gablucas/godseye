@@ -16,7 +16,7 @@ class ClipService:
     def __init__(self, video_index: VideoIndex):
         self.video_index = video_index
 
-    def generate_event_clip(self, camera_id: str, event_time: datetime) -> str:
+    def generate_event_clip(self, camera_id: str, event_time: datetime) -> tuple[str, str]:
         print("INDEX DO VIDEO")
         print(self.video_index)
 
@@ -41,10 +41,13 @@ class ClipService:
 
         os.makedirs("clips", exist_ok=True)
 
-        output_path = (
-            f"clips/{camera_id}_"
-            f"{event_time.strftime('%Y%m%d_%H%M%S')}.mkv"
-        )
+        # MKV
+        # file_name = f"{camera_id}_{event_time.strftime('%Y%m%d_%H%M%S')}.mkv"
+        # output_path = f"clips/{file_name}"
+
+        # MP4
+        file_name = f"{camera_id}_{event_time.strftime('%Y%m%d_%H%M%S')}.mp4"
+        output_path = f"clips/{file_name}"
 
         # Arquivo para concatenação
         with tempfile.NamedTemporaryFile(mode="w", delete=False, suffix=".txt") as f:
@@ -54,26 +57,64 @@ class ClipService:
 
         offset = (clip_start - segments[0]["start"]).total_seconds()
 
-        # Comando ffmpeg para gerar o clip
+
+        # Comando ffmpeg para gerar o clip - MKV
+        # cmd = [
+        #     "ffmpeg",
+        #     "-y",
+        #     "-ss", str(offset),
+        #     "-f", "concat",
+        #     "-safe", "0",
+        #     "-i", list_file,
+        #     "-t", str(duration),
+        #     "-c:v", "libx264",
+        #     "-preset", "veryfast",
+        #     "-crf", "23",
+        #     "-c:a", "aac",
+        #     "-movflags", "+faststart",
+        #     output_path
+        # ]
+
+        # Comando ffmpeg para gerar o clip - MP4
         cmd = [
             "ffmpeg",
             "-y",
+
+            # 🔑 SEEK PRECISO
             "-ss", str(offset),
+
+            # 🔗 CONCATENAÇÃO
             "-f", "concat",
             "-safe", "0",
             "-i", list_file,
+
+            # ⏱️ DURAÇÃO FINAL
             "-t", str(duration),
+
+            # 🎥 VÍDEO WEB SAFE
             "-c:v", "libx264",
+            "-profile:v", "main",
+            "-level", "4.0",
+            "-pix_fmt", "yuv420p",
             "-preset", "veryfast",
             "-crf", "23",
+
+            # 🔊 ÁUDIO
             "-c:a", "aac",
+            "-b:a", "128k",
+
+            # 🌐 STREAMING
             "-movflags", "+faststart",
+
             output_path
         ]
 
-        subprocess.run(cmd, check=True)
+        try:
+            subprocess.run(cmd, check=True)
+        except subprocess.CalledProcessError as e:
+            raise RuntimeError("Erro ao gerar clip") from e
 
-        return output_path
+        return file_name, output_path
 
     def _get_segments(self, camera_id: str, clip_start: datetime, duration: int):
         event_time = clip_start + timedelta(seconds=PRE_EVENT_SECONDS)

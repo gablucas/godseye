@@ -3,6 +3,7 @@
     public class IncidentRecordingPersonModel
     {
         public int PersonId { get; set; }
-        public DateTime FirstSeen { get; set; }
+        public DateTime SeenAt { get; set; }
+        public double VideoOffsetSeconds { get; set; }
     }
 }

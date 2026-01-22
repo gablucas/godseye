@@ -8,7 +8,8 @@ class IncidentResponse(BaseModel):
 
 class PersonSeen(BaseModel):
     id: int = Field(alias="personId")
-    first_seen: datetime = Field(alias="firstSeen")
+    seen_at: datetime = Field(alias="seenAt")
+    video_offset_seconds: float = Field(alias="videoOffsetSeconds")
 
     model_config = {
         "populate_by_name": True
@@ -17,7 +18,7 @@ class PersonSeen(BaseModel):
 class UpdateIncidentRequest(BaseModel):
     id: int = Field(alias="incidentId")
     persons: list[PersonSeen] = Field(alias="persons")
-    video_path: str = Field(alias="videoPath")
+    file_name: str = Field(alias="fileName")
 
     model_config = {
         "populate_by_name": True

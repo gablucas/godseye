@@ -1,13 +1,14 @@
-﻿using GodsEye.Infrastructure.Persistence;
+﻿using GodsEye.Application.Interfaces;
+using GodsEye.Application.Interfaces.QueryRepositories;
+using GodsEye.Domain.Interfaces.Repositories;
+using GodsEye.Infrastructure.Email;
+using GodsEye.Infrastructure.GodsEye;
+using GodsEye.Infrastructure.Persistence;
+using GodsEye.Infrastructure.QuerieRepositories;
+using GodsEye.Infrastructure.Repositories;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.EntityFrameworkCore;
-using GodsEye.Application.Interfaces;
-using GodsEye.Infrastructure.GodsEye;
-using GodsEye.Domain.Interfaces.Repositories;
-using GodsEye.Infrastructure.Repositories;
-using GodsEye.Application.Interfaces.QueryRepositories;
-using GodsEye.Infrastructure.QuerieRepositories;
 
 
 namespace GodsEye.Infrastructure.Services
@@ -56,6 +57,10 @@ namespace GodsEye.Infrastructure.Services
                     new System.Net.Http.Headers.MediaTypeWithQualityHeaderValue("application/json")
                 );
             });
+
+            services.Configure<SmtpSettings>(configuration.GetSection("SmtpSettings"));
+
+            services.AddScoped<IEmailService, MailKitEmailSender>();
         }
     }
 }

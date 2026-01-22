@@ -4,17 +4,43 @@
     gap: 24px;
 }
 
-.container .person {
+
+.container .incident-video video {
+    border-radius: 7px;
+}
+
+.container .person-list {
     display: flex;
     flex-direction: column;
     gap: 12px;
+    height: 600px;
     border: 1px solid var(--gray-050);
     border-radius: 7px;
     padding: 8px;
+    overflow-y: auto;
 }
 
-.container .person div {
+.container .person-list .person-card {
     display: flex;
     gap: 8px;
-    align-items: center;
+    align-items: start;
+}
+
+.container .person-list .person-card .person-info {
+    display: flex;
+    flex-direction: column;
+    justify-items: start;
+}
+
+.container .person-list .person-card .action-item {
+    margin-top: auto;
+    border-radius: 6px;
+    background-color: rgba(25, 118, 210, 0.08); /* primary leve */
+    cursor: pointer;
+    transition: background-color 0.2s ease;
+    height: 100px
+}
+
+.container .person-list .person-card .action-item:hover {
+    background-color: rgba(25, 118, 210, 0.18);
 }

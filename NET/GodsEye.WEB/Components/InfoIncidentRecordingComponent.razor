@@ -2,34 +2,48 @@
 
 <MudDialog>
     <TitleContent>
-        Dialog Title
+        Registro de incidencia
     </TitleContent>
 
 
     <DialogContent>
         <div class="container">
-            <div>
-                <video />
+            <div class="incident-video">
+                <video id="player" width="800"
+                       controls
+                       preload="metadata">
+                    <source src=@($"http://localhost:8000/videos/{IncidentRecording.FileName}")
+                            type="video/mp4">
+                    Seu navegador não suporta vídeo.
+                </video>
             </div>
 
-            <div class="person">
+            <div class="person-list">
                 @foreach (var person in IncidentRecording.Persons)
                 {
-                    <div>
+                    <div class="person-card">
                         <MudImage src=@($"https://localhost:7010/{person.ImagePath}") Height="160" Style="border-radius: 7px" />
-                        <p>@person.Name</p>
-                        <p>@person.FirstSeen</p>
+
+                        <MudPaper Width="300px" Height="160px" Class="d-flex flex-column" Elevation="0" Outlined="true">
+                            <MudList T="string" Class="d-flex flex-column flex-grow-1">
+                                <MudListItem Text="@person.Name" />
+                                <MudListItem Text="@person.SeenAt.ToString()" />
+                                <MudSpacer />
+                                <MudDivider Style="flex-grow: 0" />
+                                <MudListItem OnClick="() => SetTime(person.VideoOffsetSeconds)" 
+                                    Class="action-item"
+                                    Icon="@Icons.Material.Filled.PlayArrow" 
+                                    Text="Mostrar no vídeo" />
+                            </MudList>
+                        </MudPaper>
                     </div>
+                    <MudDivider />
                 }
             </div>
         </div>
-
-        
     </DialogContent>
 
-
     <DialogActions>
-        <MudButton OnClick="Cancel">Cancel</MudButton>
-        <MudButton Color="Color.Primary" OnClick="Submit">OK</MudButton>
+        <MudButton Color="Color.Primary" OnClick="Submit">Sair</MudButton>
     </DialogActions>
 </MudDialog>

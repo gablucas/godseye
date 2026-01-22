@@ -12,6 +12,7 @@ namespace GodsEye.Application.DTOs.Model
         [Column("CREATED_AT")]
         public DateTime CreatedAt { get; set; }
         public IncidentStatusEnum Status { get; set; }
+        public string? FileName { get; set; }
         public string? PersonsJSON { get; set; }
 
         public List<IncidentRecordingPersonDTO> Persons
@@ -27,6 +28,7 @@ namespace GodsEye.Application.DTOs.Model
         public int Id { get; set; }
         public string Name { get; set; }
         public string ImagePath { get; set; }
-        public DateTime FirstSeen { get; set; }
+        public DateTime SeenAt { get; set; }
+        public double VideoOffsetSeconds { get; set; }
     }
 }

@@ -1,7 +1,7 @@
 CREATE DEFINER=`root`@`localhost` PROCEDURE `SP_INCIDENT_RECORDING_UPDATE_LOG`(
     IN P_LOG_ID INT,
     IN P_PERSON_IDS_JSON JSON,
-    IN P_VIDEO_PATH VARCHAR(300)
+    IN P_FILE_NAME VARCHAR(300)
 )
 BEGIN
     DECLARE ERRO INT DEFAULT 0;
@@ -22,7 +22,7 @@ BEGIN
         UPDATE INCIDENT_RECORDING_LOG
         SET 
 			STATUS = 3,
-            VIDEO_PATH = P_VIDEO_PATH, 
+            FILE_NAME = P_FILE_NAME, 
             UPDATE_AT = NOW()
         WHERE ID = P_LOG_ID;
 
@@ -30,18 +30,21 @@ BEGIN
         (
 			INCIDENT_RECORDING_LOG_ID,
 			PERSON_ID, 
-			FIRST_SEEN
+			SEEN_AT,
+            VIDEO_OFFSET_SECONDS
         )
         SELECT 
 			P_LOG_ID, 
             jt.person_id, 
-            jt.first_seen
+            jt.seen_at,
+            jt.video_offset_seconds
 		FROM JSON_TABLE(
 			P_PERSON_IDS_JSON, 
             '$[*]' 
             COLUMNS (
 				person_id INT PATH '$.PersonId',
-				first_seen DATETIME PATH '$.FirstSeen'
+				seen_at DATETIME PATH '$.SeenAt',
+                video_offset_seconds DECIMAL(10,3) PATH '$.VideoOffsetSeconds'
             )
 		) jt;
 

@@ -36,11 +36,11 @@ class ProcessingIncident():
                     await asyncio.sleep(10)
                     continue
 
-                incident, path = result
+                incident, file_name, video_path = result
 
-                self.process_video(video_path=path)
+                self.process_video(video_path=video_path)
 
-                update_request = UpdateIncidentRequest(id=incident.id, persons=list(self.persons.values()), video_path=str(path))
+                update_request = UpdateIncidentRequest(id=incident.id, persons=list(self.persons.values()), file_name=file_name)
                 print(update_request)
                 
                 await self.done_incident(update_request)
@@ -52,18 +52,18 @@ class ProcessingIncident():
             await asyncio.sleep(10)
 
 
-    async def process_incident(self):
+    async def process_incident(self) -> tuple[IncidentResponse, str, str] | None:
         incident = await self.get_incident()
         if not incident:
             return
 
-        path = await asyncio.to_thread(
+        file_name, output_path = await asyncio.to_thread(
             self.clip_service.generate_event_clip,
             incident.camera_id,
             incident.incident_time
         )
         
-        return incident, path
+        return incident, file_name, output_path
 
 
     async def done_incident(self, request: UpdateIncidentRequest):
@@ -106,19 +106,18 @@ class ProcessingIncident():
         
     def process_video(self, video_path: str):
         video_path = Path(video_path)
-
         cap = cv2.VideoCapture(str(video_path))
 
         if not cap.isOpened():
             print(f"[ERRO] Falha ao abrir {video_path}")
             return
-        
+
         fps = cap.get(cv2.CAP_PROP_FPS)
         if fps <= 0:
             fps = 30.0
 
-
         video_start_time = self.parse_video_start_time(video_path)
+
         frame_index = 0
 
         while True:
@@ -126,26 +125,24 @@ class ProcessingIncident():
             if not ret:
                 break
 
+            video_seconds = frame_index / fps  # ✅ TEMPO REAL NO VÍDEO
+
             if frame_index % SKIP_N_FRAMES == 0:
-                timestamp_ms = cap.get(cv2.CAP_PROP_POS_MSEC)
+                
+                timestamp = video_start_time + timedelta(seconds=video_seconds)
 
-                if timestamp_ms > 0:
-                    video_time = timestamp_ms / 1000.0
-                else:
-                    video_time = frame_index / fps
-
-
-                print(video_time)
-                absolute_timestamp = video_start_time + timedelta(seconds=video_time)
-
-                print(f"[FRAME] {video_path.name} frame={frame_index} time={video_time:.2f}s")
-                self.process_frame(frame, video_time, absolute_timestamp)
+                print(f"[FRAME] {video_path.name} frame={frame_index} t={video_seconds:.2f}s")
+                self.process_frame(
+                    frame=frame,
+                    timestamp=timestamp,
+                    video_seconds=video_seconds
+                )
 
             frame_index += 1
 
         cap.release()
 
-    def process_frame(self, frame, video_time, timestamp):
+    def process_frame(self, frame, timestamp, video_seconds):
         faces = self.face_model.get_faces(frame)
         if not faces:
             return
@@ -153,23 +150,24 @@ class ProcessingIncident():
         for face in faces:
 
             emb = face.normed_embedding
-            self.process_embedding(emb, timestamp)
+            self.process_embedding(emb, timestamp,video_seconds)
 
-    def process_embedding(self, emb, timestamp):
+    def process_embedding(self, emb, timestamp, video_seconds):
         person_id, score = self.face_matcher.match(emb)
 
         if person_id is None:
             return
 
-        self.register_log(person_id, score, timestamp)
+        self.register_log(person_id, score, timestamp, video_seconds)
 
-    def register_log(self, person_id, score, timestamp):
+    def register_log(self, person_id, score, timestamp, video_seconds):
         if person_id in self.persons:
             return
         
         self.persons[person_id] = PersonSeen(
             id=person_id,
-            first_seen=timestamp.isoformat()
+            seen_at=timestamp.isoformat(),
+            video_offset_seconds=video_seconds
         )
 
 

@@ -5,6 +5,7 @@ BEGIN
 		S.NAME AS Sector,
         IR.INCIDENT_TIME AS IncidentTime,
         IR.STATUS,
+        IR.FILE_NAME AS FileName,
         IR.CREATED_AT,
         CASE 
 			WHEN COUNT(IRP.INCIDENT_RECORDING_LOG_ID) = 0 THEN NULL
@@ -13,7 +14,8 @@ BEGIN
 						"Id", P.ID,
 						"Name", P.NAME,
 						"ImagePath", P.IMAGE_PATH,
-						"FirstSeen", IRP.FIRST_SEEN
+						"SeenAt", DATE_FORMAT(IRP.SEEN_AT, '%Y-%m-%dT%H:%i:%s.%fZ'),
+                        "VideoOffsetSeconds", IRP.VIDEO_OFFSET_SECONDS
 					)
 				) 
 			END AS PERSONSJSON
@@ -27,6 +29,7 @@ BEGIN
 		S.NAME,
         IR.INCIDENT_TIME,
         IR.STATUS,
+        IR.FILE_NAME,
         IR.CREATED_AT
     ORDER BY 
 		IR.CREATED_AT;

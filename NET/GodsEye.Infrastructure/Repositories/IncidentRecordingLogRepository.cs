@@ -41,7 +41,7 @@ namespace GodsEye.Infrastructure.Repositories
             };
         }
 
-        public async Task<ProcedureResult> Update(int id, List<IncidentRecordingPersonVO> persons, string videoPath)
+        public async Task<ProcedureResult> Update(int id, List<IncidentRecordingPersonVO> persons, string fileName)
         {
             var pLogId = new MySqlParameter("@P_LOG_ID", id);
 
@@ -52,12 +52,12 @@ namespace GodsEye.Infrastructure.Repositories
                 Value = personsJSON
             };
 
-            var pVideoPath = new MySqlParameter("@P_VIDEO_PATH", videoPath);
+            var pFilename = new MySqlParameter("@P_FILE_NAME", fileName);
 
             var result = await _context.ProcedureResult
                 .FromSqlRaw(
-                "CALL SP_INCIDENT_RECORDING_UPDATE_LOG(@P_LOG_ID, @P_PERSONS_JSON, @P_VIDEO_PATH)",
-                pLogId, pPersons, pVideoPath)
+                "CALL SP_INCIDENT_RECORDING_UPDATE_LOG(@P_LOG_ID, @P_PERSONS_JSON, @P_FILE_NAME)",
+                pLogId, pPersons, pFilename)
                 .ToListAsync();
 
             return result.FirstOrDefault() ?? new ProcedureResult

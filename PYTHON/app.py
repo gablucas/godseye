@@ -8,6 +8,7 @@ from api.face import router as face_router
 from api.monitor import router as monitor_router
 from api.stream import router as stream_router
 from api.clip import router as clip_router
+from api.video import router as video_router
 
 from core.godseyedata import GodsEyeData
 from core.godseyedata_loader import load_godseye_data_from_api
@@ -123,6 +124,7 @@ app.add_middleware(
 # ======================================================
 # ROTAS
 # ======================================================
+app.include_router(video_router)
 app.include_router(face_router, prefix="/api")
 app.include_router(monitor_router, prefix="/api")
 app.include_router(stream_router, prefix="/api")
