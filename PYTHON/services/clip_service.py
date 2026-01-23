@@ -6,9 +6,9 @@ from datetime import datetime, timedelta
 
 from core.video_index import VideoIndex
 
-PRE_EVENT_SECONDS = 5
-POST_EVENT_SECONDS = 10
-MAX_WAIT_SECONDS = 60  # quanto tempo esperar o pós-evento existir
+PRE_EVENT_SECONDS = 2
+POST_EVENT_SECONDS = 2
+MAX_WAIT_SECONDS = 20  # quanto tempo esperar o pós-evento existir
 
 
 class ClipService:
@@ -117,41 +117,19 @@ class ClipService:
         return file_name, output_path
 
     def _get_segments(self, camera_id: str, clip_start: datetime, duration: int):
-        event_time = clip_start + timedelta(seconds=PRE_EVENT_SECONDS)
-        required_time = event_time + timedelta(seconds=120)
+        timeout_seconds = 120
+        check_interval = 5
 
-        print("\n========== VIDEO INDEX ANTES ==========")
-        for cam_id, segments in self.video_index.index.items():
-            print(f"\n📷 CÂMERA: {cam_id}")
-            print(f"   Total de segmentos: {len(segments)}")
+        deadline = datetime.now() + timedelta(seconds=timeout_seconds)
 
-            for seg in segments[-5:]:  # mostra só os últimos 5
-                print(
-                    f"   ▶ {seg['start']} -> {seg['end']} | {seg['path']}"
-                )
-        print("=================================\n")
-        
-        # ⏳ Espera o tempo REAL passar
-        while datetime.now() < required_time:
-            time.sleep(0.5)
+        print("⏳ Procurando segmentos...")
+        print("📌 Clip start:", clip_start)
+        print("🕒 Agora:", datetime.now())
+        print("⏱️ Timeout:", timeout_seconds, "s")
 
+        while datetime.now() < deadline:
+            self.video_index.update()
 
-        self.video_index.update()
-
-        print("\n========== VIDEO INDEX DEPOIS ==========")
-        for cam_id, segments in self.video_index.index.items():
-            print(f"\n📷 CÂMERA: {cam_id}")
-            print(f"   Total de segmentos: {len(segments)}")
-
-            for seg in segments[-5:]:  # mostra só os últimos 5
-                print(
-                    f"   ▶ {seg['start']} -> {seg['end']} | {seg['path']}"
-                )
-        print("=================================\n")
-
-        waited = 0
-        while waited < MAX_WAIT_SECONDS:
-              # 🔁 agora sim faz sentido
             try:
                 return self.video_index.find_segments(
                     camera_id=camera_id,
@@ -159,7 +137,9 @@ class ClipService:
                     duration=duration
                 )
             except Exception:
-                time.sleep(1)
-                waited += 1
+                time.sleep(check_interval)
 
-        raise Exception("Segmentos do pós-evento ainda não disponíveis")
+        raise Exception(
+            f"Segmentos não encontrados após {timeout_seconds}s "
+            f"(evento pode ser antigo, mas arquivos não estão disponíveis)"
+        )

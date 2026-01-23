@@ -70,7 +70,7 @@ async def lifespan(app: FastAPI):
         app.state.video_index.build()
 
         print("#5 - Iniciando monitoramento automático...")
-        # start_monitoring_system(app, face_model)
+        start_monitoring_system(app, face_model)
 
         print("#6 - Iniciando processamento de incidencia")
         clip_service = ClipService(app.state.video_index)

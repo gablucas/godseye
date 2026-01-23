@@ -57,11 +57,18 @@ class VideoIndex:
                 raise Exception("Câmera não encontrada")
 
             end_dt = start_dt + timedelta(seconds=duration)
-
             segments = []
+
             for seg in self.index[camera_id]:
-                if seg["end"] > start_dt and seg["start"] < end_dt:
-                    segments.append(seg)
+                overlap_start = max(seg["start"], start_dt)
+                overlap_end = min(seg["end"], end_dt)
+
+                if overlap_end > overlap_start:
+                    segments.append({
+                        **seg,
+                        "overlap_start": overlap_start,
+                        "overlap_end": overlap_end
+                    })
 
             if not segments:
                 raise Exception("Nenhum segmento encontrado")

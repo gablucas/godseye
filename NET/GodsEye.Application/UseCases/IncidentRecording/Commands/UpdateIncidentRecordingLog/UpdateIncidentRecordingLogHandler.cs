@@ -45,7 +45,7 @@ namespace GodsEye.Application.UseCases.IncidentRecording.Commands.UpdateIncident
                 }
             );
 
-            await _emailService.SendAsync(["gabriel.pegoretti96@gmail.com"], "Teste", html);
+            //await _emailService.SendAsync(["gabriel.pegoretti96@gmail.com", "contato@agse.com.br", "thiago@nbwdigital.com.br"], "Teste", html);
 
 
             //await _emailService.SendAsync("gabriel.pegoretti96@gmail.com");

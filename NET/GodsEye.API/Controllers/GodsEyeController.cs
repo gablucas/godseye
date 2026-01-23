@@ -36,23 +36,5 @@ namespace GodsEye.API.Controllers
             var result = await _mediator.Send(new GetMonitoringDataRequest(), cancellationToken);
             return Ok(result);
         }
-
-        [AllowAnonymous]
-        [HttpPost("email")]
-        public async Task<IActionResult> TestEmail(CancellationToken cancellationToken)
-        {
-            var html = await _emailService.LoadTemplateAsync(
-                "IncidentRecordingAlert.html",
-                new Dictionary<string, string>
-                {
-                    ["camera"] = "teste",
-                    ["date"] = "2025",
-                    ["videoUrl"] = "URL"
-                }
-            );
-
-            await _emailService.SendAsync(["gabriel.pegoretti96@gmail.com"], "Teste", html);
-            return Ok("FOI");
-        }
     }
 }

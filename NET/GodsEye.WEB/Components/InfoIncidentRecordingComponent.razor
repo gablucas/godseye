@@ -19,7 +19,7 @@
             </div>
 
             <div class="person-list">
-                @foreach (var person in IncidentRecording.Persons)
+                @foreach (var person in IncidentRecording.Persons.OrderBy(x => x.SeenAt))
                 {
                     <div class="person-card">
                         <MudImage src=@($"https://localhost:7010/{person.ImagePath}") Height="160" Style="border-radius: 7px" />

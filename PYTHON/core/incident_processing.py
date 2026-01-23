@@ -26,7 +26,6 @@ class ProcessingIncident():
         self.clip_service = clip_service
         self.face_model = face_model
         self.face_matcher = face_matcher
-        self.persons: dict[int, dict] = {}
 
     async def start(self):
         while True:
@@ -38,9 +37,9 @@ class ProcessingIncident():
 
                 incident, file_name, video_path = result
 
-                self.process_video(video_path=video_path)
+                persons = self.process_video(video_path=video_path)
 
-                update_request = UpdateIncidentRequest(id=incident.id, persons=list(self.persons.values()), file_name=file_name)
+                update_request = UpdateIncidentRequest(id=incident.id, persons=list(persons.values()), file_name=file_name)
                 print(update_request)
                 
                 await self.done_incident(update_request)
@@ -67,6 +66,7 @@ class ProcessingIncident():
 
 
     async def done_incident(self, request: UpdateIncidentRequest):
+        print(request)
         async with httpx.AsyncClient(verify=False, timeout=10) as client:
             response = await client.put(
                 "https://localhost:7010/api/incidentrecording/process/done",
@@ -104,7 +104,9 @@ class ProcessingIncident():
 
         return incident
         
-    def process_video(self, video_path: str):
+    def process_video(self, video_path: str) -> dict[int, PersonSeen]:
+        persons = {}
+
         video_path = Path(video_path)
         cap = cv2.VideoCapture(str(video_path))
 
@@ -135,14 +137,16 @@ class ProcessingIncident():
                 self.process_frame(
                     frame=frame,
                     timestamp=timestamp,
-                    video_seconds=video_seconds
+                    video_seconds=video_seconds,
+                    persons=persons
                 )
 
             frame_index += 1
 
         cap.release()
+        return persons
 
-    def process_frame(self, frame, timestamp, video_seconds):
+    def process_frame(self, frame, timestamp, video_seconds, persons):
         faces = self.face_model.get_faces(frame)
         if not faces:
             return
@@ -150,21 +154,21 @@ class ProcessingIncident():
         for face in faces:
 
             emb = face.normed_embedding
-            self.process_embedding(emb, timestamp,video_seconds)
+            self.process_embedding(emb, timestamp,video_seconds, persons)
 
-    def process_embedding(self, emb, timestamp, video_seconds):
+    def process_embedding(self, emb, timestamp, video_seconds, persons):
         person_id, score = self.face_matcher.match(emb)
 
         if person_id is None:
             return
 
-        self.register_log(person_id, score, timestamp, video_seconds)
+        self.register_log(person_id, score, timestamp, video_seconds, persons)
 
-    def register_log(self, person_id, score, timestamp, video_seconds):
-        if person_id in self.persons:
+    def register_log(self, person_id, score, timestamp, video_seconds, persons):
+        if person_id in persons:
             return
         
-        self.persons[person_id] = PersonSeen(
+        persons[person_id] = PersonSeen(
             id=person_id,
             seen_at=timestamp.isoformat(),
             video_offset_seconds=video_seconds
