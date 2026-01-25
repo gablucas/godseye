@@ -33,17 +33,12 @@ namespace GodsEye.Infrastructure.Repositories
                 pMacAddress, pIncidentTime)
                 .ToListAsync();
 
-            return result.FirstOrDefault() ?? new ProcedureResult
-            {
-                Erro = 1,
-                Mensagem = "Houve um erro ao cadastrar o log",
-                Id = 0
-            };
+            return result.FirstOrDefault() ?? ProcedureResult.Error("Houve um erro ao executar a procedure de registro de incidente!");
         }
 
         public async Task<ProcedureResult> Update(int id, List<IncidentRecordingPersonVO> persons, string fileName)
         {
-            var pLogId = new MySqlParameter("@P_LOG_ID", id);
+            var pLogId = new MySqlParameter("@P_ID", id);
 
             var personsJSON = JsonSerializer.Serialize(persons);
 
@@ -56,16 +51,11 @@ namespace GodsEye.Infrastructure.Repositories
 
             var result = await _context.ProcedureResult
                 .FromSqlRaw(
-                "CALL SP_INCIDENT_RECORDING_UPDATE_LOG(@P_LOG_ID, @P_PERSONS_JSON, @P_FILE_NAME)",
+                "CALL SP_INCIDENT_RECORDING_UPDATE_LOG(@P_ID, @P_PERSONS_JSON, @P_FILE_NAME)",
                 pLogId, pPersons, pFilename)
                 .ToListAsync();
 
-            return result.FirstOrDefault() ?? new ProcedureResult
-            {
-                Erro = 1,
-                Mensagem = "Houve um erro ao atualizar o log",
-                Id = 0
-            };
+            return result.FirstOrDefault() ?? ProcedureResult.Error("Houve um erro ao executar a procedure de atualização de registro de incidente!");
         }
     }
 }

@@ -26,10 +26,10 @@ namespace GodsEye.Infrastructure.QuerieRepositories
 
         public async Task<IncidentRecordingModel> GetByLogId(int logId, CancellationToken cancellationToken)
         {
-            var pLogId = new MySqlParameter("@P_LOG_ID", logId);
+            var pLogId = new MySqlParameter("@P_ID", logId);
 
             var result = await _context.IncidentRecordingModel
-                .FromSqlRaw("CALL SP_INCIDENT_RECORDING_GET_LOG_BY_ID(@P_LOG_ID)", pLogId)
+                .FromSqlRaw("CALL SP_INCIDENT_RECORDING_GET_LOG_BY_ID(@P_ID)", pLogId)
                 .ToListAsync(cancellationToken);
 
             return result.FirstOrDefault() ?? new IncidentRecordingModel();

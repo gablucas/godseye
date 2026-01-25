@@ -14,6 +14,7 @@ namespace GodsEye.Infrastructure.Persistence
         public DbSet<CameraEntity> Camera { get; set; }
         public DbSet<SectorEntity> Sector { get; set; }
         public DbSet<FeatureEntity> Feature { get; set; }
+        public DbSet<DwellTimeMonitoringEntity> DwellTimeMonitoring { get; set; }
 
 
         // DTOS
@@ -29,6 +30,7 @@ namespace GodsEye.Infrastructure.Persistence
         public DbSet<EnvironmentMonitoringModel> EnvironmentMonitoringModel { get; set; }
         public DbSet<IncidentRecordingModel> IncidentRecordingModel { get; set; }
         public DbSet<IncidentRecordingProcessModel> IncidentRecordingProcessModel { get; set; }
+        public DbSet<DwellTimeMonitoringModel> DwellTimeMonitoringModel { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -50,7 +52,7 @@ namespace GodsEye.Infrastructure.Persistence
             modelBuilder.Entity<EnvironmentMonitoringModel>().HasNoKey().ToView(null);
             modelBuilder.Entity<IncidentRecordingModel>().HasNoKey().ToView(null);
             modelBuilder.Entity<IncidentRecordingProcessModel>().HasNoKey().ToView(null);
-
+            modelBuilder.Entity<DwellTimeMonitoringModel>().HasNoKey().ToView(null);
         }
     }
 }

@@ -1,5 +1,9 @@
-﻿@page "/controle-ambiente/dashboard"
+﻿@page "/monitoramento-ambientes/dashboard"
 @using GodsEye.Application.DTOs.Model
+
+<div class="page-title">
+    <h1>Monitoramento de ambientes</h1>
+</div>
 
 <MudTable T="EnvironmentMonitoringModel" @ref="_mudTable" Items="@_log" Hover="true" Loading="@_loading" LoadingProgressColor="Color.Info" RowClass="cursor-pointer">
     <HeaderContent>

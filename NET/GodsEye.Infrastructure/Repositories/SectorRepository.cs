@@ -28,12 +28,7 @@ namespace GodsEye.Infrastructure.Repositories
                 pName)
                 .ToListAsync();
 
-            return result.FirstOrDefault() ?? new ProcedureResult
-            {
-                Erro = 1,
-                Mensagem = "Houve um ao cadastrar o setor",
-                Id = 0
-            };
+            return result.FirstOrDefault() ?? ProcedureResult.Error("Houve um erro ao executar a procedure de cadastro de setor!");
         }
     }
 }

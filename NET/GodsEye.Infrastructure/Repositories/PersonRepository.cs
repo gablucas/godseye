@@ -38,12 +38,7 @@ namespace GodsEye.Infrastructure.Repositories
                 )
                 .ToListAsync(cancellationToken);
 
-            return result.FirstOrDefault() ?? new ProcedureResult
-            {
-                Erro = 1,
-                Mensagem = "Houve um ao cadastrar a pessoa",
-                Id = 0
-            };
+            return result.FirstOrDefault() ?? ProcedureResult.Error("Houve um erro ao executar a procedure de cadastro de pessoa!");
         }
     }
 }

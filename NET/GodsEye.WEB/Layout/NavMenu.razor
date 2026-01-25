@@ -3,31 +3,29 @@
 
     <MudNavLink Href="/" Match="NavLinkMatch.All">Dashboard</MudNavLink>
 
-    <MudNavGroup Title="Cadastros" Expanded="true">
-        @* PESSOAS *@
-        <MudNavGroup Title="Pessoas" Expanded="false">
-            <MudNavLink Href="/pessoas" Match="NavLinkMatch.Prefix">Listar</MudNavLink>
-            <MudNavLink Href="/cadastrar-pessoa" Match="NavLinkMatch.Prefix">Cadastrar</MudNavLink>
-        </MudNavGroup>
+    @* PESSOAS *@
+    <MudNavGroup Title="Pessoas" Expanded="false">
+        <MudNavLink Href="/pessoas" Match="NavLinkMatch.Prefix">Listar</MudNavLink>
+        <MudNavLink Href="/cadastrar-pessoa" Match="NavLinkMatch.Prefix">Cadastrar</MudNavLink>
+    </MudNavGroup>
 
-        @* SETORES *@
-        <MudNavGroup Title="Setores" Expanded="false">
-            <MudNavLink Href="/setores" Match="NavLinkMatch.Prefix">Listar</MudNavLink>
-            <MudNavLink Href="/cadastrar-setor" Match="NavLinkMatch.Prefix">Cadastrar</MudNavLink>
-        </MudNavGroup>
+    @* SETORES *@
+    <MudNavGroup Title="Setores" Expanded="false">
+        <MudNavLink Href="/setores" Match="NavLinkMatch.Prefix">Listar</MudNavLink>
+        <MudNavLink Href="/cadastrar-setor" Match="NavLinkMatch.Prefix">Cadastrar</MudNavLink>
+    </MudNavGroup>
 
-        @* CAMERAS *@
-        <MudNavGroup Title="Cameras" Expanded="false">
-            <MudNavLink Href="/cameras" Match="NavLinkMatch.Prefix">Listar</MudNavLink>
-            <MudNavLink Href="/cadastrar-camera" Match="NavLinkMatch.Prefix">Cadastrar</MudNavLink>
-        </MudNavGroup>
+    @* CAMERAS *@
+    <MudNavGroup Title="Cameras" Expanded="false">
+        <MudNavLink Href="/cameras" Match="NavLinkMatch.Prefix">Listar</MudNavLink>
+        <MudNavLink Href="/cadastrar-camera" Match="NavLinkMatch.Prefix">Cadastrar</MudNavLink>
     </MudNavGroup>
 
     @* CONTROLE DE AMBIENTES *@
-    <MudNavGroup Title="Controle de ambientes" Expanded="false" Style="border: none" Class="text-nowrap">
-        <MudNavLink Href="/controle-ambiente/dashboard" Match="NavLinkMatch.Prefix">Dashboard</MudNavLink>
-        <MudNavLink Href="/controle-ambiente/relatorios" Match="NavLinkMatch.Prefix">Relatórios</MudNavLink>
-        <MudNavLink Href="/controle-ambientes/configuracoes" Match="NavLinkMatch.Prefix">Configurações</MudNavLink>
+    <MudNavGroup Title="Monitoramento de ambientes" Expanded="false" Style="border: none" Class="text-nowrap">
+        <MudNavLink Href="/Monitoramento-ambientes/dashboard" Match="NavLinkMatch.Prefix">Dashboard</MudNavLink>
+        <MudNavLink Href="/Monitoramento-ambientes/relatorios" Match="NavLinkMatch.Prefix">Relatórios</MudNavLink>
+        <MudNavLink Href="/Monitoramento-ambientes/configuracoes" Match="NavLinkMatch.Prefix">Configurações</MudNavLink>
     </MudNavGroup>
 
     @* CAPTURA DE INCIDENTES *@
@@ -35,7 +33,13 @@
         <MudNavLink Href="/captura-incidentes/dashboard" Match="NavLinkMatch.Prefix">Dashboard</MudNavLink>
         <MudNavLink Href="/captura-incidentes/relatorios" Match="NavLinkMatch.Prefix">Relatórios</MudNavLink>
         <MudNavLink Href="/captura-incidentes/configuracoes" Match="NavLinkMatch.Prefix">Configurações</MudNavLink>
+    </MudNavGroup>
 
+    @* CONTROLE DE PERMANENCIA *@
+    <MudNavGroup Title="Controle de permanencia" Expanded="false" Style="border: none" Class="text-nowrap">
+        <MudNavLink Href="/controle-permanencia/dashboard" Match="NavLinkMatch.Prefix">Dashboard</MudNavLink>
+        <MudNavLink Href="/controle-permanencia/relatorios" Match="NavLinkMatch.Prefix">Relatórios</MudNavLink>
+        <MudNavLink Href="/controle-permanencia/configuracoes" Match="NavLinkMatch.Prefix">Configurações</MudNavLink>
     </MudNavGroup>
 
 

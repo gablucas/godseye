@@ -38,12 +38,7 @@ namespace GodsEye.Infrastructure.Repositories
                 pName, pConnection, pSectorId, pFeaturesJSON)
                 .ToListAsync();
 
-            return result.FirstOrDefault() ?? new ProcedureResult
-            {
-                Erro = 1,
-                Mensagem = "Houve um ao cadastrar a camera",
-                Id = 0
-            };
+            return result.FirstOrDefault() ?? ProcedureResult.Error("Houve um erro ao executar a procedure de cadastro de camera!");
         }
     }
 }

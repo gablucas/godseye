@@ -28,12 +28,7 @@ namespace GodsEye.Infrastructure.Repositories
                 pCameraId, pPersonId, pScore)
                 .ToListAsync();
 
-            return result.FirstOrDefault() ?? new ProcedureResult
-            {
-                Erro = 1,
-                Mensagem = "Houve um erro ao cadastrar o log",
-                Id = 0
-            };
+            return result.FirstOrDefault() ?? ProcedureResult.Error("Houve um erro ao executar a procedure de registro de monitoramento de ambiente!");
         }
     }
 }
