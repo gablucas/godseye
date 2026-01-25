@@ -42,7 +42,7 @@ namespace GodsEye.Infrastructure.Repositories
 
             var personsJSON = JsonSerializer.Serialize(persons);
 
-            var pPersons = new MySqlParameter("@P_PERSONS_JSON", MySqlDbType.JSON)
+            var pPersons = new MySqlParameter("@P_PERSONS_IDS_JSON", MySqlDbType.JSON)
             {
                 Value = personsJSON
             };
@@ -51,7 +51,7 @@ namespace GodsEye.Infrastructure.Repositories
 
             var result = await _context.ProcedureResult
                 .FromSqlRaw(
-                "CALL SP_INCIDENT_RECORDING_UPDATE_LOG(@P_ID, @P_PERSONS_JSON, @P_FILE_NAME)",
+                "CALL SP_INCIDENT_RECORDING_UPDATE_LOG(@P_ID, @P_PERSONS_IDS_JSON, @P_FILE_NAME)",
                 pLogId, pPersons, pFilename)
                 .ToListAsync();
 

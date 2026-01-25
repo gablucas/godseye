@@ -3,9 +3,9 @@ from services.face_recognition_service import FaceModel
 from services.face_matcher_service import FaceMatcher
 
 class FaceRecognitionProcessor:
-    def __init__(self, face_model: FaceModel, matcher: FaceMatcher):
+    def __init__(self, face_model: FaceModel, face_matcher: FaceMatcher):
         self.face_model = face_model
-        self.matcher = matcher
+        self.matcher = face_matcher
 
     def process_frame(self, frame):
         results = []

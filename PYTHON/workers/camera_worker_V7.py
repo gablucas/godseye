@@ -174,7 +174,7 @@ class CameraWorker:
 
             print(f"[LOG] pessoa={person_id} cam={self.camera_id}")
 
-            self.log_sender.send_log(
+            self.log_sender.dotnet_create_environment_monitoring_log(
                 cameraId=self.camera_id,
                 personId=person_id,
                 score=score,

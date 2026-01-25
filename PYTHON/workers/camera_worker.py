@@ -8,6 +8,9 @@ from queue import Queue
 from datetime import datetime
 from zoneinfo import ZoneInfo
 
+from infrastructure.log_queue import log_queue
+from schemas.dwell_time_monitoring import DwellTimeMonitoringCreateRequest
+from schemas.environment_monitoring_schema import EnvironmentMonitoringCreateRequest
 from services.face_recognition_service import FaceModel
 from services.face_matcher_service import FaceMatcher
 from infrastructure.logger import LogSender
@@ -27,7 +30,6 @@ class CameraWorker:
         rtsp_url,
         sectorId,
         matcher: FaceMatcher,
-        log_sender: LogSender,
         active_users,
         active_users_lock,
         capture_fps: float = 2.0,
@@ -35,15 +37,16 @@ class CameraWorker:
         height: int = 720,
         environment_monitoring: bool = False,
         incident_recording: bool = False,
+        dwell_time_monitoring: bool = False
     ):
         self.face_model = face_model
         self.cameraId = cameraId
         self.url = rtsp_url
         self.sectorId = sectorId
         self.matcher = matcher
-        self.log_sender = log_sender
         self.environment_monitoring = environment_monitoring
         self.incident_recording = incident_recording
+        self.dwell_time_monitoring = dwell_time_monitoring
 
         self.running = False
         self.active_users = active_users
@@ -116,7 +119,9 @@ class CameraWorker:
                         time.sleep(0.2)
                         continue
 
+                    # print(f"[DEBUG] Aguardando frame da camera {self.cameraId}...")
                     raw = process.stdout.read(self.frame_size)
+                    # print(f"[DEBUG] Frame recebido ({len(raw)} bytes)")
 
                     if len(raw) != self.frame_size:
                         print(f"[WARN] Frame incompleto (cam {self.cameraId}), reiniciando FFmpeg")
@@ -128,12 +133,9 @@ class CameraWorker:
 
                     now = time.time()
 
-                    print("Frame recebido", time.time())
-
                     if now - self.last_sent_time >= self.SEND_INTERVAL:
                         self.last_sent_time = now
                     
-                        print("Frame enviado", time.time())
 
                         if self.frame_queue.full():
                             try:
@@ -148,7 +150,7 @@ class CameraWorker:
                 time.sleep(2)  # evita loop agressivo
 
     def processing_loop(self):
-        while self.running and self.environment_monitoring:
+        while self.running and (self.environment_monitoring or self.dwell_time_monitoring):
             try:
                 frame = self.frame_queue.get(timeout=1)
             except:
@@ -168,29 +170,85 @@ class CameraWorker:
                     )
 
             self.cleanup_unknowns()
-
-                
-
-
+      
     def register_log(self, personId, cameraId, sectorId, score):
+        now = datetime.now(ZoneInfo("America/Sao_Paulo"))
+
         with self.active_users_lock:
             personData = self.active_users.get(personId)
 
-            if personData is None or personData["sectorId"] != sectorId:
+            # ENVIRONMENT MONITORING
+            if (self.environment_monitoring and (personData is None or personData["sectorId"] != sectorId)):
+
+                environmentMonitoring = EnvironmentMonitoringCreateRequest(
+                    camera_id=cameraId,
+                    person_id=personId,
+                    score=score
+                )
+                
+                log_queue.put((
+                    LogSender.dotnet_create_environment_monitoring_log,
+                    environmentMonitoring
+                ))
+
+            # DWELL TIME MONITORING
+            if (self.dwell_time_monitoring):
+
+                if (personData is None):
+
+                    dwellTimeMonitoring = DwellTimeMonitoringCreateRequest(
+                        cameraId=cameraId,
+                        personId=personId,
+                        firstSeen=datetime.now(ZoneInfo("America/Sao_Paulo")).isoformat()
+                    )
+
+                    log_queue.put((
+                        LogSender.dotnet_create_dwell_time_monitoring,
+                        dwellTimeMonitoring
+                    ))
+
+                    return
+                
+                diff_last_seen = (now - personData["last_seen"]).total_seconds() / 60
+                diff_created = (now - personData["createdAt"]).total_seconds() / 60
+
+                if (diff_created >= 100):
+                    log_queue.put((
+                        LogSender.dotnet_send_timeout_alert,
+                        {
+                            "personId": personId,
+                            "cameraId": cameraId,
+                        }
+                    ))
+
+                if (diff_last_seen >= 5):
+                    log_queue.put((
+                        LogSender.dotnet_update_last_seen,
+                        {
+                            "personId": personId,
+                            "cameraId": cameraId,
+                            "last_seen": now.isoformat()
+                        }
+                    ))
+
+
+            if personData is None:
                 self.active_users[personId] = {
                     "cameraId": cameraId,
                     "sectorId": sectorId,
-                    "score": score
+                    "score": score,
+                    "createdAt": now,
+                    "last_seen": now,
+                    "updatedAt": now
                 }
 
-                self.log_sender.send_log(
-                    cameraId=cameraId,
-                    personId=personId,
-                    score=score,
-                    createdAt=datetime.now(
-                        ZoneInfo("America/Sao_Paulo")
-                    ).isoformat()
-                )
+            else:
+                # ATUALIZAR DADOS LISTA USERS
+                personData["last_seen"] = now
+                personData["updatedAt"] = now
+                personData["cameraId"] = cameraId
+                personData["sectorId"] = sectorId
+                personData["score"] = score
 
     def cleanup_unknowns(self):
         now = time.time()

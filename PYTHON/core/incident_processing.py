@@ -4,13 +4,10 @@ from pathlib import Path
 import httpx
 import asyncio
 from datetime import datetime, timedelta
-from infrastructure.clip_frame_reader import ClipFrameReader
-from infrastructure.frame_capture import FrameCapture
-from schemas.incident_schema import IncidentResponse, PersonSeen, UpdateIncidentRequest
+from schemas.incident_schema import IncidentResponse, PersonSeen, IncidentRecordingUpdateRequest
 from services.clip_service import ClipService
 from services.face_recognition_service import FaceModel
 from services.face_matcher_service import FaceMatcher
-from services.face_processor_service import FaceRecognitionProcessor
 import cv2
 
 
@@ -29,6 +26,8 @@ class ProcessingIncident():
 
     async def start(self):
         while True:
+            print("############# INICIANDO SISTEMA DE INCIDENTE")
+
             try:
                 result = await self.process_incident()
                 if not result:
@@ -39,7 +38,7 @@ class ProcessingIncident():
 
                 persons = self.process_video(video_path=video_path)
 
-                update_request = UpdateIncidentRequest(id=incident.id, persons=list(persons.values()), file_name=file_name)
+                update_request = IncidentRecordingUpdateRequest(id=incident.id, persons=list(persons.values()), file_name=file_name)
                 print(update_request)
                 
                 await self.done_incident(update_request)
@@ -52,9 +51,11 @@ class ProcessingIncident():
 
 
     async def process_incident(self) -> tuple[IncidentResponse, str, str] | None:
+        print("BUSCANDON INCIDENTES")
         incident = await self.get_incident()
-        if not incident:
-            return
+
+        if incident is None:
+            return None
 
         file_name, output_path = await asyncio.to_thread(
             self.clip_service.generate_event_clip,
@@ -65,7 +66,7 @@ class ProcessingIncident():
         return incident, file_name, output_path
 
 
-    async def done_incident(self, request: UpdateIncidentRequest):
+    async def done_incident(self, request: IncidentRecordingUpdateRequest):
         print(request)
         async with httpx.AsyncClient(verify=False, timeout=10) as client:
             response = await client.put(

@@ -249,7 +249,7 @@ class CameraWorker:
                     "score": score
                 }
 
-                self.log_sender.send_log(
+                self.log_sender.dotnet_create_environment_monitoring_log(
                     cameraId=cameraId,
                     personId=personId,
                     score=score

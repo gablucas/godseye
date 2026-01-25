@@ -1,6 +1,6 @@
 CREATE DEFINER=`root`@`localhost` PROCEDURE `SP_INCIDENT_RECORDING_UPDATE_LOG`(
     IN P_ID INT,
-    IN P_PERSON_IDS_JSON JSON,
+    IN P_PERSONS_IDS_JSON JSON,
     IN P_FILE_NAME VARCHAR(300)
 )
 BEGIN
@@ -34,12 +34,12 @@ BEGIN
             VIDEO_OFFSET_SECONDS
         )
         SELECT 
-			P_LOG_ID, 
+			P_ID, 
             jt.person_id, 
             jt.seen_at,
             jt.video_offset_seconds
 		FROM JSON_TABLE(
-			P_PERSON_IDS_JSON, 
+			P_PERSONS_IDS_JSON, 
             '$[*]' 
             COLUMNS (
 				person_id INT PATH '$.PersonId',
