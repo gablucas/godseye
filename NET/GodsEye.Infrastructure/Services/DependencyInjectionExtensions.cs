@@ -23,7 +23,7 @@ namespace GodsEye.Infrastructure.Services
             services.AddScoped<ICameraRepository, CameraRepository>();
             services.AddScoped<ISectorRepository, SectorRepository>();
             services.AddScoped<IEnvironmentMonitoringLogRepository, EnvironmentMonitoringLogRepository>();
-            services.AddScoped<IIncidentRecordingLogRepository, IncidentRecordingLogRepository>();
+            services.AddScoped<IIncidentRecordingRepository, IncidentRecordingLogRepository>();
             services.AddScoped<IDwellTimeMonitoringRepository, DwellTimeMonitoringRepository>();
             services.AddScoped<IFeatureRepository, FeatureRepository>();
 

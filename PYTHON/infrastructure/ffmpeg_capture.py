@@ -8,6 +8,7 @@ def ffmpeg_capture(
     height: int = 720,
     cameraId: int = 0,
     environment_monitoring: bool = False,
+    dwell_time_monitoring: bool = False,
     record: bool = False,
     record_path: str | None = None
 ):
@@ -32,7 +33,7 @@ def ffmpeg_capture(
         ]
 
     # ────── MONITORAMENTO (RAWVIDEO) ──────
-    if environment_monitoring:
+    if environment_monitoring or dwell_time_monitoring:
         command += [
             "-map", "0:v",
             "-vf", f"fps={fps},scale={width}:{height}",

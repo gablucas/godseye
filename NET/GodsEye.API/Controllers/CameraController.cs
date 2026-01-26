@@ -1,8 +1,8 @@
 ﻿using GodsEye.Application.UseCases.Camera.Commands.CreateCamera;
 using GodsEye.Application.UseCases.Camera.Queries.GetAllCameras;
 using GodsEye.Application.UseCases.Camera.Queries.GetAllCamerasConnection;
+using GodsEye.Application.UseCases.Camera.Queries.GetCamerasByFeatureID;
 using GodsEye.Application.UseCases.Person.Queries.GetCameraLog;
-using GodsEye.Application.UseCases.Person.Queries.GetPersonLog;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -41,6 +41,14 @@ namespace GodsEye.API.Controllers
         public async Task<IActionResult> GetAllCamerasConnection(CancellationToken cancellationToken)
         {
             var result = await _mediator.Send(new GetAllCamerasConnectionRequest(), cancellationToken);
+            return Ok(result);
+        }
+
+        [AllowAnonymous]
+        [HttpGet("feature/{id}")]
+        public async Task<IActionResult> GetCamerasByFeatureId(int id, CancellationToken cancellationToken)
+        {
+            var result = await _mediator.Send(new GetCamerasByFeatureIdRequest(id), cancellationToken);
             return Ok(result);
         }
 

@@ -5,5 +5,6 @@ namespace GodsEye.Application.Interfaces
     public interface INotificationSignalR
     {
         Task SendEnvironmentMonitoringCreatedLog(EnvironmentMonitoringModel message);
+        Task SendIncidentRecordingCreatedLog(IncidentRecordingModel message);
     }
 }

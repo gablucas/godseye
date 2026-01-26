@@ -26,11 +26,13 @@ namespace GodsEye.Infrastructure.Persistence
         public DbSet<PersonEmbeddingModel> PersonEmbeddingModel { get; set; }
         public DbSet<PersonLogModel> PersonLogModel { get; set; }
         public DbSet<CameraLogModel> CameraLogModel { get; set; }
+        public DbSet<CameraByFeatureModel> CameraByFeatureModel { get; set; }
         public DbSet<MonitoringDataModel> MonitoringDataModel { get; set; }
         public DbSet<EnvironmentMonitoringModel> EnvironmentMonitoringModel { get; set; }
         public DbSet<IncidentRecordingModel> IncidentRecordingModel { get; set; }
         public DbSet<IncidentRecordingProcessModel> IncidentRecordingProcessModel { get; set; }
         public DbSet<DwellTimeMonitoringModel> DwellTimeMonitoringModel { get; set; }
+        public DbSet<DwellTimeMonitoringDetailsModel> DwellTimeMonitoringDetailsModel { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -47,12 +49,14 @@ namespace GodsEye.Infrastructure.Persistence
 
             modelBuilder.Entity<PersonLogModel>().HasNoKey().ToView(null);
             modelBuilder.Entity<CameraLogModel>().HasNoKey().ToView(null);
+            modelBuilder.Entity<CameraByFeatureModel>().HasNoKey().ToView(null);
 
             modelBuilder.Entity<MonitoringDataModel>().HasNoKey().ToView(null);
             modelBuilder.Entity<EnvironmentMonitoringModel>().HasNoKey().ToView(null);
             modelBuilder.Entity<IncidentRecordingModel>().HasNoKey().ToView(null);
             modelBuilder.Entity<IncidentRecordingProcessModel>().HasNoKey().ToView(null);
             modelBuilder.Entity<DwellTimeMonitoringModel>().HasNoKey().ToView(null);
+            modelBuilder.Entity<DwellTimeMonitoringDetailsModel>().HasNoKey().ToView(null);
         }
     }
 }

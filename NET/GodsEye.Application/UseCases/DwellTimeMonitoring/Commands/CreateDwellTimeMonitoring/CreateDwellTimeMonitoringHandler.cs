@@ -27,6 +27,6 @@ namespace GodsEye.Application.UseCases.DwellTimeMonitoring.Commands.CreateDwellT
                 throw new InvalidOperationException("Falha no registro do controle de permanencia");
 
             return ApiResponse<ProcedureResult>.Ok(result);
-        }
+        }   
     }
 }

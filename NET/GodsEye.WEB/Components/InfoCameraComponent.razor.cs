@@ -13,7 +13,7 @@ namespace GodsEye.WEB.Components
         public GodsEyeWebService GodsEyeWebService { get; set; }
 
         [Inject]
-        public CameraService CameraService { get; set; }
+        public CameraWebService CameraService { get; set; }
 
         [Inject]
         public IJSRuntime JS { get; set; }

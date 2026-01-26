@@ -20,5 +20,12 @@ namespace GodsEye.API.Services
             "ReceiveMessage",
             message);
         }
+
+        public async Task SendIncidentRecordingCreatedLog(IncidentRecordingModel message)
+        {
+            await _hub.Clients.All.SendAsync(
+            "CreatedIncidentRecording",
+            message);
+        }
     }
 }

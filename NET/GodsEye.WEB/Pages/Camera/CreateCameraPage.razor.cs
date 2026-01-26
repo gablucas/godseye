@@ -13,7 +13,7 @@ namespace GodsEye.WEB.Pages.Camera
         #region Injections
 
         [Inject]
-        CameraService cameraService { get; set; }
+        CameraWebService cameraService { get; set; }
 
         [Inject]
         SectorService sectorService { get; set; }

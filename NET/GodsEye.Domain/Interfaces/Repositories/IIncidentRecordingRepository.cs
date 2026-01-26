@@ -3,7 +3,7 @@ using GodsEye.Domain.ValueObjects;
 
 namespace GodsEye.Domain.Interfaces.Repositories
 {
-    public interface IIncidentRecordingLogRepository
+    public interface IIncidentRecordingRepository
     {
         Task<ProcedureResult> Create(string macAddress, DateTime incidentTime);
         Task<ProcedureResult> Update(int id, List<IncidentRecordingPersonVO> personId, string videoPath);

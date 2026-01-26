@@ -16,7 +16,7 @@ namespace GodsEye.WEB.Pages.Sector
         SectorService sectorService { get; set; }
 
         [Inject]
-        CameraService cameraService { get; set; }
+        CameraWebService cameraService { get; set; }
 
         #endregion
 

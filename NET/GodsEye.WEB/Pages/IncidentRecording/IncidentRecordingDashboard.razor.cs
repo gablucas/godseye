@@ -46,7 +46,7 @@ namespace GodsEye.WEB.Pages.IncidentRecording
             SignalR.Create("https://localhost:7010/incidentRecordingHub");
 
             SignalR.On<IncidentRecordingModel>(
-                "ReceiveMessage",
+                "CreatedIncidentRecording",
                 log =>
                 {
                     Console.WriteLine("📥 LOG RECEBIDO NO FRONT");

@@ -10,7 +10,7 @@ using System.Text.Json;
 
 namespace GodsEye.Infrastructure.Repositories
 {
-    public class IncidentRecordingLogRepository : IIncidentRecordingLogRepository
+    public class IncidentRecordingLogRepository : IIncidentRecordingRepository
     {
         private readonly AppDbContext _context;
 

@@ -4,5 +4,5 @@ using MediatR;
 
 namespace GodsEye.Application.UseCases.DwellTimeMonitoring.Commands.CreateDwellTimeMonitoring
 {
-    public sealed record CreateDwellTimeMonitoringRequest(int personId, int cameraId) : IRequest<ApiResponse<ProcedureResult>>;
+    public sealed record CreateDwellTimeMonitoringRequest(int personId, int cameraId, DateTime firstSeen) : IRequest<ApiResponse<ProcedureResult>>;
 }

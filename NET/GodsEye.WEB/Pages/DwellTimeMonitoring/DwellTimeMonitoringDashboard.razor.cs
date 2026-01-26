@@ -2,13 +2,14 @@
 using GodsEye.WEB.Components;
 using GodsEye.WEB.Services;
 using Microsoft.AspNetCore.Components;
+using Microsoft.AspNetCore.SignalR.Client;
 using MudBlazor;
 
-
-namespace GodsEye.WEB.Pages.Camera
+namespace GodsEye.WEB.Pages.DwellTimeMonitoring
 {
-    public partial class CameraListPage
+    public partial class DwellTimeMonitoringDashboard
     {
+
         #region DI
 
         [Inject]
@@ -20,40 +21,39 @@ namespace GodsEye.WEB.Pages.Camera
 
         #endregion
 
-
         #region TABLE PARAMETERS
 
-        IEnumerable<CameraModel> _cameras = Enumerable.Empty<CameraModel>();
-        private int selectedRowNumber = -1;
-        private MudTable<CameraModel> mudTable;
+        private List<CameraByFeatureModel> _cameras = new();
+        private MudTable<CameraByFeatureModel> mudTable;
+        private HubConnection? hubConnection;
         bool _loading;
+        private int? selectedId = null;
+        private int selectedRowNumber = -1;
 
         #endregion
-
-        bool _visible = true;
 
         protected override async Task OnInitializedAsync()
         {
             _loading = true;
 
-            var camerasResult = await cameraService.GetAllAsync();
+            var camerasResult = await cameraService.GetByFeatureId(3);
 
-            if (camerasResult is not null && camerasResult.Success)
-                _cameras = camerasResult.Data;
+            if (camerasResult is not null)
+                _cameras = camerasResult.ToList();
 
             _loading = false;
         }
 
         #region TABLE FUNCTIONS
-        private void RowClickEvent(TableRowClickEventArgs<CameraModel> tableRowClickEventArgs)
+        private void RowClickEvent(TableRowClickEventArgs<CameraByFeatureModel> tableRowClickEventArgs)
         {
             var options = new DialogOptions { CloseOnEscapeKey = true, FullWidth = true, MaxWidth = MaxWidth.Large };
-            var parameters = new DialogParameters<InfoCameraComponent> { { x => x.Camera, tableRowClickEventArgs.Item } };
+            var parameters = new DialogParameters<InfoDwellTimeMonitoringComponent> { { x => x.Camera, tableRowClickEventArgs.Item } };
 
-            DialogService.ShowAsync<InfoCameraComponent>("Simple Dialog", parameters, options);
+            DialogService.ShowAsync<InfoDwellTimeMonitoringComponent>("Simple Dialog", parameters, options);
         }
 
-        private string SelectedRowClassFunc(CameraModel element, int rowNumber)
+        private string SelectedRowClassFunc(CameraByFeatureModel element, int rowNumber)
         {
             if (selectedRowNumber == rowNumber)
             {

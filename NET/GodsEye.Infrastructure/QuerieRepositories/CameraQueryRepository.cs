@@ -43,5 +43,16 @@ namespace GodsEye.Infrastructure.QuerieRepositories
 
             return result;
         }
+
+        public async Task<IEnumerable<CameraByFeatureModel>> GetCamerasByFeatureId(int featureId, CancellationToken cancellationToken)
+        {
+            var pFeatureId = new MySqlParameter("@P_FEATURE_ID", featureId);
+
+            var result = await _context.CameraByFeatureModel
+                .FromSqlRaw("CALL SP_CAMERA_GET_BY_FEATURE_ID(@P_FEATURE_ID)", pFeatureId)
+                .ToListAsync();
+
+            return result;
+        }
     }
 }

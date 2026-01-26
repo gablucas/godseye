@@ -6,11 +6,11 @@ using System.Net.Http.Json;
 
 namespace GodsEye.WEB.Services
 {
-    public class CameraService
+    public class CameraWebService
     {
         private readonly HttpClient _http;
 
-        public CameraService(HttpClient http)
+        public CameraWebService(HttpClient http)
         {
             _http = http;
         }
@@ -40,6 +40,17 @@ namespace GodsEye.WEB.Services
             var json = await result.Content.ReadFromJsonAsync<ApiResponse<IEnumerable<CameraLogModel>>>();
 
             return json!;
+        }
+
+        public async Task<IEnumerable<CameraByFeatureModel>> GetByFeatureId(int featureId)
+        {
+            var response = await _http.GetAsync($"api/camera/feature/{featureId}");
+            response.EnsureSuccessStatusCode();
+
+            var apiResponse = await response.Content
+                .ReadFromJsonAsync<ApiResponse<IEnumerable<CameraByFeatureModel>>>();
+
+            return apiResponse?.Data ?? Enumerable.Empty<CameraByFeatureModel>();
         }
     }
 }

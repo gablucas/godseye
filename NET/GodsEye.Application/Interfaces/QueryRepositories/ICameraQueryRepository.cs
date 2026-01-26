@@ -7,5 +7,6 @@ namespace GodsEye.Application.Interfaces.QueryRepositories
         Task<IEnumerable<CameraModel>> GetAll(CancellationToken cancellationToken);
         Task<IEnumerable<CameraConnectionModel>> GetAllConnection(CancellationToken cancellationToken);
         Task<IEnumerable<CameraLogModel>> GetAllLogs(int cameraId, CancellationToken cancellationToken);
+        Task<IEnumerable<CameraByFeatureModel>> GetCamerasByFeatureId(int featureId, CancellationToken cancellationToken);
     }
 }

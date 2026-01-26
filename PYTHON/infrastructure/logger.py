@@ -33,7 +33,7 @@ class LogSender:
             timeout=10
         ) as client:
             response = client.post(
-                "https://localhost:7010/api/incidentrecording/process/done",
+                "https://localhost:7010/api/dwelltimemonitoring",
                 json=result.model_dump(by_alias=True, mode="json")
             )
             response.raise_for_status()

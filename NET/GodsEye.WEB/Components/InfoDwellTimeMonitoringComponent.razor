@@ -1,0 +1,51 @@
+﻿@using GodsEye.Application.DTOs.Model
+
+<MudDialog>
+    <TitleContent>
+        Registro de incidencia
+    </TitleContent>
+
+
+    <DialogContent>
+        <div class="container">
+            <div class="incident-video">
+                <video id="camera-player" width="100%" height="100%" controls autoplay></video>
+            </div>
+
+            <div class="person-list">
+                @if (_log is not null)
+                {
+                    @foreach (var dwellTimeMonitoring in _log)
+                    {
+                        <div class="person-card">
+                            <MudImage src=@($"https://localhost:7010/{dwellTimeMonitoring.ImagePath}") Height="160" Style="border-radius: 7px" />
+
+                            <div class="person-info">
+                                <div>
+                                    <span>Nome:</span>
+                                    <span>@dwellTimeMonitoring.PersonName</span>
+                                </div>
+
+                                <div>
+                                    <span>Hora entrada:</span>
+                                    <span>@dwellTimeMonitoring.FirstSeen</span>
+                                </div>
+
+                                <div>
+                                    <span>Tempo no ambiente:</span>
+                                    <span>@GetElapsed(dwellTimeMonitoring.FirstSeen)</span>
+                                </div>
+                            </div>
+                        </div>
+                        <MudDivider />
+                    }
+                    
+                }
+            </div>
+        </div>
+    </DialogContent>
+
+    <DialogActions>
+        <MudButton Color="Color.Primary" OnClick="Submit">Sair</MudButton>
+    </DialogActions>
+</MudDialog>

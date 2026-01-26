@@ -95,7 +95,7 @@ class CameraWorker:
         while self.running:
 
             # Se nenhuma funcionalidade estiver ativa, não cria FFmpeg
-            if not self.environment_monitoring and not self.incident_recording:
+            if not self.environment_monitoring and not self.incident_recording and not self.dwell_time_monitoring:
                 time.sleep(1)
                 continue
 
@@ -106,6 +106,7 @@ class CameraWorker:
                 height=self.height,
                 cameraId=self.cameraId,
                 environment_monitoring=self.environment_monitoring,
+                dwell_time_monitoring=self.dwell_time_monitoring,
                 record=self.incident_recording,
                 record_path=f"records/{self.cameraId}"
             )
@@ -115,7 +116,7 @@ class CameraWorker:
 
                     # 🔹 Se não estiver monitorando, NÃO lê frames
                     # 🔹 FFmpeg continua rodando só para gravação
-                    if not self.environment_monitoring:
+                    if not self.environment_monitoring and not self.dwell_time_monitoring:
                         time.sleep(0.2)
                         continue
 
@@ -193,61 +194,63 @@ class CameraWorker:
 
             # DWELL TIME MONITORING
             if (self.dwell_time_monitoring):
-
                 if (personData is None):
+                    print("USUARIO NÃO EXISTE")
 
                     dwellTimeMonitoring = DwellTimeMonitoringCreateRequest(
-                        cameraId=cameraId,
-                        personId=personId,
-                        firstSeen=datetime.now(ZoneInfo("America/Sao_Paulo")).isoformat()
+                        camera_id=cameraId,
+                        person_id=personId,
+                        first_seen=datetime.now(ZoneInfo("America/Sao_Paulo")).isoformat()
                     )
 
                     log_queue.put((
-                        LogSender.dotnet_create_dwell_time_monitoring,
+                        LogSender.dotnet_create_dwell_time_monitoring_log,
                         dwellTimeMonitoring
                     ))
 
-                    return
-                
-                diff_last_seen = (now - personData["last_seen"]).total_seconds() / 60
-                diff_created = (now - personData["createdAt"]).total_seconds() / 60
+                else:
+                    diff_last_seen = (now - personData["last_seen"]).total_seconds() / 60
+                    diff_created = (now - personData["created_at"]).total_seconds() / 60
 
-                if (diff_created >= 100):
-                    log_queue.put((
-                        LogSender.dotnet_send_timeout_alert,
-                        {
-                            "personId": personId,
-                            "cameraId": cameraId,
-                        }
-                    ))
+                    print(f"ULTIMA HORA VISTO: {diff_last_seen}")
+                    print(f"TEMPO NA CAMARA: {diff_created}")
 
-                if (diff_last_seen >= 5):
-                    log_queue.put((
-                        LogSender.dotnet_update_last_seen,
-                        {
-                            "personId": personId,
-                            "cameraId": cameraId,
-                            "last_seen": now.isoformat()
-                        }
-                    ))
+                    if (diff_created >= 100):
+                        log_queue.put((
+                            LogSender.dotnet_send_timeout_alert,
+                            {
+                                "person_id": personId,
+                                "camera_id": cameraId,
+                            }
+                        ))
+
+                    if (diff_last_seen >= 5):
+                        log_queue.put((
+                            LogSender.dotnet_update_last_seen,
+                            {
+                                "person_id": personId,
+                                "camera_id": cameraId,
+                                "last_seen": now.isoformat()
+                            }
+                        ))
 
 
             if personData is None:
                 self.active_users[personId] = {
-                    "cameraId": cameraId,
-                    "sectorId": sectorId,
+                    "camera_id": cameraId,
+                    "sector_id": sectorId,
                     "score": score,
-                    "createdAt": now,
+                    "created_at": now,
                     "last_seen": now,
-                    "updatedAt": now
+                    "updated_at": now
                 }
 
             else:
                 # ATUALIZAR DADOS LISTA USERS
                 personData["last_seen"] = now
-                personData["updatedAt"] = now
-                personData["cameraId"] = cameraId
-                personData["sectorId"] = sectorId
+                personData["updated_at"] = now
+                personData["camera_id"] = cameraId
+                personData["sector_id"] = sectorId
                 personData["score"] = score
 
     def cleanup_unknowns(self):

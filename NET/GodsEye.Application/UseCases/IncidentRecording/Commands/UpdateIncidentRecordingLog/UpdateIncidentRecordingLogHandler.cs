@@ -13,10 +13,10 @@ namespace GodsEye.Application.UseCases.IncidentRecording.Commands.UpdateIncident
     {
         private readonly IMapper _mapper;
         private readonly IEmailService _emailService;
-        private readonly IIncidentRecordingLogRepository _incidentRecordingLogRepository;
+        private readonly IIncidentRecordingRepository _incidentRecordingLogRepository;
         private readonly IIncidentRecordingQueryRepository _incidentRecordingQueryRepository;
 
-        public UpdateIncidentRecordingLogHandler(IMapper mapper, IEmailService emailService, IIncidentRecordingLogRepository incidentRecordingLogRepository, IIncidentRecordingQueryRepository incidentRecordingQueryRepository)
+        public UpdateIncidentRecordingLogHandler(IMapper mapper, IEmailService emailService, IIncidentRecordingRepository incidentRecordingLogRepository, IIncidentRecordingQueryRepository incidentRecordingQueryRepository)
         {
             _mapper = mapper;
             _emailService = emailService;
