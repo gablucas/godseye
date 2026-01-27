@@ -9,6 +9,7 @@ namespace GodsEye.Application.DTOs.Model
         public string? Connection { get; set; }
         public int? SectorId { get; set; }
         public string? SectorName { get; set; }
+        public bool IsActive { get; set; }
 
         public string? FeaturesJson { get; set; }
 

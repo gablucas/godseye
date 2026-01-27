@@ -1,0 +1,30 @@
+﻿@page "/camera/{Id:int}/registro-incidente"
+@using GodsEye.WEB.Components
+@using GodsEye.WEB.Enum
+@inject ISnackbar Snackbar
+
+<PageTitle>Registro de incidente</PageTitle>
+
+<div class="page-title">
+    <h1>Registro de incidente</h1>
+    <p>Configure a funcionalidade de registro de incidente</p>
+</div>
+
+<CameraConfigurationBarComponent Id="Id" Pagina="registro-incidente" />
+
+
+<div class="form-container">
+
+    <MudForm @ref="form" Model="IncidentRecordingForm" @bind-IsValid="@success" @bind-Errors="@errors">
+
+        <MudTextField Label="MacAddress" HelperText="Identificador da camera ao receber o disparo de alarme" @bind-Value="IncidentRecordingForm.MacAddress" T="string" For="@(() => IncidentRecordingForm.MacAddress)" Variant="Variant.Outlined" />
+
+        <MudButton OnClick="Submit" Disabled=@(!success) Class="btn-submit" Variant="Variant.Filled" Color="Color.Primary">Atualizar</MudButton>
+
+        <MudOverlay Visible="visible" LightBackground="true" Absolute="true">
+            <MudProgressCircular Color="Color.Default" Indeterminate="true" />
+        </MudOverlay>
+
+    </MudForm>
+
+</div>

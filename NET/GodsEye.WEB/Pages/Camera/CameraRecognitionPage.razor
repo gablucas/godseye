@@ -1,0 +1,97 @@
+﻿@page "/camera/{Id:int}/reconhecimento"
+@using GodsEye.WEB.Components
+@using GodsEye.WEB.Enum
+@inject ISnackbar Snackbar
+
+<PageTitle>Reconhecimento</PageTitle>
+
+<div class="page-title">
+    <h1>Reconhecimento</h1>
+    <p>Realize ajustes nos parametros de reconhecimento da camera</p>
+</div>
+
+<CameraConfigurationBarComponent Id="Id" Pagina="reconhecimento" />
+
+<div class="form-container">
+
+    <MudForm @ref="form" Model="RecognitionForm" @bind-IsValid="@success" @bind-Errors="@errors">
+
+        <div class="video-inputs">
+
+            <div class="video-wrapper">
+                <video id="camera-player" style="width:100%; height:100%;" preload="metadata">
+                    <source src=@($"http://localhost:8000/videos/15_20260125_200800.mp4")
+                            type="video/mp4">
+                </video>
+
+                <canvas @onmouseup="GetRect" id="roiCanvas"
+                        width="640"
+                        height="360"
+                        style="
+                position:absolute;
+                top:0;
+                left:0;
+                cursor:crosshair;">
+                </canvas>
+            </div>
+
+        
+            <MudTabs Rounded="true" Border="true" Outlined="true" ApplyEffectsToContainer="true" PanelClass="pa-2">
+                <MudTabPanel Text="Tamanho face" OnClick="() => SetStrokeRect(RecognizeRectEnum.Face)">
+                    <MudAlert Severity="Severity.Normal" Variant="Variant.Outlined" Dense="true" Class="my-2">Aqui você define um tamanho mínimo de rosto a ser reconhecido pela IA (a posição serve apenas para lembrar onde o ultimo registro foi feito)</MudAlert>
+
+                    <MudDivider Style="margin: 12px 0px"/>
+
+                    <div class="face-size-inputs">
+                        <MudTextField Disabled Label="Altura (px)" @bind-Value="RecognitionForm.FaceDimension.Height" T="float" For="@(() => RecognitionForm.FaceDimension.Height)" Variant="Variant.Outlined" />
+                        <MudTextField Disabled Label="Largura (px)" @bind-Value="RecognitionForm.FaceDimension.Width" T="float" For="@(() => RecognitionForm.FaceDimension.Height)" Variant="Variant.Outlined" />
+
+                        @if (RecognizeRectEnum.Face != _recognizeType)
+                        {
+                            <MudButton OnClick="() => ActiveDrawing(RecognizeRectEnum.Face)" Style="height: 56px; margin-top: 8px" Variant="Variant.Outlined" Color="Color.Success">Editar tamanho</MudButton>
+                        }
+                        else
+                        {
+                            <MudButton OnClick="DesactiveDrawing" Variant="Variant.Outlined" Style="height: 56px; margin-top: 8px" Color="Color.Primary">Fechar edição</MudButton>
+                        }
+                    </div>
+
+                </MudTabPanel>
+
+                <MudTabPanel Text="Área de reconhecimento" OnClick="() => SetStrokeRect(RecognizeRectEnum.Camera)">
+                    <MudAlert Severity="Severity.Normal" Variant="Variant.Outlined" Dense="true" Class="my-2">Defina a área do vídeo no qual sera feito o reconhecimento pela IA</MudAlert>
+                    <MudDivider Style="margin: 12px 0px" />
+
+                    <div class="camera-size-inputs">
+
+                        <MudTextField Disabled Label="Altura (px)" @bind-Value="RecognitionForm.CameraDimension.Height" T="float" For="@(() => RecognitionForm.CameraDimension.Height)" Variant="Variant.Outlined" />
+                        <MudTextField Disabled Label="Largura (px)" @bind-Value="RecognitionForm.CameraDimension.Width" T="float" For="@(() => RecognitionForm.CameraDimension.Height)" Variant="Variant.Outlined" />
+                        <MudTextField Disabled Label="X (px)" @bind-Value="RecognitionForm.CameraDimension.X" T="float" For="@(() => RecognitionForm.CameraDimension.X)" Variant="Variant.Outlined" />
+                        <MudTextField Disabled Label="Y (px)" @bind-Value="RecognitionForm.CameraDimension.Y" T="float" For="@(() => RecognitionForm.CameraDimension.Y)" Variant="Variant.Outlined" />
+
+                        @if (RecognizeRectEnum.Camera != _recognizeType)
+                        {
+                            <MudButton OnClick="() => ActiveDrawing(RecognizeRectEnum.Camera)" Variant="Variant.Outlined" Style="height: 56px; margin-top: 8px" Color="Color.Success">Editar tamanho</MudButton>
+                        }
+                        else
+                        {
+                            <MudButton OnClick="DesactiveDrawing" Variant="Variant.Outlined" Style="height: 56px; margin-top: 8px" Color="Color.Primary">Fechar edição</MudButton>
+                        }
+
+                    </div>
+                </MudTabPanel>
+    
+            </MudTabs>
+
+        </div>
+
+
+        <MudButton OnClick="Submit" Disabled=@(!success) Class="btn-submit" Variant="Variant.Filled" Color="Color.Primary">Atualizar</MudButton>
+
+        <MudOverlay Visible="visible" LightBackground="true" Absolute="true">
+            <MudProgressCircular Color="Color.Default" Indeterminate="true" />
+        </MudOverlay>
+
+    </MudForm>
+
+</div>

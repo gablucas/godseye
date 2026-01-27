@@ -15,6 +15,7 @@
         <MudTh>Conexão</MudTh>
         <MudTh>Setor Vinculado</MudTh>
         <MudTh>Funcionalidades</MudTh>
+        <MudTh>Configurações</MudTh>
     </HeaderContent>
     <RowTemplate>
         <MudTd DataLabel="Name">@context.Name</MudTd>
@@ -41,6 +42,9 @@
                 <MudChip T="string">Nenhum Setor</MudChip>
             }
         </MudTd>
+        <MudTd><MudButton Variant="Variant.Outlined" Size="Size.Small">
+                <MudLink Href=@($"/camera/{@context.Id}/dados")" Underline="Underline.None">Configurações</MudLink>
+        </MudButton></MudTd>
     </RowTemplate>
 </MudTable>
 

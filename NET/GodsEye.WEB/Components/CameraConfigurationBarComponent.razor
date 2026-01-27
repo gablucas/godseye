@@ -1,0 +1,41 @@
+﻿<div>
+    <MudChip T="string" Size="Size.Large" Href=@($"/camera/{Id}/dados")" Icon="@Icons.Material.Rounded.Info" Label="true" Color=@(Pagina == "dados" ? Color.Success : Color.Default)>
+        <MudText Typo="Typo.subtitle1" Class="m-0">
+            Dados
+        </MudText>
+    </MudChip>
+
+    <MudChip T="string" Size="Size.Large" Href=@($"/camera/{Id}/reconhecimento")" Icon="@Icons.Material.Rounded.Face" Label="true" Color=@(Pagina == "reconhecimento" ? Color.Success : Color.Default)>
+        <MudText Typo="Typo.subtitle1" Class="m-0">
+            Reconhecimento
+        </MudText>
+    </MudChip>
+
+    @if (HasFeature(1))
+    {
+        <MudChip T="string" Size="Size.Large" Href=@($"/camera/{Id}/monitoramento-ambiente")" Label="true" Color=@(Pagina == "monitoramento-ambiente" ? Color.Success : Color.Default)>
+            <MudText Typo="Typo.subtitle1" Class="m-0">
+                Monitoramento de ambientes
+            </MudText>
+        </MudChip>
+
+    }
+
+    @if (HasFeature(2))
+    {
+        <MudChip T="string" Size="Size.Large" Href=@($"/camera/{Id}/registro-incidente")" Label="true" Color=@(Pagina == "registro-incidente" ? Color.Success : Color.Default)>
+            <MudText Typo="Typo.subtitle1" Class="m-0">
+                Registro de incidentes
+            </MudText>
+        </MudChip>
+    }
+
+    @if (HasFeature(3))
+    {
+        <MudChip T="string" Size="Size.Large" Href=@($"/camera/{Id}/controle-permanencia")" Label="true" Color=@(Pagina == "controle-permanencia" ? Color.Success : Color.Default)>
+            <MudText Typo="Typo.subtitle1" Class="m-0">
+                Controle de permanência
+            </MudText>
+        </MudChip>
+    }
+</div>

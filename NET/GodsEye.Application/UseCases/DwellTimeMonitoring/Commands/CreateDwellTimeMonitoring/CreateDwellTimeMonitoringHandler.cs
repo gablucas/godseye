@@ -24,7 +24,7 @@ namespace GodsEye.Application.UseCases.DwellTimeMonitoring.Commands.CreateDwellT
             var result = await _dwellTimeMonitoringRepository.Create(dwellTimeMonitoring, cancellationToken);
 
             if (result is null || result.Erro == 1)
-                throw new InvalidOperationException("Falha no registro do controle de permanencia");
+                throw new InvalidOperationException("Falha no registro do controle de permanência");
 
             return ApiResponse<ProcedureResult>.Ok(result);
         }   

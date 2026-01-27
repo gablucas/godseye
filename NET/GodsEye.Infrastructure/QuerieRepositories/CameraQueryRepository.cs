@@ -24,6 +24,17 @@ namespace GodsEye.Infrastructure.QuerieRepositories
             return result;
         }
 
+        public async Task<CameraModel> GetById(int cameraId, CancellationToken cancellationToken)
+        {
+            var pCameraId = new MySqlParameter("@P_CAMERA_ID", cameraId);
+
+            var result = await _context.CameraModel
+                .FromSqlRaw("CALL SP_CAMERA_GET_BY_ID(@P_CAMERA_ID)", pCameraId)
+                .ToListAsync();
+
+            return result.FirstOrDefault() ?? new CameraModel();
+        }
+
         public async Task<IEnumerable<CameraConnectionModel>> GetAllConnection(CancellationToken cancellationToken)
         {
             var result = await _context.CameraConnectionModel
@@ -50,7 +61,18 @@ namespace GodsEye.Infrastructure.QuerieRepositories
 
             var result = await _context.CameraByFeatureModel
                 .FromSqlRaw("CALL SP_CAMERA_GET_BY_FEATURE_ID(@P_FEATURE_ID)", pFeatureId)
-                .ToListAsync();
+                .ToListAsync(cancellationToken);
+
+            return result;
+        }
+
+        public async Task<IEnumerable<CameraFeatureModel>> GetCameraFeaturesById(int cameraId, CancellationToken cancellationToken)
+        {
+            var pCameraId = new MySqlParameter("@P_CAMERA_ID", cameraId);
+
+            var result = await _context.CameraFeatureModel
+                .FromSqlRaw("CALL SP_CAMERA_GET_FEATURES_BY_CAMERA_ID(@P_CAMERA_ID)", pCameraId)
+                .ToListAsync(cancellationToken);
 
             return result;
         }

@@ -24,11 +24,29 @@ namespace GodsEye.WEB.Services
             return json!;
         }
 
+        public async Task<ApiResponse<ProcedureResult?>> UpdateAsync(UpdateCameraForm camera)
+        {
+            var result = await _http.PutAsJsonAsync("api/camera", camera);
+
+            var json = await result.Content.ReadFromJsonAsync<ApiResponse<ProcedureResult?>>();
+
+            return json!;
+        }
+
         public async Task<ApiResponse<IEnumerable<CameraModel>>> GetAllAsync()
         {
             var result = await _http.GetAsync("api/camera");
 
             var json = await result.Content.ReadFromJsonAsync<ApiResponse<IEnumerable<CameraModel>>>();
+
+            return json!;
+        }
+
+        public async Task<ApiResponse<CameraModel>> GetById(int cameraId)
+        {
+            var result = await _http.GetAsync($"api/camera/{cameraId}");
+
+            var json = await result.Content.ReadFromJsonAsync<ApiResponse<CameraModel>>();
 
             return json!;
         }
@@ -51,6 +69,17 @@ namespace GodsEye.WEB.Services
                 .ReadFromJsonAsync<ApiResponse<IEnumerable<CameraByFeatureModel>>>();
 
             return apiResponse?.Data ?? Enumerable.Empty<CameraByFeatureModel>();
+        }
+
+        public async Task<IEnumerable<CameraFeatureModel>> GetFeatures(int cameraId)
+        {
+            var response = await _http.GetAsync($"api/camera/active-features/{cameraId}");
+            response.EnsureSuccessStatusCode();
+
+            var apiResponse = await response.Content
+                .ReadFromJsonAsync<ApiResponse<IEnumerable<CameraFeatureModel>>>();
+
+            return apiResponse?.Data ?? Enumerable.Empty<CameraFeatureModel>();
         }
     }
 }

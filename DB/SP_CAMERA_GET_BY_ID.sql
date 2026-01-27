@@ -1,0 +1,33 @@
+CREATE DEFINER=`root`@`localhost` PROCEDURE `SP_CAMERA_GET_BY_ID`(
+	IN P_CAMERA_ID INT
+)
+BEGIN
+	SELECT 
+		C.Id,
+		C.Name,
+		C.Connection,
+		C.Sector_Id AS SectorId,
+        C.IS_ACTIVE AS IsActive,
+		S.Name AS SectorName,
+		CASE
+			WHEN COUNT(F.ID) = 0 THEN NULL
+			ELSE JSON_ARRAYAGG(
+					JSON_OBJECT (
+					"FeatureId", F.ID,
+					"FeatureName", F.NAME
+					)
+				) 
+			END AS FeaturesJson
+	FROM CAMERA C
+	LEFT JOIN SECTOR S ON c.SECTOR_ID = S.Id
+	LEFT JOIN CAMERA_FEATURE CF ON CF.CAMERA_ID = C.ID AND CF.IS_ACTIVE = 1
+	LEFT JOIN FEATURE F ON F.ID = CF.FEATURE_ID
+    WHERE C.ID = P_CAMERA_ID
+	GROUP BY
+		C.ID,
+		C.NAME,
+		C.CONNECTION,
+		C.Sector_ID,
+        C.IS_ACTIVE,
+		S.Name;
+END

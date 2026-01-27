@@ -55,15 +55,6 @@ namespace GodsEye.WEB.Pages.Camera
 
         }
 
-        private string GetSelectedCameraNames(List<string> ids)
-        {
-            var names = _sectors
-                .Where(c => ids.Contains(c.Id.ToString()))
-                .Select(c => c.Name);
-
-            return string.Join(", ", names);
-        }
-
         private void OnFeatureToggled(int featureId, bool isChecked)
         {
 

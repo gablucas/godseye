@@ -40,5 +40,28 @@ namespace GodsEye.Infrastructure.Repositories
 
             return result.FirstOrDefault() ?? ProcedureResult.Error("Houve um erro ao executar a procedure de cadastro de camera!");
         }
+
+        public async Task<ProcedureResult> Update(CameraEntity camera, CancellationToken cancellationToken)
+        {
+            var pCameraId = new MySqlParameter("@P_CAMERA_ID", camera.Id);
+            var pName = new MySqlParameter("@P_NAME", camera.Name);
+            var pConnection = new MySqlParameter("@P_CONNECTION", camera.Connection);
+            var pSectorId = new MySqlParameter("@P_SECTOR_ID", camera.SectorId);
+
+            var FeaturesJSON = JsonSerializer.Serialize(camera.Features);
+
+            var pFeaturesJSON = new MySqlParameter("@P_FEATURES_JSON", MySqlDbType.JSON)
+            {
+                Value = FeaturesJSON
+            };
+
+            var result = await _context.ProcedureResult
+                .FromSqlRaw(
+                "CALL SP_CAMERA_UPDATE(@P_CAMERA_ID, @P_NAME, @P_CONNECTION, @P_SECTOR_ID, @P_FEATURES_JSON)",
+                pCameraId, pName, pConnection, pSectorId, pFeaturesJSON)
+                .ToListAsync();
+
+            return result.FirstOrDefault() ?? ProcedureResult.Error("Houve um erro ao executar a procedure de cadastro de camera!");
+        }
     }
 }
