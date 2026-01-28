@@ -5,8 +5,8 @@ BEGIN
 		P.NAME AS PersonName,
         C.ID AS CameraId,
         C.NAME AS CameraName,
-		FIRST_SEEN AS FirstSeen,
-        LAST_SEEN AS LastSeen
+		DTM.ENTETED_AT AS EnteredAt,
+        DTM.EXITED_AT AS ExitedAt
 	FROM DWELL_TIME_MONITORING DTM
     LEFT JOIN PERSON P ON P.ID = DTM.PERSON_ID
     LEFT JOIN CAMERA C ON C.ID = DTM.CAMERA_ID;

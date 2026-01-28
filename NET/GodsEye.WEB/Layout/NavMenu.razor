@@ -1,44 +1,40 @@
-﻿<MudNavMenu>
-    <MudNavLink Style="display: flex; justify-content: center; align-items: center;"><img class="logo" src="/logo.png" width="120px" /></MudNavLink>
+﻿<MudNavMenu Dense="true">
 
-    <MudNavLink Href="/" Match="NavLinkMatch.All">Dashboard</MudNavLink>
+    <MudNavLink Href="/" Icon="@Icons.Material.Filled.Dashboard" Match="NavLinkMatch.All">
+        Dashboard
+    </MudNavLink>
 
-    @* PESSOAS *@
-    <MudNavGroup Title="Pessoas" Expanded="false">
-        <MudNavLink Href="/pessoas" Match="NavLinkMatch.Prefix">Listar</MudNavLink>
-        <MudNavLink Href="/cadastrar-pessoa" Match="NavLinkMatch.Prefix">Cadastrar</MudNavLink>
+    <MudDivider Class="my-2" />
+
+    <MudNavGroup Title="Cadastros" Icon="@Icons.Material.Filled.Inventory2">
+        <MudNavLink Href="/pessoas">Pessoas</MudNavLink>
+        <MudNavLink Href="/setores">Setores</MudNavLink>
+        <MudNavLink Href="/cameras">Câmeras</MudNavLink>
     </MudNavGroup>
 
-    @* SETORES *@
-    <MudNavGroup Title="Setores" Expanded="false">
-        <MudNavLink Href="/setores" Match="NavLinkMatch.Prefix">Listar</MudNavLink>
-        <MudNavLink Href="/cadastrar-setor" Match="NavLinkMatch.Prefix">Cadastrar</MudNavLink>
+    <MudDivider Class="my-2" />
+
+    <MudNavGroup Title="Monitoramento" Icon="@Icons.Material.Filled.Visibility">
+        <MudNavLink Href="/monitoramento-ambientes/dashboard">Ambientes</MudNavLink>
+        <MudNavLink Href="/captura-incidentes/dashboard">Incidentes</MudNavLink>
+        <MudNavLink Href="/controle-permanencia/dashboard">Permanência</MudNavLink>
     </MudNavGroup>
 
-    @* CAMERAS *@
-    <MudNavGroup Title="Cameras" Expanded="false">
-        <MudNavLink Href="/cameras" Match="NavLinkMatch.Prefix">Listar</MudNavLink>
-        <MudNavLink Href="/cadastrar-camera" Match="NavLinkMatch.Prefix">Cadastrar</MudNavLink>
+    <MudDivider Class="my-2" />
+
+    <MudNavGroup Title="Relatórios" Icon="@Icons.Material.Filled.BarChart">
+        <MudNavLink Href="/monitoramento-ambientes/relatorios">Ambientes</MudNavLink>
+        <MudNavLink Href="/captura-incidentes/relatorios">Incidentes</MudNavLink>
+        <MudNavLink Href="/controle-permanencia/relatorios">Permanência</MudNavLink>
     </MudNavGroup>
 
-    @* CONTROLE DE AMBIENTES *@
-    <MudNavGroup Title="Monitoramento de ambientes" Expanded="false" Style="border: none" Class="text-nowrap">
-        <MudNavLink Href="/Monitoramento-ambientes/dashboard" Match="NavLinkMatch.Prefix">Dashboard</MudNavLink>
-        <MudNavLink Href="/Monitoramento-ambientes/relatorios" Match="NavLinkMatch.Prefix">Relatórios</MudNavLink>
-        <MudNavLink Href="/Monitoramento-ambientes/configuracoes" Match="NavLinkMatch.Prefix">Configurações</MudNavLink>
+    <MudDivider Class="my-2" />
+
+    <MudNavGroup Title="Configurações" Icon="@Icons.Material.Filled.Settings">
+        <MudNavLink Href="/monitoramento-ambientes/configuracoes">Ambientes</MudNavLink>
+        <MudNavLink Href="/captura-incidentes/configuracoes">Incidentes</MudNavLink>
+        <MudNavLink Href="/controle-permanencia/configuracoes">Permanência</MudNavLink>
+        <MudNavLink Href="/configuracoes/notificacao">Notificações</MudNavLink>
     </MudNavGroup>
 
-    @* CAPTURA DE INCIDENTES *@
-    <MudNavGroup Title="Captura de incidentes" Expanded="false" Style="border: none" Class="text-nowrap">
-        <MudNavLink Href="/captura-incidentes/dashboard" Match="NavLinkMatch.Prefix">Dashboard</MudNavLink>
-        <MudNavLink Href="/captura-incidentes/relatorios" Match="NavLinkMatch.Prefix">Relatórios</MudNavLink>
-        <MudNavLink Href="/captura-incidentes/configuracoes" Match="NavLinkMatch.Prefix">Configurações</MudNavLink>
-    </MudNavGroup>
-
-    @* CONTROLE DE PERMANENCIA *@
-    <MudNavGroup Title="Controle de permanência" Expanded="false" Style="border: none" Class="text-nowrap">
-        <MudNavLink Href="/controle-permanencia/dashboard" Match="NavLinkMatch.Prefix">Dashboard</MudNavLink>
-        <MudNavLink Href="/controle-permanencia/relatorios" Match="NavLinkMatch.Prefix">Relatórios</MudNavLink>
-        <MudNavLink Href="/controle-permanencia/configuracoes" Match="NavLinkMatch.Prefix">Configurações</MudNavLink>
-    </MudNavGroup>
 </MudNavMenu>

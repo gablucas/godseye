@@ -4,7 +4,7 @@
     {
         public string PersonName { get; set; }
         public string ImagePath { get; set; }
-        public DateTime FirstSeen { get; set; }
-        public DateTime LastSeen { get; set; }
+        public DateTime EnteredAt { get; set; }
+        public DateTime? ExitedAt { get; set; }
     }
 }

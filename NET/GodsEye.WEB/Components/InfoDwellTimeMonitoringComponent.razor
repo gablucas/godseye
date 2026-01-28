@@ -28,12 +28,12 @@
 
                                 <div>
                                     <span>Hora entrada:</span>
-                                    <span>@dwellTimeMonitoring.FirstSeen</span>
+                                    <span>@dwellTimeMonitoring.EnteredAt</span>
                                 </div>
 
                                 <div>
                                     <span>Tempo no ambiente:</span>
-                                    <span>@GetElapsed(dwellTimeMonitoring.FirstSeen)</span>
+                                    <span>@(dwellTimeMonitoring.ExitedAt is not null ? GetDiffHours(dwellTimeMonitoring.EnteredAt, (DateTime)dwellTimeMonitoring.ExitedAt) : GetElapsed(dwellTimeMonitoring.EnteredAt))</span>
                                 </div>
                             </div>
                         </div>

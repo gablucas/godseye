@@ -21,13 +21,13 @@ namespace GodsEye.Infrastructure.Repositories
             var pCameraId = new MySqlParameter("@P_CAMERA_ID", dwellTimeMonitoring.CameraId);
             var pPersonId = new MySqlParameter("@P_PERSON_ID", dwellTimeMonitoring.PersonId);
 
-            var pFirstSeen = new MySqlParameter("@P_FIRST_SEEN", dwellTimeMonitoring.FirstSeen)
+            var pEnteredAt = new MySqlParameter("@P_ENTERED_AT", dwellTimeMonitoring.EnteredAt)
             {
                 DbType = System.Data.DbType.DateTime,
             };
 
             var result = await _context.ProcedureResult.
-                FromSqlRaw("CALL SP_DWELL_TIME_MONITORING_CREATE(@P_CAMERA_ID, @P_PERSON_ID, @P_FIRST_SEEN)", pCameraId, pPersonId, pFirstSeen)
+                FromSqlRaw("CALL SP_DWELL_TIME_MONITORING_CREATE(@P_CAMERA_ID, @P_PERSON_ID, @P_ENTERED_AT)", pCameraId, pPersonId, pEnteredAt)
                 .ToListAsync(cancellationToken);
 
             return result.FirstOrDefault() ?? ProcedureResult.Error();

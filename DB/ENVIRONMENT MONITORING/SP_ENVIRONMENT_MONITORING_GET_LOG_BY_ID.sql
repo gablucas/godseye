@@ -5,6 +5,7 @@ BEGIN
 	SELECT
 		P.NAME AS Person,
         P.IMAGE_PATH AS PersonPhoto,
+        S.ID AS SectorId,
 		S.NAME AS Sector,
         L.CREATED_AT
     FROM ENVIRONMENT_MONITORING L

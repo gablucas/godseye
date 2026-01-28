@@ -13,12 +13,18 @@
     border: 1px solid var(--gray-050);
 }
 
-    .form-container ::deep .btn-submit {
-        display: block;
-        margin: 12px 0px;
-    }
+.form-container .inputs-container {
+    display: flex;
+    gap: 24px;
+}
 
-    .form-container .register-success {
-        display: flex;
-        gap: 12px;
-    }
+.form-container ::deep .btn-submit {
+    display: block;
+    margin: 12px 0px;
+    grid-column: 1/-1;
+}
+
+.form-container .register-success {
+    display: flex;
+    gap: 12px;
+}

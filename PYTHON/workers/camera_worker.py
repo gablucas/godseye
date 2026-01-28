@@ -248,7 +248,7 @@ class CameraWorker:
                     dwellTimeMonitoring = DwellTimeMonitoringCreateRequest(
                         camera_id=cameraId,
                         person_id=personId,
-                        first_seen=now.isoformat()
+                        entered_at=now.isoformat()
                     )
 
                     log_queue.put((
@@ -257,7 +257,7 @@ class CameraWorker:
                     ))
                 else:
                     diff_created = (now - personData["created_at"]).total_seconds() / 60
-                    diff_last_seen = (now - personData["last_seen"]).total_seconds() / 60
+                    diff_updated = (now - personData["updated_at"]).total_seconds() / 60
 
                     if diff_created >= 100:
                         log_queue.put((
@@ -268,13 +268,13 @@ class CameraWorker:
                             }
                         ))
 
-                    if diff_last_seen >= 5:
+                    if diff_updated_at >= 5:
                         log_queue.put((
-                            LogSender.dotnet_update_last_seen,
+                            LogSender.dotnet_update_updated_at,
                             {
                                 "person_id": personId,
                                 "camera_id": cameraId,
-                                "last_seen": now.isoformat()
+                                "updated_at": now.isoformat()
                             }
                         ))
 
@@ -285,7 +285,6 @@ class CameraWorker:
                     "sector_id": sectorId,
                     "score": score,
                     "created_at": now,
-                    "last_seen": now,
                     "updated_at": now,
                     "track_id": track_id
                 }
@@ -294,7 +293,6 @@ class CameraWorker:
                     "camera_id": cameraId,
                     "sector_id": sectorId,
                     "score": score,
-                    "last_seen": now,
                     "updated_at": now,
                     "track_id": track_id
                 })
@@ -304,7 +302,7 @@ class CameraWorker:
         to_remove = []
 
         for uid, data in self.unknowns.items():
-            if now - data["last_seen"] > self.UNKNOWN_TIMEOUT:
+            if now - data["updated_at"] > self.UNKNOWN_TIMEOUT:
                 to_remove.append(uid)
 
         for uid in to_remove:

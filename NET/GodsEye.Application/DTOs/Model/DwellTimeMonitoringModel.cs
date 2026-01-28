@@ -7,7 +7,7 @@
         public string PersonName { get; set; }
         public int CameraId { get; set; }
         public string CameraName { get; set; }
-        public DateTime FirstSeen { get; set; }
-        public DateTime? LastSeen { get; set; }
+        public DateTime EnteredAt { get; set; }
+        public DateTime? ExitedAt { get; set; }
     }
 }

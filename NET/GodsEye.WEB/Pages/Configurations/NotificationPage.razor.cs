@@ -2,9 +2,9 @@
 using Microsoft.AspNetCore.Components;
 using MudBlazor;
 
-namespace GodsEye.WEB.Pages.Camera
+namespace GodsEye.WEB.Pages.Configurations
 {
-    public partial class CameraIncidenRecordingPage
+    public partial class NotificationPage
     {
         [Parameter]
         public int Id { get; set; }

@@ -1,4 +1,4 @@
-﻿@page "/camera/{Id:int}/registro-incidente"
+﻿@page "/configuracoes/notificacao"
 @using GodsEye.WEB.Components
 @using GodsEye.WEB.Enum
 @inject ISnackbar Snackbar
@@ -9,9 +9,6 @@
     <h1>Registro de incidencia</h1>
     <p>Configure a funcionalidade de registro de incidente</p>
 </div>
-
-<CameraConfigurationBarComponent Id="Id" Pagina="registro-incidente" />
-
 
 <div class="form-container">
 
@@ -27,12 +24,12 @@
 
             <div class="email-input">
                 <MudTextField T="string"
-                      ValueChanged="OnEmailChanged"
-                      Label="Email"
-                      Variant="Variant.Outlined"
-                      Style="width: 400px"
-                      Error="@_hasEmailError"
-                      ErrorText="@_emailErrorMessage" />
+                              ValueChanged="OnEmailChanged"
+                              Label="Email"
+                              Variant="Variant.Outlined"
+                              Style="width: 400px"
+                              Error="@_hasEmailError"
+                              ErrorText="@_emailErrorMessage" />
 
                 <MudButton OnClick="AddEmail" Style="height: 56px; margin-top: 8px" Variant="Variant.Outlined" Color="Color.Success">Adicionar email</MudButton>
             </div>

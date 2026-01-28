@@ -64,7 +64,7 @@ namespace GodsEye.WEB.Components
             _now = DateTime.Now;
             _timer = new PeriodicTimer(TimeSpan.FromSeconds(1));
 
-            _ = StartTimer();
+            //_ = StartTimer();
         }
 
         private async Task StartTimer()
@@ -83,8 +83,18 @@ namespace GodsEye.WEB.Components
 
         private string GetElapsed(DateTime start)
         {
+            _ = StartTimer();
+
             var ts = _now - start;
             return $"{(int)ts.TotalHours:00}:{ts.Minutes:00}:{ts.Seconds:00}";
+        }
+
+        private string GetDiffHours(DateTime enteredAt, DateTime exitedAt)
+        {
+            var ts = exitedAt - enteredAt;
+
+            var hours = (int)ts.TotalHours;
+            return $"{hours:00}:{ts.Minutes:00}:{ts.Seconds:00}";
         }
 
         #endregion
