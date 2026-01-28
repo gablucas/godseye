@@ -57,6 +57,9 @@ namespace GodsEye.WEB.Pages.Camera
 
         private RecognizeRectEnum? _recognizeType = null;
 
+        private bool _face = false;
+        private bool _area = false;
+
         //protected override async Task OnParametersSetAsync()
         //{
 
@@ -123,6 +126,7 @@ namespace GodsEye.WEB.Pages.Camera
                     "import", "./js/roi.js");
 
                 await _roiJs.InvokeVoidAsync("initRoiCanvas");
+                await _roiJs.InvokeVoidAsync("syncCanvasWithVideo", "camera-player");
             }
         }
 

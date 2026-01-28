@@ -4,7 +4,7 @@ using MudBlazor;
 
 namespace GodsEye.WEB.Pages.Camera
 {
-    public partial class CameraIncidenRecordingPage
+    public partial class CameraEnviromentMonitoringPage
     {
         [Parameter]
         public int Id { get; set; }
@@ -12,29 +12,14 @@ namespace GodsEye.WEB.Pages.Camera
         #region FORM
 
         MudForm form;
-        UpdateCameraIncidenteRecordingForm IncidentRecordingForm { get; set; } = new();
+        UpdateCameraDwellTimeMonitoringForm DwellTimeMonitoringForm { get; set; } = new();
         private bool success;
         private string[] errors = { };
-        private string _email;
 
         #endregion
 
+
         private bool visible = false;
-
-
-        private void AddEmail()
-        {
-            if (!string.IsNullOrEmpty(_email))
-            {
-                IncidentRecordingForm.Emails.Add(_email);
-                _email = "";
-            }
-        }
-
-        private void RemoveEmail(string email)
-        {
-            IncidentRecordingForm.Emails.Remove(email);
-        }
 
         private async Task Submit()
         {

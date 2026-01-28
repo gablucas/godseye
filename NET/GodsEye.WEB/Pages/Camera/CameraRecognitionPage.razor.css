@@ -15,7 +15,7 @@
 
 .form-container .video-inputs {
     display: grid;
-    grid-template-columns: 1fr 2fr;
+    grid-template-columns: 640px 2fr;
     gap: 12px;
 }
 
@@ -27,16 +27,18 @@
 }
 
 
-.form-container .video-inputs .face-size-inputs {
+.form-container .video-inputs .measure-input {
     display: grid;
-    grid-template-columns: 100px 100px 160px;
-    column-gap: 12px;
+    align-content: space-between;
+    grid-template-rows: auto auto 1fr 40px;
+    gap: 8px;
+    height: 290px;
 }
 
-.form-container .video-inputs .camera-size-inputs {
-    display: grid;
-    grid-template-columns: repeat(4, 100px) 160px;
-    column-gap: 12px;
+.form-container .video-inputs .measure-input .set-measure {
+    display: flex;
+    align-content: center;
+    gap: 12px;
 }
 
 .form-container .inputs-container .connection {
@@ -47,7 +49,6 @@
 
 .form-container ::deep .btn-submit {
     display: block;
-    margin: 12px 0px;
 }
 
 .form-container .register-success {
@@ -58,7 +59,7 @@
 .video-wrapper {
     position: relative;
     width: 100%;
-    aspect-ratio: 16 / 9; /* ou dinâmico */
+    aspect-ratio: 16 / 9;
 }
 
 .video-wrapper video,

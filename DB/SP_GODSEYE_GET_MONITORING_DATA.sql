@@ -23,7 +23,7 @@ BEGIN
                         )
                     ) 
                     FROM FEATURE F
-                    INNER JOIN CAMERA_FEATURE CF ON CF.FEATURE_ID = F.ID
+                    INNER JOIN CAMERA_FEATURE CF ON CF.FEATURE_ID = F.ID AND CF.IS_ACTIVE = 1
                     WHERE CF.CAMERA_ID = C.ID
                     )
 				)

@@ -30,5 +30,10 @@ namespace GodsEye.WEB.Components
         {
             return _cameraFeatures.Any(x => x.Id == featureId);
         }
+
+        private bool IsPage(string page)
+        {
+            return Pagina == page;
+        }
     }
 }

@@ -13,6 +13,26 @@
     border: 1px solid var(--gray-050);
 }
 
+.form-container .email-container {
+    display: grid;
+    gap: 12px;
+    padding: 12px;
+    border: 1px solid var(--gray-050);
+    border-radius: 7px;
+}
+
+.form-container .email-input {
+    display: grid;
+    grid-template-columns: auto 200px;
+    gap: 12px;
+    justify-content: start;
+}
+
+.form-container .email-list {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+}
+
 .form-container ::deep .btn-submit {
     display: block;
     margin: 12px 0px;

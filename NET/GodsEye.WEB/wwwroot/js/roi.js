@@ -4,6 +4,7 @@ let ctx;
 let startX = 0;
 let startY = 0;
 let isDrawing = false;
+let isSynced = false;
 let drawingEnabled = false;
 
 let rect = null;
@@ -32,12 +33,16 @@ function onMouseDown(e) {
 function onMouseMove(e) {
     if (!isDrawing || !drawingEnabled) return;
 
+    const clamp = (v, min, max) => Math.max(min, Math.min(max, v));
     const pos = getMousePos(e);
 
-    const x = Math.min(startX, pos.x);
-    const y = Math.min(startY, pos.y);
-    const width = Math.abs(pos.x - startX);
-    const height = Math.abs(pos.y - startY);
+    const endX = clamp(pos.x, 0, canvas.width);
+    const endY = clamp(pos.y, 0, canvas.height);
+
+    const x = Math.min(startX, endX);
+    const y = Math.min(startY, endY);
+    const width = Math.abs(endX - startX);
+    const height = Math.abs(endY - startY);
 
     ctx.clearRect(0, 0, canvas.width, canvas.height);
 
@@ -45,7 +50,13 @@ function onMouseMove(e) {
     ctx.lineWidth = 2;
     ctx.strokeRect(x, y, width, height);
 
-    rect = { x, y, width, height };
+    // ⬇️ salva RELATIVO
+    rect = {
+        x: x / canvas.width,
+        y: y / canvas.height,
+        width: width / canvas.width,
+        height: height / canvas.height
+    };
 }
 
 export function setStrokeRect(rect) {
@@ -57,22 +68,22 @@ export function setStrokeRect(rect) {
     ctx.lineWidth = 2;
 
     ctx.strokeRect(
-        rect.x,
-        rect.y,
-        rect.width,
-        rect.height
+        rect.x * canvas.width,
+        rect.y * canvas.height,
+        rect.width * canvas.width,
+        rect.height * canvas.height
     );
 }
 
 function getMousePos(e) {
-    const rect = canvas.getBoundingClientRect();
+    const bounds = canvas.getBoundingClientRect();
 
-    const scaleX = canvas.width / rect.width;
-    const scaleY = canvas.height / rect.height;
+    const scaleX = canvas.width / bounds.width;
+    const scaleY = canvas.height / bounds.height;
 
     return {
-        x: (e.clientX - rect.left) * scaleX,
-        y: (e.clientY - rect.top) * scaleY
+        x: (e.clientX - bounds.left) * scaleX,
+        y: (e.clientY - bounds.top) * scaleY
     };
 }
 
@@ -82,6 +93,8 @@ function onMouseUp() {
 }
 
 export function enableDrawing() {
+    if (!isSynced) return;
+
     drawingEnabled = true;
     canvas.style.pointerEvents = "auto";
     canvas.style.cursor = "crosshair";
@@ -96,4 +109,20 @@ export function disableDrawing() {
 
 export function getRect() {
     return rect;
+}
+
+export function syncCanvasWithVideo(videoId) {
+    const video = document.getElementById(videoId);
+    if (!video || !canvas) return;
+
+    const sync = () => {
+        canvas.width = video.videoWidth;
+        canvas.height = video.videoHeight;
+
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+        isSynced = true;
+    };
+
+    video.addEventListener("loadedmetadata", sync);
+    sync();
 }

@@ -32,7 +32,7 @@
 
     .form-container .video-inputs {
         display: grid;
-        grid-template-columns: 1fr 2fr;
+        grid-template-columns: 640px 2fr;
         gap: 12px;
     }
 

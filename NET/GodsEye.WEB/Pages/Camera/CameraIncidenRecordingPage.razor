@@ -6,7 +6,7 @@
 <PageTitle>Registro de incidente</PageTitle>
 
 <div class="page-title">
-    <h1>Registro de incidente</h1>
+    <h1>Registro de incidencia</h1>
     <p>Configure a funcionalidade de registro de incidente</p>
 </div>
 
@@ -17,7 +17,24 @@
 
     <MudForm @ref="form" Model="IncidentRecordingForm" @bind-IsValid="@success" @bind-Errors="@errors">
 
-        <MudTextField Label="MacAddress" HelperText="Identificador da camera ao receber o disparo de alarme" @bind-Value="IncidentRecordingForm.MacAddress" T="string" For="@(() => IncidentRecordingForm.MacAddress)" Variant="Variant.Outlined" />
+        <MudText Typo="Typo.subtitle2">Identificador da camera</MudText>
+        <MudTextField Style="width: 400px" Label="MacAddress" @bind-Value="IncidentRecordingForm.MacAddress" T="string" For="@(() => IncidentRecordingForm.MacAddress)" Variant="Variant.Outlined" />
+
+        <div class="email-container">
+            <MudText Typo="Typo.subtitle2">Defina os emails que receberão o aviso da incidencia</MudText>
+
+            <div class="email-input">
+                <MudTextField Style="width: 400px" Label="Email" @bind-Value="_email" T="string" Variant="Variant.Outlined" />
+                <MudButton OnClick="AddEmail" Style="height: 56px; margin-top: 8px" Variant="Variant.Outlined" Color="Color.Success">Adicionar email</MudButton>
+            </div>
+
+            <div class="email-list">
+                @foreach (var email in IncidentRecordingForm.Emails)
+                {
+                    <MudChip T="string" Label="true" Variant="Variant.Outlined" Size="Size.Large" Color="Color.Primary" OnClose="() => RemoveEmail(email)">@email</MudChip>
+                }
+            </div>
+        </div>
 
         <MudButton OnClick="Submit" Disabled=@(!success) Class="btn-submit" Variant="Variant.Filled" Color="Color.Primary">Atualizar</MudButton>
 

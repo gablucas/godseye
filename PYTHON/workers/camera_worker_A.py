@@ -1,7 +1,8 @@
 # stream/camera_worker.py
 
+import cv2
 import time
-from ultralytics import YOLO
+import os
 from threading import Thread
 from queue import Queue
 from datetime import datetime
@@ -19,7 +20,6 @@ from infrastructure.ffmpeg_capture import ffmpeg_capture
 TIMEOUT = 5
 DEBUG_VIEW = False
 PROCESS_EVERY_N_FRAMES = 3
-TRACK_TIMEOUT_SECONDS = 3
 
 
 class CameraWorker:
@@ -52,7 +52,7 @@ class CameraWorker:
         self.active_users = active_users
         self.active_users_lock = active_users_lock
 
-        self.frame_queue = Queue(maxsize=100)
+        self.frame_queue = Queue(maxsize=1)
 
         self.capture_fps = capture_fps
         self.width = width
@@ -92,10 +92,9 @@ class CameraWorker:
         self.running = False
 
     def capture_loop(self):
-        model = YOLO("/models/ultralytics/yolo26n.pt")
-
         while self.running:
 
+            # Se nenhuma funcionalidade estiver ativa, não cria FFmpeg
             if not self.environment_monitoring and not self.incident_recording and not self.dwell_time_monitoring:
                 time.sleep(1)
                 continue
@@ -115,11 +114,15 @@ class CameraWorker:
             try:
                 while self.running:
 
+                    # 🔹 Se não estiver monitorando, NÃO lê frames
+                    # 🔹 FFmpeg continua rodando só para gravação
                     if not self.environment_monitoring and not self.dwell_time_monitoring:
                         time.sleep(0.2)
                         continue
 
+                    # print(f"[DEBUG] Aguardando frame da camera {self.cameraId}...")
                     raw = process.stdout.read(self.frame_size)
+                    # print(f"[DEBUG] Frame recebido ({len(raw)} bytes)")
 
                     if len(raw) != self.frame_size:
                         print(f"[WARN] Frame incompleto (cam {self.cameraId}), reiniciando FFmpeg")
@@ -130,145 +133,98 @@ class CameraWorker:
                     )
 
                     now = time.time()
-                    if now - self.last_sent_time < self.SEND_INTERVAL:
-                        continue
 
-                    self.last_sent_time = now
+                    if now - self.last_sent_time >= self.SEND_INTERVAL:
+                        self.last_sent_time = now
+                    
 
-                    results = model.track(
-                        source=frame,
-                        classes=[0],
-                        tracker="bytetrack.yaml",
-                        persist=True
-                    )
-
-                    # 🔹 TRACKS VISÍVEIS NESTE FRAME
-                    current_track_ids = set()
-                    test = {}
-
-                    # 🔹 MAPA track_id → person_id (somente os ativos)
-                    with self.active_users_lock:
-                        active_tracks = {
-                            u["track_id"]: person_id
-                            for person_id, u in self.active_users.items()
-                            if u["track_id"] is not None
-                        }
-
-
-                    for r in results:
-                        if r.boxes.id is None:
-                            continue
-
-                        for box in r.boxes:
-                            track_id = int(box.id.item())
-                            x1, y1, x2, y2 = map(int, box.xyxy[0])
-
-                            # marca como visto neste frame
-                            current_track_ids.add(track_id)
-
-                            # 🔥 já associado → ignora reconhecimento
-                            if track_id in active_tracks:
-                                continue
-
-                            crop = frame[y1:y2, x1:x2]
-                            if crop.size == 0:
-                                continue
-
-                            test[track_id] = {
-                                "frame": crop
-                            }
-
-                    with self.active_users_lock:
-                        for person_id, data in self.active_users.items():
-                            if data["track_id"] is not None and data["track_id"] not in current_track_ids:
-                                print(f"[INFO] Track {data['track_id']} liberado (person {person_id})")
-                                data["track_id"] = None
-
-                    if test:
                         if self.frame_queue.full():
                             try:
                                 self.frame_queue.get_nowait()
                             except:
                                 pass
 
-                        self.frame_queue.put(test)
+                        self.frame_queue.put(frame)
+
             finally:
                 process.kill()
-                time.sleep(2)
+                time.sleep(2)  # evita loop agressivo
 
     def processing_loop(self):
         while self.running and (self.environment_monitoring or self.dwell_time_monitoring):
             try:
-                test = self.frame_queue.get(timeout=1)
+                frame = self.frame_queue.get(timeout=1)
             except:
                 continue
 
-            for track_id, data in test.items():
-                frame = data["frame"]
+            faces = self.face_model.get_faces(frame)
+            for f in faces:
+                emb = f.normed_embedding
+                user_id, score = self.matcher.match(emb)
 
-                faces = self.face_model.get_faces(frame)
-                if not faces:
-                    continue
+                if user_id is not None:
+                    self.register_log(
+                        user_id,
+                        self.cameraId,
+                        self.sectorId,
+                        score
+                    )
 
-                for f in faces:
-                    emb = f.normed_embedding
-                    user_id, score = self.matcher.match(emb)
-
-                    if user_id is not None:
-                        self.register_log(
-                            user_id,
-                            self.cameraId,
-                            self.sectorId,
-                            score,
-                            track_id
-                        )
-        
-    def register_log(self, personId, cameraId, sectorId, score, track_id):
+            self.cleanup_unknowns()
+      
+    def register_log(self, personId, cameraId, sectorId, score):
         now = datetime.now(ZoneInfo("America/Sao_Paulo"))
 
         with self.active_users_lock:
             personData = self.active_users.get(personId)
 
             # ENVIRONMENT MONITORING
-            if self.environment_monitoring and (personData is None or personData["sector_id"] != sectorId):
+            if (self.environment_monitoring and (personData is None or personData["sector_id"] != sectorId)):
+
                 environmentMonitoring = EnvironmentMonitoringCreateRequest(
                     camera_id=cameraId,
                     person_id=personId,
                     score=score
                 )
-
+                
                 log_queue.put((
                     LogSender.dotnet_create_environment_monitoring_log,
                     environmentMonitoring
                 ))
 
             # DWELL TIME MONITORING
-            if self.dwell_time_monitoring:
-                if personData is None:
+            if (self.dwell_time_monitoring):
+                if (personData is None):
+                    print("USUARIO NÃO EXISTE")
+
                     dwellTimeMonitoring = DwellTimeMonitoringCreateRequest(
                         camera_id=cameraId,
                         person_id=personId,
-                        first_seen=now.isoformat()
+                        first_seen=datetime.now(ZoneInfo("America/Sao_Paulo")).isoformat()
                     )
 
                     log_queue.put((
                         LogSender.dotnet_create_dwell_time_monitoring_log,
                         dwellTimeMonitoring
                     ))
-                else:
-                    diff_created = (now - personData["created_at"]).total_seconds() / 60
-                    diff_last_seen = (now - personData["last_seen"]).total_seconds() / 60
 
-                    if diff_created >= 100:
+                else:
+                    diff_last_seen = (now - personData["last_seen"]).total_seconds() / 60
+                    diff_created = (now - personData["created_at"]).total_seconds() / 60
+
+                    print(f"ULTIMA HORA VISTO: {diff_last_seen}")
+                    print(f"TEMPO NA CAMARA: {diff_created}")
+
+                    if (diff_created >= 100):
                         log_queue.put((
                             LogSender.dotnet_send_timeout_alert,
                             {
                                 "person_id": personId,
-                                "camera_id": cameraId
+                                "camera_id": cameraId,
                             }
                         ))
 
-                    if diff_last_seen >= 5:
+                    if (diff_last_seen >= 5):
                         log_queue.put((
                             LogSender.dotnet_update_last_seen,
                             {
@@ -278,7 +234,7 @@ class CameraWorker:
                             }
                         ))
 
-            # 🧠 atualizar estado
+
             if personData is None:
                 self.active_users[personId] = {
                     "camera_id": cameraId,
@@ -286,18 +242,16 @@ class CameraWorker:
                     "score": score,
                     "created_at": now,
                     "last_seen": now,
-                    "updated_at": now,
-                    "track_id": track_id
+                    "updated_at": now
                 }
+
             else:
-                personData.update({
-                    "camera_id": cameraId,
-                    "sector_id": sectorId,
-                    "score": score,
-                    "last_seen": now,
-                    "updated_at": now,
-                    "track_id": track_id
-                })
+                # ATUALIZAR DADOS LISTA USERS
+                personData["last_seen"] = now
+                personData["updated_at"] = now
+                personData["camera_id"] = cameraId
+                personData["sector_id"] = sectorId
+                personData["score"] = score
 
     def cleanup_unknowns(self):
         now = time.time()
