@@ -1,7 +1,6 @@
 ﻿using GodsEye.Application.DTOs.Model;
 using GodsEye.WEB.Services;
 using Microsoft.AspNetCore.Components;
-using Microsoft.JSInterop;
 using MudBlazor;
 
 namespace GodsEye.WEB.Components

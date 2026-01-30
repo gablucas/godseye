@@ -18,6 +18,7 @@ builder.Services.AddScoped<SignalRService>();
 builder.Services.AddScoped<EnvironmentMonitoringWebService>();
 builder.Services.AddScoped<IncidentRecordingWebService>();
 builder.Services.AddScoped<DwellTimeMonitoringWebService>();
+builder.Services.AddScoped<NotificationGroupWebService>();
 
 
 builder.Services.AddMudServices();

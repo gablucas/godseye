@@ -1,53 +1,49 @@
 ﻿@page "/configuracoes/notificacao"
 @using GodsEye.WEB.Components
 @using GodsEye.WEB.Enum
-@inject ISnackbar Snackbar
+@using GodsEye.Application.DTOs.Model;
 
-<PageTitle>Registro de incidente</PageTitle>
+
+<PageTitle>Notificações</PageTitle>
 
 <div class="page-title">
-    <h1>Registro de incidencia</h1>
-    <p>Configure a funcionalidade de registro de incidente</p>
+    <h1>Notificações</h1>
+    <p>Configure as notificações de seu sistema</p>
 </div>
 
-<div class="form-container">
-
-    <MudForm @ref="form" Model="IncidentRecordingForm" @bind-IsValid="@success" @bind-Errors="@errors">
-
-        <div>
-            <MudText Typo="Typo.subtitle2">Identificador da camera</MudText>
-            <MudTextField Style="width: 400px" Label="MacAddress" @bind-Value="IncidentRecordingForm.MacAddress" T="string" For="@(() => IncidentRecordingForm.MacAddress)" Variant="Variant.Outlined" />
+<div class="notification-menu">
+    <div class="filters">
+        <div class="option">
+            <MudTextField @bind-Value="_groupNameFilter" TextChanged="ApplyFilters" Immediate="true" Label="Pessoa" Variant="Variant.Outlined"></MudTextField>
+            <MudButton Variant="Variant.Outlined" OnClick=@(() => _groupNameFilter = "")>
+                <MudIcon Icon="@Icons.Material.Filled.Delete"></MudIcon>
+            </MudButton>
         </div>
 
-        <div class="email-container">
-            <MudText Typo="Typo.subtitle2">Defina os emails que receberão o aviso da incidencia</MudText>
-
-            <div class="email-input">
-                <MudTextField T="string"
-                              ValueChanged="OnEmailChanged"
-                              Label="Email"
-                              Variant="Variant.Outlined"
-                              Style="width: 400px"
-                              Error="@_hasEmailError"
-                              ErrorText="@_emailErrorMessage" />
-
-                <MudButton OnClick="AddEmail" Style="height: 56px; margin-top: 8px" Variant="Variant.Outlined" Color="Color.Success">Adicionar email</MudButton>
-            </div>
-
-            <div class="email-list">
-                @foreach (var email in IncidentRecordingForm.Emails)
-                {
-                    <MudChip T="string" Label="true" Variant="Variant.Outlined" Size="Size.Large" Color="Color.Primary" OnClose="() => RemoveEmail(email)">@email</MudChip>
-                }
-            </div>
+        <div class="option">
+            <MudTextField @bind-Value="_grouEmailFilter" TextChanged="ApplyFilters" Immediate="true" Label="Email" Variant="Variant.Outlined"></MudTextField>
+            <MudButton Variant="Variant.Outlined" OnClick=@(() => _grouEmailFilter = "")>
+                <MudIcon Icon="@Icons.Material.Filled.Delete"></MudIcon>
+            </MudButton>
         </div>
+    </div>
 
-        <MudButton OnClick="Submit" Disabled=@(!success) Class="btn-submit" Variant="Variant.Filled" Color="Color.Primary">Atualizar</MudButton>
-
-        <MudOverlay Visible="visible" LightBackground="true" Absolute="true">
-            <MudProgressCircular Color="Color.Default" Indeterminate="true" />
-        </MudOverlay>
-
-    </MudForm>
-
+    <MudButton Variant="Variant.Outlined" OnClick="OpenCreateNotificationGroup">Criar grupo de notificação</MudButton>
 </div>
+
+<MudTable T="NotificationGroupModel" @ref="_mudTable" Items="@_filteredLogs" Hover="true" Loading="@_loading" LoadingProgressColor="Color.Info" RowClass="cursor-pointer">
+    <HeaderContent>
+        <MudTh>Grupo</MudTh>
+        <MudTh>Emails</MudTh>
+    </HeaderContent>
+    <RowTemplate>
+        <MudTd Style="padding: 16px" DataLabel="Person">@context.Name</MudTd>
+
+        <MudTd Style="padding: 16px" DataLabel="Name">
+            @foreach (var email in context.Emails.Where(x => String.IsNullOrWhiteSpace(x.Name) || x.Name.Contains(_grouEmailFilter, StringComparison.OrdinalIgnoreCase)))
+            {
+                <MudChip T="string" Label="true" Variant="Variant.Outlined" Size="Size.Medium" Color="Color.Primary">@email.Name</MudChip>
+            }
+        </MudTd>
+    </RowTemplate>
+</MudTable>

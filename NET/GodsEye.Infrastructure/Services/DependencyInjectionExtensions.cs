@@ -26,6 +26,7 @@ namespace GodsEye.Infrastructure.Services
             services.AddScoped<IIncidentRecordingRepository, IncidentRecordingLogRepository>();
             services.AddScoped<IDwellTimeMonitoringRepository, DwellTimeMonitoringRepository>();
             services.AddScoped<IFeatureRepository, FeatureRepository>();
+            services.AddScoped<INotificationGroupRepository, NotificationGroupRepository>();
 
             services.AddScoped<ICameraQueryRepository, CameraQueryRepository>();
             services.AddScoped<IPersonQueryRepository, PersonQueryRepository>();
@@ -34,6 +35,7 @@ namespace GodsEye.Infrastructure.Services
             services.AddScoped<IEnvironmentMonitoringQueryRepository, EnvironmentMonitoringQueryRepository>();
             services.AddScoped<IIncidentRecordingQueryRepository, IncidentRecordingQueryRepository>();
             services.AddScoped<IDwellTimeMonitoringQueryRepository, DwellTimeMonitoringQueryRepository>();
+            services.AddScoped<INotificationGroupQueryRepository, NotificationGroupQueryRepository>();
 
 
             services.AddDbContext<AppDbContext>(options =>

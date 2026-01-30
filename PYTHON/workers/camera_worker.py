@@ -268,7 +268,7 @@ class CameraWorker:
                             }
                         ))
 
-                    if diff_updated_at >= 5:
+                    if diff_updated >= 5:
                         log_queue.put((
                             LogSender.dotnet_update_updated_at,
                             {

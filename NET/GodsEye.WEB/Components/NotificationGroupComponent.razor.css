@@ -1,0 +1,83 @@
+﻿.notification-menu {
+    display: flex;
+    justify-content: space-between;
+    border: 1px solid var(--gray-050);
+    border-radius: 7px;
+    padding: 8px 16px;
+}
+
+.filters {
+    display: grid;
+    grid-template-columns: repeat(5, minmax(240px, 280px));
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 24px;
+}
+
+    .filters .option {
+        display: grid;
+        grid-template-columns: 1fr auto;
+        align-items: center;
+        gap: 4px;
+    }
+
+h1 {
+    margin-top: 2rem;
+    font-size: 1.6rem;
+}
+
+.form-container {
+    display: grid;
+    gap: 24px;
+    padding: 12px;
+    position: relative;
+    margin-top: 12px;
+    border-radius: 7px;
+    border: 1px solid var(--gray-050);
+}
+
+    .form-container ::deep form {
+        display: flex;
+        gap: 12px;
+    }
+
+    .form-container .email-container {
+        display: grid;
+        padding: 12px;
+        border: 1px solid var(--gray-050);
+        border-radius: 7px;
+    }
+
+    .form-container .email-input {
+        display: grid;
+        grid-template-columns: auto 200px;
+        gap: 12px;
+        justify-content: start;
+    }
+
+    .form-container .email-list {
+        display: grid;
+        grid-template-columns: repeat(4, 1fr);
+        margin-top: 12px;
+    }
+
+    .form-container ::deep .btn-submit {
+        display: block;
+        margin: 12px 0px;
+    }
+
+    .form-container .register-success {
+        display: flex;
+        gap: 12px;
+    }
+
+.filters .option ::deep button svg * {
+    color: #c4c4c4;
+}
+
+.filters .option ::deep button {
+    display: flex;
+    height: 56px;
+    margin-top: 4px;
+    border-color: #c4c4c4;
+}

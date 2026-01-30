@@ -1,4 +1,6 @@
-﻿using GodsEye.WEB.Model.Forms;
+﻿using GodsEye.Application.DTOs.Model;
+using GodsEye.WEB.Components;
+using GodsEye.WEB.Services;
 using Microsoft.AspNetCore.Components;
 using MudBlazor;
 
@@ -6,101 +8,57 @@ namespace GodsEye.WEB.Pages.Configurations
 {
     public partial class NotificationPage
     {
-        [Parameter]
-        public int Id { get; set; }
+        [Inject]
+        public NotificationGroupWebService notificationGroupWebService { get; set; }
 
-        #region FORM
+        #region TABLE PARAMETERS
 
-        MudForm form;
-        UpdateCameraIncidenteRecordingForm IncidentRecordingForm { get; set; } = new();
-        private bool success;
-        private string[] errors = { };
+        private List<NotificationGroupModel> _logs = new();
+        private List<NotificationGroupModel> _filteredLogs = new();
 
 
-        private string _email;
-        private bool _hasEmailError;
-        private string _emailErrorMessage;
+        private MudTable<NotificationGroupModel> _mudTable;
+        bool _loading;
+        #endregion
+
+        #region TABLE FILTERS
+
+        private string _groupNameFilter = "";
+        private string _grouEmailFilter = "";
 
         #endregion
 
-        private bool visible = false;
+        [Inject]
+        public IDialogService DialogService { get; set; }
 
-        #region Email Funcs
-
-        private void AddEmail()
+        protected override async Task OnInitializedAsync()
         {
-            _hasEmailError = false;
-            _emailErrorMessage = null;
+            _loading = true;
 
-            if (string.IsNullOrWhiteSpace(_email))
+            var result = await notificationGroupWebService.GetAllAsync();
+
+            if (result.Success)
             {
-                _hasEmailError = true;
-                _emailErrorMessage = "Informe um e-mail";
-                return;
+                _logs = result.Data.ToList();
+                _filteredLogs = _logs;
             }
 
-            _email = _email.Trim();
-
-            if (!System.Net.Mail.MailAddress.TryCreate(_email, out _))
-            {
-                _hasEmailError = true;
-                _emailErrorMessage = "E-mail inválido";
-                return;
-            }
-
-            if (IncidentRecordingForm.Emails.Contains(_email))
-            {
-                _hasEmailError = true;
-                _emailErrorMessage = "E-mail já adicionado";
-                return;
-            }
-
-            IncidentRecordingForm.Emails.Add(_email);
-
-            _email = string.Empty;
+            _loading = false;
         }
 
-        private void OnEmailChanged(string value)
+        void ApplyFilters()
         {
-            _email = value;
-            _hasEmailError = false;
-            _emailErrorMessage = null;
+            _filteredLogs = _logs
+                .Where(x =>
+                    (string.IsNullOrWhiteSpace(_groupNameFilter) || x.Name.Contains(_groupNameFilter, StringComparison.OrdinalIgnoreCase)) &&
+                    (string.IsNullOrWhiteSpace(_grouEmailFilter) || x.Emails.Any(y => y.Name.Contains(_grouEmailFilter, StringComparison.OrdinalIgnoreCase)))
+                ).ToList();
         }
 
-        private void RemoveEmail(string email)
+        private void OpenCreateNotificationGroup()
         {
-            IncidentRecordingForm.Emails.Remove(email);
-        }
-
-        #endregion
-
-        private async Task Submit()
-        {
-            //if (!ValidateFeatures())
-            //    return;
-
-            //visible = true;
-            //apiResponse = await _cameraService.UpdateAsync(CameraForm);
-            //visible = false;
-
-            //if (apiResponse.Success)
-            //{
-            //    Snackbar.Add("Camera atualizada com sucesso!", Severity.Success);
-            //    success = false;
-
-            //    var result = await _cameraService.GetById(camera.Id);
-
-            //    if (result.Success && result is not null && result.Data is not null)
-            //    {
-            //        camera = result.Data;
-            //    }
-
-            //    _refreshToken = Guid.NewGuid();
-            //}
-            //else
-            //{
-            //    Snackbar.Add("Houve um erro ao cadastrar a camera, tente novamente mais tarde", Severity.Error);
-            //}
+            var options = new DialogOptions { CloseOnEscapeKey = true, FullWidth = true, MaxWidth = MaxWidth.Large };
+            DialogService.ShowAsync<NotificationGroupComponent>("Criar grupo email", options);
         }
     }
 }
