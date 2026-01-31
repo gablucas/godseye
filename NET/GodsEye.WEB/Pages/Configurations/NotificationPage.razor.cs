@@ -1,8 +1,12 @@
 ﻿using GodsEye.Application.DTOs.Model;
 using GodsEye.WEB.Components;
+using GodsEye.WEB.Model.Forms;
 using GodsEye.WEB.Services;
 using Microsoft.AspNetCore.Components;
 using MudBlazor;
+using MudBlazor.Extensions;
+using System.Text.Json;
+
 
 namespace GodsEye.WEB.Pages.Configurations
 {
@@ -58,7 +62,55 @@ namespace GodsEye.WEB.Pages.Configurations
         private void OpenCreateNotificationGroup()
         {
             var options = new DialogOptions { CloseOnEscapeKey = true, FullWidth = true, MaxWidth = MaxWidth.Large };
-            DialogService.ShowAsync<NotificationGroupComponent>("Criar grupo email", options);
+            DialogService.ShowAsync<CreateNotificationGroupComponent>("Criar grupo email", options);
+        }
+
+        private async Task OpenUpdateNotificationGroup(NotificationGroupModel notification)
+        {
+            var options = new DialogOptions { CloseOnEscapeKey = true, FullWidth = true, MaxWidth = MaxWidth.Large };
+            var parameters = new DialogParameters<UpdateNotificationGroupComponent> { { x => x.NotificationGroupModel, notification } };
+            var dialog = await DialogService.ShowAsync<UpdateNotificationGroupComponent>("Editar grupo email", parameters, options);
+
+            var result = await dialog.Result;
+
+            if (!result.Canceled)
+            {
+                var updatedItem = result.Data.As<UpdateNotificationGroupForm>();
+
+                if (updatedItem.NewEmails.Any())
+                {
+                    var updatedNotification = await notificationGroupWebService.GetById(notification.Id);
+
+                    if (updatedNotification.Success)
+                    {
+                        var index = _logs.FindIndex(x => x.Id == notification.Id);
+
+                        if (index != -1)
+                        {
+                            _logs[index] = updatedNotification.Data;
+                        }
+                    }
+                }
+
+                if (updatedItem.RemoveEmails.Any())
+                {
+                    var index = _logs.FindIndex(x => x.Id == notification.Id);
+                    if (index == -1)
+                        return;
+
+                    var current = _logs[index];
+
+                    var updatedNotification = new NotificationGroupModel
+                    {
+                        Id = current.Id,
+                        Name = current.Name,
+                        EmailsJson = JsonSerializer.Serialize(current.Emails.Where(e => !updatedItem.RemoveEmails.Contains(e.Id)).ToList())
+                    };
+
+                    _logs[index] = updatedNotification;
+                    ApplyFilters();
+                }
+            }
         }
     }
 }

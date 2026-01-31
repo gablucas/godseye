@@ -46,6 +46,9 @@ namespace GodsEye.Infrastructure.Services
                 );
             });
 
+            services.AddScoped<IApplicationDbContext>(sp =>
+                sp.GetRequiredService<AppDbContext>());
+
             services.AddHttpClient<IGodsEyeService, GodsEyeService>((sp, client) =>
             {
                 var config = sp.GetRequiredService<IConfiguration>();

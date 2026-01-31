@@ -24,11 +24,29 @@ namespace GodsEye.WEB.Services
             return json!;
         }
 
+        public async Task<ApiResponse<NotificationGroupModel>> GetById(int notificationGroupId)
+        {
+            var result = await _http.GetAsync($"api/notificationgroup/{notificationGroupId}");
+
+            var json = await result.Content.ReadFromJsonAsync<ApiResponse<NotificationGroupModel>>();
+
+            return json!;
+        }
+
         public async Task<ApiResponse<IEnumerable<NotificationGroupModel>>> GetAllAsync()
         {
             var result = await _http.GetAsync("api/notificationgroup");
 
             var json = await result.Content.ReadFromJsonAsync<ApiResponse<IEnumerable<NotificationGroupModel>>>();
+
+            return json!;
+        }
+
+        public async Task<ApiResponse<int>> UpdateAsync(UpdateNotificationGroupForm notificationGroup)
+        {
+            var result = await _http.PutAsJsonAsync("api/notificationgroup", notificationGroup);
+
+            var json = await result.Content.ReadFromJsonAsync<ApiResponse<int>>();
 
             return json!;
         }

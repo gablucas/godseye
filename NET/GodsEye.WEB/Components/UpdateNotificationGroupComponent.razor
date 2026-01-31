@@ -1,0 +1,55 @@
+﻿@using GodsEye.Application.DTOs.Model
+@inject ISnackbar Snackbar
+
+<MudDialog>
+    <DialogContent>
+        <div class="form-container">
+
+            <MudForm @ref="form" Model="NotificationGroupForm" @bind-IsValid="@success" @bind-Errors="@errors">
+
+                <MudTextField T="string" Label="Descrição" @bind-Value="NotificationGroupForm.Name" Variant="Variant.Outlined" />
+
+                <div class="email-container">
+                    <MudText Typo="Typo.subtitle2">Defina os emails que receberão o aviso da incidencia</MudText>
+
+                    <div class="email-input">
+                        <MudTextField T="string"
+                                      Value="_email"
+                                      ValueChanged="OnEmailChanged"
+                                      Label="Email"
+                                      Variant="Variant.Outlined"
+                                      Style="width: 400px"
+                                      Error="@_hasEmailError"
+                                      ErrorText="@_emailErrorMessage" />
+
+                        <MudButton OnClick="AddEmail" Style="height: 56px; margin-top: 8px" Variant="Variant.Outlined" Color="Color.Success">Adicionar email</MudButton>
+                    </div>
+
+                    <div class="email-list">
+                        @foreach (var email in NotificationGroupForm.Emails)
+                        {
+                            <MudChip T="string" Label="true" Variant="Variant.Outlined" Size="Size.Large" Color="Color.Primary" OnClose="() => RemoveEmail(email.Id)">@email.Name</MudChip>
+                        }
+                        @foreach (var email in NotificationGroupForm.NewEmails)
+                        {
+                            <MudChip T="string" Label="true" Variant="Variant.Outlined" Size="Size.Large" Color="Color.Primary" OnClose="() => RemoveEmail(email)">@email</MudChip>
+                        }
+                    </div>
+                </div>
+
+                <MudButton OnClick="Submit" Disabled=@(!success) Class="btn-submit" Variant="Variant.Filled" Color="Color.Primary">Atualizar grupo</MudButton>
+
+                <MudOverlay Visible="visible" LightBackground="true" Absolute="true">
+                    <MudProgressCircular Color="Color.Default" Indeterminate="true" />
+                </MudOverlay>
+
+            </MudForm>
+
+        </div>
+    </DialogContent>
+
+
+    <DialogActions>
+        <MudButton OnClick="Cancel">Sair</MudButton>
+    </DialogActions>
+</MudDialog>

@@ -23,8 +23,8 @@ BEGIN
         SET NEW_ID = LAST_INSERT_ID();
         
         INSERT INTO NOTIFICATION_GROUP_EMAIL(NOTIFICATION_GROUP_ID, EMAIL)
-        SELECT NEW_ID, jt.name
-        FROM JSON_TABLE(P_EMAILS_JSON, '$[*]' COLUMNS (name VARCHAR(100) PATH '$')) jt;
+        SELECT NEW_ID, jt.email
+        FROM JSON_TABLE(P_EMAILS_JSON, '$[*]' COLUMNS (email VARCHAR(100) PATH '$')) jt;
         
     COMMIT;
     

@@ -1,11 +1,13 @@
 ﻿using GodsEye.Application.DTOs.Model;
+using GodsEye.Application.Interfaces;
 using GodsEye.Domain.DTOs.Result;
 using GodsEye.Domain.Entities;
 using Microsoft.EntityFrameworkCore;
+using MySqlConnector;
 
 namespace GodsEye.Infrastructure.Persistence
 {
-    public class AppDbContext : DbContext
+    public class AppDbContext : DbContext, IApplicationDbContext
     {
         public AppDbContext(DbContextOptions<AppDbContext> options) : base(options) { }
 
@@ -36,6 +38,41 @@ namespace GodsEye.Infrastructure.Persistence
         public DbSet<DwellTimeMonitoringDetailsModel> DwellTimeMonitoringDetailsModel { get; set; }
         public DbSet<CameraFeatureModel> CameraFeatureModel { get; set; }
         public DbSet<NotificationGroupModel> NotificationGroupModel { get; set; }
+
+        public async Task<int> ExecuteSqlAsync(string sql, IDictionary<string, object?> parameters, CancellationToken cancellationToken)
+        {
+            var sqlParameters = parameters
+            .Select(p => new MySqlParameter(p.Key, p.Value ?? DBNull.Value))
+            .ToArray();
+
+            return await Database.ExecuteSqlRawAsync(sql, sqlParameters, cancellationToken);
+        }
+
+        public async Task<T?> QuerySingleSqlAsync<T>(string sql, IDictionary<string, object?> parameters, CancellationToken cancellationToken) where T : class
+        {
+            var sqlParameters = parameters
+            .Select(p => new MySqlParameter(p.Key, p.Value ?? DBNull.Value))
+            .ToArray();
+
+            var result = await Set<T>()
+            .FromSqlRaw(sql, sqlParameters)
+            .AsNoTracking()
+            .ToListAsync();
+
+            return result.FirstOrDefault();
+        }
+
+        public async Task<List<T>> QuerySqlAsync<T>(string sql, IDictionary<string, object?> parameters, CancellationToken cancellationToken) where T : class
+        {
+            var sqlParameters = parameters
+            .Select(p => new MySqlParameter(p.Key, p.Value ?? DBNull.Value))
+            .ToArray();
+
+            return await Set<T>()
+            .FromSqlRaw(sql, sqlParameters)
+            .AsNoTracking()
+            .ToListAsync(cancellationToken);
+        }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {

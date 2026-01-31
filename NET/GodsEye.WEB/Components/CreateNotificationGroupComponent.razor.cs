@@ -5,7 +5,7 @@ using MudBlazor;
 
 namespace GodsEye.WEB.Components
 {
-    public partial class NotificationGroupComponent
+    public partial class CreateNotificationGroupComponent
     {
         [Inject]
         NotificationGroupWebService notificationGroupWebService { get; set; }
