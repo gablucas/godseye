@@ -2,6 +2,7 @@ using GodsEye.Application.UseCases.Person.Commands.CreatePerson;
 using GodsEye.Application.UseCases.Person.Queries.GetAllPersonEmbedding;
 using GodsEye.Application.UseCases.Person.Queries.GetAllPersonLogs;
 using GodsEye.Application.UseCases.Person.Queries.GetAllPersons;
+using GodsEye.Application.UseCases.Person.Queries.GetPersonById;
 using GodsEye.Application.UseCases.Person.Queries.GetPersonLog;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
@@ -45,6 +46,14 @@ namespace GodsEye.API.Controllers
         public async Task<IActionResult> GetAllPerson(CancellationToken cancellationToken)
         {
             var result = await _mediator.Send(new GetAllPersonRequest(), cancellationToken);
+            return Ok(result);
+        }
+
+        [AllowAnonymous]
+        [HttpGet("{personId}")]
+        public async Task<IActionResult> GetById(int personId, CancellationToken cancellationToken)
+        {
+            var result = await _mediator.Send(new GetPersonByIdRequest(personId), cancellationToken);
             return Ok(result);
         }
 

@@ -4,6 +4,8 @@ using GodsEye.Application.Exceptions;
 using GodsEye.Application.Interfaces;
 using System.Net.Http.Headers;
 using System.Net.Http.Json;
+using System.Text.Json;
+using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace GodsEye.Infrastructure.GodsEye
 {
@@ -27,9 +29,10 @@ namespace GodsEye.Infrastructure.GodsEye
 
             try
             {
-                response = await _httpClient.PostAsync("/api/face/embedding", content);
+                response = await _httpClient.PostAsync("api/face/embedding", content);
             }
-            catch (Exception ex) { 
+            catch (Exception ex)
+            {
                 throw new GodsEyeServiceException(
                     $"Falha ao conectar ao serviço de reconhecimento facial (Python): {ex.Message}",
                     503
@@ -38,13 +41,21 @@ namespace GodsEye.Infrastructure.GodsEye
 
             if (!response.IsSuccessStatusCode)
             {
-                var error = await response.Content.ReadAsStringAsync();
+                var errorJson = await response.Content.ReadAsStringAsync();
+                string mensagem = errorJson;
 
                 Console.WriteLine("ERRO DO PYTHON:");
-                Console.WriteLine(error);
+                Console.WriteLine(mensagem);
+                try
+                {
+                    var parsed = JsonSerializer.Deserialize<FastApiError>(errorJson);
+                    if (!string.IsNullOrWhiteSpace(parsed?.Detail))
+                        mensagem = parsed.Detail;
+                }
+                catch { /* ignora parse */ }
 
                 throw new GodsEyeServiceException(
-                    $"Python retornou erro ({(int)response.StatusCode}): {error}",
+                    $"Python retornou erro ({(int)response.StatusCode}): {mensagem}",
                     (int)response.StatusCode
                 );
             }

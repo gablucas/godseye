@@ -18,8 +18,15 @@ async def face_embedding(photo: UploadFile = File(...), face_model: FaceModel = 
     embedding = face_model.get_embedding(img)
 
     if embedding is None:
-        raise HTTPException(status_code=404, detail="Nenhum rosto encontrado")
+        raise HTTPException(status_code=404, detail="Não foi possível extrair a assinatura facial desta imagem, por favor, tente outra imagem.")
 
     return JSONResponse(
         content={"embedding": embedding.tolist()}
+    )
+
+@router.get("/face/teste")
+async def face_embedding():
+
+    return JSONResponse(
+        content={"teste": "Funcionando"}
     )

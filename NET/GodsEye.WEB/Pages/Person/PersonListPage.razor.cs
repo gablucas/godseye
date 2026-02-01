@@ -18,7 +18,7 @@ namespace GodsEye.WEB.Pages.Person
         #region TABLE PARAMETERS
 
         private MudTable<PersonModel> mudTable;
-        IEnumerable<PersonModel> _persons = Enumerable.Empty<PersonModel>();
+        List<PersonModel> _persons = new();
         IEnumerable<PersonModel> _filteredPersons = Enumerable.Empty<PersonModel>();
         private int selectedRowNumber = -1;
 
@@ -41,7 +41,7 @@ namespace GodsEye.WEB.Pages.Person
             var personsResult = await personService.GetAllAsync();
 
             if (personsResult is not null && personsResult.Success)
-                _persons = personsResult.Data;
+                _persons = personsResult.Data.ToList();
                 _filteredPersons = _persons;
 
             _loading = false;
@@ -73,10 +73,28 @@ namespace GodsEye.WEB.Pages.Person
             }
         }
 
-        private void OpenCreatePerson()
+        private async Task OpenCreatePerson()
         {
             var options = new DialogOptions { CloseOnEscapeKey = true, FullWidth = true, MaxWidth = MaxWidth.Large };
-            DialogService.ShowAsync<CreatePersonComponent>("Criar pessoa", options);
+            var dialog = await DialogService.ShowAsync<CreatePersonComponent>("Criar pessoa", options);
+
+            var result = await dialog.Result;
+
+            if (result.Canceled)
+                return;
+
+            if (result.Data is not int personId || personId <= 0)
+            {
+                Snackbar.Add("ID inválido retornado", Severity.Error);
+                return;
+            }
+
+            var newPerson = await personService.GetById(personId);
+
+            if (newPerson is null || !newPerson.Success)
+                return;
+
+            _persons.Insert(0, newPerson.Data);
         }
 
         void ApplyFilters()

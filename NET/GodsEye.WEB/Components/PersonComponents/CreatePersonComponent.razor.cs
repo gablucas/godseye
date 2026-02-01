@@ -49,9 +49,11 @@ namespace GodsEye.WEB.Components.PersonComponents
         private bool visible = false;
 
         IEnumerable<SectorModel> _sectors = Enumerable.Empty<SectorModel>();
-        
+
 
         #endregion
+
+        private string _errorMessage = "";
 
         protected override async Task OnAfterRenderAsync(bool firstRender)
         {
@@ -125,10 +127,17 @@ namespace GodsEye.WEB.Components.PersonComponents
             apiResponse = await personService.CreateAsync(CreatePersonForm);
             visible = false;
 
-            if (!apiResponse.Success)
-                Snackbar.Add("Houve um erro ao cadastrar a pessoa, tente novamente mais tarde", Severity.Error);
-            else
+            if (apiResponse.Success)
+            {
                 Snackbar.Add("Pessoa cadastrada com sucesso!", Severity.Success);
+                MudDialog.Close(DialogResult.Ok(apiResponse.Data.Id));
+            }
+            else
+            {
+                _errorMessage = apiResponse?.Error?.Message ?? "Houve um erro ao cadastrar a pessoa, tente novamente mais tarde";
+                Snackbar.Add(_errorMessage, Severity.Error);
+            }
+                
         }
 
         private void Cancel() => MudDialog.Cancel();

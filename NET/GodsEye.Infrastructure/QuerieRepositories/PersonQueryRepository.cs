@@ -24,6 +24,17 @@ namespace GodsEye.Infrastructure.QuerieRepositories
             return result;
         }
 
+        public async Task<PersonModel?> GetById(int personId, CancellationToken cancellationToken)
+        {
+            var pPersonId = new MySqlParameter("@P_PERSON_ID", personId);
+
+            var result = await _context.PersonModel
+                .FromSqlRaw("CALL SP_PERSON_GET_BY_ID(@P_PERSON_ID)", personId)
+                .ToListAsync();
+
+            return result.FirstOrDefault();
+        }
+
         public async Task<IEnumerable<PersonEmbeddingModel>> GetAllEmbeddings(CancellationToken cancellationToken)
         {
             var result = await _context.PersonEmbeddingModel

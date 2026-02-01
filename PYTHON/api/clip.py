@@ -4,7 +4,6 @@ from schemas.clip_schema import ClipRequest
 
 router = APIRouter()
 
-
 @router.post("/clip/{camera_id}")
 def gerar_clip(data: ClipRequest, request: Request):
     try:
