@@ -1,6 +1,7 @@
 ﻿using GodsEye.Application.DTOs.Model;
 using GodsEye.WEB.Services;
 using Microsoft.AspNetCore.Components;
+using MudBlazor;
 
 namespace GodsEye.WEB.Components.CameraComponents
 {
@@ -10,13 +11,19 @@ namespace GodsEye.WEB.Components.CameraComponents
         public CameraWebService cameraService { get; set;  }
 
         [Parameter]
-        public int Id { get; set; }
-
-        [Parameter]
         public Guid RefreshToken { get; set; }
 
         [Parameter]
         public string Pagina { get; set; }
+
+        [Parameter]
+        public int Id { get; set; }
+
+        [Inject]
+        public IDialogService DialogService { get; set; }
+
+        [CascadingParameter]
+        private IMudDialogInstance MudDialog { get; set; }
 
         private List<CameraFeatureModel> _cameraFeatures = new();
 
@@ -31,9 +38,56 @@ namespace GodsEye.WEB.Components.CameraComponents
             return _cameraFeatures.Any(x => x.Id == featureId);
         }
 
-        private bool IsPage(string page)
+        
+        private async Task OpenCameraData(int cameraId)
         {
-            return Pagina == page;
+            MudDialog.CancelAll();
+
+            var options = new DialogOptions { CloseOnEscapeKey = true, FullWidth = true, MaxWidth = MaxWidth.False };
+            var parameters = new DialogParameters<CameraDataComponent> { { x => x.Id, cameraId } };
+            var dialog = await DialogService.ShowAsync<CameraDataComponent>("Dados", parameters, options);
+
+            var result = await dialog.Result;
+        }
+
+        private async Task OpenEnvironmentMonitoring(int cameraId)
+        {
+            MudDialog.CancelAll();
+
+            var options = new DialogOptions { CloseOnEscapeKey = true, FullWidth = true, MaxWidth = MaxWidth.False };
+            var parameters = new DialogParameters<CameraEnvironmentMonitoringComponent> { { x => x.Id, cameraId } };
+            var dialog = await DialogService.ShowAsync<CameraEnvironmentMonitoringComponent>("Monitoramento de ambientes", parameters, options);
+
+            var result = await dialog.Result;
+        }
+
+        private async Task OpenIncidentRecording(int cameraId)
+        {
+            MudDialog.CancelAll();
+
+            var options = new DialogOptions { CloseOnEscapeKey = true, FullWidth = true, MaxWidth = MaxWidth.False };
+            var parameters = new DialogParameters<CameraIncidentRecordingComponent> { { x => x.Id, cameraId } };
+            var dialog = await DialogService.ShowAsync<CameraIncidentRecordingComponent>("Registro de incidente", parameters, options);
+
+            var result = await dialog.Result;
+        }
+
+        private async Task OpenCameraRecognition(int cameraId)
+        {
+            MudDialog.CancelAll();
+
+            var options = new DialogOptions { CloseOnEscapeKey = true, FullWidth = true, MaxWidth = MaxWidth.False };
+            var parameters = new DialogParameters<CameraRecognitionComponent> { { x => x.Id, cameraId } };
+            await DialogService.ShowAsync<CameraRecognitionComponent>("Reconhecimento", parameters, options);
+        }
+
+        private async Task OpenDwellTimeMonitoring(int cameraId)
+        {
+            MudDialog.CancelAll();
+
+            var options = new DialogOptions { CloseOnEscapeKey = true, FullWidth = true, MaxWidth = MaxWidth.False };
+            var parameters = new DialogParameters<CameraDwellTimeRecordingComponent> { { x => x.Id, cameraId } };
+            await DialogService.ShowAsync<CameraDwellTimeRecordingComponent>("Controle de permanência", parameters, options);
         }
     }
 }

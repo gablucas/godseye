@@ -202,5 +202,6 @@ button {
     justify-content: end;
 }
 
-
-
+.mud-dialog-width-full {
+    height: calc(100% - 64px)
+}

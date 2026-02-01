@@ -1,0 +1,91 @@
+﻿@using GodsEye.Application.DTOs.Model
+@using GodsEye.WEB.Enum
+@inject ISnackbar Snackbar
+
+<MudDialog Class="dialog-90" ContentStyle="width: 90vw">
+    <DialogContent>
+        <CameraConfigurationBarComponent Id="Id" Pagina="dados" />
+
+        <div class="form-container">
+
+            <MudForm @ref="form" Model="CameraForm" @bind-IsValid="@success" @bind-Errors="@errors">
+
+                <div class="video-inputs">
+                    <video id="camera-player" controls autoplay></video>
+
+                    <div class="inputs-container">
+                        <MudTextField Label="Descrição" @bind-Value="CameraForm.Name" Required="true" RequiredError="O nome é obrigatório" T="string" For="@(() => CameraForm.Name)" Variant="Variant.Outlined" />
+
+                        <MudSelect T="string" Clearable="true" Label="Selecione um setor" @bind-Value="CameraForm.SectorId" Required="true" RequiredError="Selecione um setor" Variant="Variant.Outlined">
+                            @foreach (var sector in _sectors)
+                            {
+                                <MudSelectItem T="string" Value="@sector.Id.ToString()">@sector.Name</MudSelectItem>
+                            }
+                        </MudSelect>
+
+                        <div class="connection">
+                            <MudTextField Label="Conexão" HelperText="IP de conexão para se conectar a camera" @bind-Value="CameraForm.Connection" T="string" Variant="Variant.Outlined" />
+                            <MudButton Variant="Variant.Outlined" Style="height: 56px; margin-top: 8px" Color="Color.Success">Testar conexão</MudButton>
+                        </div>
+                    </div>
+                </div>
+
+                <MudDivider Style="margin: 24px 0px" />
+
+                <MudText Typo="Typo.h6">Funcionalidades</MudText>
+                <MudText Typo="Typo.body2" Class="mb-4 mud-text-secondary"> Selecione no mínimo uma funcionalidade para esta camera</MudText>
+
+                <div class="feature-container">
+                    @foreach (var feature in _features)
+                    {
+                        <div class="feature">
+                            <MudCheckBox T="bool"
+                                         Value="@(CameraForm.Features.Contains(feature.Id))"
+                                         ValueChanged="@((bool isChecked) => OnFeatureToggled(feature.Id, isChecked))"
+                                         Label="@feature.Name"
+                                         Color="Color.Primary"
+                                         Dense="true" />
+
+                            <MudText Typo="Typo.body2" Class="mud-text-secondary">
+                                @feature.Description
+                            </MudText>
+                        </div>
+                    }
+                </div>
+
+                @* @if (!string.IsNullOrEmpty(featureError))
+                {
+                    <MudText Color="Color.Error" Typo="Typo.caption">
+                        @featureError
+                    </MudText>
+                } *@
+
+
+                <MudButton OnClick="Submit" Disabled=@(!success) Class="btn-submit" Variant="Variant.Filled" Color="Color.Primary">Atualizar</MudButton>
+                @* <MudButton OnClick="Submit" Disabled=@(!success || !ValidateFeatures()) Class="btn-submit" Variant="Variant.Filled" Color="Color.Primary">Atualizar</MudButton> *@
+
+                @* @if (apiResponse is not null)
+                {
+                    if (apiResponse.Success)
+                    {
+                        <MudAlert Severity="Severity.Success" Variant="Variant.Outlined">Camera atualizada com sucesso</MudAlert>
+                    }
+                    else
+                    {
+                        <MudAlert Severity="Severity.Error" Variant="Variant.Outlined">Houve um erro ao atualizar a camera, tente novamente mais tarde</MudAlert>
+                    }
+                } *@
+
+                <MudOverlay Visible="visible" LightBackground="true" Absolute="true">
+                    <MudProgressCircular Color="Color.Default" Indeterminate="true" />
+                </MudOverlay>
+
+            </MudForm>
+
+        </div>
+    </DialogContent>
+
+    <DialogActions>
+        <MudButton OnClick="Cancel">Sair</MudButton>
+    </DialogActions>
+</MudDialog>

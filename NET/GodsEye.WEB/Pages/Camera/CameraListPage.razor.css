@@ -1,3 +1,38 @@
 ﻿::deep .edit-container {
     background-color: #FFFFFF;
 }
+
+.notification-menu {
+    display: grid;
+    grid-template-columns: 1fr auto;
+    justify-content: space-between;
+    border: 1px solid var(--gray-050);
+    border-radius: 7px;
+    padding: 8px 16px;
+    margin-bottom: 24px;
+}
+
+.filters {
+    display: grid;
+    grid-template-columns: repeat(5, minmax(240px, 280px));
+    align-items: center;
+    gap: 12px;
+}
+
+.filters .option {
+    display: grid;
+    grid-template-columns: 1fr auto;
+    align-items: center;
+    gap: 4px;
+}
+
+.filters .option ::deep button svg * {
+    color: #c4c4c4;
+}
+
+.filters .option ::deep button {
+    display: flex;
+    height: 56px;
+    margin-top: 4px;
+    border-color: #c4c4c4;
+}
