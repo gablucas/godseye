@@ -6,7 +6,7 @@ using Microsoft.JSInterop;
 using MudBlazor;
 using System;
 
-namespace GodsEye.WEB.Components
+namespace GodsEye.WEB.Components.DwellTimeMonitoringComponents
 {
     public partial class InfoDwellTimeMonitoringComponent
     {

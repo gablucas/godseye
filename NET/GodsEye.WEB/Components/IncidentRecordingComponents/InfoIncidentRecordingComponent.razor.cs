@@ -3,7 +3,7 @@ using Microsoft.AspNetCore.Components;
 using Microsoft.JSInterop;
 using MudBlazor;
 
-namespace GodsEye.WEB.Components
+namespace GodsEye.WEB.Components.IncidentRecordingComponents
 {
     public partial class InfoIncidentRecordingComponent
     {

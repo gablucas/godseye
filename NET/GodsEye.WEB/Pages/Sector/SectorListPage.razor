@@ -7,10 +7,31 @@
     <p>Aqui você encontra uma lista de setores cadastrados em seu sistema</p>
 </div>
 
-<MudTable Items="@_sectors" Hover="true" Loading="@_loading" LoadingProgressColor="Color.Info">
+<div class="notification-menu">
+    <div class="filters">
+        <div class="option">
+            <MudTextField @bind-Value="_sectorNameFilter" TextChanged="ApplyFilters" Immediate="true" Label="Setor" Variant="Variant.Outlined"></MudTextField>
+            <MudButton Variant="Variant.Outlined" OnClick=@(() => _sectorNameFilter = "")>
+                <MudIcon Icon="@Icons.Material.Filled.Delete"></MudIcon>
+            </MudButton>
+        </div>
+
+        <div class="option">
+            <MudTextField @bind-Value="_cameraNameFilter" TextChanged="ApplyFilters" Immediate="true" Label="Camera" Variant="Variant.Outlined"></MudTextField>
+            <MudButton Variant="Variant.Outlined" OnClick=@(() => _cameraNameFilter = "")>
+                <MudIcon Icon="@Icons.Material.Filled.Delete"></MudIcon>
+            </MudButton>
+        </div>
+    </div>
+
+    <MudButton Variant="Variant.Outlined" OnClick="OpenCreateSector">Criar Setor</MudButton>
+</div>
+
+<MudTable Items="@_filteredSectors" Hover="true" Loading="@_loading" LoadingProgressColor="Color.Info">
     <HeaderContent>
         <MudTh>Nome</MudTh>
         <MudTh>Cameras vinculadas</MudTh>
+        <MudTh>Grupos de notificação vinculados</MudTh>
     </HeaderContent>
     <RowTemplate>
         <MudTd DataLabel="Name">@context.Name</MudTd>
@@ -19,14 +40,26 @@
             {
                 foreach (var cam in context.Cameras)
                 {
-                    <MudChip Color="Color.Info" T="string">@cam.CameraName</MudChip>
+                    <MudChip Color="Color.Info" T="string">@cam.Name</MudChip>
                 }
             } 
             else
             {
                 <MudChip T="string">Sem cameras</MudChip>
             }
-
+        </MudTd>
+        <MudTd DataLabel="NotificationGroups">
+            @if (context.NotificationGroups.Count > 0)
+            {
+                foreach (var notificationGroup in context.NotificationGroups)
+                {
+                    <MudChip Color="Color.Info" T="string">@notificationGroup.Name</MudChip>
+                }
+            }
+            else
+            {
+                <MudChip T="string">Sem grupo</MudChip>
+            }
         </MudTd>
 
     </RowTemplate>

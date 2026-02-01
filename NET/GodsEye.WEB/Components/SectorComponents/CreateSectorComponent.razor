@@ -1,0 +1,51 @@
+﻿@using GodsEye.Application.DTOs.Model
+@using GodsEye.WEB.Enum
+@inject ISnackbar Snackbar
+
+<MudDialog>
+    <DialogContent>
+        <div class="form-container">
+            <MudForm @ref="form" Model="CreateSectorForm" @bind-IsValid="@success" @bind-Errors="@errors">
+
+                <div class="inputs-container">
+                    <MudTextField Label="Nome do setor" @bind-Value="CreateSectorForm.Name" Required="true" RequiredError="O nome do setor é obrigatório" T="string" For="@(() => CreateSectorForm.Name)" Variant="Variant.Outlined" />
+
+
+                    <div class="selected-emails-preview">
+                        <MudSelect T="string" Label="Grupos de notificação" HelperText="Selecione os grupos que irão receber notificaçõe neste setor" MultiSelection="true" @bind-SelectedValues="CreateSectorForm.NotificationGroups" MultiSelectionTextFunc="GetSelectNotificationGroupsName" Variant="Variant.Outlined">
+                            @foreach (var notificationGroup in _notificationGroups)
+                            {
+                                <MudSelectItem T="string" Value="@notificationGroup.Id.ToString()">@notificationGroup.Name</MudSelectItem>
+                            }
+                        </MudSelect>
+
+                        <MudText Typo="Typo.overline" Style="display: block">Emails que receberão a notificação</MudText>
+
+                        @foreach (var group in _notificationGroups.Where(x => CreateSectorForm.NotificationGroups.Contains(x.Id.ToString())))
+                        {
+                            foreach(var email in group.Emails)
+                            {
+                                <MudChip T="string" Label="true" Variant="Variant.Outlined" Size="Size.Medium" Color="Color.Primary">@email.Name</MudChip>
+                            }
+                        }
+                    </div>
+                </div>
+
+                <MudDivider />
+
+                <MudButton OnClick="Submit" Disabled=@(!success) Class="btn-submit" Variant="Variant.Filled" Color="Color.Primary">Registrar</MudButton>
+
+                <MudOverlay Visible="visible" LightBackground="true" Absolute="true">
+                    <MudProgressCircular Color="Color.Default" Indeterminate="true" />
+                </MudOverlay>
+
+            </MudForm>
+
+        </div>
+    </DialogContent>
+
+
+    <DialogActions>
+        <MudButton OnClick="Cancel">Sair</MudButton>
+    </DialogActions>
+</MudDialog>

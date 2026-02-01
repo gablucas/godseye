@@ -4,7 +4,7 @@ using GodsEye.WEB.Services;
 using Microsoft.AspNetCore.Components;
 using MudBlazor;
 
-namespace GodsEye.WEB.Components
+namespace GodsEye.WEB.Components.NotificationGroupsComponents
 {
     public partial class UpdateNotificationGroupComponent
     {

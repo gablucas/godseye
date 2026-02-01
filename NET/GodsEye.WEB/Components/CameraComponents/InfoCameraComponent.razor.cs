@@ -5,7 +5,7 @@ using Microsoft.JSInterop;
 using MudBlazor;
 using System;
 
-namespace GodsEye.WEB.Components
+namespace GodsEye.WEB.Components.CameraComponents
 {
     public partial class InfoCameraComponent
     {

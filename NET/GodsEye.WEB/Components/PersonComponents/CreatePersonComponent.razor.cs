@@ -9,11 +9,11 @@ using Microsoft.AspNetCore.Components.Forms;
 using Microsoft.JSInterop;
 using MudBlazor;
 
-namespace GodsEye.WEB.Pages.Person
+namespace GodsEye.WEB.Components.PersonComponents
 {
-    public partial class CreatePersonPage
+    public partial class CreatePersonComponent
     {
-        #region Injections
+        #region DI
 
         [Inject]
         PersonService personService { get; set; }
@@ -24,14 +24,17 @@ namespace GodsEye.WEB.Pages.Person
         [Inject]
         IJSRuntime JS { get; set; }
 
+        [CascadingParameter]
+        private IMudDialogInstance MudDialog { get; set; }
+
         #endregion
 
         #region FORM
 
         MudForm form;
         private bool success;
-        private string[] errors = {};
-        public CreatePersonForm PersonModel { get; set; } = new();
+        private string[] errors = { };
+        public CreatePersonForm CreatePersonForm { get; set; } = new();
 
         private IBrowserFile? _file;
         public string? PreviewImage { get; set; } = null;
@@ -46,6 +49,7 @@ namespace GodsEye.WEB.Pages.Person
         private bool visible = false;
 
         IEnumerable<SectorModel> _sectors = Enumerable.Empty<SectorModel>();
+        
 
         #endregion
 
@@ -62,6 +66,7 @@ namespace GodsEye.WEB.Pages.Person
             {
                 _sectors = response.Data;
             }
+
         }
 
         private async Task OpenCamera(EventArgs e)
@@ -74,7 +79,7 @@ namespace GodsEye.WEB.Pages.Person
         private async Task TakePhoto()
         {
             PreviewImage = await JS.InvokeAsync<string>("cameraFunctions.capturePhoto");
-            PersonModel.Photo = PreviewImage;
+            CreatePersonForm.Photo = PreviewImage;
         }
 
         private void BackToRegister()
@@ -83,7 +88,7 @@ namespace GodsEye.WEB.Pages.Person
             _file = null;
             CapturedImage = null;
             photoMethod = null;
-            PersonModel.Photo = null;
+            CreatePersonForm.Photo = null;
             apiResponse = null;
         }
 
@@ -101,7 +106,7 @@ namespace GodsEye.WEB.Pages.Person
             var dataUrl = $"data:{file.ContentType};base64,{base64}";
 
             PreviewImage = dataUrl;
-            PersonModel.Photo = dataUrl;
+            CreatePersonForm.Photo = dataUrl;
         }
 
         private string GetSelectedSectorsName(List<string> ids)
@@ -117,14 +122,15 @@ namespace GodsEye.WEB.Pages.Person
         private async Task Submit()
         {
             visible = true;
-            apiResponse = await personService.CreateAsync(PersonModel);
+            apiResponse = await personService.CreateAsync(CreatePersonForm);
             visible = false;
 
             if (!apiResponse.Success)
                 Snackbar.Add("Houve um erro ao cadastrar a pessoa, tente novamente mais tarde", Severity.Error);
             else
                 Snackbar.Add("Pessoa cadastrada com sucesso!", Severity.Success);
-                PersonModel = new();
         }
+
+        private void Cancel() => MudDialog.Cancel();
     }
 }

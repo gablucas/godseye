@@ -2,7 +2,7 @@
 using GodsEye.WEB.Services;
 using Microsoft.AspNetCore.Components;
 
-namespace GodsEye.WEB.Components
+namespace GodsEye.WEB.Components.CameraComponents
 {
     public partial class CameraConfigurationBarComponent
     {

@@ -8,8 +8,28 @@
     <p>Aqui você encontra a lista de pessoas cadastradas em seu sistema</p>
 </div>
 
+<div class="notification-menu">
+    <div class="filters">
+        <div class="option">
+            <MudTextField @bind-Value="_personNameFilter" TextChanged="ApplyFilters" Immediate="true" Label="Pessoa" Variant="Variant.Outlined"></MudTextField>
+            <MudButton Variant="Variant.Outlined" OnClick=@(() => _personNameFilter = "")>
+                <MudIcon Icon="@Icons.Material.Filled.Delete"></MudIcon>
+            </MudButton>
+        </div>
 
-<MudTable T="PersonModel" @ref="mudTable" Items="@_persons" Hover="true" Loading="@_loading" LoadingProgressColor="Color.Info" RowClass="cursor-pointer" RowClassFunc="@SelectedRowClassFunc" OnRowClick="RowClickEvent">
+        <div class="option">
+            <MudTextField @bind-Value="_sectorNameFilter" TextChanged="ApplyFilters" Immediate="true" Label="Setor" Variant="Variant.Outlined"></MudTextField>
+            <MudButton Variant="Variant.Outlined" OnClick=@(() => _sectorNameFilter = "")>
+                <MudIcon Icon="@Icons.Material.Filled.Delete"></MudIcon>
+            </MudButton>
+        </div>
+    </div>
+
+    <MudButton Variant="Variant.Outlined" OnClick="OpenCreatePerson">Criar pessoa</MudButton>
+</div>
+
+
+<MudTable T="PersonModel" @ref="mudTable" Items="@_filteredPersons" Hover="true" Loading="@_loading" LoadingProgressColor="Color.Info" RowClass="cursor-pointer" RowClassFunc="@SelectedRowClassFunc" OnRowClick="RowClickEvent">
     <HeaderContent>
         <MudTh>Foto</MudTh>
         <MudTh>Nome</MudTh>

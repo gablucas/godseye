@@ -1,5 +1,5 @@
 ﻿using GodsEye.Application.DTOs.Model;
-using GodsEye.WEB.Components;
+using GodsEye.WEB.Components.DwellTimeMonitoringComponents;
 using GodsEye.WEB.Services;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.SignalR.Client;

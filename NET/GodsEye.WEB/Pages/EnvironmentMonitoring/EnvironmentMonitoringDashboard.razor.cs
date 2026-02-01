@@ -18,7 +18,7 @@ namespace GodsEye.WEB.Pages.EnvironmentMonitoring
         public NavigationManager Navigation { get; set; }
 
         [Inject]
-        public SectorService SectorService { get; set; }
+        public SectorWebService SectorService { get; set; }
 
         #region TABLE PARAMETERS
 

@@ -21,11 +21,18 @@ namespace GodsEye.Infrastructure.Repositories
         {
             var pName = new MySqlParameter("@P_NAME", sector.Name);
 
+            var notificationGroupsJSON = JsonSerializer.Serialize(sector.NotificationGroups);
+
+            var pNotificationGroupsJSON = new MySqlParameter("@P_NOTIFICATION_GROUP_JSON", MySqlDbType.JSON)
+            {
+                Value = notificationGroupsJSON,
+            };
+
 
             var result = await _context.ProcedureResult
                 .FromSqlRaw(
-                "CALL SP_SECTOR_CREATE(@P_NAME)",
-                pName)
+                "CALL SP_SECTOR_CREATE(@P_NAME, @P_NOTIFICATION_GROUP_JSON)",
+                pName, pNotificationGroupsJSON)
                 .ToListAsync();
 
             return result.FirstOrDefault() ?? ProcedureResult.Error("Houve um erro ao executar a procedure de cadastro de setor!");

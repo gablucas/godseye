@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using GodsEye.Application.DTOs.Response;
+using GodsEye.Application.Interfaces;
 using GodsEye.Domain.DTOs.Result;
 using GodsEye.Domain.Entities;
 using GodsEye.Domain.Interfaces.Repositories;

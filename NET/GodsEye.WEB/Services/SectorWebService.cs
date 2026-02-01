@@ -6,11 +6,11 @@ using System.Net.Http.Json;
 
 namespace GodsEye.WEB.Services
 {
-    public class SectorService
+    public class SectorWebService
     {
         private readonly HttpClient _http;
 
-        public SectorService(HttpClient http)
+        public SectorWebService(HttpClient http)
         {
             _http = http;
         }

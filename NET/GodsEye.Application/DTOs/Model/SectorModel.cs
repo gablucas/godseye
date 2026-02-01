@@ -8,6 +8,7 @@ namespace GodsEye.Application.DTOs.Model
         public string Name { get; set; }
         public int Active { get; set; }
         public string? CamerasJson { get; set; }
+        public string? NotificationGroupsJson { get; set; }
 
         public List<CameraDTO> Cameras
         {
@@ -15,11 +16,24 @@ namespace GodsEye.Application.DTOs.Model
                 ? new List<CameraDTO>()
                 : JsonSerializer.Deserialize<List<CameraDTO>>(CamerasJson);
         }
+
+        public List<NotificationGroupDTO> NotificationGroups
+        {
+            get => string.IsNullOrWhiteSpace(NotificationGroupsJson)
+                ? new List<NotificationGroupDTO>()
+                : JsonSerializer.Deserialize<List<NotificationGroupDTO>>(NotificationGroupsJson);
+        }
     }
 
     public class CameraDTO
     {
-        public int CameraId { get; set; }
-        public string CameraName { get; set; }
+        public int Id { get; set; }
+        public string Name { get; set; }
+    }
+
+    public class NotificationGroupDTO
+    {
+        public int Id { get; set; }
+        public string Name { get; set; }
     }
 }

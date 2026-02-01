@@ -3,7 +3,7 @@ using GodsEye.WEB.Services;
 using Microsoft.AspNetCore.Components;
 using MudBlazor;
 
-namespace GodsEye.WEB.Components
+namespace GodsEye.WEB.Components.NotificationGroupsComponents
 {
     public partial class CreateNotificationGroupComponent
     {
@@ -91,6 +91,7 @@ namespace GodsEye.WEB.Components
             {
                 Snackbar.Add("Camera atualizada com sucesso!", Severity.Success);
                 success = false;
+                MudDialog.Close(DialogResult.Ok(1));
             }
             else
             {

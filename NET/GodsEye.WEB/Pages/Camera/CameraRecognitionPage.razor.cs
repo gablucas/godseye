@@ -18,7 +18,7 @@ namespace GodsEye.WEB.Pages.Camera
         CameraWebService _cameraService { get; set; }
 
         [Inject]
-        SectorService _sectorService { get; set; }
+        SectorWebService _sectorService { get; set; }
 
         [Inject]
         FeatureWebService _featureWebService { get; set; }

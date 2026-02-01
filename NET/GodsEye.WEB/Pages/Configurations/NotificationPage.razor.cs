@@ -1,5 +1,5 @@
 ﻿using GodsEye.Application.DTOs.Model;
-using GodsEye.WEB.Components;
+using GodsEye.WEB.Components.NotificationGroupsComponents;
 using GodsEye.WEB.Model.Forms;
 using GodsEye.WEB.Services;
 using Microsoft.AspNetCore.Components;

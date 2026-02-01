@@ -11,7 +11,7 @@ builder.RootComponents.Add<HeadOutlet>("head::after");
 // SERVICES
 builder.Services.AddScoped<PersonService>();
 builder.Services.AddScoped<CameraWebService>();
-builder.Services.AddScoped<SectorService>();
+builder.Services.AddScoped<SectorWebService>();
 builder.Services.AddScoped<FeatureWebService>();
 builder.Services.AddScoped<GodsEyeWebService>();
 builder.Services.AddScoped<SignalRService>();
