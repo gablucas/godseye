@@ -1,0 +1,39 @@
+﻿@inject NavigationManager Nav
+
+<div class="sidebar">
+    @foreach (var menu in _menus)
+    {
+        @* MENU SEM NÍVEL *@
+        if (!menu.HasChildren)
+        {
+            <div class="navitem">
+                <NavLink href="@menu.Url"
+                         class="@(SelectedMenu(menu.Url) ? "selected" : "")">
+                    <MudIcon Icon="@menu.Icon" />
+                    @menu.Title
+                </NavLink>
+            </div>
+        }
+        else
+        {
+            <div class="nav-group @(IsGroupOpen(menu) ? "open" : "")">
+                <div class="nav-title" @onclick="() => ToggleGroup(menu.Key)">
+                    <MudIcon Icon="@menu.Icon" />
+                    <p>@menu.Title</p>
+                </div>
+
+                <div class="ng-level-1">
+                    @foreach (var item in menu.Items)
+                    {
+                        <div class="navitem">
+                            <NavLink href="@item.Url"
+                                     class="@(SelectedMenu(item.Url) ? "selected" : "")">
+                                @item.Title
+                            </NavLink>
+                        </div>
+                    }
+                </div>
+            </div>
+        }
+    }
+</div>

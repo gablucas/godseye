@@ -1,5 +1,4 @@
 ﻿using GodsEye.Application.DTOs.Model;
-using GodsEye.WEB.Components.PersonComponents;
 using GodsEye.WEB.Services;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.SignalR.Client;
@@ -7,7 +6,7 @@ using MudBlazor;
 
 namespace GodsEye.WEB.Pages.EnvironmentMonitoring
 {
-    public partial class EnvironmentMonitoringDashboard
+    public partial class EnvironmentMonitoringList
     {
         [Inject]
         public EnvironmentMonitoringWebService environmentMonitoringService { get; set; }
