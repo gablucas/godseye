@@ -14,6 +14,9 @@ namespace GodsEye.WEB.Pages.Sector
         public SectorWebService sectorService { get; set; }
 
         [Inject]
+        public CameraWebService cameraService { get; set; }
+
+        [Inject]
         public IDialogService DialogService { get; set; }
 
         #endregion
@@ -29,10 +32,17 @@ namespace GodsEye.WEB.Pages.Sector
         #region TABLE FILTERS
 
         private string _sectorNameFilter = "";
-        private string _cameraNameFilter = "";
+
+        private string _personNameFilter = "";
+
+        private List<CameraModel> _camerasFilter = new();
+        private IEnumerable<string> _selectedCameras { get; set; } = new HashSet<string>() { };
+
+        private string _personFilter = "";
 
         #endregion
 
+ 
         protected override async Task OnInitializedAsync()
         {
             _loading = true;
@@ -44,7 +54,11 @@ namespace GodsEye.WEB.Pages.Sector
                 _sectors = sectorsResult.Data;
                 _filteredSectors = _sectors;
             }
-                
+
+            var camerasRequest = await cameraService.GetAllAsync();
+            if (camerasRequest.Success)
+                _camerasFilter = camerasRequest.Data.ToList();
+
 
             _loading = false;
         }
@@ -55,12 +69,23 @@ namespace GodsEye.WEB.Pages.Sector
             DialogService.ShowAsync<CreateSectorComponent>("Criar setor", options);
         }
 
+        private void OnCamerasChanged(IEnumerable<string> values)
+        {
+            _selectedCameras = values.ToHashSet();
+            ApplyFilters();
+        }
+
+        private string GetMultiSelectionText(List<string> selectedValues)
+        {
+            return $"{selectedValues.Count} setor{(selectedValues.Count > 1 ? "es foram selecionados" : " foi selecionado")}";
+        }
+
         void ApplyFilters()
         {
             _filteredSectors = _sectors
                 .Where(x =>
                     (string.IsNullOrWhiteSpace(_sectorNameFilter) || x.Name.Contains(_sectorNameFilter, StringComparison.OrdinalIgnoreCase)) &&
-                    (string.IsNullOrWhiteSpace(_cameraNameFilter) || x.Cameras.Any(y => y.Name.Contains(_sectorNameFilter, StringComparison.OrdinalIgnoreCase)))
+                    (_selectedCameras.Count() == 0 || x.Cameras.Any(c => _selectedCameras.ToList().Contains(c.Id.ToString())))
                 ).ToList();
         }
     }

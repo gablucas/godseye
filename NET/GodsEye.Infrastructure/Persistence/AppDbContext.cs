@@ -27,7 +27,6 @@ namespace GodsEye.Infrastructure.Persistence
         public DbSet<SectorModel> SectorModel { get; set; }
         public DbSet<CameraConnectionModel> CameraConnectionModel { get; set; }
         public DbSet<PersonEmbeddingModel> PersonEmbeddingModel { get; set; }
-        public DbSet<PersonLogModel> PersonLogModel { get; set; }
         public DbSet<CameraLogModel> CameraLogModel { get; set; }
         public DbSet<CameraByFeatureModel> CameraByFeatureModel { get; set; }
         public DbSet<MonitoringDataModel> MonitoringDataModel { get; set; }
@@ -38,6 +37,7 @@ namespace GodsEye.Infrastructure.Persistence
         public DbSet<DwellTimeMonitoringDetailsModel> DwellTimeMonitoringDetailsModel { get; set; }
         public DbSet<CameraFeatureModel> CameraFeatureModel { get; set; }
         public DbSet<NotificationGroupModel> NotificationGroupModel { get; set; }
+        public DbSet<EnvironmentMonitoringPersonModel> EnvironmentMonitoringPersonModel { get; set; }
 
         public async Task<int> ExecuteSqlAsync(string sql, IDictionary<string, object?> parameters, CancellationToken cancellationToken)
         {
@@ -87,7 +87,6 @@ namespace GodsEye.Infrastructure.Persistence
             modelBuilder.Entity<CameraConnectionModel>().HasNoKey().ToView(null);
             modelBuilder.Entity<PersonEmbeddingModel>().HasNoKey().ToView(null);
 
-            modelBuilder.Entity<PersonLogModel>().HasNoKey().ToView(null);
             modelBuilder.Entity<CameraLogModel>().HasNoKey().ToView(null);
             modelBuilder.Entity<CameraByFeatureModel>().HasNoKey().ToView(null);
 
@@ -99,6 +98,7 @@ namespace GodsEye.Infrastructure.Persistence
             modelBuilder.Entity<DwellTimeMonitoringDetailsModel>().HasNoKey().ToView(null);
             modelBuilder.Entity<CameraFeatureModel>().HasNoKey().ToView(null);
             modelBuilder.Entity<NotificationGroupModel>().HasNoKey().ToView(null);
+            modelBuilder.Entity<EnvironmentMonitoringPersonModel>().HasNoKey().ToView(null);
         }
     }
 }

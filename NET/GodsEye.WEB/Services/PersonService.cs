@@ -54,23 +54,5 @@ namespace GodsEye.WEB.Services
 
             return json!;
         }
-
-        public async Task<ApiResponse<IEnumerable<PersonLogModel>>> GetLogs(int personId)
-        {
-            var result = await _http.GetAsync($"api/person/logs/{personId}");
-
-            var json = await result.Content.ReadFromJsonAsync<ApiResponse<IEnumerable<PersonLogModel>>>();
-
-            return json!;
-        }
-
-        public async Task<ApiResponse<IEnumerable<PersonLogModel>>> GetAllLogs()
-        {
-            var result = await _http.GetAsync($"api/person/logs");
-
-            var json = await result.Content.ReadFromJsonAsync<ApiResponse<IEnumerable<PersonLogModel>>>();
-
-            return json!;
-        }
     }
 }

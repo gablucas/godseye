@@ -13,6 +13,12 @@ namespace GodsEye.WEB.Pages.Person
         public PersonService personService { get; set; }
 
         [Inject]
+        public SectorWebService SectorService { get; set; }
+
+        [Inject]
+        public DialogWebService DialogWebService { get; set; }
+
+        [Inject]
         public IDialogService DialogService { get; set; }
 
         #region TABLE PARAMETERS
@@ -25,9 +31,12 @@ namespace GodsEye.WEB.Pages.Person
         #endregion
 
         #region TABLE FILTERS
-
         private string _personNameFilter = "";
-        private string _sectorNameFilter = "";
+
+        private List<SectorModel> _sectors = new();
+        private IEnumerable<string> _selectedSectors { get; set; } = new HashSet<string>() { };
+
+        private string _personFilter = "";
 
         #endregion
 
@@ -45,14 +54,21 @@ namespace GodsEye.WEB.Pages.Person
                 _filteredPersons = _persons;
 
             _loading = false;
+
+            var sectorsRequest = await SectorService.GetAllAsync();
+            if (sectorsRequest.Success)
+                _sectors = sectorsRequest.Data.ToList();
         }
 
-        private void RowClickEvent(TableRowClickEventArgs<PersonModel> tableRowClickEventArgs)
+        private async Task RowClickEvent(TableRowClickEventArgs<PersonModel> args)
         {
-            var options = new DialogOptions { CloseOnEscapeKey = true, FullWidth = true, MaxWidth = MaxWidth.Large };
-            var parameters = new DialogParameters<InfoPersonComponent> { { x => x.Person, tableRowClickEventArgs.Item } };
+            if (args?.Item == null)
+                return;
 
-            DialogService.ShowAsync<InfoPersonComponent>("Simple Dialog", parameters, options);
+            if (args.Item.Id <= 0)
+                return;
+
+            await DialogWebService.OpenPersonInfoDialog(args.Item.Id);
         }
 
         private string SelectedRowClassFunc(PersonModel element, int rowNumber)
@@ -75,7 +91,7 @@ namespace GodsEye.WEB.Pages.Person
 
         private async Task OpenCreatePerson()
         {
-            var options = new DialogOptions { CloseOnEscapeKey = true, FullWidth = true, MaxWidth = MaxWidth.Large };
+            var options = new DialogOptions { CloseOnEscapeKey = true, FullWidth = true, MaxWidth = MaxWidth.False };
             var dialog = await DialogService.ShowAsync<CreatePersonComponent>("Criar pessoa", options);
 
             var result = await dialog.Result;
@@ -97,12 +113,23 @@ namespace GodsEye.WEB.Pages.Person
             _persons.Insert(0, newPerson.Data);
         }
 
+        private void OnSectorsChanged(IEnumerable<string> values)
+        {
+            _selectedSectors = values.ToHashSet();
+            ApplyFilters();
+        }
+
+        private string GetMultiSelectionText(List<string> selectedValues)
+        {
+            return $"{selectedValues.Count} setor{(selectedValues.Count > 1 ? "es foram selecionados" : " foi selecionado")}";
+        }
+
         void ApplyFilters()
         {
             _filteredPersons = _persons
                 .Where(x =>
                     (string.IsNullOrWhiteSpace(_personNameFilter) || x.Name.Contains(_personNameFilter, StringComparison.OrdinalIgnoreCase)) &&
-                    (string.IsNullOrWhiteSpace(_sectorNameFilter) || x.Sectors.Any(y => y.SectorName.Contains(_sectorNameFilter, StringComparison.OrdinalIgnoreCase)))
+                    (_selectedSectors.Count() == 0 || x.Sectors.Any(s => _selectedSectors.ToList().Contains(s.SectorId.ToString())))
                 ).ToList();
         }
     }

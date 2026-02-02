@@ -27,8 +27,13 @@
         </div>
 
         <div class="option">
-            <MudTextField @bind-Value="_sectorNameFilter" TextChanged="ApplyFilters" Immediate="true" Label="Setor" Variant="Variant.Outlined"></MudTextField>
-            <MudButton Variant="Variant.Outlined" OnClick=@(() => _sectorNameFilter = "")>
+            <MudSelect T="string" SelectedValuesChanged="OnSectorsChanged" SelectedValues="_selectedSectors" MultiSelection="true" SelectAll="true" SelectAllText="Selecionar tudo" MultiSelectionTextFunc="@(new Func<List<string>, string>(GetMultiSelectionText))" Label="Setores" AdornmentIcon="@Icons.Material.Filled.Search" Variant="Variant.Outlined">
+                @foreach (var sector in _sectors)
+                {
+                    <MudSelectItem T="string" Value="@sector.Id.ToString()">@sector.Name</MudSelectItem>
+                }
+            </MudSelect>
+            <MudButton Variant="Variant.Outlined" OnClick=@(() => _selectedSectors = Enumerable.Empty<string>())>
                 <MudIcon Icon="@Icons.Material.Filled.Delete"></MudIcon>
             </MudButton>
         </div>

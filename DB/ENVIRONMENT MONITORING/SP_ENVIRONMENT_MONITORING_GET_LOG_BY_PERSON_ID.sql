@@ -1,0 +1,25 @@
+CREATE DEFINER=`root`@`localhost` PROCEDURE `SP_ENVIRONMENT_MONITORING_GET_LOG_BY_PERSON_ID`(
+	IN P_PERSON_ID INT
+)
+BEGIN
+	SELECT
+		P.NAME AS PersonName,
+        P.IMAGE_PATH AS PersonPhoto,
+        CASE
+        WHEN COUNT(EM.ID) = 0 THEN NULL
+        ELSE JSON_ARRAYAGG(
+			JSON_OBJECT(
+				"SectorId", S.ID,
+                "SectorName", S.NAME,
+                "CreatedAt", DATE_FORMAT(EM.CREATED_AT, '%Y-%m-%dT%H:%i:%s')
+            )
+        ) END AS LogsJSON
+    FROM PERSON P
+    LEFT JOIN ENVIRONMENT_MONITORING EM ON EM.PERSON_ID = P.ID
+    LEFT JOIN CAMERA C ON C.ID = EM.CAMERA_ID
+    LEFT JOIN SECTOR S ON S.ID = C.SECTOR_ID
+    WHERE P.ID = P_PERSON_ID
+    GROUP BY
+		P.NAME,
+        P.IMAGE_PATH;
+END

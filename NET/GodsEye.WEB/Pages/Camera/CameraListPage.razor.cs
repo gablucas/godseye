@@ -15,6 +15,9 @@ namespace GodsEye.WEB.Pages.Camera
         public CameraWebService cameraService { get; set; }
 
         [Inject]
+        public SectorWebService SectorService { get; set; }
+
+        [Inject]
         public IDialogService DialogService { get; set; }
 
 
@@ -35,8 +38,10 @@ namespace GodsEye.WEB.Pages.Camera
 
         private string _cameraNameFilter = "";
         private string _conectionNameFilter = "";
-        private string _sectorNameFilter = "";
         private string _featuresNameFilter = "";
+
+        private List<SectorModel> _sectors = new();
+        private IEnumerable<string> _selectedSectors { get; set; } = new HashSet<string>() { };
 
         #endregion
 
@@ -51,6 +56,10 @@ namespace GodsEye.WEB.Pages.Camera
             if (camerasResult is not null && camerasResult.Success)
                 _cameras = camerasResult.Data.ToList();
                 _filteredCameras = _cameras.ToList();
+
+            var sectorsRequest = await SectorService.GetAllAsync();
+            if (sectorsRequest.Success)
+                _sectors = sectorsRequest.Data.ToList();
 
             _loading = false;
         }
@@ -121,6 +130,16 @@ namespace GodsEye.WEB.Pages.Camera
         #endregion
 
 
+        private void OnSectorsChanged(IEnumerable<string> values)
+        {
+            _selectedSectors = values.ToHashSet();
+            ApplyFilters();
+        }
+
+        private string GetMultiSelectionText(List<string> selectedValues)
+        {
+            return $"{selectedValues.Count} setor{(selectedValues.Count > 1 ? "es foram selecionados" : " foi selecionado")}";
+        }
 
         void ApplyFilters()
         {
@@ -128,7 +147,7 @@ namespace GodsEye.WEB.Pages.Camera
                 .Where(x =>
                     (string.IsNullOrWhiteSpace(_cameraNameFilter) || x.Name.Contains(_cameraNameFilter, StringComparison.OrdinalIgnoreCase)) &&
                     (string.IsNullOrWhiteSpace(_conectionNameFilter) || (x.Connection ?? "").Contains(_conectionNameFilter, StringComparison.OrdinalIgnoreCase) &&
-                    (string.IsNullOrWhiteSpace(_sectorNameFilter) || (x.SectorName ?? "").Contains(_sectorNameFilter, StringComparison.OrdinalIgnoreCase))) &&
+                    (_selectedSectors.Count() == 0 || _selectedSectors.Contains(x.SectorId.ToString()))) &&
                     (string.IsNullOrWhiteSpace(_featuresNameFilter) || x.Features.Any(y => y.FeatureName.Contains(_featuresNameFilter, StringComparison.OrdinalIgnoreCase)))
                 ).ToList();
         }

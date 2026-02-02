@@ -17,8 +17,13 @@
         </div>
 
         <div class="option">
-            <MudTextField @bind-Value="_cameraNameFilter" TextChanged="ApplyFilters" Immediate="true" Label="Camera" Variant="Variant.Outlined"></MudTextField>
-            <MudButton Variant="Variant.Outlined" OnClick=@(() => _cameraNameFilter = "")>
+            <MudSelect T="string" SelectedValuesChanged="OnCamerasChanged" SelectedValues="_selectedCameras" MultiSelection="true" SelectAll="true" SelectAllText="Selecionar tudo" MultiSelectionTextFunc="@(new Func<List<string>, string>(GetMultiSelectionText))" Label="Cameras" AdornmentIcon="@Icons.Material.Filled.Search" Variant="Variant.Outlined">
+                @foreach (var camera in _camerasFilter)
+                {
+                    <MudSelectItem T="string" Value="@camera.Id.ToString()">@camera.Name</MudSelectItem>
+                }
+            </MudSelect>
+            <MudButton Variant="Variant.Outlined" OnClick=@(() => _selectedCameras = Enumerable.Empty<string>())>
                 <MudIcon Icon="@Icons.Material.Filled.Delete"></MudIcon>
             </MudButton>
         </div>
@@ -31,7 +36,7 @@
     <HeaderContent>
         <MudTh>Nome</MudTh>
         <MudTh>Cameras vinculadas</MudTh>
-        <MudTh>Grupos de notificação vinculados</MudTh>
+        <MudTh>Grupos de notificação</MudTh>
     </HeaderContent>
     <RowTemplate>
         <MudTd DataLabel="Name">@context.Name</MudTd>

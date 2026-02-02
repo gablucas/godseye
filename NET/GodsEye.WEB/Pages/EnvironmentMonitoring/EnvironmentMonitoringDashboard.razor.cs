@@ -1,4 +1,5 @@
 ﻿using GodsEye.Application.DTOs.Model;
+using GodsEye.WEB.Components.PersonComponents;
 using GodsEye.WEB.Services;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.SignalR.Client;
@@ -19,6 +20,9 @@ namespace GodsEye.WEB.Pages.EnvironmentMonitoring
 
         [Inject]
         public SectorWebService SectorService { get; set; }
+
+        [Inject]
+        public DialogWebService DialogWebService { get; set; }
 
         #region TABLE PARAMETERS
 
@@ -53,6 +57,9 @@ namespace GodsEye.WEB.Pages.EnvironmentMonitoring
         DateTime? _finalDate = null;
 
         #endregion
+
+        [Inject]
+        public IDialogService DialogService { get; set; }
 
         protected override async Task OnInitializedAsync()
         {

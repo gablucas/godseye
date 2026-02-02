@@ -21,5 +21,14 @@ namespace GodsEye.WEB.Services
 
             return json!;
         }
+
+        public async Task<ApiResponse<EnvironmentMonitoringPersonModel>> GetByPersonId(int personId)
+        {
+            var result = await _http.GetAsync($"api/environmentmonitoring/person/{personId}");
+
+            var json = await result.Content.ReadFromJsonAsync<ApiResponse<EnvironmentMonitoringPersonModel>>();
+
+            return json!;
+        }
     }
 }

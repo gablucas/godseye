@@ -6,7 +6,5 @@ namespace GodsEye.Application.Interfaces.QueryRepositories
     {
         Task<IEnumerable<PersonModel>> GetAll(CancellationToken cancellationToken);
         Task<IEnumerable<PersonEmbeddingModel>> GetAllEmbeddings(CancellationToken cancellationToken);
-        Task<IEnumerable<PersonLogModel>> GetLogsByPersonId(int personId, CancellationToken cancellationToken);
-        Task<IEnumerable<PersonLogModel>> GetAllPersonLogs(CancellationToken cancellationToken);
     }
 }

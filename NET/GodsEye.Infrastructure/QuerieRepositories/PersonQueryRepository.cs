@@ -43,26 +43,5 @@ namespace GodsEye.Infrastructure.QuerieRepositories
 
             return result;
         }
-
-        public async Task<IEnumerable<PersonLogModel>> GetLogsByPersonId(int personId, CancellationToken cancellationToken)
-        {
-            var pPersonId = new MySqlParameter("@P_PERSON_ID", personId);
-
-            var result = await _context.PersonLogModel
-                .FromSqlRaw("CALL SP_PERSON_GET_ENVIRONMENT_MONITORING_LOG_BY_ID(@P_PERSON_ID)", pPersonId)
-                .ToListAsync(cancellationToken);
-
-            return result;
-        }
-
-        public async Task<IEnumerable<PersonLogModel>> GetAllPersonLogs(CancellationToken cancellationToken) 
-        {
-
-            var result = await _context.PersonLogModel
-                .FromSqlRaw("CALL SP_PERSON_GET_ALL_ENVIRONMENT_MONITORING_LOG()")
-                .ToListAsync(cancellationToken);
-
-            return result;
-        }
     }
 }
