@@ -54,10 +54,10 @@ namespace GodsEye.WEB.Components.Dashboard
                     _logs.Insert(0, log);
                     _logs.RemoveAt(_logs.Count() - 1);
 
-                    //InvokeAsync(() =>
-                    //{
-                    //    StateHasChanged();
-                    //});
+                    InvokeAsync(() =>
+                    {
+                        StateHasChanged();
+                    });
                 });
 
             await SignalR.StartAsync();

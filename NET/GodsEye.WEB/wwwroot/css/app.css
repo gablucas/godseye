@@ -140,7 +140,6 @@ button {
 }
 
 .page-title {
-    margin-top: 2rem;
     margin-bottom: 1rem;
 }
 
@@ -165,6 +164,10 @@ button {
 
 .animated-logo-intro img:last-of-type {
     animation: girar 10s linear infinite;
+}
+
+.page-container {
+    padding: 12px;
 }
 
 

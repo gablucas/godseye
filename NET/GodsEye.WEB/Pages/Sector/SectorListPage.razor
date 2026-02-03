@@ -2,70 +2,73 @@
 
 <PageTitle>Setores</PageTitle>
 
-<div class="page-title">
-    <h1>Setores</h1>
-    <p>Aqui você encontra uma lista de setores cadastrados em seu sistema</p>
-</div>
-
-<div class="notification-menu">
-    <div class="filters">
-        <div class="option">
-            <MudTextField @bind-Value="_sectorNameFilter" TextChanged="ApplyFilters" Immediate="true" Label="Setor" Variant="Variant.Outlined"></MudTextField>
-            <MudButton Variant="Variant.Outlined" OnClick=@(() => _sectorNameFilter = "")>
-                <MudIcon Icon="@Icons.Material.Filled.Delete"></MudIcon>
-            </MudButton>
-        </div>
-
-        <div class="option">
-            <MudSelect T="string" SelectedValuesChanged="OnCamerasChanged" SelectedValues="_selectedCameras" MultiSelection="true" SelectAll="true" SelectAllText="Selecionar tudo" MultiSelectionTextFunc="@(new Func<List<string>, string>(GetMultiSelectionText))" Label="Cameras" AdornmentIcon="@Icons.Material.Filled.Search" Variant="Variant.Outlined">
-                @foreach (var camera in _camerasFilter)
-                {
-                    <MudSelectItem T="string" Value="@camera.Id.ToString()">@camera.Name</MudSelectItem>
-                }
-            </MudSelect>
-            <MudButton Variant="Variant.Outlined" OnClick=@(() => _selectedCameras = Enumerable.Empty<string>())>
-                <MudIcon Icon="@Icons.Material.Filled.Delete"></MudIcon>
-            </MudButton>
-        </div>
+<div class="page-container">
+    <div class="page-title">
+        <h1>Setores</h1>
+        <p>Aqui você encontra uma lista de setores cadastrados em seu sistema</p>
     </div>
 
-    <MudButton Variant="Variant.Outlined" OnClick="OpenCreateSector">Criar Setor</MudButton>
+    <div class="notification-menu">
+        <div class="filters">
+            <div class="option">
+                <MudTextField @bind-Value="_sectorNameFilter" TextChanged="ApplyFilters" Immediate="true" Label="Setor" Variant="Variant.Outlined"></MudTextField>
+                <MudButton Variant="Variant.Outlined" OnClick=@(() => _sectorNameFilter = "")>
+                    <MudIcon Icon="@Icons.Material.Filled.Delete"></MudIcon>
+                </MudButton>
+            </div>
+
+            <div class="option">
+                <MudSelect T="string" SelectedValuesChanged="OnCamerasChanged" SelectedValues="_selectedCameras" MultiSelection="true" SelectAll="true" SelectAllText="Selecionar tudo" MultiSelectionTextFunc="@(new Func<List<string>, string>(GetMultiSelectionText))" Label="Cameras" AdornmentIcon="@Icons.Material.Filled.Search" Variant="Variant.Outlined">
+                    @foreach (var camera in _camerasFilter)
+                    {
+                        <MudSelectItem T="string" Value="@camera.Id.ToString()">@camera.Name</MudSelectItem>
+                    }
+                </MudSelect>
+                <MudButton Variant="Variant.Outlined" OnClick=@(() => _selectedCameras = Enumerable.Empty<string>())>
+                    <MudIcon Icon="@Icons.Material.Filled.Delete"></MudIcon>
+                </MudButton>
+            </div>
+        </div>
+
+        <MudButton Variant="Variant.Outlined" OnClick="OpenCreateSector">Criar Setor</MudButton>
+    </div>
+
+    <MudTable Items="@_filteredSectors" Hover="true" Loading="@_loading" LoadingProgressColor="Color.Info">
+        <HeaderContent>
+            <MudTh>Nome</MudTh>
+            <MudTh>Cameras vinculadas</MudTh>
+            <MudTh>Grupos de notificação</MudTh>
+        </HeaderContent>
+        <RowTemplate>
+            <MudTd DataLabel="Name">@context.Name</MudTd>
+            <MudTd DataLabel="Cameras">
+                @if (context.Cameras.Count > 0)
+                {
+                    foreach (var cam in context.Cameras)
+                    {
+                        <MudChip Color="Color.Info" T="string">@cam.Name</MudChip>
+                    }
+                } 
+                else
+                {
+                    <MudChip T="string">Sem cameras</MudChip>
+                }
+            </MudTd>
+            <MudTd DataLabel="NotificationGroups">
+                @if (context.NotificationGroups.Count > 0)
+                {
+                    foreach (var notificationGroup in context.NotificationGroups)
+                    {
+                        <MudChip Color="Color.Info" T="string">@notificationGroup.Name</MudChip>
+                    }
+                }
+                else
+                {
+                    <MudChip T="string">Sem grupo</MudChip>
+                }
+            </MudTd>
+
+        </RowTemplate>
+    </MudTable>
 </div>
 
-<MudTable Items="@_filteredSectors" Hover="true" Loading="@_loading" LoadingProgressColor="Color.Info">
-    <HeaderContent>
-        <MudTh>Nome</MudTh>
-        <MudTh>Cameras vinculadas</MudTh>
-        <MudTh>Grupos de notificação</MudTh>
-    </HeaderContent>
-    <RowTemplate>
-        <MudTd DataLabel="Name">@context.Name</MudTd>
-        <MudTd DataLabel="Cameras">
-            @if (context.Cameras.Count > 0)
-            {
-                foreach (var cam in context.Cameras)
-                {
-                    <MudChip Color="Color.Info" T="string">@cam.Name</MudChip>
-                }
-            } 
-            else
-            {
-                <MudChip T="string">Sem cameras</MudChip>
-            }
-        </MudTd>
-        <MudTd DataLabel="NotificationGroups">
-            @if (context.NotificationGroups.Count > 0)
-            {
-                foreach (var notificationGroup in context.NotificationGroups)
-                {
-                    <MudChip Color="Color.Info" T="string">@notificationGroup.Name</MudChip>
-                }
-            }
-            else
-            {
-                <MudChip T="string">Sem grupo</MudChip>
-            }
-        </MudTd>
-
-    </RowTemplate>
-</MudTable>

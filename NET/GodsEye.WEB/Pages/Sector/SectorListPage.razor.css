@@ -15,20 +15,20 @@
     gap: 12px;
 }
 
-    .filters .option {
-        display: grid;
-        grid-template-columns: 1fr auto;
-        align-items: center;
-        gap: 4px;
-    }
+.filters .option {
+    display: grid;
+    grid-template-columns: 1fr auto;
+    align-items: center;
+    gap: 4px;
+}
 
-        .filters .option ::deep button svg * {
-            color: #c4c4c4;
-        }
+.filters .option ::deep button svg * {
+    color: #c4c4c4;
+}
 
-        .filters .option ::deep button {
-            display: flex;
-            height: 56px;
-            margin-top: 4px;
-            border-color: #c4c4c4;
-        }
+.filters .option ::deep button {
+    display: flex;
+    height: 56px;
+    margin-top: 4px;
+    border-color: #c4c4c4;
+}

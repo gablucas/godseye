@@ -5,88 +5,91 @@
 
 <PageTitle>Monitoramento de ambientes</PageTitle>
 
-<div class="page-title">
-    <h1>Monitoramento de ambientes</h1>
-</div>
+<div class="page-container">
 
-<div class="filters">
-
-    <div class="option">
-        <MudTextField @bind-Value="_personFilter" TextChanged="ApplyFilters" Immediate="true" Label="Pessoa" Variant="Variant.Outlined"></MudTextField>
-        <MudButton Variant="Variant.Outlined" OnClick=@(() => _personFilter = "")>
-            <MudIcon Icon="@Icons.Material.Filled.Delete"></MudIcon>
-        </MudButton>
+    <div class="page-title">
+        <h1>Monitoramento de ambientes</h1>
     </div>
 
-    <div class="option">
-        <MudSelect T="string" SelectedValuesChanged="OnSectorsChanged" SelectedValues="_selectedSectors" MultiSelection="true" SelectAll="true" SelectAllText="Selecionar tudo" MultiSelectionTextFunc="@(new Func<List<string>, string>(GetMultiSelectionText))" Label="Setores" AdornmentIcon="@Icons.Material.Filled.Search" Variant="Variant.Outlined">
-            @foreach (var sector in _sectors)
-            {
-                <MudSelectItem T="string" Value="@sector.Id.ToString()">@sector.Name</MudSelectItem>
-            }
-        </MudSelect>
-        <MudButton Variant="Variant.Outlined" OnClick=@(() => _selectedSectors = Enumerable.Empty<string>())>
-            <MudIcon Icon="@Icons.Material.Filled.Delete"></MudIcon>
-        </MudButton>
-    </div>
+    <div class="filters">
 
-    <div class="option">
-        <MudSelect T="string" Label="Filtro rápido - Data" @bind-Value="_selectedFilterData" SelectedValuesChanged="PreDateFilter" Variant="Variant.Outlined">
+        <div class="option">
+            <MudTextField @bind-Value="_personFilter" TextChanged="ApplyFilters" Immediate="true" Label="Pessoa" Variant="Variant.Outlined"></MudTextField>
+            <MudButton Variant="Variant.Outlined" OnClick=@(() => _personFilter = "")>
+                <MudIcon Icon="@Icons.Material.Filled.Delete"></MudIcon>
+            </MudButton>
+        </div>
 
-            @foreach (var preFiltro in _preFiltersData)
-            {
-                <MudSelectItem T="string" Value="@preFiltro">
-                    @preFiltro
-                </MudSelectItem>
-            }
-        </MudSelect>
+        <div class="option">
+            <MudSelect T="string" SelectedValuesChanged="OnSectorsChanged" SelectedValues="_selectedSectors" MultiSelection="true" SelectAll="true" SelectAllText="Selecionar tudo" MultiSelectionTextFunc="@(new Func<List<string>, string>(GetMultiSelectionText))" Label="Setores" AdornmentIcon="@Icons.Material.Filled.Search" Variant="Variant.Outlined">
+                @foreach (var sector in _sectors)
+                {
+                    <MudSelectItem T="string" Value="@sector.Id.ToString()">@sector.Name</MudSelectItem>
+                }
+            </MudSelect>
+            <MudButton Variant="Variant.Outlined" OnClick=@(() => _selectedSectors = Enumerable.Empty<string>())>
+                <MudIcon Icon="@Icons.Material.Filled.Delete"></MudIcon>
+            </MudButton>
+        </div>
 
-        <MudButton Variant="Variant.Outlined" OnClick="CleanPreFiltred">
-            <MudIcon Icon="@Icons.Material.Filled.Delete"></MudIcon>
-        </MudButton>
-    </div>
+        <div class="option">
+            <MudSelect T="string" Label="Filtro rápido - Data" @bind-Value="_selectedFilterData" SelectedValuesChanged="PreDateFilter" Variant="Variant.Outlined">
 
-    <div class="option">
-        <MudDatePicker @ref="_initialDatePicker"
-                       DateChanged="OnInitialDateChanged"
-                       Label="Data inicial"
-                       Editable="true"
-                       Mask="@(new DateMask("dd/MM/yyyy"))"
-                       DateFormat="dd/MM/yyyy"
-                       Variant="Variant.Outlined" />
+                @foreach (var preFiltro in _preFiltersData)
+                {
+                    <MudSelectItem T="string" Value="@preFiltro">
+                        @preFiltro
+                    </MudSelectItem>
+                }
+            </MudSelect>
 
-        <MudButton Variant="Variant.Outlined" OnClick="CleanPreFiltred">
-            <MudIcon Icon="@Icons.Material.Filled.Delete"></MudIcon>
-        </MudButton>
-    </div>
+            <MudButton Variant="Variant.Outlined" OnClick="CleanPreFiltred">
+                <MudIcon Icon="@Icons.Material.Filled.Delete"></MudIcon>
+            </MudButton>
+        </div>
 
-    <div class="option">
-        <MudDatePicker @ref="_finalDatePicker"
-                       DateChanged="OnFinalDateChanged"
-                       Label="Data final"
-                       Editable="true"
-                       Mask="@(new DateMask("dd/MM/yyyy"))"
-                       DateFormat="dd/MM/yyyy"
-                       Variant="Variant.Outlined" />
+        <div class="option">
+            <MudDatePicker @ref="_initialDatePicker"
+                           DateChanged="OnInitialDateChanged"
+                           Label="Data inicial"
+                           Editable="true"
+                           Mask="@(new DateMask("dd/MM/yyyy"))"
+                           DateFormat="dd/MM/yyyy"
+                           Variant="Variant.Outlined" />
 
-        <MudButton Variant="Variant.Outlined" OnClick="CleanPreFiltred">
-            <MudIcon Icon="@Icons.Material.Filled.Delete"></MudIcon>
-        </MudButton>
-    </div>
+            <MudButton Variant="Variant.Outlined" OnClick="CleanPreFiltred">
+                <MudIcon Icon="@Icons.Material.Filled.Delete"></MudIcon>
+            </MudButton>
+        </div>
+
+        <div class="option">
+            <MudDatePicker @ref="_finalDatePicker"
+                           DateChanged="OnFinalDateChanged"
+                           Label="Data final"
+                           Editable="true"
+                           Mask="@(new DateMask("dd/MM/yyyy"))"
+                           DateFormat="dd/MM/yyyy"
+                           Variant="Variant.Outlined" />
+
+            <MudButton Variant="Variant.Outlined" OnClick="CleanPreFiltred">
+                <MudIcon Icon="@Icons.Material.Filled.Delete"></MudIcon>
+            </MudButton>
+        </div>
     
-</div>
+    </div>
 
-<MudTable T="EnvironmentMonitoringModel" @ref="_mudTable" Items="@_filteredLogs" Hover="true" Loading="@_loading" LoadingProgressColor="Color.Info" RowClass="cursor-pointer">
-    <HeaderContent>
-        <MudTh></MudTh>
-        <MudTh>Pessoa</MudTh>
-        <MudTh>Setor</MudTh>
-        <MudTh>Data/Hora</MudTh>
-    </HeaderContent>
-    <RowTemplate>
-        <MudTd onclick=@(() => DialogWebService.OpenPersonInfoDialog(context.PersonId)) Style="padding: 4px 16px" DataLabel="PersonPhoto"><MudImage Height="40" Style="border-radius: 7px" src=@($"https://localhost:7010/{context.PersonPhoto}") /></MudTd>
-        <MudTd Style="padding: 4px 16px" DataLabel="Person">@context.Person</MudTd>
-        <MudTd Style="padding: 4px 16px" DataLabel="Name">@context.Sector</MudTd>
-        <MudTd Style="padding: 4px 16px" DataLabel="Connection">@context.CreatedAt</MudTd>
-    </RowTemplate>
-</MudTable>
+    <MudTable T="EnvironmentMonitoringModel" @ref="_mudTable" Items="@_filteredLogs" Hover="true" Loading="@_loading" LoadingProgressColor="Color.Info" RowClass="cursor-pointer">
+        <HeaderContent>
+            <MudTh></MudTh>
+            <MudTh>Pessoa</MudTh>
+            <MudTh>Setor</MudTh>
+            <MudTh>Data/Hora</MudTh>
+        </HeaderContent>
+        <RowTemplate>
+            <MudTd onclick=@(() => DialogWebService.OpenPersonInfoDialog(context.PersonId)) Style="padding: 4px 16px" DataLabel="PersonPhoto"><MudImage Height="40" Style="border-radius: 7px" src=@($"https://localhost:7010/{context.PersonPhoto}") /></MudTd>
+            <MudTd Style="padding: 4px 16px" DataLabel="Person">@context.Person</MudTd>
+            <MudTd Style="padding: 4px 16px" DataLabel="Name">@context.Sector</MudTd>
+            <MudTd Style="padding: 4px 16px" DataLabel="Connection">@context.CreatedAt</MudTd>
+        </RowTemplate>
+    </MudTable>
+</div>

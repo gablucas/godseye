@@ -3,6 +3,7 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `SP_ENVIRONMENT_MONITORING_GET_LOG_B
 )
 BEGIN
 	SELECT
+		P.ID AS PersonId,
 		P.NAME AS Person,
         P.IMAGE_PATH AS PersonPhoto,
         S.ID AS SectorId,

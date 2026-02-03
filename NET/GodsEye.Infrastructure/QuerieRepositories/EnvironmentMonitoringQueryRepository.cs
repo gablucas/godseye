@@ -18,10 +18,10 @@ namespace GodsEye.Infrastructure.QuerieRepositories
 
         public async Task<EnvironmentMonitoringModel> GetByLogId(int logId, CancellationToken cancellationToken)
         {
-            var pLogId = new MySqlParameter("@P_LOG_ID", logId);
+            var pLogId = new MySqlParameter("@P_ID", logId);
 
             var result = await _context.EnvironmentMonitoringModel
-                .FromSqlRaw("CALL SP_ENVIRONMENT_MONITORING_GET_LOG_BY_ID(@P_LOG_ID)", pLogId)
+                .FromSqlRaw("CALL SP_ENVIRONMENT_MONITORING_GET_LOG_BY_ID(@P_ID)", pLogId)
                 .ToListAsync(cancellationToken);
 
             return result.FirstOrDefault() ?? new EnvironmentMonitoringModel();

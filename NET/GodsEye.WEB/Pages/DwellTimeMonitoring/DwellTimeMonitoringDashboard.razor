@@ -1,21 +1,25 @@
 ﻿@page "/monitoramento/controle-permanencia"
 @using GodsEye.Application.DTOs.Model
 
-<div class="page-title">
-    <h1>Controle de permanência</h1>
+<PageTitle>Controle de permanência</PageTitle>
+
+<div class="page-container">
+    <div class="page-title">
+        <h1>Controle de permanência</h1>
+    </div>
+
+    <MudTable T="CameraByFeatureModel" @ref="mudTable" Items="@_cameras" Hover="true" Loading="@_loading" LoadingProgressColor="Color.Info" RowClass="cursor-pointer" RowClassFunc="@SelectedRowClassFunc" OnRowClick="RowClickEvent">
+        <HeaderContent>
+
+            <MudTh>Camera</MudTh>
+            <MudTh>Setor</MudTh>
+            <MudTh>Ver detalhes</MudTh>
+
+        </HeaderContent>
+        <RowTemplate>
+            <MudTd DataLabel="SectorName">@context.Name</MudTd>
+            <MudTd DataLabel="SectorName">@context.SectorName</MudTd>
+            <MudTd><MudButton Variant="Variant.Outlined" Size="Size.Small">Ver Detalhes</MudButton></MudTd>
+        </RowTemplate>
+    </MudTable>
 </div>
-
-<MudTable T="CameraByFeatureModel" @ref="mudTable" Items="@_cameras" Hover="true" Loading="@_loading" LoadingProgressColor="Color.Info" RowClass="cursor-pointer" RowClassFunc="@SelectedRowClassFunc" OnRowClick="RowClickEvent">
-    <HeaderContent>
-
-        <MudTh>Camera</MudTh>
-        <MudTh>Setor</MudTh>
-        <MudTh>Ver detalhes</MudTh>
-
-    </HeaderContent>
-    <RowTemplate>
-        <MudTd DataLabel="SectorName">@context.Name</MudTd>
-        <MudTd DataLabel="SectorName">@context.SectorName</MudTd>
-        <MudTd><MudButton Variant="Variant.Outlined" Size="Size.Small">Ver Detalhes</MudButton></MudTd>
-    </RowTemplate>
-</MudTable>
