@@ -37,13 +37,13 @@
 .sidebar .nav-group .nav-title:hover {
     color: #FFFFFF;
     cursor: pointer;
-    box-shadow: inset 0 0 0 2px #594ae2;
+    box-shadow: inset 0 0 0 2px #175cd3;
     box-sizing: border-box;
 }
 
 .sidebar ::deep a.selected {
     color: #FFFFFF;
-    background-color: #594ae2;
+    background-color: #175cd3;
 }
 
 .ng-level-1 {

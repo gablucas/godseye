@@ -64,7 +64,7 @@ namespace GodsEye.WEB.Pages.EnvironmentMonitoring
         {
             _loading = true;
 
-            var result = await environmentMonitoringService.GetAllLogs();
+            var result = await environmentMonitoringService.GetAllLogs(1, 10);
 
             if (result.Success)
             {

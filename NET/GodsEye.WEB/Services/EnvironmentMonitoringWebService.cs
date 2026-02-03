@@ -13,11 +13,35 @@ namespace GodsEye.WEB.Services
             _http = http;
         }
 
-        public async Task<ApiResponse<IEnumerable<EnvironmentMonitoringModel>>> GetAllLogs()
+        public async Task<ApiResponse<IEnumerable<EnvironmentMonitoringModel>>> GetAllLogs(int pageNumber, int pageSize)
         {
-            var result = await _http.GetAsync($"api/environmentmonitoring");
+            var result = await _http.GetAsync($"api/environmentmonitoring?pageNumber={pageNumber}&pageSize={pageSize}");
+
+            result.EnsureSuccessStatusCode();
 
             var json = await result.Content.ReadFromJsonAsync<ApiResponse<IEnumerable<EnvironmentMonitoringModel>>>();
+
+            return json!;
+        }
+
+        public async Task<ApiResponse<IEnumerable<EnvironmentMonitoringModel>>> GetLastRegisterPerPerson()
+        {
+            var result = await _http.GetAsync($"api/environmentmonitoring/last-register-per-person");
+
+            result.EnsureSuccessStatusCode();
+
+            var json = await result.Content.ReadFromJsonAsync<ApiResponse<IEnumerable<EnvironmentMonitoringModel>>>();
+
+            return json!;
+        }
+
+        public async Task<ApiResponse<IEnumerable<EnvironmentMonitoringSectorModel>>> GetSectors()
+        {
+            var result = await _http.GetAsync($"api/environmentmonitoring/sectors");
+
+            result.EnsureSuccessStatusCode();
+
+            var json = await result.Content.ReadFromJsonAsync<ApiResponse<IEnumerable<EnvironmentMonitoringSectorModel>>>();
 
             return json!;
         }

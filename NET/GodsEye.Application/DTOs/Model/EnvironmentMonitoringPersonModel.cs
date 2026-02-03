@@ -8,15 +8,15 @@ namespace GodsEye.Application.DTOs.Model
         public string PersonPhoto { get; set;  }
         public string? LogsJSON { get; set; }
 
-        public List<EnvironmentMonitoringLogs> Logs
+        public List<EnvironmentMonitoringPersonLog> Logs
         {
             get => string.IsNullOrWhiteSpace(LogsJSON)
-                ? new List<EnvironmentMonitoringLogs>()
-                : JsonSerializer.Deserialize<List<EnvironmentMonitoringLogs>>(LogsJSON);
+                ? new List<EnvironmentMonitoringPersonLog>()
+                : JsonSerializer.Deserialize<List<EnvironmentMonitoringPersonLog>>(LogsJSON);
         }
     }
 
-    public class EnvironmentMonitoringLogs
+    public class EnvironmentMonitoringPersonLog
     {
         public int SectorId { get; set; }
         public string SectorName { get; set; }

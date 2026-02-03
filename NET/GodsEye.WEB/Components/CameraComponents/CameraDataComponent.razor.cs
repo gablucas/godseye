@@ -121,19 +121,19 @@ namespace GodsEye.WEB.Components.CameraComponents
 
         private async Task Submit()
         {
-            //visible = true;
-            //apiResponse = await _cameraService.UpdateAsync(CameraForm);
-            //visible = false;
+            visible = true;
+            apiResponse = await _cameraService.UpdateAsync(CameraForm);
+            visible = false;
 
-            //if (apiResponse.Success)
-            //{
-            //    Snackbar.Add("Camera atualizada com sucesso!", Severity.Success);
-            //    MudDialog.Close(DialogResult.Ok(1));
-            //}
-            //else
-            //{
-            //    Snackbar.Add("Houve um erro ao cadastrar o setor, tente novamente mais tarde", Severity.Error);
-            //}
+            if (apiResponse.Success)
+            {
+                Snackbar.Add("Camera atualizada com sucesso!", Severity.Success);
+                MudDialog.Close(DialogResult.Ok(1));
+            }
+            else
+            {
+                Snackbar.Add("Houve um erro ao cadastrar o setor, tente novamente mais tarde", Severity.Error);
+            }
 
         }
 

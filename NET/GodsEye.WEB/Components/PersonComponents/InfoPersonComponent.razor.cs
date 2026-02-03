@@ -20,9 +20,9 @@ namespace GodsEye.WEB.Components.PersonComponents
         #region TABLE PARAMETERS
 
         private EnvironmentMonitoringPersonModel _personLogs = new();
-        private List<EnvironmentMonitoringLogs> _logs = new();
+        private List<EnvironmentMonitoringPersonLog> _logs = new();
 
-        private MudTable<EnvironmentMonitoringLogs> _mudTable;
+        private MudTable<EnvironmentMonitoringPersonLog> _mudTable;
         bool _loading;
 
         #endregion

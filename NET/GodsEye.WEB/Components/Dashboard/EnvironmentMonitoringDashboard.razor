@@ -1,0 +1,21 @@
+﻿@using GodsEye.Application.DTOs.Model
+@using GodsEye.WEB.Model
+
+<div class="dashboard-item">
+    <p class="title">Monitoramento de ambientes</p>
+
+    <div class="info">
+        @foreach (var log in _logs)
+        {
+            <div class="info-row">
+                <img src="@($"https://localhost:7010/{log.PersonPhoto}")" @onclick="() => DialogWebService.OpenPersonInfoDialog(log.PersonId)" />
+                <span class="person" @onclick="() => DialogWebService.OpenPersonInfoDialog(log.PersonId)">@log.Person</span>
+                <span class="sector">@log.Sector</span>
+                <span class="date">@log.CreatedAt</span>
+            </div>
+        }
+    </div>
+</div>
+
+
+

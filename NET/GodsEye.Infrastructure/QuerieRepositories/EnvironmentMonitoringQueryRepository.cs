@@ -16,15 +16,6 @@ namespace GodsEye.Infrastructure.QuerieRepositories
             _context = context;
         }
 
-        public async Task<IEnumerable<EnvironmentMonitoringModel>> GetAll(CancellationToken cancellationToken)
-        {
-            var result = await _context.EnvironmentMonitoringModel
-            .FromSqlRaw("CALL SP_ENVIRONMENT_MONITORING_GET_ALL_LOGS()")
-            .ToListAsync(cancellationToken);
-
-            return result;
-        }
-
         public async Task<EnvironmentMonitoringModel> GetByLogId(int logId, CancellationToken cancellationToken)
         {
             var pLogId = new MySqlParameter("@P_LOG_ID", logId);

@@ -5,11 +5,11 @@ using MediatR;
 
 namespace GodsEye.Application.UseCases.EnvironmentMonitoring.Queries.GetEnvironmentMonitoringLogsByPersonId
 {
-    public class GetEnvironmentMonitoringLogsByPersonIdHandler : IRequestHandler<GetEnvironmentMonitoringLogsByPersonIdRequest, ApiResponse<EnvironmentMonitoringPersonModel>>
+    public class GetEnvironmentoMonitoringLogsByPersonIdHandler : IRequestHandler<GetEnvironmentMonitoringLogsByPersonIdRequest, ApiResponse<EnvironmentMonitoringPersonModel>>
     {
         private readonly IApplicationDbContext _context;
 
-        public GetEnvironmentMonitoringLogsByPersonIdHandler(IApplicationDbContext context)
+        public GetEnvironmentoMonitoringLogsByPersonIdHandler(IApplicationDbContext context)
         {
             _context = context;
         }

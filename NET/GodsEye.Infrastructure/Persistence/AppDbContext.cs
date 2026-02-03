@@ -38,6 +38,7 @@ namespace GodsEye.Infrastructure.Persistence
         public DbSet<CameraFeatureModel> CameraFeatureModel { get; set; }
         public DbSet<NotificationGroupModel> NotificationGroupModel { get; set; }
         public DbSet<EnvironmentMonitoringPersonModel> EnvironmentMonitoringPersonModel { get; set; }
+        public DbSet<EnvironmentMonitoringSectorModel> EnvironmentMonitoringSectorModel { get; set; }
 
         public async Task<int> ExecuteSqlAsync(string sql, IDictionary<string, object?> parameters, CancellationToken cancellationToken)
         {
@@ -60,6 +61,14 @@ namespace GodsEye.Infrastructure.Persistence
             .ToListAsync();
 
             return result.FirstOrDefault();
+        }
+
+        public async Task<List<T>> QuerySqlAsync<T>(string sql, CancellationToken cancellationToken) where T : class
+        {
+            return await Set<T>()
+            .FromSqlRaw(sql)
+            .AsNoTracking()
+            .ToListAsync(cancellationToken);
         }
 
         public async Task<List<T>> QuerySqlAsync<T>(string sql, IDictionary<string, object?> parameters, CancellationToken cancellationToken) where T : class
@@ -99,6 +108,7 @@ namespace GodsEye.Infrastructure.Persistence
             modelBuilder.Entity<CameraFeatureModel>().HasNoKey().ToView(null);
             modelBuilder.Entity<NotificationGroupModel>().HasNoKey().ToView(null);
             modelBuilder.Entity<EnvironmentMonitoringPersonModel>().HasNoKey().ToView(null);
+            modelBuilder.Entity<EnvironmentMonitoringSectorModel>().HasNoKey().ToView(null);
         }
     }
 }
