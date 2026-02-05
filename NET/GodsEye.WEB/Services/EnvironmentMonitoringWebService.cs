@@ -54,5 +54,12 @@ namespace GodsEye.WEB.Services
 
             return json!;
         }
+
+        public async Task<ApiResponse<bool>> DeleteAllLogs()
+        {
+            var result = await _http.DeleteAsync($"api/environmentmonitoring");
+            var json = await result.Content.ReadFromJsonAsync<ApiResponse<bool>>();
+            return json!;
+        }
     }
 }

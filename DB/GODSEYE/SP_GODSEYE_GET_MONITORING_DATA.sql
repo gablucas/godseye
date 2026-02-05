@@ -29,7 +29,7 @@ BEGIN
 				)
 			)
 			FROM CAMERA C
-            WHERE CONNECTION IS NOT NULL
+            WHERE CONNECTION IS NOT NULL AND C.IS_ACTIVE = 1
 		)
 	) AS Data;
 END

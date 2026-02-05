@@ -243,5 +243,17 @@ namespace GodsEye.WEB.Pages.EnvironmentMonitoring
         }
 
         #endregion
+
+
+        #region DEV TOOLS
+
+        private async Task DeleteAll()
+        {
+            await environmentMonitoringService.DeleteAllLogs();
+            _logs.Clear();
+            _filteredLogs.Clear();
+        }
+
+        #endregion
     }
 }

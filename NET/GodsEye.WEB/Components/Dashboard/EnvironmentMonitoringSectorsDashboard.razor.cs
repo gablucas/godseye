@@ -39,11 +39,11 @@ namespace GodsEye.WEB.Components.Dashboard
             if (result.Success)
             {
                 _logs = result.Data.ToList();
-                foreach (var log in _logs)
+                
+                foreach(var log in _logs)
                 {
                     log.ParsePersons();
                 }
-                
             }
 
             _loading = false;
@@ -77,12 +77,12 @@ namespace GodsEye.WEB.Components.Dashboard
 
                         return x;
                     }).ToList();
-                   
 
-                    //InvokeAsync(() =>
-                    //{
-                    //    StateHasChanged();
-                    //});
+
+                    InvokeAsync(() =>
+                    {
+                        StateHasChanged();
+                    });
                 });
 
             await SignalR.StartAsync();

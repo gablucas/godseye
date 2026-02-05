@@ -1,4 +1,14 @@
-﻿.filters {
+﻿.page-container {
+    min-height: 100vh;
+}
+
+::deep .dev-menu {
+    position: absolute;
+    right: 50px;
+    bottom: 50px;
+}
+
+.filters {
     display: grid;
     grid-template-columns: repeat(5, minmax(240px, 280px));
     align-items: center;

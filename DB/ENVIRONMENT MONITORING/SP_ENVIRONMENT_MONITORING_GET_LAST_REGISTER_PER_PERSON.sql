@@ -4,8 +4,8 @@ BEGIN
 		P.ID AS PersonId,
 		P.NAME AS Person,
         P.IMAGE_PATH AS PersonPhoto,
-        S.ID AS SectorId,
-		S.NAME AS Sector,
+        IFNULL(S.ID, 0) AS SectorId,
+		IFNULL(S.NAME, "Fora da empresa") AS Sector,
         EM.CREATED_AT
 	FROM PERSON P
 	LEFT JOIN ENVIRONMENT_MONITORING EM

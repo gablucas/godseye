@@ -83,6 +83,19 @@ namespace GodsEye.Infrastructure.Persistence
             .ToListAsync(cancellationToken);
         }
 
+        public async Task<int> ExecuteDeleteAsync(string sql, IDictionary<string, object?> parameters, CancellationToken cancellationToken)
+        {
+            var sqlParameters = parameters
+            .Select(p => new MySqlParameter(p.Key, p.Value ?? DBNull.Value))
+            .ToArray();
+
+            return await Database.ExecuteSqlRawAsync(
+                sql,
+                sqlParameters,
+                cancellationToken
+            );
+        }
+
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);

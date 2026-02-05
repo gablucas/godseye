@@ -8,5 +8,6 @@ namespace GodsEye.Application.Interfaces
         Task<List<T>> QuerySqlAsync<T>(string sql, CancellationToken cancellationToken) where T : class;
         Task<List<T>> QuerySqlAsync<T>(string sql, IDictionary<string, object?> parameters, CancellationToken cancellationToken) where T : class;
         Task<T> QuerySingleSqlAsync<T>(string sql, IDictionary<string, object?> parameters, CancellationToken cancellationToken) where T : class;
+        Task<int> ExecuteDeleteAsync(string sql, IDictionary<string, object?> parameters, CancellationToken cancellationToken);
     }
 }

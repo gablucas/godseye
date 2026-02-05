@@ -52,6 +52,9 @@
     font-size: 13px;
     font-weight: 500;
     color: #101828;
+    width: 120px;
+    overflow: hidden;
+    white-space: nowrap;
 }
 
 .dashboard-item .info-row .sector {

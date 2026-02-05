@@ -32,6 +32,8 @@ class MonitorManager:
 
     def start_monitoring(self):
         for cam in self.cameras:
+            print(cam)
+
             print("##############################################################")
             print(f"INICIANDO MONITORAMENTO DA CAMERA {cam['Id']}...")
 

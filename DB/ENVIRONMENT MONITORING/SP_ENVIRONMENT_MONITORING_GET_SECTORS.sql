@@ -1,7 +1,29 @@
 CREATE DEFINER=`root`@`localhost` PROCEDURE `SP_ENVIRONMENT_MONITORING_GET_SECTORS`()
 BEGIN
+    -- CTE (Common Table Expression) para isolar a lógica de "Visto Hoje"
+    -- Isso evita repetir esse código pesado duas vezes e melhora a performance (MySQL 8.0+)
+    WITH PeopleSeenToday AS (
+        SELECT
+            EM1.PERSON_ID,
+            EM1.CREATED_AT AS LastSeen,
+            EM1.CAMERA_ID
+        FROM ENVIRONMENT_MONITORING EM1
+        INNER JOIN (
+            SELECT
+                PERSON_ID,
+                MAX(CREATED_AT) AS LastSeen
+            FROM ENVIRONMENT_MONITORING
+            WHERE CREATED_AT >= CURDATE()
+              AND CREATED_AT < CURDATE() + INTERVAL 1 DAY
+            GROUP BY PERSON_ID
+        ) LAST_EM
+        ON LAST_EM.PERSON_ID = EM1.PERSON_ID
+        AND LAST_EM.LastSeen = EM1.CREATED_AT
+    )
+
+    -- SETORES - Com e sem pessoas
     SELECT
-        S.ID AS SectorId,
+        S.ID   AS SectorId,
         S.NAME AS SectorName,
         COUNT(P.ID) AS TotalPerson,
         CASE
@@ -11,52 +33,38 @@ BEGIN
                     'PersonId', P.ID,
                     'PersonName', P.NAME,
                     'PersonPhoto', P.IMAGE_PATH,
-                    'CreatedAt', DATE_FORMAT(EM.CREATED_AT, '%Y-%m-%dT%H:%i:%s')
+                    'CreatedAt', DATE_FORMAT(PST.LastSeen, '%Y-%m-%dT%H:%i:%s')
                 )
             )
         END AS PersonJSON
     FROM SECTOR S
-    LEFT JOIN CAMERA C 
-        ON C.SECTOR_ID = S.ID
-    LEFT JOIN ENVIRONMENT_MONITORING EM
-        ON EM.ID = (
-            SELECT EM2.ID
-            FROM ENVIRONMENT_MONITORING EM2
-            WHERE EM2.CAMERA_ID = C.ID
-              AND EM2.CREATED_AT >= CURDATE()
-              AND EM2.CREATED_AT < CURDATE() + INTERVAL 1 DAY
-            ORDER BY EM2.CREATED_AT DESC
-            LIMIT 1
-        )
-    LEFT JOIN PERSON P 
-        ON P.ID = EM.PERSON_ID
-    GROUP BY
-        S.ID,
-        S.NAME
+    LEFT JOIN CAMERA C ON C.SECTOR_ID = S.ID
+    LEFT JOIN PeopleSeenToday PST ON PST.CAMERA_ID = C.ID
+    LEFT JOIN PERSON P ON P.ID = PST.PERSON_ID
+    GROUP BY S.ID, S.NAME
 
     UNION ALL
 
-    /* ===========================
-       FORA DA EMPRESA
-       =========================== */
+    -- PARTE 2: Setor "Fora da Empresa" (Pessoas não vistas hoje)
     SELECT
         0 AS SectorId,
         'Fora da empresa' AS SectorName,
-        COUNT(P.ID) AS TotalPeople,
-        JSON_ARRAYAGG(
-            JSON_OBJECT(
-                'PersonId', P.ID,
-                'PersonName', P.NAME,
-                'PersonPhoto', P.IMAGE_PATH,
-                'CreatedAt', NULL
+        COUNT(P.ID) AS TotalPerson,
+        CASE
+            WHEN COUNT(P.ID) = 0 THEN NULL
+            ELSE JSON_ARRAYAGG(
+                JSON_OBJECT(
+                    'PersonId', P.ID,
+                    'PersonName', P.NAME,
+                    'PersonPhoto', P.IMAGE_PATH,
+                    'CreatedAt', NULL -- Não foi visto hoje, então data é NULL
+                )
             )
-        ) AS PersonJSON
+        END AS PersonJSON
     FROM PERSON P
-    WHERE NOT EXISTS (
-        SELECT 1
-        FROM ENVIRONMENT_MONITORING EM
-        WHERE EM.PERSON_ID = P.ID
-          AND EM.CREATED_AT >= CURDATE()
-          AND EM.CREATED_AT < CURDATE() + INTERVAL 1 DAY
-    );
+    LEFT JOIN PeopleSeenToday PST ON PST.PERSON_ID = P.ID
+    WHERE PST.PERSON_ID IS NULL -- Pega apenas quem NÃO está no "Visto Hoje"
+    GROUP BY SectorId, SectorName
+    
+    ORDER BY TotalPerson DESC; 
 END

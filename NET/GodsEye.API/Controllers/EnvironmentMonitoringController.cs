@@ -1,4 +1,5 @@
 ﻿using GodsEye.Application.UseCases.EnvironmentMonitoring.Commands.CreateEnvironmentMonitoringLog;
+using GodsEye.Application.UseCases.EnvironmentMonitoring.Commands.DeleteAllEnvironmentMonitoring;
 using GodsEye.Application.UseCases.EnvironmentMonitoring.Queries.GetAllEnvironmentMonitoringLogs;
 using GodsEye.Application.UseCases.EnvironmentMonitoring.Queries.GetEnvironmentMonitoringLogsByPersonId;
 using GodsEye.Application.UseCases.EnvironmentMonitoring.Queries.GetEnvironmentMonitoringPersonsLastSector;
@@ -54,6 +55,14 @@ namespace GodsEye.API.Controllers
         public async Task<IActionResult> GetByPersonId(int id, CancellationToken cancellationToken)
         {
             var result = await _mediator.Send(new GetEnvironmentMonitoringLogsByPersonIdRequest(id), cancellationToken);
+            return Ok(result);
+        }
+
+        [AllowAnonymous]
+        [HttpDelete]
+        public async Task<IActionResult> DeleteAll(CancellationToken cancellationToken)
+        {
+            var result = await _mediator.Send(new DeleteAllEnvironmentMonitoringRequest(), cancellationToken);
             return Ok(result);
         }
     }
