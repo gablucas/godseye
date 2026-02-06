@@ -8,7 +8,10 @@ class FaceModel:
         self.app = insightface.app.FaceAnalysis(
             name="antelopev2",
             root="C:/Users/Gab/Documents/Fabrica/GodsEye/PYTHON",
-            providers=["CUDAExecutionProvider"]
+            providers=[
+                "CUDAExecutionProvider",
+                "CPUExecutionProvider"
+            ]
         )
         self.app.prepare(ctx_id=0)
 

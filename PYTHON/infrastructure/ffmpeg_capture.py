@@ -3,9 +3,9 @@ import os
 
 def ffmpeg_capture(
     rtsp_url: str,
-    fps: float = 1.0,
-    width: int = 1280,
-    height: int = 720,
+    fps: float = 10.0,
+    width: int = 640,
+    height: int = 360,
     cameraId: int = 0,
     features: dict = {},
     record_path: str | None = None
@@ -14,6 +14,8 @@ def ffmpeg_capture(
         "ffmpeg",
         "-loglevel", "error",
         "-rtsp_transport", "tcp",
+        "-hwaccel", "cuda",
+        "-reorder_queue_size", "4000",
         "-i", rtsp_url,
     ]
 
@@ -36,7 +38,7 @@ def ffmpeg_capture(
     if features.get("environment_monitoring", False) or features.get("dwell_time_monitoring", False):
         command += [
             "-map", "0:v",
-            "-vf", f"fps={fps},scale={width}:{height}",
+            "-vf", f"fps={fps},scale={width}:-2",
             "-f", "rawvideo",
             "-pix_fmt", "bgr24",
             "pipe:1"
@@ -50,6 +52,7 @@ def ffmpeg_capture(
     return subprocess.Popen(
         command,
         stdout=stdout,
-        stderr=subprocess.DEVNULL,
+        # stderr=subprocess.DEVNULL,
+        stderr=None, #Mostra os erros no console
         bufsize=10**8
     )

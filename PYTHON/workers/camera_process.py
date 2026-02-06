@@ -1,11 +1,16 @@
 # stream/camera_worker.py
+from multiprocessing import Process, Queue, Event
+from threading import Thread, Lock
+
+
 import time
 from datetime import datetime
+from turtle import width
 from zoneinfo import ZoneInfo
+import cv2
+import cv2
 from ultralytics import YOLO
 import supervision as sv
-from multiprocessing import Process, Queue, Event
-
 from schemas.dwell_time_monitoring import DwellTimeMonitoringCreateRequest
 from schemas.environment_monitoring_schema import EnvironmentMonitoringCreateRequest
 from services.face_recognition_service import FaceModel
@@ -26,30 +31,39 @@ class CameraProcess(Process):
         rtsp_url,
         sector_id,
         face_matcher: FaceMatcher,
-        capture_fps=15,
-        width=800,
-        height=600,
-        features={},
-        log_queue=None
+        features=None,
+        log_queue=None,
+        shared_person=None
     ):
         super().__init__()
         self.camera_id = camera_id
         self.rtsp_url = rtsp_url
         self.sector_id = sector_id
         self.matcher = face_matcher
-        self.capture_fps = capture_fps
-        self.width = width
-        self.height = height
         self.features = features or {}
         self.stop_event = Event()
         self.log_queue = log_queue
+        self.shared_person = shared_person or {}
+        self.frame_queue = Queue(maxsize=1)
+        self.width = 640
+        self.height = 360
+        
 
     def stop(self):
         self.stop_event.set()
 
     def run(self):
+        self.frame_lock = Lock()
         self.init_models()
-        self.run_stream_loop()
+
+        capture_thread = Thread(target=self.capture_loop)
+        inference_thread = Thread(target=self.inference_loop)
+
+        capture_thread.start()
+        inference_thread.start()
+
+        while not self.stop_event.is_set():
+            time.sleep(1)
 
     def init_models(self):
         self.yolo = YOLO("yolo26s.pt")
@@ -59,16 +73,25 @@ class CameraProcess(Process):
         self.box_annotator = sv.BoxAnnotator()
         self.label_annotator = sv.LabelAnnotator()
 
-        self.track_to_person = {}
+        self.person_on_frame_by_track_id = {}
         self.active_tracks = {}
-        self.active_users = {}
 
-    def run_stream_loop(self):
-        frame_size = self.width * self.height * 3
+        self.last_run = 0.0
+        self.last_detection = 0.0
+        self.target_fps = 1.0 
 
+        self.last_detection = 0
+        self.bg = cv2.createBackgroundSubtractorMOG2(
+        history=500,
+        varThreshold=16,
+        detectShadows=False
+    )
+        
+
+    def capture_loop(self):
+        
         process = ffmpeg_capture(
             rtsp_url=self.rtsp_url,
-            fps=self.capture_fps,
             width=self.width,
             height=self.height,
             cameraId=self.camera_id,
@@ -76,19 +99,101 @@ class CameraProcess(Process):
             record_path=f"records/{self.camera_id}"
         )
 
+        frame_size = self.width * self.height * 3
+
         try:
             while not self.stop_event.is_set():
                 raw = process.stdout.read(frame_size)
-                if (len(raw) != frame_size):
+                if not raw or len(raw) < frame_size:
+                    time.sleep(0.1)
+                    continue
+
+                if process.poll() is not None:
+                    print("❌ ffmpeg morreu")
                     break
 
                 frame = np.frombuffer(raw, np.uint8).reshape(
                     (self.height, self.width, 3)
                 )
 
-                self.process_frame(frame)
+                if self.frame_queue.full():
+                    try:
+                        self.frame_queue.get_nowait()
+                    except:
+                        pass
+
+                self.frame_queue.put(frame)
+
         finally:
             process.kill()
+
+    def movement_detection(self, frame, now):
+        FPS_IDLE = 1.0
+        FPS_ACTIVE = 10.0
+        FPS_STEADY = 5.0
+        COOLDOWN_TIME = 2.0
+
+        mask = self.bg.apply(frame)
+        motion_pixels = cv2.countNonZero(mask)
+
+        IS_HIGH_MOTION = motion_pixels > 5000 
+        IS_LOW_MOTION = motion_pixels > 500
+
+        has_people = len(self.active_tracks) > 0
+
+        if IS_HIGH_MOTION:
+            self.last_detection = now
+            self.target_fps = FPS_ACTIVE
+            print(f"🚀 MODO ATIVO (Alta movimentação: {motion_pixels})")
+            
+        elif has_people:
+            # Tem gente (tracks ativos), mas o movimento de pixels é baixo
+            # Mantemos um FPS seguro para não perder o ID se eles levantarem
+            self.last_detection = now
+            self.target_fps = FPS_STEADY 
+            print(f"👀 MODO STEADY (Pessoas paradas)")
+            
+        elif IS_LOW_MOTION or (now - self.last_detection < COOLDOWN_TIME):
+            # Movimento residual (vento, luz mudando) ou cooldown
+            self.target_fps = FPS_STEADY
+            
+        else:
+            # Deserto total
+            self.target_fps = FPS_IDLE
+            print(f"💤 MODO IDLE")
+
+        return motion_pixels > 500
+
+    def inference_loop(self):
+        while not self.stop_event.is_set():
+            now = time.time()
+
+            frame = None
+            while not self.frame_queue.empty():
+                try:
+                    frame = self.frame_queue.get_nowait()
+                except:
+                    break
+
+            if frame is None:
+                continue
+
+            self.movement_detection(frame, now)
+
+            print(f"Target FPS: {self.target_fps:.2f}, Active Tracks: {len(self.active_tracks)}, Queue Size: {self.frame_queue.qsize()}")
+            # CONTROLE DE FPS
+            frame_interval = 1.0 / self.target_fps
+            elapsed = now - self.last_run
+
+            if elapsed < frame_interval:
+                time.sleep(frame_interval - elapsed)
+
+            self.last_run = time.time()
+            print("PROCESSANDO FRAME")
+
+            # INFERÊNCIA
+            self.process_frame(frame)
+
 
     def process_frame(self, frame):
         now = time.time()
@@ -104,79 +209,101 @@ class CameraProcess(Process):
         detections = sv.Detections.from_ultralytics(results[0])
 
         if detections.tracker_id is None:
-            return
+            tracker_ids_on_frame = []
+            detections.tracker_id = np.array([]) # Garante consistência para o loop
+        else:
+            tracker_ids_on_frame = detections.tracker_id.tolist()
 
-        tracker_ids = detections.tracker_id.tolist()
-        
-        for i, track_id in enumerate(tracker_ids):
-            x1, y1, x2, y2 = detections.xyxy[i].astype(int)
+        # ==================================================
+        # 1. PROCESSAR TRACKS ATIVOS (Se houver alguém)
+        # ==================================================
+        if len(tracker_ids_on_frame) > 0:
+            for i, track_id in enumerate(tracker_ids_on_frame):
+                x1, y1, x2, y2 = detections.xyxy[i].astype(int)
 
-            self.active_tracks[track_id] = now
+                # Atualiza timestamp do track (para manter FPS alto)
+                self.active_tracks[track_id] = now
 
-            # ============================
-            # JÁ TEM PESSOA ASSOCIADA
-            # ============================
-            if track_id in self.track_to_person:
-                person_id = self.track_to_person[track_id]
+                # CASO A: JÁ TEM PESSOA ASSOCIADA A ESSE TRACK
+                if track_id in self.person_on_frame_by_track_id:
+                    person_id = self.person_on_frame_by_track_id[track_id]
+
+                    events = self.evaluate_rules(
+                        personId=person_id,
+                        cameraId=self.camera_id,
+                        sectorId=self.sector_id,
+                        score=None
+                    )
+
+                    for event in events:
+                        self.dispatch_log(event)
+
+                    self.update_shared_person(
+                        personId=person_id,
+                        cameraId=self.camera_id,
+                        sectorId=self.sector_id,
+                        score=None
+                    )
+                    continue
+
+                # CASO B: NOVA PESSOA (TENTAR RECONHECIMENTO)
+                crop = frame[y1:y2, x1:x2]
+                if crop.size == 0:
+                    continue
+
+                faces = self.face_model.get_faces(crop)
+                if not faces:
+                    continue
+
+                emb = faces[0].normed_embedding
+                person_id, score = self.matcher.match(emb)
+
+                if person_id is None:
+                    continue
+
+                # Associa track -> pessoa
+                self.person_on_frame_by_track_id[track_id] = person_id
+                print(f"🔗 Associando track {track_id} à pessoa {person_id} (score: {score:.2f})")
 
                 events = self.evaluate_rules(
                     personId=person_id,
                     cameraId=self.camera_id,
                     sectorId=self.sector_id,
-                    score=None
+                    score=score
                 )
 
                 for event in events:
                     self.dispatch_log(event)
 
-                self.update_active_users(
+                self.update_shared_person(
                     personId=person_id,
                     cameraId=self.camera_id,
                     sectorId=self.sector_id,
-                    score=None
+                    score=score
                 )
-                continue
 
-            # ============================
-            # NOVA PESSOA (REID)
-            # ============================
-            crop = frame[y1:y2, x1:x2]
-            if crop.size == 0:
-                continue
+        # ==================================================
+        # 2. LIMPEZA DE TRACKS PERDIDOS (A Parte Crítica)
+        # ==================================================
+        # Identifica tracks que estão em 'active_tracks' mas NÃO vieram no YOLO agora
+        current_tracks_set = set(tracker_ids_on_frame)
+        
+        # Pega as chaves existentes antes de iterar para evitar erro de tamanho do dicionário mudando
+        known_tracks = list(self.active_tracks.keys())
 
-            faces = self.face_model.get_faces(crop)
-            if not faces:
-                continue
-
-            emb = faces[0].normed_embedding
-            person_id, score = self.matcher.match(emb)
-
-            if person_id is None:
-                continue
-
-            # associa track -> pessoa
-            self.track_to_person[track_id] = person_id
-
-            events = self.evaluate_rules(
-                personId=person_id,
-                cameraId=self.camera_id,
-                sectorId=self.sector_id,
-                score=score
-            )
-
-            for event in events:
-                self.dispatch_log(event)
-
-            self.update_active_users(
-                personId=person_id,
-                cameraId=self.camera_id,
-                sectorId=self.sector_id,
-                score=score
-            )
+        for tid in known_tracks:
+            if tid not in current_tracks_set:
+                print(f"🧹 Limpando Track {tid} (Saiu de cena)")
+                
+                # Remove do controle de FPS
+                self.active_tracks.pop(tid, None)
+                
+                # Remove da associação Track -> Pessoa (para evitar inconsistência se o ID for reutilizado)
+                self.person_on_frame_by_track_id.pop(tid, None)
 
     def evaluate_rules(self, personId, cameraId, sectorId, score):
         now = datetime.now(ZoneInfo("America/Sao_Paulo"))
-        personData = self.active_users.get(personId)
+        personData = self.shared_person.get(personId)
 
         events = []
 
@@ -262,13 +389,16 @@ class CameraProcess(Process):
                     event
                 ))
 
-    def update_active_users(self, personId, cameraId, sectorId, score):
+    def update_shared_person(self, personId, cameraId, sectorId, score):
         now = datetime.now(ZoneInfo("America/Sao_Paulo"))
 
-        personData = self.active_users.get(personId)
+        # Pega uma cópia dos dados atuais (ou None se não existir)
+        # IMPORTANTE: Isso aqui retorna um dicionário puro, desconectado do Manager
+        personData = self.shared_person.get(personId)
 
         if personData is None:
-            self.active_users[personId] = {
+            # CRIANDO: Aqui funciona normal porque você está atribuindo na chave
+            self.shared_person[personId] = {
                 "camera_id": cameraId,
                 "sector_id": sectorId,
                 "score": score,
@@ -277,6 +407,8 @@ class CameraProcess(Process):
                 "updated_at": now
             }
         else:
+            # ATUALIZANDO: 
+            # 1. Atualize a sua cópia local
             personData.update({
                 "camera_id": cameraId,
                 "sector_id": sectorId,
@@ -284,3 +416,7 @@ class CameraProcess(Process):
                 "last_seen": now,
                 "updated_at": now
             })
+            
+            # 2. O PULO DO GATO: Reescreva o dicionário inteiro de volta na chave compartilhada
+            # Sem essa linha, os outros processos nunca vão ver a atualização!
+            self.shared_person[personId] = personData

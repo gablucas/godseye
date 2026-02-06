@@ -33,8 +33,8 @@ class CameraWorker:
         active_users,
         active_users_lock,
         capture_fps: float = 10.0,
-        width: int = 1280,
-        height: int = 720,
+        width: int = 800,
+        height: int = 600,
         environment_monitoring: bool = False,
         incident_recording: bool = False,
         dwell_time_monitoring: bool = False
