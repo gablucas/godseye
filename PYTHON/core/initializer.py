@@ -11,54 +11,40 @@ from core.godseyedata_loader import load_godseye_data_from_api
 from core.incident_processing import ProcessingIncident
 from application.monitor_manager import MonitorManager
 
-from infrastructure.log_queue import start_log_worker
 from services.clip_service import ClipService
 from services.face_matcher_service import FaceMatcher
-from services.face_processor_service import FaceRecognitionProcessor
 from services.monitoring_service import validate_monitoring_data
 from dependencies import get_face_model
 
-def initialize_monitoring(app: FastAPI, data):
-    if getattr(app.state, "background_started", False):
-        return
+async def initialize_monitoring(app: FastAPI, data):
+    async with app.state.init_lock:
+        if app.state.background_started:
+            return
 
-    print("###### INICIANDO INITIALIZE")
-    app.state.background_started = True
+        app.state.background_started = True
 
-    cameras, persons = validate_monitoring_data(data)
+        cameras, persons = validate_monitoring_data(data)
+        face_matcher = build_face_matcher(persons)
 
+        monitor_manager = MonitorManager(cameras, face_matcher)
+        monitor_manager.start_monitoring()
+
+        clip_service = ClipService(app.state.video_index)
+
+        incident_processor = ProcessingIncident(
+            clip_service=clip_service,
+            face_matcher=face_matcher
+        )
+
+        loop = asyncio.get_running_loop()
+        loop.create_task(incident_processor.run())
+
+
+def build_face_matcher(persons):
     ids = [p["Id"] for p in persons]
-    embeddings = [p["Embedding"] for p in persons]
-
-    face_matcher = FaceMatcher(
-        ids=ids,
-        emb_matrix=np.asarray(embeddings, dtype=np.float32)
+    embeddings = np.asarray(
+        [p["Embedding"] for p in persons],
+        dtype=np.float32
     )
 
-    face_model = get_face_model()
-
-    face_processor = FaceRecognitionProcessor(
-        face_model=face_model,
-        face_matcher=face_matcher
-    )
-
-    app.state.face_model = face_model
-    app.state.face_matcher = face_matcher
-    app.state.face_processor = face_processor
-
-    app.state.godseye.set(data)
-    app.state.video_index.build()
-
-    monitor_manager = MonitorManager(face_model, face_matcher, cameras)
-    monitor_manager.start_monitoring_async()
-
-    clip_service = ClipService(app.state.video_index)
-
-    incident_processor = ProcessingIncident(
-        clip_service=clip_service,
-        face_model=face_model,
-        face_matcher=face_matcher
-    )
-
-    loop = asyncio.get_running_loop()
-    loop.create_task(incident_processor.start())
+    return FaceMatcher(ids=ids, emb_matrix=embeddings)

@@ -7,9 +7,7 @@ def ffmpeg_capture(
     width: int = 1280,
     height: int = 720,
     cameraId: int = 0,
-    environment_monitoring: bool = False,
-    dwell_time_monitoring: bool = False,
-    record: bool = False,
+    features: dict = {},
     record_path: str | None = None
 ):
     command = [
@@ -19,8 +17,10 @@ def ffmpeg_capture(
         "-i", rtsp_url,
     ]
 
+    print(features)
+
     # ────── GRAVAÇÃO ──────
-    if record:
+    if features.get("incident_recording", False) and record_path and cameraId:
         os.makedirs(record_path, exist_ok=True)
         command += [
             "-map", "0:v",
@@ -33,7 +33,7 @@ def ffmpeg_capture(
         ]
 
     # ────── MONITORAMENTO (RAWVIDEO) ──────
-    if environment_monitoring or dwell_time_monitoring:
+    if features.get("environment_monitoring", False) or features.get("dwell_time_monitoring", False):
         command += [
             "-map", "0:v",
             "-vf", f"fps={fps},scale={width}:{height}",

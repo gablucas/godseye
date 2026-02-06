@@ -1,4 +1,5 @@
 import asyncio
+from fastapi import FastAPI
 import httpx
 
 from core.godseyedata_loader import (
@@ -8,17 +9,23 @@ from core.godseyedata_loader import (
 from core.initializer import initialize_monitoring
 
 
-async def load_godseye_with_retry(app):
+async def load_godseye_with_retry(app: FastAPI):
     retry = 0
 
     while True:
         try:
             print("🔄 Tentando buscar dados do GodsEye...")
+
             data = await load_godseye_data_from_api()
+            retry = 0  # reset após sucesso
 
             print("✅ Dados carregados com sucesso")
-            initialize_monitoring(app, data)
-            return  # sucesso → sai do loop
+            await initialize_monitoring(app, data)
+            return
+
+        except asyncio.CancelledError:
+            print("🛑 load_godseye_with_retry cancelado")
+            raise
 
         except (httpx.ConnectError, httpx.ReadTimeout):
             retry += 1
@@ -28,7 +35,7 @@ async def load_godseye_with_retry(app):
 
         except GodsEyeLoadError as e:
             print(f"❌ Erro lógico da API: {e}")
-            await asyncio.sleep(10)
+            break
 
         except Exception as e:
             print("🔥 Erro inesperado no startup:", e)

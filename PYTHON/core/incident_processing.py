@@ -19,12 +19,13 @@ class IncidentLoadError(Exception):
     pass
 
 class ProcessingIncident():
-    def __init__(self, clip_service: ClipService, face_model: FaceModel, face_matcher: FaceMatcher):
+    def __init__(self, clip_service: ClipService, face_matcher: FaceMatcher):
         self.clip_service = clip_service
-        self.face_model = face_model
         self.face_matcher = face_matcher
 
-    async def start(self):
+    async def run(self):
+        self.init_models()
+
         while True:
             print("############# INICIANDO SISTEMA DE INCIDENTE")
 
@@ -36,11 +37,18 @@ class ProcessingIncident():
 
                 incident, file_name, video_path = result
 
-                persons = self.process_video(video_path=video_path)
+                # ⚠️ processamento pesado → thread
+                persons = await asyncio.to_thread(
+                    self.process_video,
+                    video_path
+                )
 
-                update_request = IncidentRecordingUpdateRequest(id=incident.id, persons=list(persons.values()), file_name=file_name)
-                print(update_request)
-                
+                update_request = IncidentRecordingUpdateRequest(
+                    id=incident.id,
+                    persons=list(persons.values()),
+                    file_name=file_name
+                )
+
                 await self.done_incident(update_request)
                 print("#FINALIZANDO INCIDENTE")
 
@@ -49,6 +57,9 @@ class ProcessingIncident():
 
             await asyncio.sleep(10)
 
+
+    def init_models(self):
+        self.face_model = FaceModel()
 
     async def process_incident(self) -> tuple[IncidentResponse, str, str] | None:
         print("BUSCANDON INCIDENTES")

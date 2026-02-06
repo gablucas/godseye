@@ -11,19 +11,7 @@ from api.clip import router as clip_router
 from api.video import router as video_router
 
 from core.godseyedata import GodsEyeData
-from core.godseyedata_loader import load_godseye_data_from_api
 from core.video_index import VideoIndex
-from core.incident_processing import ProcessingIncident
-from application.monitor_manager import MonitorManager
-
-from domain.data_validation import MonitoringDataError
-from infrastructure.log_queue import start_log_worker
-from services.clip_service import ClipService
-from services.face_matcher_service import FaceMatcher
-from services.face_processor_service import FaceRecognitionProcessor
-from services.monitoring_service import validate_monitoring_data
-from dependencies import get_face_model
-
 from contextlib import asynccontextmanager
 from fastapi import FastAPI
 from core.startup_retry import load_godseye_with_retry
@@ -34,8 +22,7 @@ async def lifespan(app: FastAPI):
     app.state.godseye = GodsEyeData()
     app.state.video_index = VideoIndex()
     app.state.background_started = False
-
-    start_log_worker()
+    app.state.init_lock = asyncio.Lock()
 
     asyncio.create_task(load_godseye_with_retry(app))
     yield
