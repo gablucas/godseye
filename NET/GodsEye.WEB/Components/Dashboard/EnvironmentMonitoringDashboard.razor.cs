@@ -12,6 +12,9 @@ namespace GodsEye.WEB.Components.Dashboard
         public EnvironmentMonitoringWebService environmentMonitoringService { get; set; }
 
         [Inject]
+        public SectorWebService sectorWebService { get; set; }
+
+        [Inject]
         public SignalRService SignalR { get; set; }
 
         [Inject]
@@ -22,6 +25,10 @@ namespace GodsEye.WEB.Components.Dashboard
 
 
         private List<EnvironmentMonitoringModel> _logs = new();
+        private List<EnvironmentMonitoringModel> _filteredLogs = new();
+
+        private List<SectorModel> _sector = new();
+        private int _selectedSector = 0;
 
         private HubConnection? hubConnection;
         bool _loading;
@@ -39,6 +46,14 @@ namespace GodsEye.WEB.Components.Dashboard
             if (result.Success)
             {
                 _logs = result.Data.ToList();
+                _filteredLogs = _logs;
+            }
+
+            var sectorResult = await sectorWebService.GetAllAsync();
+
+            if (sectorResult.Success)
+            {
+                _sector = sectorResult.Data.ToList();
             }
 
             _loading = false;
@@ -52,7 +67,13 @@ namespace GodsEye.WEB.Components.Dashboard
                     Console.WriteLine("📥 LOG RECEBIDO NO FRONT");
 
                     _logs.Insert(0, log);
-                    _logs.RemoveAt(_logs.Count() - 1);
+
+                    if (_logs.Count > 5)
+                    {
+                        _logs.RemoveAt(_logs.Count - 1);
+                    }
+
+                    SelectSector(_selectedSector);
 
                     InvokeAsync(() =>
                     {
@@ -61,6 +82,19 @@ namespace GodsEye.WEB.Components.Dashboard
                 });
 
             await SignalR.StartAsync();
+        }
+
+        private void SelectSector(int sectorId)
+        {
+            _selectedSector = sectorId;
+
+            if (_selectedSector == 0)
+            {
+                _filteredLogs = _logs;
+                return;
+            }
+                
+            _filteredLogs = _logs.Where(x => x.SectorId == _selectedSector).ToList();
         }
     }
 }

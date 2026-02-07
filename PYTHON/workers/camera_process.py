@@ -99,33 +99,35 @@ class CameraProcess(Process):
             record_path=f"records/{self.camera_id}"
         )
 
-        frame_size = self.width * self.height * 3
+        if self.features.get("environment_monitoring", False) == True or self.features.get("dwell_time_monitoring", False) == True:
 
-        try:
-            while not self.stop_event.is_set():
-                raw = process.stdout.read(frame_size)
-                if not raw or len(raw) < frame_size:
-                    time.sleep(0.1)
-                    continue
+            frame_size = self.width * self.height * 3
 
-                if process.poll() is not None:
-                    print("❌ ffmpeg morreu")
-                    break
+            try:
+                while not self.stop_event.is_set():
+                    raw = process.stdout.read(frame_size)
+                    if not raw or len(raw) < frame_size:
+                        time.sleep(0.1)
+                        continue
 
-                frame = np.frombuffer(raw, np.uint8).reshape(
-                    (self.height, self.width, 3)
-                )
+                    if process.poll() is not None:
+                        print("❌ ffmpeg morreu")
+                        break
 
-                if self.frame_queue.full():
-                    try:
-                        self.frame_queue.get_nowait()
-                    except:
-                        pass
+                    frame = np.frombuffer(raw, np.uint8).reshape(
+                        (self.height, self.width, 3)
+                    )
 
-                self.frame_queue.put(frame)
+                    if self.frame_queue.full():
+                        try:
+                            self.frame_queue.get_nowait()
+                        except:
+                            pass
 
-        finally:
-            process.kill()
+                    self.frame_queue.put(frame)
+
+            finally:
+                process.kill()
 
     def movement_detection(self, frame, now):
         FPS_IDLE = 1.0

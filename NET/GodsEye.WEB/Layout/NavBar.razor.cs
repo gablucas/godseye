@@ -28,7 +28,8 @@ namespace GodsEye.WEB.Layout
                 {
                     new() { Title = "Pessoas", Url = "/cadastro/pessoas" },
                     new() { Title = "Setores", Url = "/cadastro/setores" },
-                    new() { Title = "Câmeras", Url = "/cadastro/cameras" }
+                    new() { Title = "Câmeras", Url = "/cadastro/cameras" },
+                    new() { Title = "Notificações", Url = "/cadastro/notificacoes" },
                 }
             },
 

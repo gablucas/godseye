@@ -41,6 +41,10 @@
     box-sizing: border-box;
 }
 
+.sidebar .nav-group:has(.navitem .selected) .nav-title {
+    color: #FFFFFF;
+}
+
 .sidebar ::deep a.selected {
     color: #FFFFFF;
     background-color: #175cd3;

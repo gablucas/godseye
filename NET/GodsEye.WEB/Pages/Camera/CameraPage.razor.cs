@@ -7,7 +7,7 @@ using MudBlazor;
 
 namespace GodsEye.WEB.Pages.Camera
 {
-    public partial class CameraListPage
+    public partial class CameraPage
     {
         #region DI
 

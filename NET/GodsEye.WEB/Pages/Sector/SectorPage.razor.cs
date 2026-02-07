@@ -6,7 +6,7 @@ using MudBlazor;
 
 namespace GodsEye.WEB.Pages.Sector
 {
-    public partial class SectorListPage
+    public partial class SectorPage
     {
         #region DI
 

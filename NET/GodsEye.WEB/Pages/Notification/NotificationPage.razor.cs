@@ -8,7 +8,7 @@ using MudBlazor.Extensions;
 using System.Text.Json;
 
 
-namespace GodsEye.WEB.Pages.Configurations
+namespace GodsEye.WEB.Pages.Notification
 {
     public partial class NotificationPage
     {

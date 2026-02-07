@@ -7,7 +7,7 @@ using MudBlazor;
 
 namespace GodsEye.WEB.Pages.Person
 {
-    public partial class PersonListPage
+    public partial class PersonPage
     {
         [Inject]
         public PersonService personService { get; set; }

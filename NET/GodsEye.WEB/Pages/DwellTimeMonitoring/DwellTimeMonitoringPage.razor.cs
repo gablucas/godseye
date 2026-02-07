@@ -7,7 +7,7 @@ using MudBlazor;
 
 namespace GodsEye.WEB.Pages.DwellTimeMonitoring
 {
-    public partial class DwellTimeMonitoringDashboard
+    public partial class DwellTimeMonitoringPage
     {
 
         #region DI

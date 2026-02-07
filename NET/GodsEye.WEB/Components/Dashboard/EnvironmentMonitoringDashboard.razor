@@ -4,8 +4,20 @@
 <div class="dashboard-item">
     <p class="title">Monitoramento de ambientes</p>
 
+
+    <div class="sector-filter">
+
+        <MudChip T="string" Text="Todos" onclick="() => SelectSector(0)" Variant=@(_selectedSector == 0 ? Variant.Filled : Variant.Outlined) />
+
+        @foreach (var sector in _sector)
+        {
+            <MudChip T="string" Text="@sector.Name" onclick="() => SelectSector(sector.Id)" Variant=@(_selectedSector == sector.Id ? Variant.Filled : Variant.Outlined) />
+        }
+    </div>
+
+
     <div class="info">
-        @foreach (var log in _logs)
+        @foreach (var log in _filteredLogs)
         {
             <div class="info-row">
                 <img src="@($"https://localhost:7010/{log.PersonPhoto}")" @onclick="() => DialogWebService.OpenPersonInfoDialog(log.PersonId)" />

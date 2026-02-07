@@ -6,7 +6,7 @@ using MudBlazor;
 
 namespace GodsEye.WEB.Pages.EnvironmentMonitoring
 {
-    public partial class EnvironmentMonitoringList
+    public partial class EnvironmentMonitoringPage
     {
         [Inject]
         public EnvironmentMonitoringWebService environmentMonitoringService { get; set; }

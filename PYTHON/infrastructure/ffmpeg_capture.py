@@ -52,7 +52,7 @@ def ffmpeg_capture(
     return subprocess.Popen(
         command,
         stdout=stdout,
-        # stderr=subprocess.DEVNULL,
-        stderr=None, #Mostra os erros no console
+        stderr=subprocess.DEVNULL,
+        #stderr=None, #Mostra os erros no console
         bufsize=10**8
     )

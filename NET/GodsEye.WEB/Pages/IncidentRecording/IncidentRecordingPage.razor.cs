@@ -7,7 +7,7 @@ using MudBlazor;
 
 namespace GodsEye.WEB.Pages.IncidentRecording
 {
-    public partial class IncidentRecordingDashboard
+    public partial class IncidentRecordingPage
     {
         [Inject]
         public IncidentRecordingWebService incidentRecordingWebService { get; set; }
