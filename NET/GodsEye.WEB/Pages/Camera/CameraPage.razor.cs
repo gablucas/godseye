@@ -129,6 +129,12 @@ namespace GodsEye.WEB.Pages.Camera
 
         #endregion
 
+        private List<BreadcrumbItem> _items =
+        [
+            new("Home", href: "/"),
+            new("Cadastro", href: null, disabled: true),
+            new("Cameras", href: null, disabled: true)
+        ];
 
         private void OnSectorsChanged(IEnumerable<string> values)
         {

@@ -1,5 +1,4 @@
-﻿using GodsEye.Application.DTOs.External.GodsEye;
-using GodsEye.Application.DTOs.Response;
+﻿using GodsEye.Application.DTOs.Response;
 
 namespace GodsEye.Application.Interfaces
 {

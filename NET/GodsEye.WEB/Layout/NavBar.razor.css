@@ -3,7 +3,7 @@
     gap: 12px;
     flex-direction: column;
     height: 100vh;
-    background: #2c2c2c;
+    background: linear-gradient(180deg, #1f1f1f 0%, #151515 100%);
     color: #e5e5e5;
     font-family: Inter, system-ui, sans-serif;
     padding: 12px;
@@ -14,11 +14,11 @@
     display: flex;
     align-items: center;
     gap: 8px;
-    padding: 16px;
+    padding: 8px 16px;
     border-radius: 7px;
     color: #a3a3a3;
     font-weight: 500;
-    font-size: 16px;
+    font-size: 14px;
 }
 
 .sidebar .nav-group {

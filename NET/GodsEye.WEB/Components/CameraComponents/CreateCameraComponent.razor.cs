@@ -4,6 +4,7 @@ using GodsEye.Domain.DTOs.Result;
 using GodsEye.WEB.Model.Forms;
 using GodsEye.WEB.Services;
 using Microsoft.AspNetCore.Components;
+using Microsoft.JSInterop;
 using MudBlazor;
 
 namespace GodsEye.WEB.Components.CameraComponents
@@ -20,6 +21,12 @@ namespace GodsEye.WEB.Components.CameraComponents
 
         [Inject]
         FeatureWebService featureWebService { get; set; }
+
+        [Inject]
+        MediaMtxWebService mediaMtxWebService { get; set; }
+
+        [Inject]
+        public IJSRuntime JS { get; set; }
 
         #endregion
 
@@ -121,5 +128,26 @@ namespace GodsEye.WEB.Components.CameraComponents
 
 
         private void Cancel() => MudDialog.Cancel();
+
+
+        public async Task StartStream()
+        {
+            if (string.IsNullOrEmpty(CameraModel.Connection))
+                return;
+
+            var cam = await mediaMtxWebService.StartStream(CameraModel.Connection);
+
+            if (cam is null || !cam.Success)
+                return;
+
+            var webRtcUrl = cam.Data;
+
+            await JS.InvokeVoidAsync("streamFunctions.start", "camera-player", webRtcUrl);
+        }
+
+        public async ValueTask DisposeAsync()
+        {
+            await JS.InvokeVoidAsync("streamFunctions.stop", "camera-player");
+        }
     }
 }

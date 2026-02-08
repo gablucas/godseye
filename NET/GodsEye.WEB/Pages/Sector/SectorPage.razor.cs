@@ -42,7 +42,14 @@ namespace GodsEye.WEB.Pages.Sector
 
         #endregion
 
- 
+        private List<BreadcrumbItem> _items =
+        [
+            new("Home", href: "/"),
+            new("Cadastro", href: null, disabled: true),
+            new("Setores", href: null, disabled: true)
+        ];
+
+
         protected override async Task OnInitializedAsync()
         {
             _loading = true;

@@ -40,6 +40,15 @@ namespace GodsEye.WEB.Pages.Person
 
         #endregion
 
+        private List<BreadcrumbItem> _items =
+        [
+            new("Home", href: "/"),
+            new("Cadastro", href: null, disabled: true),
+            new("Pessoas", href: null, disabled: true)
+        ];
+
+
+
         bool _loading;
 
         

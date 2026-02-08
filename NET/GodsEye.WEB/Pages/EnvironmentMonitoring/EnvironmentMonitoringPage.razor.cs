@@ -60,6 +60,13 @@ namespace GodsEye.WEB.Pages.EnvironmentMonitoring
         [Inject]
         public IDialogService DialogService { get; set; }
 
+        private List<BreadcrumbItem> _items =
+        [
+            new("Home", href: "/"),
+            new("Monitoramento", href: null, disabled: true),
+            new("Ambientes", href: null, disabled: true)
+        ];
+
         protected override async Task OnInitializedAsync()
         {
             _loading = true;

@@ -32,6 +32,13 @@ namespace GodsEye.WEB.Pages.DwellTimeMonitoring
 
         #endregion
 
+        private List<BreadcrumbItem> _items =
+        [
+            new("Home", href: "/"),
+            new("Monitoramento", href: null, disabled: true),
+            new("Permanência", href: null, disabled: true)
+        ];
+
         protected override async Task OnInitializedAsync()
         {
             _loading = true;

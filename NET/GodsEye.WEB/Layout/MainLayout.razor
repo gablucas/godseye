@@ -5,16 +5,19 @@
 <MudDialogProvider />
 <MudSnackbarProvider />
 
+
 <MudLayout>
     <MudDrawer @bind-Open="@_drawerOpen" Color="Color.Default">
         <NavBar />
     </MudDrawer>
-    <MudMainContent Style="padding-top: 0;">
+    <MudMainContent Style="padding: 12px; background-color: var(--primary); border-radius: 7px;">
         <MudContainer Fixed="true" Gutters="false">
             @Body
         </MudContainer>
     </MudMainContent>
 </MudLayout>
+
+
 
 @code {
     bool _drawerOpen = true;

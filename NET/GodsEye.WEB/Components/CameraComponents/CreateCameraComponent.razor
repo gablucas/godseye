@@ -10,7 +10,21 @@
                 <div class="inputs-container">
 
                     <MudTextField Label="Descrição" @bind-Value="CameraModel.Name" Required="true" RequiredError="O nome é obrigatório" T="string" For="@(() => CameraModel.Name)" Variant="Variant.Outlined" />
-                    <MudTextField Label="Conexão" HelperText="IP de conexão para se conectar a camera" @bind-Value="CameraModel.Connection" T="string" Variant="Variant.Outlined" />
+                    
+                    <div class="video-inputs">
+                        <video id="camera-player"
+                               controls
+                               autoplay
+                               muted
+                               playsinline
+                               style="width: 100%; max-width: 640px; background: black;">
+                        </video>
+
+                        <div class="connection">
+                            <MudTextField Label="Conexão" HelperText="IP de conexão para se conectar a camera" @bind-Value="CameraModel.Connection" T="string" Variant="Variant.Outlined" />
+                            <MudButton OnClick="StartStream" Disabled="string.IsNullOrEmpty(CameraModel.Connection)" Variant="Variant.Outlined" Style="height: 56px; margin-top: 8px" Color="Color.Success">Testar conexão</MudButton>
+                        </div>
+                    </div>
 
                     <MudSelect T="string" Clearable="true" Label="Selecione um setor" @bind-Value="CameraModel.SectorId" Required="true" RequiredError="Selecione um setor" Variant="Variant.Outlined">
                         @foreach (var sector in _sectors)

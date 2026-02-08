@@ -20,6 +20,7 @@ builder.Services.AddScoped<IncidentRecordingWebService>();
 builder.Services.AddScoped<DwellTimeMonitoringWebService>();
 builder.Services.AddScoped<NotificationGroupWebService>();
 builder.Services.AddScoped<DialogWebService>();
+builder.Services.AddScoped<MediaMtxWebService>();
 
 
 builder.Services.AddMudServices();

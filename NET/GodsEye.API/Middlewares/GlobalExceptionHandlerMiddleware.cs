@@ -37,6 +37,7 @@ namespace GodsEye.API.Middlewares
             var statusCode = exception switch
             {
                 GodsEyeServiceException ex => (HttpStatusCode)ex.StatusCode,
+                MediaMtxServiceException ex => (HttpStatusCode)ex.StatusCode,
                 UnauthorizedAccessException => HttpStatusCode.Unauthorized,
                 KeyNotFoundException => HttpStatusCode.NotFound,
                 ArgumentException => HttpStatusCode.BadRequest,

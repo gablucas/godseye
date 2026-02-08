@@ -5,9 +5,8 @@ using GodsEye.Application.Interfaces;
 using System.Net.Http.Headers;
 using System.Net.Http.Json;
 using System.Text.Json;
-using static System.Runtime.InteropServices.JavaScript.JSType;
 
-namespace GodsEye.Infrastructure.GodsEye
+namespace GodsEye.Infrastructure.Services
 {
     public class GodsEyeService : IGodsEyeService
     {
@@ -41,14 +40,14 @@ namespace GodsEye.Infrastructure.GodsEye
 
             if (!response.IsSuccessStatusCode)
             {
-                var errorJson = await response.Content.ReadAsStringAsync();
-                string mensagem = errorJson;
+                var errorContent = await response.Content.ReadAsStringAsync();
+                string mensagem = errorContent;
 
                 Console.WriteLine("ERRO DO PYTHON:");
                 Console.WriteLine(mensagem);
                 try
                 {
-                    var parsed = JsonSerializer.Deserialize<FastApiError>(errorJson);
+                    var parsed = JsonSerializer.Deserialize<FastApiError>(errorContent);
                     if (!string.IsNullOrWhiteSpace(parsed?.Detail))
                         mensagem = parsed.Detail;
                 }

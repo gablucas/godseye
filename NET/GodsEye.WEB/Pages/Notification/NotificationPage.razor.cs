@@ -35,6 +35,13 @@ namespace GodsEye.WEB.Pages.Notification
         [Inject]
         public IDialogService DialogService { get; set; }
 
+        private List<BreadcrumbItem> _items =
+        [
+            new("Home", href: "/"),
+            new("Cadastro", href: null, disabled: true),
+            new("Notificações", href: null, disabled: true)
+        ];
+
         protected override async Task OnInitializedAsync()
         {
             _loading = true;

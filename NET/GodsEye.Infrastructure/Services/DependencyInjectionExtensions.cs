@@ -2,7 +2,6 @@
 using GodsEye.Application.Interfaces.QueryRepositories;
 using GodsEye.Domain.Interfaces.Repositories;
 using GodsEye.Infrastructure.Email;
-using GodsEye.Infrastructure.GodsEye;
 using GodsEye.Infrastructure.Persistence;
 using GodsEye.Infrastructure.QuerieRepositories;
 using GodsEye.Infrastructure.Repositories;
@@ -36,6 +35,7 @@ namespace GodsEye.Infrastructure.Services
             services.AddScoped<IIncidentRecordingQueryRepository, IncidentRecordingQueryRepository>();
             services.AddScoped<IDwellTimeMonitoringQueryRepository, DwellTimeMonitoringQueryRepository>();
             services.AddScoped<INotificationGroupQueryRepository, NotificationGroupQueryRepository>();
+            services.AddScoped<ICameraConnectionTesterService, RtspCameraConnectionTesterService>();
 
 
             services.AddDbContext<AppDbContext>(options =>
@@ -56,6 +56,22 @@ namespace GodsEye.Infrastructure.Services
 
                 if (string.IsNullOrWhiteSpace(baseUrl))
                     throw new InvalidOperationException("A URL de GodsEye não foi configurada.");
+
+                client.BaseAddress = new Uri(baseUrl);
+
+                client.DefaultRequestHeaders.Accept.Clear();
+                client.DefaultRequestHeaders.Accept.Add(
+                    new System.Net.Http.Headers.MediaTypeWithQualityHeaderValue("application/json")
+                );
+            });
+
+            services.AddHttpClient<IMediaMtxService, MediaMtxService>((sp, client) =>
+            {
+                var config = sp.GetRequiredService<IConfiguration>();
+                var baseUrl = config["MediaMtx:BaseUrl"];
+
+                if(string.IsNullOrWhiteSpace(baseUrl))
+                    throw new InvalidOperationException("A URL do MediaMtx não foi configurada.");
 
                 client.BaseAddress = new Uri(baseUrl);
 
