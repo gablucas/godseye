@@ -33,7 +33,7 @@
             <MudButton Variant="Variant.Outlined" OnClick="OpenCreateSector">Criar Setor</MudButton>
         </div>
 
-        <MudTable Items="@_filteredSectors" Hover="true" Loading="@_loading" LoadingProgressColor="Color.Info">
+        <MudTable Items="@_filteredSectors" Hover="true" Loading="@_loading" Elevation="0" LoadingProgressColor="Color.Info">
             <HeaderContent>
                 <MudTh>Nome</MudTh>
                 <MudTh>Cameras vinculadas</MudTh>

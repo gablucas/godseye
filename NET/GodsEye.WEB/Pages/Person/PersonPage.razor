@@ -35,7 +35,7 @@
         </div>
 
 
-        <MudTable T="PersonModel" @ref="mudTable" Items="@_filteredPersons" Hover="true" Loading="@_loading" LoadingProgressColor="Color.Info" RowClass="cursor-pointer" RowClassFunc="@SelectedRowClassFunc" OnRowClick="RowClickEvent">
+        <MudTable T="PersonModel" @ref="mudTable" Elevation="0" Items="@_filteredPersons" Hover="true" Loading="@_loading" LoadingProgressColor="Color.Info" RowClass="cursor-pointer" RowClassFunc="@SelectedRowClassFunc" OnRowClick="RowClickEvent">
             <HeaderContent>
                 <MudTh>Foto</MudTh>
                 <MudTh>Nome</MudTh>

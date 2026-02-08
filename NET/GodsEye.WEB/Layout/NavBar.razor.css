@@ -1,4 +1,4 @@
-﻿.sidebar {
+﻿/*.sidebar {
     display: flex;
     gap: 12px;
     flex-direction: column;
@@ -19,6 +19,8 @@
     color: #a3a3a3;
     font-weight: 500;
     font-size: 14px;
+
+    transition: all .3s;
 }
 
 .sidebar .nav-group {
@@ -55,5 +57,128 @@
 }
 
 .ng-level-1 .navitem ::deep a {
-    padding-left: 24px;
+    padding-left: 48px;
+}
+*/
+
+.sidebar {
+    display: flex;
+    gap: 12px;
+    flex-direction: column;
+    height: 100vh;
+    /* Fundo base escuro e profundo para destacar o vidro */
+    background: radial-gradient(circle at top left, #2b2b2b 0%, #151515 100%);
+    color: #e5e5e5;
+    font-family: Inter, system-ui, sans-serif;
+    padding: 12px;
+}
+
+/* Base dos Itens */
+.sidebar ::deep a,
+.sidebar .nav-group .nav-title {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 8px 16px;
+    border-radius: 12px; /* Mais arredondado para estilo moderno */
+    color: #a3a3a3;
+    font-weight: 500;
+    font-size: 14px;
+    /* Prepara transição para o efeito vidro */
+    background: rgba(255, 255, 255, 0);
+    border: 1px solid transparent;
+    transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+}
+
+/* Container do Grupo */
+.sidebar .nav-group {
+    border-radius: 12px;
+    transition: background-color 0.3s;
+}
+
+/* Quando o grupo abre - Fundo semi-transparente escuro */
+.sidebar .nav-group.open {
+    background-color: rgba(68, 68, 68, 0.4); /* #444 com transparência */
+    border: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.sidebar .nav-group.open .ng-level-1 {
+    display: initial;
+}
+
+/* --- EFEITO 1: HOVER (Sutil e Gelado) --- */
+.sidebar ::deep a:hover,
+.sidebar .nav-group .nav-title:hover {
+    color: #FFFFFF;
+    cursor: pointer;
+    /* Efeito fosco leve */
+    background: rgba(255, 255, 255, 0.08);
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+    /* Borda fina brilhante para simular borda de vidro */
+    border: 1px solid rgba(255, 255, 255, 0.15);
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+    /* Removemos o box-shadow inset antigo para usar o estilo glass */
+    box-sizing: border-box;
+}
+
+/* Ajuste de Hover dentro de grupos abertos (Nivel 1) */
+/* Como o fundo é mais claro (#444), aumentamos levemente a opacidade do branco no hover */
+.sidebar .nav-group.open .ng-level-1 .navitem ::deep a:hover {
+    background: rgba(255, 255, 255, 0.12);
+}
+
+/* Título do grupo fica branco se tiver filho selecionado */
+.sidebar .nav-group:has(.navitem .selected) .nav-title {
+    color: #FFFFFF;
+    text-shadow: 0 0 10px rgba(255, 255, 255, 0.3);
+}
+
+/* --- EFEITO 2: SELECIONADO (Liquid Glass Azul - SUTIL) --- */
+.sidebar ::deep a.selected {
+    color: #FFFFFF;
+    
+    /* --- 1. Diminuindo a Intensidade da Cor Interna --- */
+    /* Antes era 0.6 e 0.2. Reduzi para 0.35 e 0.1 para ficar mais transparente */
+    background: linear-gradient(135deg, rgba(23, 92, 211, 0.35) 0%, rgba(23, 92, 211, 0.1) 100%);
+    
+    /* --- 2. Diminuindo o Desfoque do Fundo --- */
+    /* Antes era 12px. Reduzi para 6px para um vidro mais "fino" */
+    backdrop-filter: blur(6px);
+    -webkit-backdrop-filter: blur(6px);
+    
+    /* Bordas (ajustei levemente a opacidade para combinar com o novo fundo) */
+    border: 1px solid rgba(255, 255, 255, 0.15);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+    border-right: 1px solid rgba(255, 255, 255, 0.05);
+    
+    /* --- 3. Diminuindo a Expansão (Glow Externo) --- */
+    /* Antes: box-shadow: 0 8px 32px 0 rgba(23, 92, 211, 0.25);
+       O '32px' era o culpado pela grande expansão.
+       Reduzi o deslocamento Y (de 8 para 4px) e o desfoque (de 32 para 15px).
+    */
+    box-shadow: 0 4px 15px 0 rgba(23, 92, 211, 0.2);
+}
+
+.ng-level-1 {
+    display: none;
+    margin-top: 4px; /* Espaço entre o titulo e os itens filhos */
+}
+
+.ng-level-1 .navitem ::deep a {
+    padding-left: 48px;
+    position: relative;
+}
+
+/* Opcional: Pequeno detalhe visual nos itens aninhados para conectar ao pai */
+.ng-level-1 .navitem ::deep a::before {
+    content: '';
+    position: absolute;
+    left: 28px;
+    top: 50%;
+    height: 4px;
+    width: 4px;
+    background-color: rgba(255,255,255,0.2);
+    border-radius: 50%;
+    transform: translateY(-50%);
 }

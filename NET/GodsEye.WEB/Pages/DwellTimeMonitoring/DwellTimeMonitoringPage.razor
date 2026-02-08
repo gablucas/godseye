@@ -13,7 +13,7 @@
             <h1>Controle de permanência</h1>
         </div>
 
-        <MudTable T="CameraByFeatureModel" @ref="mudTable" Items="@_cameras" Hover="true" Loading="@_loading" LoadingProgressColor="Color.Info" RowClass="cursor-pointer" RowClassFunc="@SelectedRowClassFunc" OnRowClick="RowClickEvent">
+        <MudTable T="CameraByFeatureModel" @ref="mudTable" Elevation="0" Items="@_cameras" Hover="true" Loading="@_loading" LoadingProgressColor="Color.Info" RowClass="cursor-pointer" RowClassFunc="@SelectedRowClassFunc" OnRowClick="RowClickEvent">
             <HeaderContent>
 
                 <MudTh>Camera</MudTh>

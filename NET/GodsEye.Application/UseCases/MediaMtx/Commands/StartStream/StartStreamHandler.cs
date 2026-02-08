@@ -21,7 +21,7 @@ namespace GodsEye.Application.UseCases.MediaMtx.Commands.StartStream
 
             if (!isValid)
             {
-                return ApiResponse<string>.Fail(400, "URL inválida", message);
+                return ApiResponse<string>.Fail(400, message);
             }
 
             var webRtcUrl = await _mediaMtxService.StartStream(request.RtspUrl);

@@ -2,12 +2,14 @@
 using GodsEye.Application.Interfaces.QueryRepositories;
 using GodsEye.Domain.Interfaces.Repositories;
 using GodsEye.Infrastructure.Email;
+using GodsEye.Infrastructure.MediaMtx;
 using GodsEye.Infrastructure.Persistence;
 using GodsEye.Infrastructure.QuerieRepositories;
 using GodsEye.Infrastructure.Repositories;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Options;
 
 
 namespace GodsEye.Infrastructure.Services
@@ -65,15 +67,26 @@ namespace GodsEye.Infrastructure.Services
                 );
             });
 
+            services.AddOptions<MediaMtxOptions>()
+            .Bind(configuration.GetSection("MediaMtx"))
+            .Validate(o =>
+                !string.IsNullOrWhiteSpace(o.ApiBaseUrl) &&
+                !string.IsNullOrWhiteSpace(o.WebRtcBaseUrl),
+                "Configuração do MediaMTX inválida"
+            )
+            .ValidateOnStart();
+
             services.AddHttpClient<IMediaMtxService, MediaMtxService>((sp, client) =>
             {
-                var config = sp.GetRequiredService<IConfiguration>();
-                var baseUrl = config["MediaMtx:BaseUrl"];
+                var options = sp
+                    .GetRequiredService<IOptions<MediaMtxOptions>>()
+                    .Value;
 
-                if(string.IsNullOrWhiteSpace(baseUrl))
+
+                if (string.IsNullOrWhiteSpace(options.ApiBaseUrl))
                     throw new InvalidOperationException("A URL do MediaMtx não foi configurada.");
 
-                client.BaseAddress = new Uri(baseUrl);
+                client.BaseAddress = new Uri(options.ApiBaseUrl);
 
                 client.DefaultRequestHeaders.Accept.Clear();
                 client.DefaultRequestHeaders.Accept.Add(

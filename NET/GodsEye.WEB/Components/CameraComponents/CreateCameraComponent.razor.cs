@@ -33,6 +33,9 @@ namespace GodsEye.WEB.Components.CameraComponents
         [CascadingParameter]
         private IMudDialogInstance MudDialog { get; set; }
 
+        [Parameter]
+        public int Id { get; set; }
+
         #region FORM
 
         MudForm form;
@@ -43,15 +46,16 @@ namespace GodsEye.WEB.Components.CameraComponents
         IEnumerable<SectorModel> _sectors = Enumerable.Empty<SectorModel>();
         IEnumerable<FeatureModel> _features = Enumerable.Empty<FeatureModel>();
 
+        private bool _hasConnectionError = false;
+        private string? _connectionErrorMessage = null;
+        private bool _loadingConnection = false;
+
         ApiResponse<ProcedureResult?>? apiResponse { get; set; } = null;
 
         private bool visible = false;
+        private bool _videoExpanded = false;
 
         #endregion
-
-
-        [Parameter]
-        public int Id { get; set; }
 
 
         protected override async Task OnInitializedAsync()
@@ -126,23 +130,45 @@ namespace GodsEye.WEB.Components.CameraComponents
             }   
         }
 
-
         private void Cancel() => MudDialog.Cancel();
+
+        private void OnConnectionChanged(string value)
+        {
+            CameraModel.Connection = value;
+            _hasConnectionError = false;
+            _connectionErrorMessage = null;
+        }
 
 
         public async Task StartStream()
         {
+            _loadingConnection = true;
+
             if (string.IsNullOrEmpty(CameraModel.Connection))
+            {
+                _loadingConnection = false;
                 return;
+            }
+                
 
             var cam = await mediaMtxWebService.StartStream(CameraModel.Connection);
 
             if (cam is null || !cam.Success)
+            {
+                _hasConnectionError = true;
+                _connectionErrorMessage = cam.Error.Message;
+                _loadingConnection = false;
                 return;
-
+            }
+                
             var webRtcUrl = cam.Data;
+            _videoExpanded = true;
 
             await JS.InvokeVoidAsync("streamFunctions.start", "camera-player", webRtcUrl);
+
+            _loadingConnection = false;
+            _hasConnectionError = false;
+            _connectionErrorMessage = null;
         }
 
         public async ValueTask DisposeAsync()

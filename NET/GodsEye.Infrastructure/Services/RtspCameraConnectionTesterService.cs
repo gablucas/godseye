@@ -66,7 +66,7 @@ namespace GodsEye.Infrastructure.Services
             }
             catch (Exception ex)
             {
-                return (false, $"Erro ao validar: {ex.Message}");
+                return (false, $"Erro ao testar conexão, contate um administrador.");
             }
         }
     }

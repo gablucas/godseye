@@ -7,7 +7,6 @@
     position: relative;
 }
 
-
 .form-container .feature-container {
     display: flex;
     flex-direction: column;
@@ -23,6 +22,17 @@
     padding-left: 4px;
     border-radius: 7px;
     border: 1px solid var(--gray-050);
+}
+
+.form-container .inputs-container .video-inputs ::deep video {
+    display: flex;
+    justify-self: center;
+}
+
+.form-container .inputs-container .video-inputs .connection {
+    display: grid;
+    grid-template-columns: 1fr auto;
+    gap: 12px;
 }
 
 .form-container ::deep .btn-submit {

@@ -249,3 +249,70 @@ button {
     align-items: center;
     gap: 12px;
 }
+
+video {
+    border-radius: 14px;
+}
+
+/* --- CONTAINER PRINCIPAL --- */
+.mud-table-root {
+    /* Fundo Branco Puro */
+    background-color: #ffffff !important;
+    /* Remove a sombra (elevation) */
+    box-shadow: none !important;
+    /* Borda externa fina e cinza claro */
+    border: 1px solid #e0e0e0;
+    /* Arredondamento leve nos cantos (moderno) */
+    border-radius: 8px !important;
+    /* Garante que o conteúdo não vaze o arredondamento */
+    overflow: hidden;
+}
+
+/* --- CABEÇALHO (Header) --- */
+.mud-table-head {
+    /* Fundo levemente cinza para diferenciar do corpo (opcional, mas recomendado) */
+    background-color: #f9fafb !important;
+}
+
+    .mud-table-head .mud-table-cell {
+        color: #6b7280 !important; /* Cinza médio para o texto */
+        font-weight: 600 !important;
+        font-size: 0.75rem !important;
+        text-transform: uppercase;
+        letter-spacing: 0.05em;
+        /* Borda inferior um pouco mais visível para separar o header */
+        border-bottom: 1px solid #e5e7eb !important;
+        /* Mais espaçamento vertical */
+        padding-top: 16px !important;
+        padding-bottom: 16px !important;
+    }
+
+/* --- CORPO (Body) --- */
+.mud-table-body .mud-table-cell {
+    color: #111827 !important; /* Texto quase preto para leitura fácil */
+    font-size: 0.9rem;
+    /* Linha divisória muito sutil */
+    border-bottom: 1px solid #f3f4f6 !important;
+    /* Espaçamento generoso */
+    padding-top: 16px !important;
+    padding-bottom: 16px !important;
+}
+
+/* --- EFEITO HOVER (Ao passar o mouse) --- */
+.mud-table-hover .mud-table-row:hover {
+    /* Um cinza muito, muito claro */
+    background-color: #f9fafb !important;
+    transition: background-color 0.2s ease;
+}
+
+/* Remove a borda da última linha para não duplicar com a borda do container */
+.mud-table-body .mud-table-row:last-child .mud-table-cell {
+    border-bottom: none !important;
+}
+
+/* --- RODAPÉ / PAGINAÇÃO --- */
+.mud-table-pagination {
+    background-color: transparent !important;
+    border-top: 1px solid #e5e7eb !important;
+    color: #6b7280 !important;
+}

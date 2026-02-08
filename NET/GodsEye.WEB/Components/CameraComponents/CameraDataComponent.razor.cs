@@ -4,6 +4,7 @@ using GodsEye.Domain.DTOs.Result;
 using GodsEye.WEB.Model.Forms;
 using GodsEye.WEB.Services;
 using Microsoft.AspNetCore.Components;
+using Microsoft.JSInterop;
 using MudBlazor;
 
 namespace GodsEye.WEB.Components.CameraComponents
@@ -13,13 +14,19 @@ namespace GodsEye.WEB.Components.CameraComponents
         #region DI
 
         [Inject]
-        CameraWebService _cameraService { get; set; }
+        CameraWebService CameraWebService { get; set; }
 
         [Inject]
-        SectorWebService _sectorService { get; set; }
+        SectorWebService SectorWebService { get; set; }
 
         [Inject]
-        FeatureWebService _featureWebService { get; set; }
+        FeatureWebService FeatureWebService { get; set; }
+
+        [Inject]
+        MediaMtxWebService MediaMtxWebService { get; set; }
+
+        [Inject]
+        public IJSRuntime JS { get; set; }
 
         #endregion
 
@@ -44,6 +51,10 @@ namespace GodsEye.WEB.Components.CameraComponents
         private string[] errors = { };
         private string featureError;
 
+        private bool _loadingConnection = false;
+        private bool _hasConnectionError = false;
+        private string? _connectionErrorMessage = null;
+
         #endregion
 
         public CameraModel camera { get; set; }
@@ -57,7 +68,7 @@ namespace GodsEye.WEB.Components.CameraComponents
         protected override async Task OnParametersSetAsync()
         {
 
-            var result = await _cameraService.GetById(Id);
+            var result = await CameraWebService.GetById(Id);
 
             if (result.Success && result is not null && result.Data is not null)
             {
@@ -71,6 +82,8 @@ namespace GodsEye.WEB.Components.CameraComponents
                     Features = camera.Features.Select(x => x.FeatureId),
                     SectorId = camera.SectorId.ToString()
                 };
+
+                await StartStream();
             }
 
             base.OnParametersSet();
@@ -85,13 +98,13 @@ namespace GodsEye.WEB.Components.CameraComponents
 
         protected override async Task OnInitializedAsync()
         {
-            var response = await _sectorService.GetAllAsync();
+            var response = await SectorWebService.GetAllAsync();
             if (response is not null && response.Success)
             {
                 _sectors = response.Data;
             }
 
-            var featureResponse = await _featureWebService.GetAllAsync();
+            var featureResponse = await FeatureWebService.GetAllAsync();
             if (featureResponse is not null && featureResponse.Success)
             {
                 _features = featureResponse.Data;
@@ -118,17 +131,52 @@ namespace GodsEye.WEB.Components.CameraComponents
             //ValidateFeatures();
         }
 
+        public async Task StartStream()
+        {
+            _loadingConnection = true;
+
+            if (string.IsNullOrEmpty(CameraForm.Connection))
+            {
+                _loadingConnection = false;
+                return;
+            }
+
+
+            var cam = await MediaMtxWebService.StartStream(CameraForm.Connection);
+
+            if (cam is null || !cam.Success)
+            {
+                _hasConnectionError = true;
+                _connectionErrorMessage = cam.Error.Message;
+                _loadingConnection = false;
+                return;
+            }
+
+            var webRtcUrl = cam.Data;
+
+            await JS.InvokeVoidAsync("streamFunctions.start", "camera-player", webRtcUrl);
+
+            _loadingConnection = false;
+            _hasConnectionError = false;
+            _connectionErrorMessage = null;
+        }
+
+        public async ValueTask DisposeAsync()
+        {
+            await JS.InvokeVoidAsync("streamFunctions.stop", "camera-player");
+        }
+
 
         private async Task Submit()
         {
             visible = true;
-            apiResponse = await _cameraService.UpdateAsync(CameraForm);
+            apiResponse = await CameraWebService.UpdateAsync(CameraForm);
             visible = false;
 
             if (apiResponse.Success)
             {
                 Snackbar.Add("Camera atualizada com sucesso!", Severity.Success);
-                MudDialog.Close(DialogResult.Ok(1));
+                //MudDialog.Close(DialogResult.Ok(1));
             }
             else
             {

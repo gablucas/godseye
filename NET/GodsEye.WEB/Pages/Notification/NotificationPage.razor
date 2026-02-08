@@ -31,7 +31,7 @@
             <MudButton Variant="Variant.Outlined" OnClick="OpenCreateNotificationGroup">Criar grupo de notificação</MudButton>
         </div>
 
-        <MudTable T="NotificationGroupModel" @ref="_mudTable" Items="@_filteredLogs" Hover="true" Loading="@_loading" LoadingProgressColor="Color.Info" RowClass="cursor-pointer">
+        <MudTable T="NotificationGroupModel" @ref="_mudTable" Items="@_filteredLogs" Elevation="0" Hover="true" Loading="@_loading" LoadingProgressColor="Color.Info" RowClass="cursor-pointer">
             <HeaderContent>
                 <MudTh>Grupo</MudTh>
                 <MudTh>Emails</MudTh>
