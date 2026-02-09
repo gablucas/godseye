@@ -15,13 +15,16 @@ namespace GodsEye.WEB.Components.CameraComponents
         #region DI
 
         [Inject]
-        CameraWebService _cameraService { get; set; }
+        CameraWebService CameraService { get; set; }
 
         [Inject]
-        SectorWebService _sectorService { get; set; }
+        SectorWebService SectorService { get; set; }
 
         [Inject]
-        FeatureWebService _featureWebService { get; set; }
+        FeatureWebService FeatureWebService { get; set; }
+
+        [Inject]
+        MediaMtxWebService MediaMtxWebService { get; set; }
 
         [Inject]
         IJSRuntime JS { get; set; }
@@ -62,6 +65,10 @@ namespace GodsEye.WEB.Components.CameraComponents
         private bool _face = false;
         private bool _area = false;
 
+        private bool _loadingConnection = false;
+        private bool _hasConnectionError = false;
+        private string? _connectionErrorMessage = null;
+
         protected override void OnInitialized()
         {
             Snackbar.Configuration.PositionClass = Defaults.Classes.Position.BottomCenter;
@@ -73,11 +80,20 @@ namespace GodsEye.WEB.Components.CameraComponents
         {
             if (firstRender)
             {
+
                 _roiJs = await JS.InvokeAsync<IJSObjectReference>(
                     "import", "./js/roi.js");
 
                 await _roiJs.InvokeVoidAsync("initRoiCanvas");
                 await _roiJs.InvokeVoidAsync("syncCanvasWithVideo", "camera-player");
+
+                var cameraRequest = await CameraService.GetById(Id);
+
+                if (cameraRequest.Success)
+                {
+                    camera = cameraRequest.Data;
+                    await StartStream();
+                }
             }
         }
 
@@ -134,6 +150,41 @@ namespace GodsEye.WEB.Components.CameraComponents
         {
             _recognizeType = null;
             await _roiJs.InvokeVoidAsync("disableDrawing");
+        }
+
+        public async Task StartStream()
+        {
+            _loadingConnection = true;
+
+            if (string.IsNullOrEmpty(camera.Connection))
+            {
+                _loadingConnection = false;
+                return;
+            }
+
+
+            var cam = await MediaMtxWebService.StartStream(camera.Connection);
+
+            if (cam is null || !cam.Success)
+            {
+                _hasConnectionError = true;
+                _connectionErrorMessage = cam.Error.Message;
+                _loadingConnection = false;
+                return;
+            }
+
+            var webRtcUrl = cam.Data;
+
+            await JS.InvokeVoidAsync("streamFunctions.start", "camera-player", webRtcUrl);
+
+            _loadingConnection = false;
+            _hasConnectionError = false;
+            _connectionErrorMessage = null;
+        }
+
+        public async ValueTask DisposeAsync()
+        {
+            await JS.InvokeVoidAsync("streamFunctions.stop", "camera-player");
         }
 
 

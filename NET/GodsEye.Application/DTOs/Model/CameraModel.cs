@@ -1,4 +1,5 @@
-﻿using System.Text.Json;
+﻿using System.ComponentModel.DataAnnotations.Schema;
+using System.Text.Json;
 
 namespace GodsEye.Application.DTOs.Model
 {
@@ -10,6 +11,9 @@ namespace GodsEye.Application.DTOs.Model
         public int? SectorId { get; set; }
         public string? SectorName { get; set; }
         public bool IsActive { get; set; }
+
+        [NotMapped]
+        public bool? Status { get; set;  }
 
         public string? FeaturesJson { get; set; }
 

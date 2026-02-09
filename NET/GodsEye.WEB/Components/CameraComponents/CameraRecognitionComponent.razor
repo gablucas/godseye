@@ -13,17 +13,19 @@
                 <div class="video-inputs">
 
                     <div class="video-wrapper">
-                        <video id="camera-player" preload="metadata">
-                            <source src=@($"http://localhost:8000/videos/15_20260125_200800.mp4")
-                                    type="video/mp4">
+                        <video id="camera-player"
+                               controls
+                               autoplay
+                               muted
+                               playsinline>
                         </video>
 
                         <canvas @onmouseup="GetRect" id="roiCanvas"
-                                style="
-                    position:absolute;
-                    top:0;
-                    left:0;
-                    cursor:crosshair;">
+                            style="
+                                position:absolute;
+                                top:0;
+                                left:0;
+                                cursor:crosshair;">
                         </canvas>
                     </div>
 

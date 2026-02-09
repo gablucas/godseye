@@ -46,39 +46,48 @@
         </div>
 
         <MudTable T="CameraModel" Elevation="0" @ref="mudTable" Items="@_filteredCameras" Hover="true" Loading="@_loading" LoadingProgressColor="Color.Info" RowClass="cursor-pointer" RowClassFunc="@SelectedRowClassFunc" OnRowClick="RowClickEvent">
+             <ColGroup>
+                <col style="width: 20%" />
+                <col />
+                <col style="width: 20%" />
+                <col style="width: 20%" />
+                <col style="width: 20%"/>
+                <col style="width: 140px" />
+             </ColGroup>
+            
             <HeaderContent>
                 <MudTh>Nome</MudTh>
                 <MudTh>Conexão</MudTh>
-                <MudTh>Setor</MudTh>
-                <MudTh>Funcionalidades</MudTh>
-                <MudTh>Configurações</MudTh>
+                <MudTh Style="text-align:center">Status</MudTh>
+                <MudTh Style="text-align:center">Setor</MudTh>
+                <MudTh Style="text-align:center">Funcionalidades</MudTh>
+                <MudTh Style="text-align:center">Configurações</MudTh>
             </HeaderContent>
             <RowTemplate>
                 <MudTd DataLabel="Name">@context.Name</MudTd>
                 <MudTd DataLabel="Connection">@context.Connection</MudTd>
-                <MudTd DataLabel="Setor Vinculado">
-                    @if (!string.IsNullOrEmpty(context.SectorName)) {
-                        <MudChip T="string" Color="Color.Info">@context.SectorName</MudChip>
-                    } else
-                    {
-                        <MudChip T="string">Nenhum setor</MudChip>
-                    }
+                <MudTd DataLabel="Status" Style="text-align:center">
+                    <MudChip Label="true" Class=@(context.Status == null ? "chip-warning" : context.Status == true ? "chip-success" : "chip-error") Size="Size.Medium" T="string" Text="@(context.Status == null ? "Verificando..." : context.Status == true ? "Online" : "Offline")" />
                 </MudTd>
+                <MudTd DataLabel="Setor Vinculado" Style="text-align:center">@context.SectorName</MudTd>
 
-                <MudTd DataLabel="Funcionalidades">
+                <MudTd Class="funcs" DataLabel="Funcionalidades">
                     @if (context.Features.Count > 0)
                     {
                         foreach (var feature in context.Features)
                         {
-                            <MudChip T="string" Color="Color.Info">@feature.FeatureName</MudChip>
+                            <MudChip T="string" Label="true" Class="chip-neutral" Size="Size.Small" Text="@feature.FeatureName" />
+                            
                         }
                     }
                     else
                     {
-                        <MudChip T="string">Nenhuma funcionalidade</MudChip>
+                        @("Nenhuma funcionalidade")
                     }
                 </MudTd>
-                <MudTd><MudButton OnClick="() => OpenEditData(context.Id)" Variant="Variant.Outlined" Size="Size.Medium">Configurações</MudButton></MudTd>
+                <MudTd>
+                    <MudButton OnClick="() => OpenEditData(context.Id)" Variant="Variant.Outlined" Color="Color.Primary" Size="Size.Small">Configurações</MudButton>
+                </MudTd>
             </RowTemplate>
         </MudTable>
 

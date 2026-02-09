@@ -8,7 +8,7 @@ import time
 RTSP_HOST = "rtsp://localhost:8554"
 VIDEO_DIR = "C:\\Users\\Gab\\Pictures\\FINAL\\Test"
 
-RESOLUTION = "1280x720"   # 1920x1080 ou 1280x720
+# RESOLUTION = "1280x720"   # 1920x1080 ou 1280x720
 FPS = 15                   # FPS típico de câmera IP
 BITRATE = "2500k"          # 1500k (720p) | 2500k (1080p)
 GOP_SECONDS = 2             # keyframe a cada X segundos
@@ -71,7 +71,7 @@ for idx, video in enumerate(os.listdir(VIDEO_DIR), start=1):
 
         # === FORMATO ===
         "-pix_fmt", "yuv420p",
-        "-s", RESOLUTION,
+        # "-s", RESOLUTION,
         "-r", str(FPS),
 
         # === GOP / KEYFRAMES ===

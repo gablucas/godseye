@@ -5,6 +5,7 @@ using GodsEye.Application.UseCases.Camera.Queries.GetAllCamerasConnection;
 using GodsEye.Application.UseCases.Camera.Queries.GetCameraById;
 using GodsEye.Application.UseCases.Camera.Queries.GetCameraFeatureById;
 using GodsEye.Application.UseCases.Camera.Queries.GetCamerasByFeatureID;
+using GodsEye.Application.UseCases.Camera.Queries.TestCameraConnection;
 using GodsEye.Application.UseCases.Person.Queries.GetCameraLog;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
@@ -82,6 +83,14 @@ namespace GodsEye.API.Controllers
         [AllowAnonymous]
         [HttpPut]
         public async Task<IActionResult> UpdateCamera([FromBody] UpdateCameraRequest request, CancellationToken cancellationToken)
+        {
+            var result = await _mediator.Send(request, cancellationToken);
+            return Ok(result);
+        }
+
+        [AllowAnonymous]
+        [HttpPost("test-connection")]
+        public async Task<IActionResult> CheckCameraConnection(CheckCameraConnectionRequest request, CancellationToken cancellationToken)
         {
             var result = await _mediator.Send(request, cancellationToken);
             return Ok(result);

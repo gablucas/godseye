@@ -3,6 +3,7 @@ using GodsEye.WEB.Components.CameraComponents;
 using GodsEye.WEB.Services;
 using Microsoft.AspNetCore.Components;
 using MudBlazor;
+using System.Net.NetworkInformation;
 
 
 namespace GodsEye.WEB.Pages.Camera
@@ -16,6 +17,9 @@ namespace GodsEye.WEB.Pages.Camera
 
         [Inject]
         public SectorWebService SectorService { get; set; }
+
+        [Inject]
+        public MediaMtxWebService MediaMtxService { get; set; }
 
         [Inject]
         public IDialogService DialogService { get; set; }
@@ -54,9 +58,13 @@ namespace GodsEye.WEB.Pages.Camera
             var camerasResult = await cameraService.GetAllAsync();
 
             if (camerasResult is not null && camerasResult.Success)
+            {
                 _cameras = camerasResult.Data.ToList();
                 _filteredCameras = _cameras.ToList();
 
+                _ = GetCameraStatusAsync();
+            }
+                
             var sectorsRequest = await SectorService.GetAllAsync();
             if (sectorsRequest.Success)
                 _sectors = sectorsRequest.Data.ToList();
@@ -135,6 +143,31 @@ namespace GodsEye.WEB.Pages.Camera
             new("Cadastro", href: null, disabled: true),
             new("Cameras", href: null, disabled: true)
         ];
+
+        private async Task GetCameraStatusAsync()
+        {
+            var isMediaMtxOnline = await MediaMtxService.CheckStatus();
+
+            if (!isMediaMtxOnline.Success || !isMediaMtxOnline.Data)
+            {
+                foreach (var camera in _cameras)
+                    camera.Status = false;
+
+                await InvokeAsync(StateHasChanged);
+                return;
+            }
+
+            foreach (var camera in _cameras)
+            {
+                if (!string.IsNullOrEmpty(camera.Connection))
+                {
+                    var status = await cameraService.TesteCameraConnection(camera.Connection);
+                    camera.Status = status;
+                }
+
+                await InvokeAsync(StateHasChanged);
+            }
+        }
 
         private void OnSectorsChanged(IEnumerable<string> values)
         {

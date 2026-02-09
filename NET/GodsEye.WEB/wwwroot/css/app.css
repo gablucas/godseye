@@ -316,3 +316,33 @@ video {
     border-top: 1px solid #e5e7eb !important;
     color: #6b7280 !important;
 }
+
+
+.chip-success {
+    background: #cef0d2;
+    color: #22b832;
+    border: 1px solid #22b832; /* Borda real para mais definição */
+}
+
+.chip-error {
+    background: rgba(239, 68, 68, 0.2);
+    color: #f87171;
+    border: 1px solid rgba(239, 68, 68, 0.4);
+}
+
+.chip-warning {
+    background: rgba(234, 179, 8, 0.2);
+    color: #facc15;
+    border: 1px solid rgba(234, 179, 8, 0.4);
+}
+
+.chip-info {
+    background: rgba(59, 130, 246, 0.2); /* Azul Royal mais forte */
+    color: #60a5fa;
+    border: 1px solid rgba(59, 130, 246, 0.4);
+}
+
+.chip-neutral {
+    background: #f3f3f3;
+    color: #7e7e7e;
+}

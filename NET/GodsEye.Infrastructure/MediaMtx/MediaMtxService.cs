@@ -2,6 +2,8 @@
 using GodsEye.Application.Exceptions;
 using GodsEye.Application.Interfaces;
 using Microsoft.Extensions.Options;
+using System;
+using System.Net.Http;
 using System.Net.Http.Json;
 using System.Security.Cryptography;
 using System.Text;
@@ -18,6 +20,22 @@ namespace GodsEye.Infrastructure.MediaMtx
         {
             _httpClient = httpClient;
             _options = options.Value;
+        }
+
+        public async Task<bool> IsOnlineAsync()
+        {
+            try
+            {
+                using var response = await _httpClient.GetAsync(
+                    "/v3/info",
+                    HttpCompletionOption.ResponseHeadersRead);
+
+                return response.IsSuccessStatusCode;
+            }
+            catch
+            {
+                return false;
+            }
         }
 
         public async Task<(bool, string)> GetStream(string rtspUrl)

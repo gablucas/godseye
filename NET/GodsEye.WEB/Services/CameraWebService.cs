@@ -81,5 +81,36 @@ namespace GodsEye.WEB.Services
 
             return apiResponse?.Data ?? Enumerable.Empty<CameraFeatureModel>();
         }
+
+        public async Task<bool> TesteCameraConnection(string rtspUrl)
+        {
+            var payload = new { rtspUrl };
+
+            HttpResponseMessage response;
+
+            try
+            {
+                response = await _http.PostAsJsonAsync(
+                    "api/camera/test-connection",
+                    payload
+                );
+            }
+            catch (HttpRequestException)
+            {
+                // API offline / CORS / DNS
+                return false;
+            }
+
+            if (!response.IsSuccessStatusCode)
+            {
+                // aqui cai 400, 401, 405, 500 etc
+                return false;
+            }
+
+            var apiResponse =
+                await response.Content.ReadFromJsonAsync<ApiResponse<string>>();
+
+            return apiResponse?.Success == true;
+        }
     }
 }
