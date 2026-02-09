@@ -80,19 +80,21 @@ namespace GodsEye.WEB.Components.CameraComponents
         {
             if (firstRender)
             {
+                var version = DateTime.Now.Ticks;
 
                 _roiJs = await JS.InvokeAsync<IJSObjectReference>(
-                    "import", "./js/roi.js");
+                    "import", $"./js/roi.js?v={version}");
 
                 await _roiJs.InvokeVoidAsync("initRoiCanvas");
                 await _roiJs.InvokeVoidAsync("syncCanvasWithVideo", "camera-player");
+                await ClearStrokeRect();
 
                 var cameraRequest = await CameraService.GetById(Id);
 
                 if (cameraRequest.Success)
                 {
                     camera = cameraRequest.Data;
-                    await StartStream();
+                    _ = StartStream();
                 }
             }
         }
@@ -138,6 +140,11 @@ namespace GodsEye.WEB.Components.CameraComponents
                     RecognitionForm.CameraDimension
                 );
             }
+        }
+
+        async Task ClearStrokeRect()
+        {
+            await _roiJs.InvokeVoidAsync("clearStrokeRect");
         }
 
         async Task ActiveDrawing(RecognizeRectEnum recognizeType)

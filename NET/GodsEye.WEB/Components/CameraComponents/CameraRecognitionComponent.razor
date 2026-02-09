@@ -31,13 +31,13 @@
 
 
                     <MudTabs Rounded="true" Border="true" Outlined="true" ApplyEffectsToContainer="true" PanelClass="pa-2">
-                        <MudTabPanel Text="Como usar">
+
+                        <MudTabPanel Text="Como usar" OnClick="ClearStrokeRect">
                             <MudText Typo="Typo.body1">1. Selecione uma opção de interesse (Tamanho Face ou Área de Reconhecimento)</MudText>
                             <MudText Typo="Typo.body1">2. Clique em Editar tamanho</MudText>
                             <MudText Typo="Typo.body1">3. Pressione o botão esquerdo do mouse na região do video e arraste para desenhar uma forma de quatro lados</MudText>
                             <MudText Typo="Typo.body1">4. Ao soltar o botão do mouse, as medidas serão definidas</MudText>
                             <MudText Typo="Typo.body1">5. Clique em salvar para registrar as medidas</MudText>
-
                         </MudTabPanel>
 
                         <MudTabPanel Text="Tamanho face" OnClick="() => SetStrokeRect(RecognizeRectEnum.Face)">

@@ -49,6 +49,7 @@ namespace GodsEye.WEB.Pages.Camera
 
         #endregion
 
+
         bool _visible = true;
 
         protected override async Task OnInitializedAsync()
@@ -63,12 +64,12 @@ namespace GodsEye.WEB.Pages.Camera
                 _filteredCameras = _cameras.ToList();
 
                 _ = GetCameraStatusAsync();
+
+                var sectorsRequest = await SectorService.GetAllAsync();
+                if (sectorsRequest.Success)
+                    _sectors = sectorsRequest.Data.ToList();
             }
                 
-            var sectorsRequest = await SectorService.GetAllAsync();
-            if (sectorsRequest.Success)
-                _sectors = sectorsRequest.Data.ToList();
-
             _loading = false;
         }
 
@@ -146,17 +147,6 @@ namespace GodsEye.WEB.Pages.Camera
 
         private async Task GetCameraStatusAsync()
         {
-            var isMediaMtxOnline = await MediaMtxService.CheckStatus();
-
-            if (!isMediaMtxOnline.Success || !isMediaMtxOnline.Data)
-            {
-                foreach (var camera in _cameras)
-                    camera.Status = false;
-
-                await InvokeAsync(StateHasChanged);
-                return;
-            }
-
             foreach (var camera in _cameras)
             {
                 if (!string.IsNullOrEmpty(camera.Connection))

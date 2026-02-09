@@ -55,6 +55,8 @@ namespace GodsEye.WEB.Components.CameraComponents
         private bool _hasConnectionError = false;
         private string? _connectionErrorMessage = null;
 
+        private bool? _mediaMtxStatus = null;
+
         #endregion
 
         public CameraModel camera { get; set; }
@@ -83,7 +85,7 @@ namespace GodsEye.WEB.Components.CameraComponents
                     SectorId = camera.SectorId.ToString()
                 };
 
-                await StartStream();
+                _ = StartStream();
             }
 
             base.OnParametersSet();
@@ -141,6 +143,16 @@ namespace GodsEye.WEB.Components.CameraComponents
                 return;
             }
 
+            var isMediaMtxOnline = await MediaMtxWebService.CheckStatus();
+
+            if (!isMediaMtxOnline.Success || !isMediaMtxOnline.Data)
+            {
+                _mediaMtxStatus = false;
+                _loadingConnection = false;
+                await InvokeAsync(StateHasChanged);
+                return;
+            }
+
 
             var cam = await MediaMtxWebService.StartStream(CameraForm.Connection);
 
@@ -164,6 +176,13 @@ namespace GodsEye.WEB.Components.CameraComponents
         public async ValueTask DisposeAsync()
         {
             await JS.InvokeVoidAsync("streamFunctions.stop", "camera-player");
+        }
+
+        private void OnConnectionChanged(string value)
+        {
+            CameraForm.Connection = value;
+            _hasConnectionError = false;
+            _connectionErrorMessage = null;
         }
 
 

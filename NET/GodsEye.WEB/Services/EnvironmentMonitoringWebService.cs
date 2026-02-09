@@ -17,8 +17,6 @@ namespace GodsEye.WEB.Services
         {
             var result = await _http.GetAsync($"api/environmentmonitoring?pageNumber={pageNumber}&pageSize={pageSize}");
 
-            result.EnsureSuccessStatusCode();
-
             var json = await result.Content.ReadFromJsonAsync<ApiResponse<IEnumerable<EnvironmentMonitoringModel>>>();
 
             return json!;
@@ -28,8 +26,6 @@ namespace GodsEye.WEB.Services
         {
             var result = await _http.GetAsync($"api/environmentmonitoring/last-register-per-person");
 
-            result.EnsureSuccessStatusCode();
-
             var json = await result.Content.ReadFromJsonAsync<ApiResponse<IEnumerable<EnvironmentMonitoringModel>>>();
 
             return json!;
@@ -38,8 +34,6 @@ namespace GodsEye.WEB.Services
         public async Task<ApiResponse<IEnumerable<EnvironmentMonitoringSectorModel>>> GetSectors()
         {
             var result = await _http.GetAsync($"api/environmentmonitoring/sectors");
-
-            result.EnsureSuccessStatusCode();
 
             var json = await result.Content.ReadFromJsonAsync<ApiResponse<IEnumerable<EnvironmentMonitoringSectorModel>>>();
 
