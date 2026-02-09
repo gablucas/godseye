@@ -69,6 +69,11 @@ namespace GodsEye.WEB.Components.CameraComponents
         private bool _hasConnectionError = false;
         private string? _connectionErrorMessage = null;
 
+        private bool isDrawingActive = false;
+        private string drawingMode = ""; // "rect" ou "polygon"
+        private RecognizeRectEnum? activeContext = null; // Face ou Camera
+        private int activeTabIndex = 0;
+
         protected override void OnInitialized()
         {
             Snackbar.Configuration.PositionClass = Defaults.Classes.Position.BottomCenter;
@@ -85,9 +90,7 @@ namespace GodsEye.WEB.Components.CameraComponents
                 _roiJs = await JS.InvokeAsync<IJSObjectReference>(
                     "import", $"./js/roi.js?v={version}");
 
-                await _roiJs.InvokeVoidAsync("initRoiCanvas");
-                await _roiJs.InvokeVoidAsync("syncCanvasWithVideo", "camera-player");
-                await ClearStrokeRect();
+                await _roiJs.InvokeVoidAsync("initRoiCanvas", "camera-player", "roiCanvas");
 
                 var cameraRequest = await CameraService.GetById(Id);
 
@@ -99,64 +102,103 @@ namespace GodsEye.WEB.Components.CameraComponents
             }
         }
 
-        async Task GetRect()
+        private async Task SelectTab(RecognizeRectEnum context)
         {
-            var rect = await _roiJs.InvokeAsync<Rect>("getRect");
+            // 1. PRIMEIRO: Para qualquer desenho ativo e limpa o canvas
+            // Isso evita que o JS tente desenhar um polígono enquanto carrega um retângulo
+            await _roiJs.InvokeVoidAsync("stopDrawing");
+            await _roiJs.InvokeVoidAsync("clearCanvas");
 
-            if (rect == null)
-                return;
+            isDrawingActive = false;
+            activeContext = context;
 
-            if (_recognizeType == RecognizeRectEnum.Face)
+            // 2. SEGUNDO: Carrega o desenho salvo (se houver)
+            if (context == RecognizeRectEnum.Face && RecognitionForm.FaceDimension != null)
             {
-                RecognitionForm.FaceDimension.Width = rect.Width;
-                RecognitionForm.FaceDimension.Height = rect.Height;
-                RecognitionForm.FaceDimension.X = rect.X;
-                RecognitionForm.FaceDimension.Y = rect.Y;
+                // Se a face tiver width > 0, renderiza
+                if (RecognitionForm.FaceDimension.Width > 0)
+                {
+                    await _roiJs.InvokeVoidAsync("renderExistingShape", RecognitionForm.FaceDimension, "rect");
+                }
             }
-            else if (_recognizeType == RecognizeRectEnum.Camera)
+            else if (context == RecognizeRectEnum.Camera && RecognitionForm.CameraDimension != null)
             {
-                RecognitionForm.CameraDimension.Width = rect.Width;
-                RecognitionForm.CameraDimension.Height = rect.Height;
-                RecognitionForm.CameraDimension.X = rect.X;
-                RecognitionForm.CameraDimension.Y = rect.Y;
-            }
-        }
+                // Verifica se é polígono (tem pontos) ou retângulo legado
+                bool hasPoints = RecognitionForm.CameraDimension.Points != null && RecognitionForm.CameraDimension.Points.Any();
 
-        async Task SetStrokeRect(RecognizeRectEnum recognizeType)
-        {
-            _recognizeType = null;
-
-            if (recognizeType == RecognizeRectEnum.Face)
-            {
-                await _roiJs.InvokeVoidAsync(
-                    "setStrokeRect",
-                    RecognitionForm.FaceDimension
-                );
-            }
-            else if (recognizeType == RecognizeRectEnum.Camera)
-            {
-                await _roiJs.InvokeVoidAsync(
-                    "setStrokeRect",
-                    RecognitionForm.CameraDimension
-                );
+                if (hasPoints)
+                {
+                    await _roiJs.InvokeVoidAsync("renderExistingShape", RecognitionForm.CameraDimension, "polygon");
+                }
+                else if (RecognitionForm.CameraDimension.Width > 0)
+                {
+                    // Caso legado: era retângulo, renderiza como retângulo mas força modo visual
+                    await _roiJs.InvokeVoidAsync("renderExistingShape", RecognitionForm.CameraDimension, "rect");
+                }
             }
         }
 
-        async Task ClearStrokeRect()
+        private async Task StartDrawingFace()
         {
-            await _roiJs.InvokeVoidAsync("clearStrokeRect");
+            isDrawingActive = true;
+            drawingMode = "rect";
+            await _roiJs.InvokeVoidAsync("startDrawing", "rect");
         }
 
-        async Task ActiveDrawing(RecognizeRectEnum recognizeType)
+        // Ação: Iniciar Desenho da Área (Polígono Apenas)
+        private async Task StartDrawingArea()
         {
-            _recognizeType = recognizeType;
-            await _roiJs.InvokeVoidAsync("enableDrawing");
+            isDrawingActive = true;
+            drawingMode = "polygon";
+            await _roiJs.InvokeVoidAsync("startDrawing", "polygon");
         }
 
-        async Task DesactiveDrawing()
+        // Ação: Confirmar e Salvar no Objeto C#
+        private async Task ConfirmDrawing()
         {
-            _recognizeType = null;
-            await _roiJs.InvokeVoidAsync("disableDrawing");
+            // Busca dados do JS no formato { x, y, width, height, points: [{x,y}] }
+            var shapeData = await _roiJs.InvokeAsync<Rect>("getShapeData");
+
+            if (shapeData != null)
+            {
+                if (activeContext == RecognizeRectEnum.Face)
+                {
+                    // Garante que face é apenas retangulo (ignora pontos se vierem por bug)
+                    shapeData.Points = new List<Point>();
+                    RecognitionForm.FaceDimension = shapeData;
+                    Snackbar.Add("Dimensão da face definida.", Severity.Success);
+                }
+                else if (activeContext == RecognizeRectEnum.Camera)
+                {
+                    RecognitionForm.CameraDimension = shapeData;
+                    Snackbar.Add("Polígono de área definido.", Severity.Success);
+                }
+            }
+
+            // Desativa modo de desenho no JS e na UI
+            await _roiJs.InvokeVoidAsync("stopDrawing");
+            isDrawingActive = false;
+        }
+
+        private async Task UndoLastPoint()
+        {
+            await _roiJs.InvokeVoidAsync("undo");
+        }
+
+        private async Task CancelDrawing()
+        {
+            isDrawingActive = false;
+            await _roiJs.InvokeVoidAsync("stopDrawing");
+
+            // Opcional: Recarregar o desenho original salvo anteriormente
+            if (activeContext != null) await SelectTab(activeContext.Value);
+        }
+
+        private async Task ResetInteraction()
+        {
+            activeContext = null;
+            await CancelDrawing();
+            await _roiJs.InvokeVoidAsync("clearCanvas");
         }
 
         public async Task StartStream()

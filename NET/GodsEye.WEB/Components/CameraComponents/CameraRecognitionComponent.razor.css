@@ -19,11 +19,10 @@
 }
 
 .form-container .video-inputs .measure-input {
-    display: grid;
-    align-content: space-between;
-    grid-template-rows: auto auto 1fr 40px;
-    gap: 8px;
-    height: 290px;
+    display: flex;
+    align-items: center;
+    gap: 24px;
+
 }
 
 .form-container .video-inputs .measure-input .set-measure {

@@ -1,204 +1,251 @@
-﻿let canvas;
-let ctx;
-let videoElement;
+﻿let canvas, ctx, videoElement;
+let isActive = false;
+let currentMode = null; // 'rect' ou 'polygon'
 
-let startX = 0;
-let startY = 0;
-let isDrawing = false;
-let isSynced = false;
-let drawingEnabled = false;
+// Estado interno
+let isDragging = false;
+let points = [];
+let rectStart = null;
+let rectCurrent = null;
 
-// Armazena o retângulo final
-let rect = null;
+// Cores
+const drawColor = "#00FFCE";
+const fillColor = "rgba(0, 255, 206, 0.2)";
+const nodeColor = "#FFFFFF";
 
-export function initRoiCanvas() {
-    canvas = document.getElementById("roiCanvas");
-    if (!canvas) return; // Segurança extra
-
-    ctx = canvas.getContext("2d");
-
-    canvas.addEventListener("mousedown", onMouseDown);
-    canvas.addEventListener("mousemove", onMouseMove);
-    canvas.addEventListener("mouseup", onMouseUp);
-
-    // Tratamento para quando o mouse sai do canvas enquanto arrasta
-    canvas.addEventListener("mouseleave", onMouseUp);
-
-    canvas.addEventListener("contextmenu", e => e.preventDefault());
-
-    disableDrawing();
-}
-
-export function syncCanvasWithVideo(videoId) {
+export function initRoiCanvas(videoId, canvasId) {
     videoElement = document.getElementById(videoId);
+    canvas = document.getElementById(canvasId);
+
     if (!videoElement || !canvas) return;
 
-    const sync = () => {
-        if (videoElement.videoWidth > 0 && videoElement.videoHeight > 0) {
-            canvas.width = videoElement.videoWidth;
-            canvas.height = videoElement.videoHeight;
-        }
+    ctx = canvas.getContext('2d');
 
-        ctx.clearRect(0, 0, canvas.width, canvas.height);
-        isSynced = true;
+    const resizeObserver = new ResizeObserver(() => syncSize());
+    resizeObserver.observe(videoElement);
 
-        // Redesenha o retângulo existente na nova escala
-        if (rect) setStrokeRect(rect);
-    };
+    // Eventos globais (adicionados apenas uma vez)
+    canvas.addEventListener('mousedown', onMouseDown);
+    canvas.addEventListener('mousemove', onMouseMove);
+    window.addEventListener('mouseup', onMouseUp);
 
-    if (videoElement.readyState >= 1) {
-        sync();
-    } else {
-        videoElement.addEventListener("loadedmetadata", sync);
-    }
-
-    const resizeObserver = new ResizeObserver(() => {
-        // Redesenha para garantir que o canvas não estique visualmente errado
-        if (rect) setStrokeRect(rect);
+    window.addEventListener('keydown', (e) => {
+        if (!isActive) return;
+        if (e.key === 'z' && (e.ctrlKey || e.metaKey)) undo();
+        if (e.key === 'Enter' && currentMode === 'polygon') closePolygon();
+        if (e.key === 'Escape') cancelDrawing();
     });
 
-    resizeObserver.observe(videoElement);
+    syncSize();
 }
 
-function onMouseDown(e) {
-    if (!drawingEnabled || !isSynced) return;
-    e.preventDefault();
+function syncSize() {
+    if (videoElement && canvas) {
+        const width = videoElement.clientWidth;
+        const height = videoElement.clientHeight;
+        if (canvas.width !== width || canvas.height !== height) {
+            canvas.width = width;
+            canvas.height = height;
+            redraw();
+        }
+    }
+}
 
-    const pos = getMousePos(e);
-    isDrawing = true;
-    startX = pos.x;
-    startY = pos.y;
+// --- ZERAR TUDO (Função auxiliar interna) ---
+function resetState() {
+    points = [];
+    rectStart = null;
+    rectCurrent = null;
+    isDragging = false;
+    // Não alteramos isActive ou currentMode aqui, pois isso depende do contexto
+}
+
+// --- API Pública ---
+
+export function startDrawing(mode) {
+    resetState(); // <--- O SEGREDO: Limpa lixo da memória anterior
+
+    isActive = true;
+    currentMode = mode;
+    canvas.style.cursor = 'crosshair';
+    redraw();
+}
+
+export function stopDrawing() {
+    isActive = false;
+    isDragging = false;
+    currentMode = null;
+    canvas.style.cursor = 'default';
+    redraw();
+}
+
+export function clearCanvas() {
+    resetState();
+    redraw();
+}
+
+export function undo() {
+    if (currentMode === 'polygon' && points.length > 0) {
+        points.pop();
+        redraw();
+    } else if (currentMode === 'rect') {
+        rectStart = null;
+        rectCurrent = null;
+        redraw();
+    }
+}
+
+export function getShapeData() {
+    let result = {
+        x: 0, y: 0, width: 0, height: 0, points: []
+    };
+
+    // Prioridade para Rect
+    if (currentMode === 'rect' && rectStart && rectCurrent) {
+        let finalX = rectCurrent.w < 0 ? rectStart.x + rectCurrent.w : rectStart.x;
+        let finalY = rectCurrent.h < 0 ? rectStart.y + rectCurrent.h : rectStart.y;
+        result.x = finalX;
+        result.y = finalY;
+        result.width = Math.abs(rectCurrent.w);
+        result.height = Math.abs(rectCurrent.h);
+    }
+    // Se não, verifica Polygon
+    else if (currentMode === 'polygon' && points.length > 0) {
+        let minX = Infinity, minY = Infinity, maxX = -Infinity, maxY = -Infinity;
+        points.forEach(p => {
+            if (p.x < minX) minX = p.x;
+            if (p.y < minY) minY = p.y;
+            if (p.x > maxX) maxX = p.x;
+            if (p.y > maxY) maxY = p.y;
+        });
+        result.x = minX;
+        result.y = minY;
+        result.width = maxX - minX;
+        result.height = maxY - minY;
+        result.points = points;
+    }
+
+    return result;
+}
+
+export function renderExistingShape(data, mode) {
+    resetState(); // <--- Limpa antes de desenhar o que veio do banco
+
+    if (mode === 'polygon' && data.points && data.points.length > 0) {
+        points = data.points;
+        currentMode = 'polygon';
+    } else if (mode === 'rect' && data.width > 0) {
+        rectStart = { x: data.x, y: data.y };
+        rectCurrent = { w: data.width, h: data.height };
+        currentMode = 'rect';
+    }
+    redraw();
+}
+
+// --- Eventos ---
+
+function onMouseDown(e) {
+    if (!isActive) return;
+    e.preventDefault();
+    const { x, y } = getMousePos(e);
+
+    if (currentMode === 'rect') {
+        isDragging = true;
+        rectStart = { x, y };
+        rectCurrent = { w: 0, h: 0 };
+    }
+    else if (currentMode === 'polygon') {
+        // Fechar polígono
+        if (points.length > 2) {
+            const dist = Math.sqrt((points[0].x - x) ** 2 + (points[0].y - y) ** 2);
+            if (dist < 10) {
+                closePolygon();
+                return;
+            }
+        }
+        points.push({ x, y });
+    }
+    redraw();
 }
 
 function onMouseMove(e) {
-    if (!isDrawing || !drawingEnabled) return;
-    e.preventDefault();
+    if (!isActive) return;
 
-    const pos = getMousePos(e);
+    if (currentMode === 'rect') {
+        if (!isDragging || !rectStart) return;
 
-    // Garante limites do canvas
-    const currentX = Math.max(0, Math.min(canvas.width, pos.x));
-    const currentY = Math.max(0, Math.min(canvas.height, pos.y));
+        const { x, y } = getMousePos(e);
+        rectCurrent.w = x - rectStart.x;
+        rectCurrent.h = y - rectStart.y;
 
-    // Cálculo que permite arrastar para trás (valores negativos temporários)
-    const width = currentX - startX;
-    const height = currentY - startY;
-
-    ctx.clearRect(0, 0, canvas.width, canvas.height);
-
-    ctx.strokeStyle = "#00ff00";
-    ctx.lineWidth = 3;
-    ctx.strokeRect(startX, startY, width, height);
+        requestAnimationFrame(redraw);
+    }
 }
 
 function onMouseUp(e) {
-    if (!drawingEnabled || !isDrawing) return;
-    isDrawing = false;
-
-    const pos = getMousePos(e);
-
-    // Normalização (Matemática para garantir X/Y no topo-esquerdo e Width/Height positivos)
-    // Isso corrige o problema de arrastar da direita para esquerda
-    const currentX = Math.max(0, Math.min(canvas.width, pos.x));
-    const currentY = Math.max(0, Math.min(canvas.height, pos.y));
-
-    const finalX = Math.min(startX, currentX);
-    const finalY = Math.min(startY, currentY);
-    const finalW = Math.abs(currentX - startX);
-    const finalH = Math.abs(currentY - startY);
-
-    if (finalW < 5 || finalH < 5) {
-        rect = null;
-        ctx.clearRect(0, 0, canvas.width, canvas.height);
-        return;
+    // Soltar o mouse para de arrastar, mas mantém isActive true (modo de edição ainda ligado)
+    if (isDragging) {
+        isDragging = false;
     }
-
-    // Cria o objeto unificado
-    updateGlobalRect(finalX, finalY, finalW, finalH);
-
-    // Redesenha limpo usando a função centralizada
-    setStrokeRect(rect);
 }
 
-function getMousePos(e) {
-    const bounds = canvas.getBoundingClientRect();
-
-    // Proteção contra divisão por zero se o elemento estiver oculto
-    if (bounds.width === 0 || bounds.height === 0) return { x: 0, y: 0 };
-
-    const scaleX = canvas.width / bounds.width;
-    const scaleY = canvas.height / bounds.height;
-
+function getMousePos(evt) {
+    const rect = canvas.getBoundingClientRect();
     return {
-        x: (e.clientX - bounds.left) * scaleX,
-        y: (e.clientY - bounds.top) * scaleY
+        x: evt.clientX - rect.left,
+        y: evt.clientY - rect.top
     };
 }
 
-// Helper para manter o objeto rect sempre consistente
-function updateGlobalRect(x, y, w, h) {
-    rect = {
-        x: Math.round(x),
-        y: Math.round(y),
-        width: Math.round(w),
-        height: Math.round(h),
-        // Recalcula sempre os relativos para garantir consistência
-        relativeX: x / canvas.width,
-        relativeY: y / canvas.height,
-        relativeWidth: w / canvas.width,
-        relativeHeight: h / canvas.height
-    };
+function closePolygon() {
+    redraw();
 }
 
-export function setStrokeRect(inputRect) {
-    if (!inputRect || !ctx || !canvas) return;
+function cancelDrawing() {
+    stopDrawing();
+    clearCanvas();
+}
+
+function redraw() {
+    if (!ctx) return;
 
     ctx.clearRect(0, 0, canvas.width, canvas.height);
-    ctx.strokeStyle = "#00ff00";
     ctx.lineWidth = 3;
+    ctx.strokeStyle = drawColor;
+    ctx.fillStyle = fillColor;
 
-    let rX = inputRect.x;
-    let rY = inputRect.y;
-    let rW = inputRect.width;
-    let rH = inputRect.height;
+    // Desenha Polígono (Somente se pontos existirem)
+    if (points.length > 0) {
+        ctx.beginPath();
+        ctx.moveTo(points[0].x, points[0].y);
+        for (let i = 1; i < points.length; i++) {
+            ctx.lineTo(points[i].x, points[i].y);
+        }
+        if (points.length > 2) {
+            ctx.closePath();
+            ctx.fill();
+        }
+        ctx.stroke();
 
-    // Detecta se veio em porcentagem (ex: do banco de dados)
-    // Checagem mais robusta: se for menor que 1 E não for 0 pixels intencionalmente
-    const isPercentage = (inputRect.width <= 1 && inputRect.width > 0) && (inputRect.x <= 1);
-
-    if (isPercentage) {
-        rX *= canvas.width;
-        rY *= canvas.height;
-        rW *= canvas.width;
-        rH *= canvas.height;
+        points.forEach(p => {
+            ctx.beginPath();
+            ctx.arc(p.x, p.y, 4, 0, 2 * Math.PI);
+            ctx.fillStyle = nodeColor;
+            ctx.fill();
+        });
     }
 
-    ctx.strokeRect(rX, rY, rW, rH);
+    // Desenha Retângulo (Somente se dados existirem)
+    if (rectStart && rectCurrent) {
+        ctx.beginPath();
+        ctx.rect(rectStart.x, rectStart.y, rectCurrent.w, rectCurrent.h);
+        ctx.fill();
+        ctx.stroke();
 
-    // ATENÇÃO: Atualiza o global rect com os valores calculados E os relativos
-    updateGlobalRect(rX, rY, rW, rH);
-}
-
-export function clearStrokeRect() {
-    if (!ctx || !canvas) return;
-    ctx.clearRect(0, 0, canvas.width, canvas.height);
-    rect = null; // Importante limpar a referência lógica também
-}
-
-export function enableDrawing() {
-    if (!isSynced) return;
-    drawingEnabled = true;
-    canvas.style.pointerEvents = "auto";
-    canvas.style.cursor = "crosshair";
-}
-
-export function disableDrawing() {
-    drawingEnabled = false;
-    isDrawing = false;
-    canvas.style.pointerEvents = "none";
-    canvas.style.cursor = "default";
-}
-
-export function getRect() {
-    return rect;
+        // Ponto de visualização no canto
+        ctx.beginPath();
+        ctx.arc(rectStart.x + rectCurrent.w, rectStart.y + rectCurrent.h, 3, 0, 2 * Math.PI);
+        ctx.fillStyle = nodeColor;
+        ctx.fill();
+    }
 }
