@@ -82,9 +82,13 @@ namespace GodsEye.WEB.Components.CameraComponents
         bool areaSuccess;
         string[] areaErrors = { };
 
+        private DotNetObjectReference<CameraRecognitionComponent>? _objRef;
+
         protected override void OnInitialized()
         {
             Snackbar.Configuration.PositionClass = Defaults.Classes.Position.BottomCenter;
+
+            _objRef = DotNetObjectReference.Create(this);
 
             base.OnInitialized();
         }
@@ -98,17 +102,52 @@ namespace GodsEye.WEB.Components.CameraComponents
                 _roiJs = await JS.InvokeAsync<IJSObjectReference>(
                     "import", $"./js/roi.js?v={version}");
 
-                await _roiJs.InvokeVoidAsync("initRoiCanvas", "camera-player", "roiCanvas");
+                await _roiJs.InvokeVoidAsync("initRoiCanvas", "camera-player", "roiCanvas", _objRef);
 
                 var cameraRequest = await CameraService.GetById(Id);
 
                 if (cameraRequest.Success)
                 {
                     camera = cameraRequest.Data;
-                    _ = StartStream();
-                    _ = GetCameraRoi();
+                    await StartStream();
+                    await GetCameraRoi();
                 }
+
+                await _roiJs.InvokeVoidAsync("renderExistingShape", FaceRoi.Coordinates, "rect");
             }
+        }
+
+        public async ValueTask DisposeAsync()
+        {
+            await JS.InvokeVoidAsync("streamFunctions.stop", "camera-player");
+
+            // Libere a memória da referência
+            _objRef?.Dispose();
+        }
+
+        [JSInvokable]
+        public async Task OnVideoReady()
+        {
+            Console.WriteLine("Vídeo carregado! Sincronizando canvas...");
+
+            await _roiJs.InvokeVoidAsync("resizeCanvasToVideo");
+
+            // PRECAUÇÃO: Verifica se as coordenadas já existem (caso o vídeo carregue antes da API)
+            // Se FaceRoi.Id for 0, talvez a API ainda não tenha retornado.
+            // Mas se você inicializa com 'new()', o objeto não é null, então o código não quebra,
+            // apenas desenha nada (o que é aceitável).
+
+            // Apenas garanta que o Coordinates não seja nulo antes de enviar
+            if (activeContext == RoiTypeEnum.FaceDetection && FaceRoi?.Coordinates != null)
+            {
+                await _roiJs.InvokeVoidAsync("renderExistingShape", FaceRoi.Coordinates, "rect");
+            }
+            else if (EnvironmentRoi?.Coordinates != null)
+            {
+                await _roiJs.InvokeVoidAsync("renderExistingShape", EnvironmentRoi.Coordinates, "polygon");
+            }
+
+            StateHasChanged();
         }
 
         private async Task SelectTab(RoiTypeEnum context)
@@ -141,19 +180,20 @@ namespace GodsEye.WEB.Components.CameraComponents
             }
         }
 
-        private async Task StartDrawingFace()
+        private async Task StartDrawingFace(RoiTypeEnum roiType)
         {
             isDrawingActive = true;
-            drawingMode = "rect";
-            await _roiJs.InvokeVoidAsync("startDrawing", "rect");
-        }
-
-        // Ação: Iniciar Desenho da Área (Polígono Apenas)
-        private async Task StartDrawingArea()
-        {
-            isDrawingActive = true;
-            drawingMode = "polygon";
-            await _roiJs.InvokeVoidAsync("startDrawing", "polygon");
+            
+            if (roiType == RoiTypeEnum.FaceDetection)
+            {
+                drawingMode = "rect";
+                await _roiJs.InvokeVoidAsync("startDrawing", "rect");
+            }
+            else if (roiType == RoiTypeEnum.RestrictedArea)
+            {
+                drawingMode = "polygon";
+                await _roiJs.InvokeVoidAsync("startDrawing", "polygon");
+            }
         }
 
         // Ação: Confirmar e Salvar no Objeto C#
@@ -173,20 +213,19 @@ namespace GodsEye.WEB.Components.CameraComponents
                     // CORREÇÃO 2: Atribua o objeto inteiro, não a propriedade Points
                     FaceRoi.Coordinates = shapeData;
 
-                    Snackbar.Add("Dimensão da face definida.", Severity.Success);
+                    Snackbar.Add("Dimensão da face definida.", Severity.Info);
                 }
                 else if (activeContext == RoiTypeEnum.RestrictedArea)
                 {
                     // CORREÇÃO 3: Atribua o objeto inteiro
                     EnvironmentRoi.Coordinates = shapeData;
 
-                    Snackbar.Add("Polígono de área definido.", Severity.Success);
+                    Snackbar.Add("Polígono de área definido.", Severity.Info);
                 }
             }
 
             await _roiJs.InvokeVoidAsync("stopDrawing");
             isDrawingActive = false;
-            // Opcional: Força renderizar de novo para garantir que o visual reflete o objeto salvo
             StateHasChanged();
         }
 
@@ -203,7 +242,7 @@ namespace GodsEye.WEB.Components.CameraComponents
                 await _roiJs.InvokeVoidAsync("renderExistingShape", FaceRoi.Coordinates, "rect");
 
             else if(roiType == RoiTypeEnum.RestrictedArea)
-                await _roiJs.InvokeVoidAsync("renderExistingShape", EnvironmentRoi.Coordinates, "rect");
+                await _roiJs.InvokeVoidAsync("renderExistingShape", EnvironmentRoi.Coordinates, "polygon");
 
         }
 
@@ -273,44 +312,80 @@ namespace GodsEye.WEB.Components.CameraComponents
             }
         }
 
-        public async ValueTask DisposeAsync()
+
+        private async Task Delete(RoiTypeEnum roiType)
         {
-            await JS.InvokeVoidAsync("streamFunctions.stop", "camera-player");
+            CameraRoiForm? roiForm = roiType switch
+            {
+                RoiTypeEnum.FaceDetection => FaceRoi,
+                RoiTypeEnum.RestrictedArea => EnvironmentRoi,
+                _ => null
+            };
+
+            if (roiForm is null || roiForm.Id <= 0)
+                return;
+
+            var id = roiForm.Id;
+
+            // (Opcional) confirmação do usuário
+            // var confirmar = await DialogService.ShowMessageBox("Confirmação", "Excluir área?", yesText: "Sim", cancelText: "Cancelar");
+            // if (confirmar != true) return;
+
+            // 2. Chamar API
+            var deleteResult = await CameraService.DeleteRoiAsync(id);
+
+            if (deleteResult is null || !deleteResult.Success)
+            {
+                Snackbar.Add("Erro ao excluir área.", Severity.Error);  
+                return;
+            }
+
+            await ResetInteraction();
+
+            switch (roiType)
+            {
+                case RoiTypeEnum.FaceDetection:
+                    FaceRoi = new CameraRoiForm();
+                    break;
+
+                case RoiTypeEnum.RestrictedArea:
+                    EnvironmentRoi = new CameraRoiForm();
+                    break;
+            }
+
+            Snackbar.Add("Área excluída com sucesso.", Severity.Success);
         }
 
-
-        private async Task Delete(CameraRoiForm cameraRoi)
-        {
-            var deleteResult = await CameraService.DeelteRoiAsync(cameraRoi.Id);
-        }
-
-        private async Task Submit(CameraRoiForm cameraRoi, RoiTypeEnum roiType)
+        private async Task Submit(RoiTypeEnum roiType)
         {
             visible = true;
 
-            if (cameraRoi.Id == 0)
+            var selectedCameraRoiForm = new CameraRoiForm();
+
+            switch (roiType)
             {
-                var createRequest = new CreateCameraRoiRequest(Id, roiType, cameraRoi.Coordinates);
+                case RoiTypeEnum.FaceDetection:
+                    selectedCameraRoiForm = FaceRoi;
+                    break;
+                case RoiTypeEnum.RestrictedArea:
+                    selectedCameraRoiForm = EnvironmentRoi;
+                    break;
+            }
+
+            if (selectedCameraRoiForm.Id == 0)
+            {
+                var createRequest = new CreateCameraRoiRequest(Id, roiType, selectedCameraRoiForm.Coordinates);
                 var createResult = await CameraService.CreateRoiAsync(createRequest);
+                Snackbar.Add("Área salva com sucesso.", Severity.Success);
             }
             else
             {
-                var updateRequest = new UpdateCameraRoiRequest(cameraRoi.Id, cameraRoi.Coordinates);
+                var updateRequest = new UpdateCameraRoiRequest(selectedCameraRoiForm.Id, selectedCameraRoiForm.Coordinates);
                 var updateResult = await CameraService.UpdateRoiAsync(updateRequest);
+                Snackbar.Add("Área atualizada com sucesso.", Severity.Success);
             }
 
             visible = false;
-
-            //if (apiResponse.Success)
-            //{
-            //    Snackbar.Add("Camera atualizada com sucesso!", Severity.Success);
-            //    //MudDialog.Close(DialogResult.Ok(1));
-            //}
-            //else
-            //{
-            //    Snackbar.Add("Houve um erro ao cadastrar o setor, tente novamente mais tarde", Severity.Error);
-            //}
-
         }
 
         private void Cancel() => MudDialog.Cancel();

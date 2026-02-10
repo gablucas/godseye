@@ -13,6 +13,71 @@
     border: 1px solid var(--gray-050);
 }
 
+/* --- CONTAINER: Versão Clara --- */
+.form-container .menu {
+    display: flex;
+    justify-content: center;
+    gap: 4px;
+    /* Inversão: Degradê de branco para cinza bem claro */
+    background: radial-gradient(circle at top left, #ffffff 0%, #f0f0f0 100%);
+    padding: 8px;
+    border-radius: 9px;
+    /* Opcional: Uma sombra suave para destacar o menu do fundo da página */
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
+    border: 1px solid #e5e5e5;
+}
+
+/* --- ITEM: Estado Normal --- */
+.form-container .menu .item {
+    display: flex;
+    gap: 8px;
+    align-items: center;
+    cursor: pointer;
+    padding: 9px;
+    border-radius: 12px;
+    /* Inversão: Cinza médio para leitura em fundo claro */
+    color: #666666;
+    font-weight: 500;
+    font-size: 14px;
+    background: rgba(0, 0, 0, 0);
+    border: 1px solid transparent;
+    transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+}
+
+/* --- ITEM: Hover (Passar o mouse) --- */
+.form-container .menu .item:hover {
+    /* Inversão: Preto quase total para destaque */
+    color: #1a1a1a;
+    cursor: pointer;
+    /* Inversão: Efeito 'fumaça' leve (preto com baixíssima opacidade) */
+    background: rgba(0, 0, 0, 0.04);
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+    /* Borda cinza sutil */
+    border: 1px solid rgba(0, 0, 0, 0.08);
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+    box-sizing: border-box;
+}
+
+/* --- ITEM: Selecionado (Active) --- */
+.form-container .menu .item.selected {
+    /* Ajuste: Azul escuro para garantir contraste no fundo claro */
+    color: #175cd3;
+    /* --- Fundo Azul Glass --- */
+    /* Usamos o mesmo azul, mas bem mais suave (0.1 e 0.05) para não ficar pesado */
+    background: linear-gradient(135deg, rgba(23, 92, 211, 0.15) 0%, rgba(23, 92, 211, 0.05) 100%);
+    backdrop-filter: blur(6px);
+    -webkit-backdrop-filter: blur(6px);
+    /* Bordas azuladas bem sutis */
+    border: 1px solid rgba(23, 92, 211, 0.15);
+    border-bottom: 1px solid rgba(23, 92, 211, 0.1);
+    border-right: 1px solid rgba(23, 92, 211, 0.1);
+    /* --- Glow Externo --- */
+    /* Sombra azul suave, ajustada para fundo claro */
+    box-shadow: 0 4px 15px 0 rgba(23, 92, 211, 0.15);
+}
+
+
 .form-container .video-inputs {
     display: grid;
     gap: 12px;

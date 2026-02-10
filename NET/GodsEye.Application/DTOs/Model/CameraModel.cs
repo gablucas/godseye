@@ -19,9 +19,22 @@ namespace GodsEye.Application.DTOs.Model
 
         public List<FeatureDTO> Features
         {
-            get => string.IsNullOrWhiteSpace(FeaturesJson)
-                ? new List<FeatureDTO>()
-                : JsonSerializer.Deserialize<List<FeatureDTO>>(FeaturesJson);
+            get
+            {
+                if (string.IsNullOrWhiteSpace(FeaturesJson))
+                    return new List<FeatureDTO>();
+
+                try
+                {
+                    return JsonSerializer.Deserialize<List<FeatureDTO>>(FeaturesJson)
+                           ?? new List<FeatureDTO>();
+                }
+                catch
+                {
+                    // opcional: logar o erro
+                    return new List<FeatureDTO>();
+                }
+            }
         }
     }
 

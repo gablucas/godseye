@@ -79,7 +79,7 @@ namespace GodsEye.WEB.Pages.Camera
             var options = new DialogOptions { CloseOnEscapeKey = true, FullWidth = true, MaxWidth = MaxWidth.False };
             var parameters = new DialogParameters<InfoCameraComponent> { { x => x.Camera, tableRowClickEventArgs.Item } };
 
-            DialogService.ShowAsync<InfoCameraComponent>("Simple Dialog", parameters, options);
+            DialogService.ShowAsync<InfoCameraComponent>("Dados camera", parameters, options);
         }
 
         private string SelectedRowClassFunc(CameraModel element, int rowNumber)
@@ -129,9 +129,9 @@ namespace GodsEye.WEB.Pages.Camera
 
         private async Task OpenEditData(int cameraId)
         {
-            var options = new DialogOptions { CloseOnEscapeKey = true, FullWidth = true, MaxWidth = MaxWidth.False };
+            var options = new DialogOptions { CloseOnEscapeKey = true, FullWidth = true, MaxWidth = MaxWidth.False, NoHeader = true };
             var parameters = new DialogParameters<CameraDataComponent> { { x => x.Id, cameraId } };
-            var dialog = await DialogService.ShowAsync<CameraDataComponent>("Editar dados camera", parameters, options);
+            var dialog = await DialogService.ShowAsync<CameraDataComponent>(null, parameters, options);
 
             var result = await dialog.Result;
         }

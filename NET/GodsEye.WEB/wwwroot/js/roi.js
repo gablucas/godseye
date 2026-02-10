@@ -1,4 +1,5 @@
 ﻿let canvas, ctx, videoElement;
+let dotnetHelper;
 let isActive = false;
 let currentMode = null; // 'rect' ou 'polygon'
 
@@ -13,30 +14,54 @@ const drawColor = "#00FFCE";
 const fillColor = "rgba(0, 255, 206, 0.2)";
 const nodeColor = "#FFFFFF";
 
-export function initRoiCanvas(videoId, canvasId) {
-    videoElement = document.getElementById(videoId);
-    canvas = document.getElementById(canvasId);
+export function initRoiCanvas(videoId, canvasId, dotnetRef) {
+    const video = document.getElementById(videoId);
 
-    if (!videoElement || !canvas) return;
+    // 1. ATRIBUIÇÃO ÀS VARIÁVEIS GLOBAIS
+    canvas = document.getElementById(canvasId); // Remove o 'const' para usar a global
 
-    ctx = canvas.getContext('2d');
+    if (canvas) {
+        ctx = canvas.getContext('2d'); // <--- FALTAVA ISSO: Inicializar o contexto
 
-    const resizeObserver = new ResizeObserver(() => syncSize());
-    resizeObserver.observe(videoElement);
+        // 2. ADICIONAR OUVINTES DE MOUSE (FALTAVA ISSO)
+        // Sem isso, onMouseDown/Move/Up nunca são chamados
+        canvas.addEventListener('mousedown', onMouseDown);
+        canvas.addEventListener('mousemove', onMouseMove);
+        canvas.addEventListener('mouseup', onMouseUp);
+        // Opcional: lidar com saída do mouse
+        canvas.addEventListener('mouseleave', () => isDragging = false);
+    }
 
-    // Eventos globais (adicionados apenas uma vez)
-    canvas.addEventListener('mousedown', onMouseDown);
-    canvas.addEventListener('mousemove', onMouseMove);
-    window.addEventListener('mouseup', onMouseUp);
+    dotnetHelper = dotnetRef;
 
-    window.addEventListener('keydown', (e) => {
-        if (!isActive) return;
-        if (e.key === 'z' && (e.ctrlKey || e.metaKey)) undo();
-        if (e.key === 'Enter' && currentMode === 'polygon') closePolygon();
-        if (e.key === 'Escape') cancelDrawing();
-    });
+    if (video) {
+        video.addEventListener('loadedmetadata', () => {
+            resizeCanvasToVideo();
+            if (dotnetHelper) {
+                dotnetHelper.invokeMethodAsync('OnVideoReady');
+            }
+        });
 
-    syncSize();
+        if (video.readyState >= 1) {
+            resizeCanvasToVideo(); // Garanta o resize aqui também
+            if (dotnetHelper) {
+                dotnetHelper.invokeMethodAsync('OnVideoReady');
+            }
+        }
+    }
+}
+
+export function resizeCanvasToVideo() {
+    const video = document.getElementById("camera-player"); // Ou passe o ID
+    const canvas = document.getElementById("roiCanvas");
+
+    if (video && canvas) {
+        canvas.width = video.clientWidth || video.videoWidth;
+        canvas.height = video.clientHeight || video.videoHeight;
+        // Importante ajustar o estilo também para não distorcer
+        canvas.style.width = `${video.clientWidth}px`;
+        canvas.style.height = `${video.clientHeight}px`;
+    }
 }
 
 function syncSize() {
@@ -178,7 +203,7 @@ export function renderExistingShape(data, mode) {
         let height = data.height * h;
 
         rectStart = { x: startX, y: startY };
-        rectCurrent = { w: width, h: height };
+        rectCurrent = { w: width, h: height }; // Aqui width e height já são calculados
         currentMode = 'rect';
     }
 

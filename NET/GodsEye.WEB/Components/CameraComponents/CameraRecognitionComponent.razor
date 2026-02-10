@@ -5,83 +5,81 @@
 
 <MudDialog>
     <DialogContent>
+        <CameraConfigurationBarComponent Id="Id" Pagina="reconhecimento" />
+
         <div class="form-container">
+
+            <div class="menu">
+                <div class="item @(activeContext == RoiTypeEnum.FaceDetection ? "selected" : "")" @onclick="() => SelectTab(RoiTypeEnum.FaceDetection)">
+                    <MudIcon Icon="@Icons.Material.Filled.Face" />
+                    <span>Face</span>
+                </div>
+
+                <div class="item @(activeContext == RoiTypeEnum.RestrictedArea ? "selected" : "")" @onclick="() => SelectTab(RoiTypeEnum.RestrictedArea)">
+                    <MudIcon Icon="@Icons.Material.Filled.AreaChart" />
+                    <span>Área</span>
+                </div>
+
+                <MudDivider Vertical="true" Style="margin: 0px 40px" />
+
+
+                @if (!isDrawingActive)
+                {
+                    <div class="item" @onclick="() => StartDrawingFace(activeContext)">
+                        <MudIcon Icon="@Icons.Material.Filled.Edit" />
+                        <span>Desenhar</span>
+                    </div>
+                }
+                else
+                {
+                    <div class="item" @onclick="ConfirmDrawing">
+                        <MudIcon Icon="@Icons.Material.Filled.Done" />
+                        <span>Confirmar</span>
+                    </div>
+
+
+                    if (activeContext == RoiTypeEnum.RestrictedArea)
+                    {
+                        <div class="item" @onclick="UndoLastPoint">
+                            <MudIcon Icon="@Icons.Material.Filled.Undo" />
+                            <span>Desfazer</span>
+                        </div>
+                    }
+
+                    <div class="item" @onclick="() => CancelDrawing(activeContext)">
+                        <MudIcon Icon="@Icons.Material.Filled.Cancel" />
+                        <span>Cancelar</span>
+                    </div>
+                }
+
+                <MudDivider Vertical="true" Style="margin: 0px 40px" />
+
+                @if (!isDrawingActive && (activeContext == RoiTypeEnum.FaceDetection && FaceRoi.Coordinates.Points.Count() > 0) || (activeContext == RoiTypeEnum.RestrictedArea && EnvironmentRoi.Coordinates.Points.Count() > 0))
+                {
+                    <div class="item" @onclick="() => Submit(activeContext)">
+                        <MudIcon Icon="@Icons.Material.Filled.Save" />
+                        <span>Salvar</span>
+                    </div>
+                }
+                
+
+                @if (activeContext == RoiTypeEnum.FaceDetection && FaceRoi.Id > 0 || activeContext == RoiTypeEnum.RestrictedArea && EnvironmentRoi.Id > 0)
+                {
+                    <div class="item" @onclick="() => Delete(activeContext)">
+                        <MudIcon Icon="@Icons.Material.Filled.Delete" />
+                        <span>Excluir</span>
+                    </div>
+                }
+            </div>
+
 
             <div class="video-inputs mb-4">
                 <div class="video-wrapper" style="position: relative;">
                     <video id="camera-player" controls autoplay muted playsinline style="width: 100%; display: block;"></video>
                     <canvas id="roiCanvas" style="position:absolute; top:0; left:0; width:100%; height:100%; z-index:10;"></canvas>
-
-                    @if (isDrawingActive)
-                    {
-                        <div style="position:absolute; top:10px; left:50%; transform:translateX(-50%); background:rgba(0,0,0,0.7); color:white; padding:5px 10px; border-radius:5px; z-index:20;">
-                            @(drawingMode == "rect" ? "Clique e arraste para desenhar o retângulo" : "Clique nos pontos para formar o polígono (Enter para fechar)")
-                        </div>
-                    }
                 </div>
             </div>
 
-            <MudTabs Rounded="true" Outlined="true" Elevation="0" PanelClass="pa-4" @bind-ActivePanelIndex="activeTabIndex">
-
-                <MudTabPanel Text="Como usar" OnClick="ResetInteraction">
-                    <MudText Typo="Typo.body1">1. Selecione uma opção de interesse (Tamanho Face ou Área de Reconhecimento)</MudText>
-                    <MudText Typo="Typo.body1">2. Clique em Editar tamanho</MudText>
-                    <MudText Typo="Typo.body1">3. Pressione o botão esquerdo do mouse na região do video e arraste para desenhar uma forma de quatro lados</MudText>
-                    <MudText Typo="Typo.body1">4. Ao soltar o botão do mouse, as medidas serão definidas</MudText>
-                    <MudText Typo="Typo.body1">5. Clique em salvar para registrar as medidas</MudText>
-                </MudTabPanel>
-
-                <MudTabPanel Text="Tamanho Face"  OnClick="() => SelectTab(RoiTypeEnum.FaceDetection)">
-                    <MudForm @ref="faceForm" Model="@FaceRoi" @bind-IsValid="@faceSuccess" @bind-Errors="@faceErrors">
-
-                        <div class="measure-input">
-
-                            <div class="mt-2">
-                                @if (!isDrawingActive)
-                                {
-                                    <MudButton OnClick="() => StartDrawingFace()" Variant="Variant.Outlined" Color="Color.Success">
-                                        Desenhar Retângulo
-                                    </MudButton>
-                                }
-                                else
-                                {
-                                    <MudButton OnClick="ConfirmDrawing" Variant="Variant.Filled" Color="Color.Primary">Finalizar Desenho</MudButton>
-                                    <MudButton OnClick="() => CancelDrawing(RoiTypeEnum.FaceDetection)" Variant="Variant.Outlined" Color="Color.Error" Class="ml-2">Cancelar</MudButton>
-                                }
-                            </div>
-
-                            <MudButton OnClick="() => Submit(FaceRoi, RoiTypeEnum.FaceDetection)">Salvar</MudButton>
-                        </div>
-
-                    </MudForm>
-                </MudTabPanel>
-
-                <MudTabPanel Text="Área de Reconhecimento" OnClick="() => SelectTab(RoiTypeEnum.RestrictedArea)">
-                    <MudForm @ref="areaForm" Model="@EnvironmentRoi" @bind-IsValid="@areaSuccess" @bind-Errors="@areaErrors">
-
-                        <div class="measure-input">
-
-                            <div class="mt-2">
-                                @if (!isDrawingActive)
-                                {
-                                    <MudButton OnClick="() => StartDrawingArea()" Variant="Variant.Outlined" Color="Color.Success">
-                                        Desenhar Polígono
-                                    </MudButton>
-                                }
-                                else
-                                {
-                                    <MudButton OnClick="ConfirmDrawing" Variant="Variant.Filled" Color="Color.Primary">Finalizar desenho</MudButton>
-                                    <MudButton OnClick="UndoLastPoint" Variant="Variant.Filled" Color="Color.Secondary" Class="ml-2">Desfazer</MudButton>
-                                    <MudButton OnClick="() => CancelDrawing(RoiTypeEnum.RestrictedArea)" Variant="Variant.Outlined" Color="Color.Error" Class="ml-2">Cancelar</MudButton>
-                                }
-
-                                <MudButton OnClick="() => Submit(EnvironmentRoi, RoiTypeEnum.RestrictedArea)">Salvar</MudButton>
-                            </div>
-                        </div>
-
-                    </MudForm>
-                </MudTabPanel>
-            </MudTabs>
 
         </div>
     </DialogContent>

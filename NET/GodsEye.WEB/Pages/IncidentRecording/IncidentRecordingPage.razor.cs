@@ -76,7 +76,7 @@ namespace GodsEye.WEB.Pages.IncidentRecording
             var options = new DialogOptions { CloseOnEscapeKey = true, FullWidth = true, MaxWidth = MaxWidth.Large };
             var parameters = new DialogParameters<InfoIncidentRecordingComponent> { { x => x.IncidentRecording, tableRowClickEventArgs.Item } };
 
-            DialogService.ShowAsync<InfoIncidentRecordingComponent>("Simple Dialog", parameters, options);
+            DialogService.ShowAsync<InfoIncidentRecordingComponent>("Registro de incidentes", parameters, options);
         }
 
         private string SelectedRowClassFunc(IncidentRecordingModel element, int rowNumber)

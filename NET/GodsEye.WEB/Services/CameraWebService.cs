@@ -112,7 +112,7 @@ namespace GodsEye.WEB.Services
             return json!;
         }
 
-        public async Task<ApiResponse<int>> DeelteRoiAsync(int roiId)
+        public async Task<ApiResponse<int>> DeleteRoiAsync(int roiId)
         {
             var result = await _http.DeleteAsync($"{_baseEndpoint}/roi/{roiId}");
 

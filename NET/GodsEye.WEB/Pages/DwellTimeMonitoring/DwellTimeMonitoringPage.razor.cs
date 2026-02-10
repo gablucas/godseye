@@ -57,7 +57,7 @@ namespace GodsEye.WEB.Pages.DwellTimeMonitoring
             var options = new DialogOptions { CloseOnEscapeKey = true, FullWidth = true, MaxWidth = MaxWidth.Large };
             var parameters = new DialogParameters<InfoDwellTimeMonitoringComponent> { { x => x.Camera, tableRowClickEventArgs.Item } };
 
-            DialogService.ShowAsync<InfoDwellTimeMonitoringComponent>("Simple Dialog", parameters, options);
+            DialogService.ShowAsync<InfoDwellTimeMonitoringComponent>("Controle de permanência", parameters, options);
         }
 
         private string SelectedRowClassFunc(CameraByFeatureModel element, int rowNumber)

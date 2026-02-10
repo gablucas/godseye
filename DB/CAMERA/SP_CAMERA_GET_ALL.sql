@@ -7,6 +7,7 @@ BEGIN
         C.IS_ACTIVE AS IsActive,
 		c.Sector_Id AS SectorId,
 		s.Name AS SectorName,
+        NULL AS RoiJson,
         CASE
 			WHEN COUNT(F.ID) = 0 THEN NULL
             ELSE JSON_ARRAYAGG(

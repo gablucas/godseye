@@ -1,41 +1,31 @@
-﻿<div>
-    <MudChip T="string" Size="Size.Large" Style="padding: 8px;" OnClick="() => OpenCameraData(Id)" Label="true" Color=@(Pagina == "dados" ? Color.Success : Color.Default) Variant=@(Pagina == "dados" ? Variant.Filled : Variant.Outlined)>
-        <MudText Typo="Typo.subtitle1" Class="m-0">
-            Dados
-        </MudText>
-    </MudChip>
+﻿<div class="camera-bar">
 
-    <MudChip T="string" Size="Size.Large" Style="padding: 8px;" OnClick="() => OpenCameraRecognition(Id)" Label="true" Color=@(Pagina == "reconhecimento" ? Color.Success : Color.Default) Variant=@(Pagina == "reconhecimento" ? Variant.Filled : Variant.Outlined)>
-        <MudText Typo="Typo.subtitle1" Class="m-0">
-            Reconhecimento
-        </MudText>
-    </MudChip>
+    <div class="item @(Pagina == "dados" ? "selected" : "")" @onclick="() => OpenCameraData(Id)">
+        <span>Dados</span>
+    </div>
+
+    <div class="item @(Pagina == "reconhecimento" ? "selected" : "")" @onclick="() => OpenCameraRecognition(Id)">
+        <span>Reconhecimento</span>
+    </div>
 
     @if (HasFeature(1))
     {
-        <MudChip T="string" Size="Size.Large" Style="padding: 8px;" OnClick="() => OpenEnvironmentMonitoring(Id)" Label="true" Color=@(Pagina == "monitoramento-ambiente" ? Color.Success : Color.Default) Variant=@(Pagina == "monitoramento-ambiente" ? Variant.Filled : Variant.Outlined)>
-            <MudText Typo="Typo.subtitle1" Class="m-0">
-                Monitoramento de ambientes
-            </MudText>
-        </MudChip>
-
+        <div class="item @(Pagina == "monitoramento-ambiente" ? "selected" : "")" @onclick="() => OpenEnvironmentMonitoring(Id)">
+            <span>Monitoramento de ambientes</span>
+        </div>
     }
 
     @if (HasFeature(2))
     {
-        <MudChip T="string" Size="Size.Large" Style="padding: 8px;" OnClick="() => OpenIncidentRecording(Id)" Label="true" Color=@(Pagina == "registro-incidente" ? Color.Success : Color.Default) Variant=@(Pagina == "registro-incidente" ? Variant.Filled : Variant.Outlined)>
-            <MudText Typo="Typo.subtitle1" Class="m-0">
-                Registro de incidentes
-            </MudText>
-        </MudChip>
+        <div class="item @(Pagina == "registro-incidente" ? "selected" : "")" @onclick="() => OpenIncidentRecording(Id)">
+            <span>Registro de incidente</span>
+        </div>
     }
 
     @if (HasFeature(3))
     {
-        <MudChip T="string" Size="Size.Large" Style="padding: 8px;" OnClick="() => OpenDwellTimeMonitoring(Id)" Label="true" Color=@(Pagina == "controle-permanencia" ? Color.Success : Color.Default) Variant=@(Pagina == "controle-permanencia" ? Variant.Filled : Variant.Outlined)>
-            <MudText Typo="Typo.subtitle1" Class="m-0">
-                Controle de permanência
-            </MudText>
-        </MudChip>
+        <div class="item @(Pagina == "controle-permanencia" ? "selected" : "")" @onclick="() => OpenDwellTimeMonitoring(Id)">
+            <span>Controle de permanência</span>
+        </div>
     }
 </div>

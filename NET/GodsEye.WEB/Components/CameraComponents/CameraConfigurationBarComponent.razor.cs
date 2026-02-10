@@ -43,9 +43,9 @@ namespace GodsEye.WEB.Components.CameraComponents
         {
             MudDialog.CancelAll();
 
-            var options = new DialogOptions { CloseOnEscapeKey = true, FullWidth = true, MaxWidth = MaxWidth.False };
+            var options = new DialogOptions { CloseOnEscapeKey = true, FullWidth = true, MaxWidth = MaxWidth.False, NoHeader = true };
             var parameters = new DialogParameters<CameraDataComponent> { { x => x.Id, cameraId } };
-            var dialog = await DialogService.ShowAsync<CameraDataComponent>("Dados", parameters, options);
+            var dialog = await DialogService.ShowAsync<CameraDataComponent>(null, parameters, options);
 
             var result = await dialog.Result;
         }
@@ -54,9 +54,9 @@ namespace GodsEye.WEB.Components.CameraComponents
         {
             MudDialog.CancelAll();
 
-            var options = new DialogOptions { CloseOnEscapeKey = true, FullWidth = true, MaxWidth = MaxWidth.False };
+            var options = new DialogOptions { CloseOnEscapeKey = true, FullWidth = true, MaxWidth = MaxWidth.False, NoHeader = true };
             var parameters = new DialogParameters<CameraEnvironmentMonitoringComponent> { { x => x.Id, cameraId } };
-            var dialog = await DialogService.ShowAsync<CameraEnvironmentMonitoringComponent>("Monitoramento de ambientes", parameters, options);
+            var dialog = await DialogService.ShowAsync<CameraEnvironmentMonitoringComponent>(null, parameters, options);
 
             var result = await dialog.Result;
         }
@@ -65,9 +65,9 @@ namespace GodsEye.WEB.Components.CameraComponents
         {
             MudDialog.CancelAll();
 
-            var options = new DialogOptions { CloseOnEscapeKey = true, FullWidth = true, MaxWidth = MaxWidth.False };
+            var options = new DialogOptions { CloseOnEscapeKey = true, FullWidth = true, MaxWidth = MaxWidth.False, NoHeader = true };
             var parameters = new DialogParameters<CameraIncidentRecordingComponent> { { x => x.Id, cameraId } };
-            var dialog = await DialogService.ShowAsync<CameraIncidentRecordingComponent>("Registro de incidente", parameters, options);
+            var dialog = await DialogService.ShowAsync<CameraIncidentRecordingComponent>(null, parameters, options);
 
             var result = await dialog.Result;
         }
@@ -76,18 +76,18 @@ namespace GodsEye.WEB.Components.CameraComponents
         {
             MudDialog.CancelAll();
 
-            var options = new DialogOptions { CloseOnEscapeKey = true, FullWidth = true, MaxWidth = MaxWidth.False };
+            var options = new DialogOptions { CloseOnEscapeKey = true, FullWidth = true, MaxWidth = MaxWidth.False, NoHeader = true };
             var parameters = new DialogParameters<CameraRecognitionComponent> { { x => x.Id, cameraId } };
-            await DialogService.ShowAsync<CameraRecognitionComponent>("Reconhecimento", parameters, options);
+            await DialogService.ShowAsync<CameraRecognitionComponent>(null, parameters, options);
         }
 
         private async Task OpenDwellTimeMonitoring(int cameraId)
         {
             MudDialog.CancelAll();
 
-            var options = new DialogOptions { CloseOnEscapeKey = true, FullWidth = true, MaxWidth = MaxWidth.False };
+            var options = new DialogOptions { CloseOnEscapeKey = true, FullWidth = true, MaxWidth = MaxWidth.False, NoHeader = true };
             var parameters = new DialogParameters<CameraDwellTimeRecordingComponent> { { x => x.Id, cameraId } };
-            await DialogService.ShowAsync<CameraDwellTimeRecordingComponent>("Controle de permanência", parameters, options);
+            await DialogService.ShowAsync<CameraDwellTimeRecordingComponent>(null, parameters, options);
         }
     }
 }

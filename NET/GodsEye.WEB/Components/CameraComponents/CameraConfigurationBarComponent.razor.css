@@ -1,1 +1,60 @@
-﻿
+﻿.camera-bar {
+    display: flex;
+    justify-content: center;
+    gap: 4px;
+    background: radial-gradient(circle at top left, #2b2b2b 0%, #151515 100%);
+    padding: 8px;
+    border-radius: 9px;
+    margin-top: 12px;
+}
+
+.camera-bar .item {
+    display: flex;
+    gap: 8px;
+    align-items: center;
+    cursor: pointer;
+    padding: 18px;
+    border-radius: 12px; /* Mais arredondado para estilo moderno */
+    color: #a3a3a3;
+    font-weight: 500;
+    font-size: 14px;
+    /* Prepara transição para o efeito vidro */
+    background: rgba(255, 255, 255, 0);
+    border: 1px solid transparent;
+    transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+}
+
+.camera-bar .item:hover {
+    color: #FFFFFF;
+    cursor: pointer;
+    /* Efeito fosco leve */
+    background: rgba(255, 255, 255, 0.08);
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+    /* Borda fina brilhante para simular borda de vidro */
+    border: 1px solid rgba(255, 255, 255, 0.15);
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+    /* Removemos o box-shadow inset antigo para usar o estilo glass */
+    box-sizing: border-box;
+}
+
+.camera-bar .item.selected {
+    color: #FFFFFF;
+    /* --- 1. Diminuindo a Intensidade da Cor Interna --- */
+    /* Antes era 0.6 e 0.2. Reduzi para 0.35 e 0.1 para ficar mais transparente */
+    background: linear-gradient(135deg, rgba(23, 92, 211, 0.35) 0%, rgba(23, 92, 211, 0.1) 100%);
+    /* --- 2. Diminuindo o Desfoque do Fundo --- */
+    /* Antes era 12px. Reduzi para 6px para um vidro mais "fino" */
+    backdrop-filter: blur(6px);
+    -webkit-backdrop-filter: blur(6px);
+    /* Bordas (ajustei levemente a opacidade para combinar com o novo fundo) */
+    border: 1px solid rgba(255, 255, 255, 0.15);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+    border-right: 1px solid rgba(255, 255, 255, 0.05);
+    /* --- 3. Diminuindo a Expansão (Glow Externo) --- */
+    /* Antes: box-shadow: 0 8px 32px 0 rgba(23, 92, 211, 0.25);
+O '32px' era o culpado pela grande expansão.
+Reduzi o deslocamento Y (de 8 para 4px) e o desfoque (de 32 para 15px).
+*/
+    box-shadow: 0 4px 15px 0 rgba(23, 92, 211, 0.2);
+}
