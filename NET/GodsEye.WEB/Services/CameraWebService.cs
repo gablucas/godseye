@@ -1,5 +1,9 @@
 ﻿using GodsEye.Application.DTOs.Model;
 using GodsEye.Application.DTOs.Response;
+using GodsEye.Application.UseCases.Camera.Commands.CreateCameraRoi;
+using GodsEye.Application.UseCases.Camera.Commands.DeleteCameraRoi;
+using GodsEye.Application.UseCases.Camera.Commands.UpdateCameraRoi;
+using GodsEye.Application.UseCases.Camera.Queries.GetCamerasRoiByCameraId;
 using GodsEye.Domain.DTOs.Result;
 using GodsEye.WEB.Model.Forms;
 using System.Net.Http.Json;
@@ -9,6 +13,7 @@ namespace GodsEye.WEB.Services
     public class CameraWebService
     {
         private readonly HttpClient _http;
+        private readonly string _baseEndpoint = "api/camera";
 
         public CameraWebService(HttpClient http)
         {
@@ -17,7 +22,7 @@ namespace GodsEye.WEB.Services
 
         public async Task<ApiResponse<ProcedureResult?>> CreateAsync(CreateCameraForm camera)
         {
-            var result = await _http.PostAsJsonAsync("api/camera", camera);
+            var result = await _http.PostAsJsonAsync(_baseEndpoint, camera);
 
             var json = await result.Content.ReadFromJsonAsync<ApiResponse<ProcedureResult?>>();
 
@@ -26,7 +31,7 @@ namespace GodsEye.WEB.Services
 
         public async Task<ApiResponse<ProcedureResult?>> UpdateAsync(UpdateCameraForm camera)
         {
-            var result = await _http.PutAsJsonAsync("api/camera", camera);
+            var result = await _http.PutAsJsonAsync(_baseEndpoint, camera);
 
             var json = await result.Content.ReadFromJsonAsync<ApiResponse<ProcedureResult?>>();
 
@@ -35,7 +40,7 @@ namespace GodsEye.WEB.Services
 
         public async Task<ApiResponse<IEnumerable<CameraModel>>> GetAllAsync()
         {
-            var result = await _http.GetAsync("api/camera");
+            var result = await _http.GetAsync(_baseEndpoint);
 
             var json = await result.Content.ReadFromJsonAsync<ApiResponse<IEnumerable<CameraModel>>>();
 
@@ -44,7 +49,7 @@ namespace GodsEye.WEB.Services
 
         public async Task<ApiResponse<CameraModel>> GetById(int cameraId)
         {
-            var result = await _http.GetAsync($"api/camera/{cameraId}");
+            var result = await _http.GetAsync($"{_baseEndpoint}/{cameraId}");
 
             var json = await result.Content.ReadFromJsonAsync<ApiResponse<CameraModel>>();
 
@@ -53,7 +58,7 @@ namespace GodsEye.WEB.Services
 
         public async Task<ApiResponse<IEnumerable<CameraLogModel>>> GetLogs(int cameraId)
         {
-            var result = await _http.GetAsync($"api/camera/logs/{cameraId}");
+            var result = await _http.GetAsync($"{_baseEndpoint}/logs/{cameraId}");
 
             var json = await result.Content.ReadFromJsonAsync<ApiResponse<IEnumerable<CameraLogModel>>>();
 
@@ -62,8 +67,7 @@ namespace GodsEye.WEB.Services
 
         public async Task<IEnumerable<CameraByFeatureModel>> GetByFeatureId(int featureId)
         {
-            var response = await _http.GetAsync($"api/camera/feature/{featureId}");
-            response.EnsureSuccessStatusCode();
+            var response = await _http.GetAsync($"{_baseEndpoint}/feature/{featureId}");
 
             var apiResponse = await response.Content
                 .ReadFromJsonAsync<ApiResponse<IEnumerable<CameraByFeatureModel>>>();
@@ -73,13 +77,48 @@ namespace GodsEye.WEB.Services
 
         public async Task<IEnumerable<CameraFeatureModel>> GetFeatures(int cameraId)
         {
-            var response = await _http.GetAsync($"api/camera/active-features/{cameraId}");
-            response.EnsureSuccessStatusCode();
+            var response = await _http.GetAsync($"{_baseEndpoint}/active-features/{cameraId}");
 
             var apiResponse = await response.Content
                 .ReadFromJsonAsync<ApiResponse<IEnumerable<CameraFeatureModel>>>();
 
             return apiResponse?.Data ?? Enumerable.Empty<CameraFeatureModel>();
+        }
+
+        public async Task<ApiResponse<List<CameraRoiModel>>> GetRoiByCameraId(int cameraId)
+        {
+            var result = await _http.GetAsync($"{_baseEndpoint}/roi/{cameraId}");
+
+            var json = await result.Content.ReadFromJsonAsync<ApiResponse<List<CameraRoiModel>>>();
+
+            return json!;
+        }
+
+        public async Task<ApiResponse<int>> CreateRoiAsync(CreateCameraRoiRequest cameraRoi)
+        {
+            var result = await _http.PostAsJsonAsync($"{_baseEndpoint}/roi", cameraRoi);
+
+            var json = await result.Content.ReadFromJsonAsync<ApiResponse<int>>();
+
+            return json!;
+        }
+
+        public async Task<ApiResponse<int>> UpdateRoiAsync(UpdateCameraRoiRequest cameraRoi)
+        {
+            var result = await _http.PutAsJsonAsync($"{_baseEndpoint}/roi", cameraRoi);
+
+            var json = await result.Content.ReadFromJsonAsync<ApiResponse<int>>();
+
+            return json!;
+        }
+
+        public async Task<ApiResponse<int>> DeelteRoiAsync(int roiId)
+        {
+            var result = await _http.DeleteAsync($"{_baseEndpoint}/roi/{roiId}");
+
+            var json = await result.Content.ReadFromJsonAsync<ApiResponse<int>>();
+
+            return json!;
         }
 
         public async Task<bool> TesteCameraConnection(string rtspUrl)
@@ -91,7 +130,7 @@ namespace GodsEye.WEB.Services
             try
             {
                 response = await _http.PostAsJsonAsync(
-                    "api/camera/test-connection",
+                    $"{_baseEndpoint}/test-connection",
                     payload
                 );
             }

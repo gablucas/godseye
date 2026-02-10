@@ -1,10 +1,14 @@
 ﻿using GodsEye.Application.UseCases.Camera.Commands.CreateCamera;
+using GodsEye.Application.UseCases.Camera.Commands.CreateCameraRoi;
+using GodsEye.Application.UseCases.Camera.Commands.DeleteCameraRoi;
 using GodsEye.Application.UseCases.Camera.Commands.UpdateCamera;
+using GodsEye.Application.UseCases.Camera.Commands.UpdateCameraRoi;
 using GodsEye.Application.UseCases.Camera.Queries.GetAllCameras;
 using GodsEye.Application.UseCases.Camera.Queries.GetAllCamerasConnection;
 using GodsEye.Application.UseCases.Camera.Queries.GetCameraById;
 using GodsEye.Application.UseCases.Camera.Queries.GetCameraFeatureById;
 using GodsEye.Application.UseCases.Camera.Queries.GetCamerasByFeatureID;
+using GodsEye.Application.UseCases.Camera.Queries.GetCamerasRoiByCameraId;
 using GodsEye.Application.UseCases.Camera.Queries.TestCameraConnection;
 using GodsEye.Application.UseCases.Person.Queries.GetCameraLog;
 using MediatR;
@@ -93,6 +97,38 @@ namespace GodsEye.API.Controllers
         public async Task<IActionResult> CheckCameraConnection(CheckCameraConnectionRequest request, CancellationToken cancellationToken)
         {
             var result = await _mediator.Send(request, cancellationToken);
+            return Ok(result);
+        }
+
+        [AllowAnonymous]
+        [HttpGet("roi/{cameraId}")]
+        public async Task<IActionResult> GetCameraRoiByCameraId(int cameraId, CancellationToken cancellationToken)
+        {
+            var result = await _mediator.Send(new GetCamerasRoiByCameraIdRequest(cameraId), cancellationToken);
+            return Ok(result);
+        }
+
+        [AllowAnonymous]
+        [HttpPost("roi")]
+        public async Task<IActionResult> CreateCameraRoi([FromBody] CreateCameraRoiRequest request, CancellationToken cancellationToken)
+        {
+            var result = await _mediator.Send(request, cancellationToken);
+            return Ok(result);
+        }
+
+        [AllowAnonymous]
+        [HttpPut("roi")]
+        public async Task<IActionResult> UpdateRoiCamera(UpdateCameraRoiRequest request, CancellationToken cancellationToken)
+        {
+            var result = await _mediator.Send(request, cancellationToken);
+            return Ok(result);
+        }
+
+        [AllowAnonymous]
+        [HttpDelete("roi/{id}")]
+        public async Task<IActionResult> DeleteRoiCamera(int id, CancellationToken cancellationToken)
+        {
+            var result = await _mediator.Send(new DeleteCameraRoiRequest(id), cancellationToken);
             return Ok(result);
         }
     }

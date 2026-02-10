@@ -18,14 +18,13 @@
     gap: 12px;
 }
 
-.form-container .video-inputs .measure-input {
+.form-container .measure-input {
     display: flex;
-    align-items: center;
     gap: 24px;
 
 }
 
-.form-container .video-inputs .measure-input .set-measure {
+.form-container .measure-input .set-measure {
     display: flex;
     align-content: center;
     gap: 12px;

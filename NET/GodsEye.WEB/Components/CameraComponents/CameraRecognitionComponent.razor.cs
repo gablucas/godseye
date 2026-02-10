@@ -1,6 +1,9 @@
 ﻿using GodsEye.Application.DTOs.Model;
 using GodsEye.Application.DTOs.Response;
+using GodsEye.Application.UseCases.Camera.Commands.CreateCameraRoi;
+using GodsEye.Application.UseCases.Camera.Commands.UpdateCameraRoi;
 using GodsEye.Domain.DTOs.Result;
+using GodsEye.Domain.Enums;
 using GodsEye.WEB.Enum;
 using GodsEye.WEB.Model.Forms;
 using GodsEye.WEB.Services;
@@ -44,7 +47,8 @@ namespace GodsEye.WEB.Components.CameraComponents
         #region FORM
 
         MudForm form;
-        UpdateCameraRecognitionForm RecognitionForm { get; set; } = new();
+        CameraRoiForm FaceRoi { get; set; } = new();
+        CameraRoiForm EnvironmentRoi { get; set; } = new();
 
         private bool success;
         private string[] errors = { };
@@ -60,19 +64,23 @@ namespace GodsEye.WEB.Components.CameraComponents
 
         private bool visible = false;
 
-        private RecognizeRectEnum? _recognizeType = null;
-
-        private bool _face = false;
-        private bool _area = false;
-
-        private bool _loadingConnection = false;
+        private bool _loadingConnection = true;
         private bool _hasConnectionError = false;
         private string? _connectionErrorMessage = null;
 
         private bool isDrawingActive = false;
         private string drawingMode = ""; // "rect" ou "polygon"
-        private RecognizeRectEnum? activeContext = null; // Face ou Camera
+        private RoiTypeEnum activeContext = RoiTypeEnum.FaceDetection; // Face ou Camera
         private int activeTabIndex = 0;
+
+        MudForm faceForm;
+        MudForm areaForm;
+
+        bool faceSuccess;
+        string[] faceErrors = { };
+
+        bool areaSuccess;
+        string[] areaErrors = { };
 
         protected override void OnInitialized()
         {
@@ -98,14 +106,14 @@ namespace GodsEye.WEB.Components.CameraComponents
                 {
                     camera = cameraRequest.Data;
                     _ = StartStream();
+                    _ = GetCameraRoi();
                 }
             }
         }
 
-        private async Task SelectTab(RecognizeRectEnum context)
+        private async Task SelectTab(RoiTypeEnum context)
         {
-            // 1. PRIMEIRO: Para qualquer desenho ativo e limpa o canvas
-            // Isso evita que o JS tente desenhar um polígono enquanto carrega um retângulo
+            // Limpa estado anterior
             await _roiJs.InvokeVoidAsync("stopDrawing");
             await _roiJs.InvokeVoidAsync("clearCanvas");
 
@@ -113,27 +121,22 @@ namespace GodsEye.WEB.Components.CameraComponents
             activeContext = context;
 
             // 2. SEGUNDO: Carrega o desenho salvo (se houver)
-            if (context == RecognizeRectEnum.Face && RecognitionForm.FaceDimension != null)
+            if (context == RoiTypeEnum.FaceDetection)
             {
-                // Se a face tiver width > 0, renderiza
-                if (RecognitionForm.FaceDimension.Width > 0)
+                // Valida se tem dimensões E se tem o ponto de origem salvo
+                if (FaceRoi.Coordinates.Width > 0 &&
+                    FaceRoi.Coordinates.Points != null &&
+                    FaceRoi.Coordinates.Points.Any())
                 {
-                    await _roiJs.InvokeVoidAsync("renderExistingShape", RecognitionForm.FaceDimension, "rect");
+                    await _roiJs.InvokeVoidAsync("renderExistingShape", FaceRoi.Coordinates, "rect");
                 }
             }
-            else if (context == RecognizeRectEnum.Camera && RecognitionForm.CameraDimension != null)
+            else if (context == RoiTypeEnum.RestrictedArea)
             {
-                // Verifica se é polígono (tem pontos) ou retângulo legado
-                bool hasPoints = RecognitionForm.CameraDimension.Points != null && RecognitionForm.CameraDimension.Points.Any();
-
-                if (hasPoints)
+                if (EnvironmentRoi.Coordinates.Points != null &&
+                    EnvironmentRoi.Coordinates.Points.Count() > 1) // Polígono precisa de > 1 ponto
                 {
-                    await _roiJs.InvokeVoidAsync("renderExistingShape", RecognitionForm.CameraDimension, "polygon");
-                }
-                else if (RecognitionForm.CameraDimension.Width > 0)
-                {
-                    // Caso legado: era retângulo, renderiza como retângulo mas força modo visual
-                    await _roiJs.InvokeVoidAsync("renderExistingShape", RecognitionForm.CameraDimension, "rect");
+                    await _roiJs.InvokeVoidAsync("renderExistingShape", EnvironmentRoi.Coordinates, "polygon");
                 }
             }
         }
@@ -156,28 +159,35 @@ namespace GodsEye.WEB.Components.CameraComponents
         // Ação: Confirmar e Salvar no Objeto C#
         private async Task ConfirmDrawing()
         {
-            // Busca dados do JS no formato { x, y, width, height, points: [{x,y}] }
-            var shapeData = await _roiJs.InvokeAsync<Rect>("getShapeData");
+            // O JS retorna um objeto completo com Width, Height e Points
+            var shapeData = await _roiJs.InvokeAsync<RoiModel>("getShapeData");
 
             if (shapeData != null)
             {
-                if (activeContext == RecognizeRectEnum.Face)
+                if (activeContext == RoiTypeEnum.FaceDetection)
                 {
-                    // Garante que face é apenas retangulo (ignora pontos se vierem por bug)
-                    shapeData.Points = new List<Point>();
-                    RecognitionForm.FaceDimension = shapeData;
+                    // CORREÇÃO 1: Não limpe a lista! 
+                    // O JS retorna uma lista com 1 item para Face (que é o X, Y do canto).
+                    // Se você der new List(), perde a posição do retângulo.
+
+                    // CORREÇÃO 2: Atribua o objeto inteiro, não a propriedade Points
+                    FaceRoi.Coordinates = shapeData;
+
                     Snackbar.Add("Dimensão da face definida.", Severity.Success);
                 }
-                else if (activeContext == RecognizeRectEnum.Camera)
+                else if (activeContext == RoiTypeEnum.RestrictedArea)
                 {
-                    RecognitionForm.CameraDimension = shapeData;
+                    // CORREÇÃO 3: Atribua o objeto inteiro
+                    EnvironmentRoi.Coordinates = shapeData;
+
                     Snackbar.Add("Polígono de área definido.", Severity.Success);
                 }
             }
 
-            // Desativa modo de desenho no JS e na UI
             await _roiJs.InvokeVoidAsync("stopDrawing");
             isDrawingActive = false;
+            // Opcional: Força renderizar de novo para garantir que o visual reflete o objeto salvo
+            StateHasChanged();
         }
 
         private async Task UndoLastPoint()
@@ -185,19 +195,21 @@ namespace GodsEye.WEB.Components.CameraComponents
             await _roiJs.InvokeVoidAsync("undo");
         }
 
-        private async Task CancelDrawing()
+        private async Task CancelDrawing(RoiTypeEnum roiType)
         {
             isDrawingActive = false;
-            await _roiJs.InvokeVoidAsync("stopDrawing");
 
-            // Opcional: Recarregar o desenho original salvo anteriormente
-            if (activeContext != null) await SelectTab(activeContext.Value);
+            if (roiType == RoiTypeEnum.FaceDetection)
+                await _roiJs.InvokeVoidAsync("renderExistingShape", FaceRoi.Coordinates, "rect");
+
+            else if(roiType == RoiTypeEnum.RestrictedArea)
+                await _roiJs.InvokeVoidAsync("renderExistingShape", EnvironmentRoi.Coordinates, "rect");
+
         }
 
         private async Task ResetInteraction()
         {
-            activeContext = null;
-            await CancelDrawing();
+            isDrawingActive = false;
             await _roiJs.InvokeVoidAsync("clearCanvas");
         }
 
@@ -231,22 +243,68 @@ namespace GodsEye.WEB.Components.CameraComponents
             _connectionErrorMessage = null;
         }
 
+        public async Task GetCameraRoi()
+        {
+            var getCameraRoi = await CameraService.GetRoiByCameraId(Id);
+
+            if (getCameraRoi == null || !getCameraRoi.Success)
+                return;
+
+            foreach (var cameraRoi in getCameraRoi.Data)
+            {
+                if (cameraRoi.RoiType == RoiTypeEnum.FaceDetection)
+                {
+                    FaceRoi = new CameraRoiForm
+                    {
+                        Id = cameraRoi.Id,
+                        RoiType = cameraRoi.RoiType,
+                        Coordinates = cameraRoi.Coordinates,
+                    };
+                }
+                else
+                {
+                    EnvironmentRoi = new CameraRoiForm
+                    {
+                        Id = cameraRoi.Id,
+                        RoiType = cameraRoi.RoiType,
+                        Coordinates = cameraRoi.Coordinates,
+                    };
+                }
+            }
+        }
+
         public async ValueTask DisposeAsync()
         {
             await JS.InvokeVoidAsync("streamFunctions.stop", "camera-player");
         }
 
 
-        private async Task Submit()
+        private async Task Delete(CameraRoiForm cameraRoi)
         {
-            //visible = true;
-            //apiResponse = await _cameraService.UpdateAsync(CameraForm);
-            //visible = false;
+            var deleteResult = await CameraService.DeelteRoiAsync(cameraRoi.Id);
+        }
+
+        private async Task Submit(CameraRoiForm cameraRoi, RoiTypeEnum roiType)
+        {
+            visible = true;
+
+            if (cameraRoi.Id == 0)
+            {
+                var createRequest = new CreateCameraRoiRequest(Id, roiType, cameraRoi.Coordinates);
+                var createResult = await CameraService.CreateRoiAsync(createRequest);
+            }
+            else
+            {
+                var updateRequest = new UpdateCameraRoiRequest(cameraRoi.Id, cameraRoi.Coordinates);
+                var updateResult = await CameraService.UpdateRoiAsync(updateRequest);
+            }
+
+            visible = false;
 
             //if (apiResponse.Success)
             //{
             //    Snackbar.Add("Camera atualizada com sucesso!", Severity.Success);
-            //    MudDialog.Close(DialogResult.Ok(1));
+            //    //MudDialog.Close(DialogResult.Ok(1));
             //}
             //else
             //{

@@ -77,5 +77,5 @@ BEGIN
     SELECT 
         ERRO AS Erro,
         MENSAGEM AS Mensagem,
-        NEW_ID AS Id;
+        P_CAMERA_ID AS Id;
 END

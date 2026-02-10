@@ -1,0 +1,32 @@
+CREATE DEFINER=`root`@`localhost` PROCEDURE `SP_CAMERA_ROI_CREATE`(
+	IN P_CAMERA_ID INT,
+    IN P_ROI_TYPE INT,
+    IN P_COORDINATES_JSON JSON
+)
+BEGIN
+	DECLARE ERRO INT DEFAULT 0;
+    DECLARE MENSAGEM VARCHAR(100) DEFAULT 'SUCESSO';
+    DECLARE NEW_ID INT DEFAULT 0;
+    
+    DECLARE EXIT HANDLER FOR SQLEXCEPTION
+    BEGIN
+		ROLLBACK;
+        
+        SELECT
+			1 AS Erro,
+            'Erro ao inserir o roi da camera' AS Mensagem,
+            0 AS ID;
+	END;
+    
+    START TRANSACTION;
+		INSERT INTO camera_roi (CAMERA_ID, ROI_TYPE, COORDINATES_JSON)
+        VALUES (P_CAMERA_ID, P_ROI_TYPE, P_COORDINATES_JSON);
+        
+        SET NEW_ID = LAST_INSERT_ID();
+    COMMIT;
+    
+    SELECT 
+        ERRO AS Erro,
+        MENSAGEM AS Mensagem,
+        NEW_ID AS Id;
+END

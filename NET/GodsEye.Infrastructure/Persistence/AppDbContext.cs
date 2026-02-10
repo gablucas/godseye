@@ -39,12 +39,13 @@ namespace GodsEye.Infrastructure.Persistence
         public DbSet<NotificationGroupModel> NotificationGroupModel { get; set; }
         public DbSet<EnvironmentMonitoringPersonModel> EnvironmentMonitoringPersonModel { get; set; }
         public DbSet<EnvironmentMonitoringSectorModel> EnvironmentMonitoringSectorModel { get; set; }
+        public DbSet<CameraRoiModel> CameraRoiModel { get; set; }
 
         public async Task<int> ExecuteSqlAsync(string sql, IDictionary<string, object?> parameters, CancellationToken cancellationToken)
         {
             var sqlParameters = parameters
-            .Select(p => new MySqlParameter(p.Key, p.Value ?? DBNull.Value))
-            .ToArray();
+                .Select(p => new MySqlParameter(p.Key, p.Value ?? DBNull.Value))
+                .ToArray();
 
             return await Database.ExecuteSqlRawAsync(sql, sqlParameters, cancellationToken);
         }
@@ -52,13 +53,13 @@ namespace GodsEye.Infrastructure.Persistence
         public async Task<T?> QuerySingleSqlAsync<T>(string sql, IDictionary<string, object?> parameters, CancellationToken cancellationToken) where T : class
         {
             var sqlParameters = parameters
-            .Select(p => new MySqlParameter(p.Key, p.Value ?? DBNull.Value))
-            .ToArray();
+                .Select(p => new MySqlParameter(p.Key, p.Value ?? DBNull.Value))
+                .ToArray();
 
             var result = await Set<T>()
-            .FromSqlRaw(sql, sqlParameters)
-            .AsNoTracking()
-            .ToListAsync();
+                .FromSqlRaw(sql, sqlParameters)
+                .AsNoTracking()
+                .ToListAsync();
 
             return result.FirstOrDefault();
         }
@@ -66,28 +67,28 @@ namespace GodsEye.Infrastructure.Persistence
         public async Task<List<T>> QuerySqlAsync<T>(string sql, CancellationToken cancellationToken) where T : class
         {
             return await Set<T>()
-            .FromSqlRaw(sql)
-            .AsNoTracking()
-            .ToListAsync(cancellationToken);
+                .FromSqlRaw(sql)
+                .AsNoTracking()
+                .ToListAsync(cancellationToken);
         }
 
         public async Task<List<T>> QuerySqlAsync<T>(string sql, IDictionary<string, object?> parameters, CancellationToken cancellationToken) where T : class
         {
             var sqlParameters = parameters
-            .Select(p => new MySqlParameter(p.Key, p.Value ?? DBNull.Value))
-            .ToArray();
+                .Select(p => new MySqlParameter(p.Key, p.Value ?? DBNull.Value))
+                .ToArray();
 
             return await Set<T>()
-            .FromSqlRaw(sql, sqlParameters)
-            .AsNoTracking()
-            .ToListAsync(cancellationToken);
+                .FromSqlRaw(sql, sqlParameters)
+                .AsNoTracking()
+                .ToListAsync(cancellationToken);
         }
 
         public async Task<int> ExecuteDeleteAsync(string sql, IDictionary<string, object?> parameters, CancellationToken cancellationToken)
         {
             var sqlParameters = parameters
-            .Select(p => new MySqlParameter(p.Key, p.Value ?? DBNull.Value))
-            .ToArray();
+                .Select(p => new MySqlParameter(p.Key, p.Value ?? DBNull.Value))
+                .ToArray();
 
             return await Database.ExecuteSqlRawAsync(
                 sql,
@@ -122,6 +123,7 @@ namespace GodsEye.Infrastructure.Persistence
             modelBuilder.Entity<NotificationGroupModel>().HasNoKey().ToView(null);
             modelBuilder.Entity<EnvironmentMonitoringPersonModel>().HasNoKey().ToView(null);
             modelBuilder.Entity<EnvironmentMonitoringSectorModel>().HasNoKey().ToView(null);
+            modelBuilder.Entity<CameraRoiModel>().HasNoKey().ToView(null);
         }
     }
 }

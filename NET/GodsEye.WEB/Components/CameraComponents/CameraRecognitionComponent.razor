@@ -1,73 +1,91 @@
 ﻿@using GodsEye.Application.DTOs.Model
+@using GodsEye.Domain.Enums
 @using GodsEye.WEB.Enum
 @inject ISnackbar Snackbar
 
 <MudDialog>
     <DialogContent>
         <div class="form-container">
-            <MudForm @ref="form" Model="RecognitionForm" @bind-IsValid="@success" @bind-Errors="@errors">
 
-                <div class="video-inputs">
-                    <div class="video-wrapper">
-                        <video id="camera-player" controls autoplay muted playsinline></video>
-                        <canvas id="roiCanvas" style="position:absolute; top:0; left:0; width:100%; height:100%; z-index:10;"></canvas>
+            <div class="video-inputs mb-4">
+                <div class="video-wrapper" style="position: relative;">
+                    <video id="camera-player" controls autoplay muted playsinline style="width: 100%; display: block;"></video>
+                    <canvas id="roiCanvas" style="position:absolute; top:0; left:0; width:100%; height:100%; z-index:10;"></canvas>
 
-                        @if (isDrawingActive)
-                        {
-                            <div style="position:absolute; top:10px; left:50%; transform:translateX(-50%); background:rgba(0,0,0,0.7); color:white; padding:5px 10px; border-radius:5px; z-index:20;">
-                                @(drawingMode == "rect" ? "Clique e arraste para desenhar o retângulo" : "Clique nos pontos para formar o polígono (Enter para fechar)")
-                            </div>
-                        }
-                    </div>
-
-                    <MudTabs Rounded="true" Border="true" Outlined="true" PanelClass="pa-2" @bind-ActivePanelIndex="activeTabIndex">
-
-                        <MudTabPanel Text="Tamanho Face" OnClick="() => SelectTab(RecognizeRectEnum.Face)">
-                            <div class="measure-input">
-                                <MudCheckBox @bind-Value="_face" Label="Ativar" Color="Color.Tertiary"></MudCheckBox>
-
-                                <div>
-                                    @if (!isDrawingActive)
-                                    {
-                                        <MudButton Disabled="!_face" OnClick="() => StartDrawingFace()" Variant="Variant.Outlined" Color="Color.Success">
-                                            Desenhar Retângulo
-                                        </MudButton>
-                                    }
-                                    else
-                                    {
-                                        <MudButton OnClick="ConfirmDrawing" Variant="Variant.Filled" Color="Color.Primary">Salvar Desenho</MudButton>
-                                        <MudButton OnClick="CancelDrawing" Variant="Variant.Outlined" Color="Color.Error">Cancelar</MudButton>
-                                    }
-                                </div>
-                            </div>
-                        </MudTabPanel>
-
-                        <MudTabPanel Text="Área de Reconhecimento" OnClick="() => SelectTab(RecognizeRectEnum.Camera)">
-                            <div class="measure-input">
-                                <MudCheckBox @bind-Value="_area" Label="Ativar" Color="Color.Tertiary"></MudCheckBox>
-
-                                <div>
-                                    @if (!isDrawingActive)
-                                    {
-                                        <MudButton Disabled="!_area" OnClick="() => StartDrawingArea()" Variant="Variant.Outlined" Color="Color.Success">
-                                            Desenhar Polígono
-                                        </MudButton>
-                                    }
-                                    else
-                                    {
-                                        <MudButton OnClick="ConfirmDrawing" Variant="Variant.Filled" Color="Color.Primary">Salvar Desenho</MudButton>
-                                        <MudButton OnClick="UndoLastPoint" Variant="Variant.Filled" Color="Color.Secondary">Desfazer</MudButton>
-                                        <MudButton OnClick="CancelDrawing" Variant="Variant.Outlined" Color="Color.Error">Cancelar</MudButton>
-                                    }
-                                </div>
-                            </div>
-                        </MudTabPanel>
-
-                    </MudTabs>
+                    @if (isDrawingActive)
+                    {
+                        <div style="position:absolute; top:10px; left:50%; transform:translateX(-50%); background:rgba(0,0,0,0.7); color:white; padding:5px 10px; border-radius:5px; z-index:20;">
+                            @(drawingMode == "rect" ? "Clique e arraste para desenhar o retângulo" : "Clique nos pontos para formar o polígono (Enter para fechar)")
+                        </div>
+                    }
                 </div>
-            </MudForm>
+            </div>
+
+            <MudTabs Rounded="true" Outlined="true" Elevation="0" PanelClass="pa-4" @bind-ActivePanelIndex="activeTabIndex">
+
+                <MudTabPanel Text="Como usar" OnClick="ResetInteraction">
+                    <MudText Typo="Typo.body1">1. Selecione uma opção de interesse (Tamanho Face ou Área de Reconhecimento)</MudText>
+                    <MudText Typo="Typo.body1">2. Clique em Editar tamanho</MudText>
+                    <MudText Typo="Typo.body1">3. Pressione o botão esquerdo do mouse na região do video e arraste para desenhar uma forma de quatro lados</MudText>
+                    <MudText Typo="Typo.body1">4. Ao soltar o botão do mouse, as medidas serão definidas</MudText>
+                    <MudText Typo="Typo.body1">5. Clique em salvar para registrar as medidas</MudText>
+                </MudTabPanel>
+
+                <MudTabPanel Text="Tamanho Face"  OnClick="() => SelectTab(RoiTypeEnum.FaceDetection)">
+                    <MudForm @ref="faceForm" Model="@FaceRoi" @bind-IsValid="@faceSuccess" @bind-Errors="@faceErrors">
+
+                        <div class="measure-input">
+
+                            <div class="mt-2">
+                                @if (!isDrawingActive)
+                                {
+                                    <MudButton OnClick="() => StartDrawingFace()" Variant="Variant.Outlined" Color="Color.Success">
+                                        Desenhar Retângulo
+                                    </MudButton>
+                                }
+                                else
+                                {
+                                    <MudButton OnClick="ConfirmDrawing" Variant="Variant.Filled" Color="Color.Primary">Finalizar Desenho</MudButton>
+                                    <MudButton OnClick="() => CancelDrawing(RoiTypeEnum.FaceDetection)" Variant="Variant.Outlined" Color="Color.Error" Class="ml-2">Cancelar</MudButton>
+                                }
+                            </div>
+
+                            <MudButton OnClick="() => Submit(FaceRoi, RoiTypeEnum.FaceDetection)">Salvar</MudButton>
+                        </div>
+
+                    </MudForm>
+                </MudTabPanel>
+
+                <MudTabPanel Text="Área de Reconhecimento" OnClick="() => SelectTab(RoiTypeEnum.RestrictedArea)">
+                    <MudForm @ref="areaForm" Model="@EnvironmentRoi" @bind-IsValid="@areaSuccess" @bind-Errors="@areaErrors">
+
+                        <div class="measure-input">
+
+                            <div class="mt-2">
+                                @if (!isDrawingActive)
+                                {
+                                    <MudButton OnClick="() => StartDrawingArea()" Variant="Variant.Outlined" Color="Color.Success">
+                                        Desenhar Polígono
+                                    </MudButton>
+                                }
+                                else
+                                {
+                                    <MudButton OnClick="ConfirmDrawing" Variant="Variant.Filled" Color="Color.Primary">Finalizar desenho</MudButton>
+                                    <MudButton OnClick="UndoLastPoint" Variant="Variant.Filled" Color="Color.Secondary" Class="ml-2">Desfazer</MudButton>
+                                    <MudButton OnClick="() => CancelDrawing(RoiTypeEnum.RestrictedArea)" Variant="Variant.Outlined" Color="Color.Error" Class="ml-2">Cancelar</MudButton>
+                                }
+
+                                <MudButton OnClick="() => Submit(EnvironmentRoi, RoiTypeEnum.RestrictedArea)">Salvar</MudButton>
+                            </div>
+                        </div>
+
+                    </MudForm>
+                </MudTabPanel>
+            </MudTabs>
+
         </div>
     </DialogContent>
+
     <DialogActions>
         <MudButton OnClick="Cancel">Sair</MudButton>
     </DialogActions>

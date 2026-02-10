@@ -96,52 +96,94 @@ export function undo() {
 }
 
 export function getShapeData() {
+    // Pega as dimensões ATUAIS do canvas (que está sincronizado com o vídeo)
+    const w = canvas.width;
+    const h = canvas.height;
+
     let result = {
-        x: 0, y: 0, width: 0, height: 0, points: []
+        width: 0, height: 0, points: []
     };
 
-    // Prioridade para Rect
+    if (w === 0 || h === 0) return result; // Proteção contra divisão por zero
+
+    // --- MODO RETÂNGULO (Face) ---
     if (currentMode === 'rect' && rectStart && rectCurrent) {
-        let finalX = rectCurrent.w < 0 ? rectStart.x + rectCurrent.w : rectStart.x;
-        let finalY = rectCurrent.h < 0 ? rectStart.y + rectCurrent.h : rectStart.y;
-        result.x = finalX;
-        result.y = finalY;
-        result.width = Math.abs(rectCurrent.w);
-        result.height = Math.abs(rectCurrent.h);
+        // 1. Calcula em PIXELS
+        let pixelX = rectCurrent.w < 0 ? rectStart.x + rectCurrent.w : rectStart.x;
+        let pixelY = rectCurrent.h < 0 ? rectStart.y + rectCurrent.h : rectStart.y;
+        let pixelW = Math.abs(rectCurrent.w);
+        let pixelH = Math.abs(rectCurrent.h);
+
+        // 2. Converte para RELATIVO (0.0 a 1.0)
+        result.width = pixelW / w;
+        result.height = pixelH / h;
+
+        // Salva Ponto inicial normalizado
+        result.points = [{
+            x: pixelX / w,
+            y: pixelY / h
+        }];
     }
-    // Se não, verifica Polygon
+    // --- MODO POLÍGONO (Ambiente) ---
     else if (currentMode === 'polygon' && points.length > 0) {
         let minX = Infinity, minY = Infinity, maxX = -Infinity, maxY = -Infinity;
-        points.forEach(p => {
+
+        // Mapeia todos os pontos para relativo
+        const relativePoints = points.map(p => {
             if (p.x < minX) minX = p.x;
             if (p.y < minY) minY = p.y;
             if (p.x > maxX) maxX = p.x;
             if (p.y > maxY) maxY = p.y;
+
+            return {
+                x: p.x / w,
+                y: p.y / h
+            };
         });
-        result.x = minX;
-        result.y = minY;
-        result.width = maxX - minX;
-        result.height = maxY - minY;
-        result.points = points;
+
+        // Salva bounding box relativa e pontos relativos
+        result.width = (maxX - minX) / w;
+        result.height = (maxY - minY) / h;
+        result.points = relativePoints;
     }
 
     return result;
 }
 
 export function renderExistingShape(data, mode) {
-    resetState(); // <--- Limpa antes de desenhar o que veio do banco
+    resetState();
 
-    if (mode === 'polygon' && data.points && data.points.length > 0) {
-        points = data.points;
+    const w = canvas.width;
+    const h = canvas.height;
+
+    // Proteções contra nulos
+    if (w === 0 || h === 0 || !data) return;
+
+    // --- CARREGAR POLÍGONO ---
+    if (mode === 'polygon' && data.points && data.points.length > 1) {
+        points = data.points.map(p => ({
+            x: p.x * w,
+            y: p.y * h
+        }));
         currentMode = 'polygon';
-    } else if (mode === 'rect' && data.width > 0) {
-        rectStart = { x: data.x, y: data.y };
-        rectCurrent = { w: data.width, h: data.height };
+    }
+    // --- CARREGAR RETÂNGULO ---
+    // Verifica se tem pontos (onde guardamos X/Y) e largura
+    else if (mode === 'rect' && data.points && data.points.length > 0) {
+        // Recupera X/Y do primeiro ponto (normalizado 0-1) e converte para pixel
+        let startX = data.points[0].x * w;
+        let startY = data.points[0].y * h;
+
+        let width = data.width * w;
+        let height = data.height * h;
+
+        rectStart = { x: startX, y: startY };
+        rectCurrent = { w: width, h: height };
         currentMode = 'rect';
     }
+
     redraw();
 }
-
 // --- Eventos ---
 
 function onMouseDown(e) {
