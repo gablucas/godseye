@@ -30,13 +30,13 @@ namespace GodsEye.WEB.Components.CameraComponents
 
         #endregion
 
-        [CascadingParameter]
-        private IMudDialogInstance MudDialog { get; set; }
-
         #region PARAMS
 
         [Parameter]
         public int Id { get; set; }
+
+        [CascadingParameter]
+        private IMudDialogInstance MudDialog { get; set; }
 
         #endregion
 
@@ -49,7 +49,6 @@ namespace GodsEye.WEB.Components.CameraComponents
 
         private bool success;
         private string[] errors = { };
-        private string featureError;
 
         private bool _loadingConnection = false;
         private bool _hasConnectionError = false;
@@ -177,14 +176,6 @@ namespace GodsEye.WEB.Components.CameraComponents
         {
             await JS.InvokeVoidAsync("streamFunctions.stop", "camera-player");
         }
-
-        private void OnConnectionChanged(string value)
-        {
-            CameraForm.Connection = value;
-            _hasConnectionError = false;
-            _connectionErrorMessage = null;
-        }
-
 
         private async Task Submit()
         {

@@ -13,61 +13,69 @@
                 <div class="video-inputs">
                     <video id="camera-player" controls autoplay></video>
 
-                    <div class="inputs-container">
-                        <MudTextField
-                            Label="Descrição"
-                            T="string"
-                            For="@(() => CameraForm.Name)"
-                            @bind-Value="CameraForm.Name"
-                            Required="true"
-                            RequiredError="O nome é obrigatório"
-                            Variant="Variant.Outlined" />
 
-                        <MudSelect 
-                            Label="Selecione um setor" 
-                            @bind-Value="CameraForm.SectorId" 
-                            T="string" 
-                            Clearable="true" 
-                            Required="true" 
-                            RequiredError="Selecione um setor" 
-                            Variant="Variant.Outlined">
-
-                            @foreach (var sector in _sectors)
-                            {
-                                <MudSelectItem T="string" Value="@sector.Id.ToString()">@sector.Name</MudSelectItem>
-                            }
-                        </MudSelect>
-
-                        <div class="connection">
-                            <MudTextField 
-                                Label="Conexão" 
-                                T="string" 
-                                HelperText="IP de conexão para se conectar a camera" 
-                                @bind-Value="CameraForm.Connection" 
-                                Variant="Variant.Outlined"
-                                Required="true"
-                                />
-
-                            <MudButton 
-                                Variant="Variant.Outlined" 
-                                Style="height: 56px; margin-top: 8px" 
-                                Color="Color.Success">Testar conexão</MudButton>
-                        </div>
-
-                        @if(_mediaMtxStatus == false)
-                        {
-                            <MudChip T="string" Label="true" Text="Não foi possível realizar a transmissão do vídeo, por favor contate um administrador." Color="Color.Error" />
-                        }
-
-                    </div>
+                    @if (_loadingConnection == true)
+                    {
+                        <MudChip Style="width: 100%" T="string" Label="true" Text="Concetando-se a camera a camera..." Color="Color.Info" />
+                    }
+                    else if (_mediaMtxStatus == false)
+                    {
+                        <MudChip Style="width: 100%" T="string" Label="true" Text="Não foi possível realizar a transmissão do vídeo, por favor contate um administrador." Color="Color.Error" />
+                    }
                 </div>
 
-                <MudDivider Style="margin: 24px 0px" />
+                <div class="inputs-container">
+                    <MudTextField
+                        Label="Descrição"
+                        T="string"
+                        For="@(() => CameraForm.Name)"
+                        @bind-Value="CameraForm.Name"
+                        Required="true"
+                        RequiredError="O nome é obrigatório"
+                        Variant="Variant.Outlined" />
 
-                <MudText Typo="Typo.h6">Funcionalidades</MudText>
-                <MudText Typo="Typo.body2" Class="mb-4 mud-text-secondary"> Selecione no mínimo uma funcionalidade para esta camera</MudText>
+                    <MudSelect 
+                        Label="Selecione um setor" 
+                        @bind-Value="CameraForm.SectorId" 
+                        T="string" 
+                        Clearable="true" 
+                        Required="true" 
+                        RequiredError="Selecione um setor" 
+                        Variant="Variant.Outlined">
+
+                        @foreach (var sector in _sectors)
+                        {
+                            <MudSelectItem T="string" Value="@sector.Id.ToString()">@sector.Name</MudSelectItem>
+                        }
+                    </MudSelect>
+
+                    <div class="connection">
+                        <MudTextField 
+                            Label="Conexão" 
+                            T="string" 
+                            HelperText="IP de conexão para se conectar a camera" 
+                            @bind-Value="CameraForm.Connection" 
+                            Variant="Variant.Outlined"
+                            Required="true"
+                            />
+
+                        <MudButton 
+                            Variant="Variant.Outlined" 
+                            Style="height: 56px; margin-top: 8px" 
+                            Color="Color.Success">Testar conexão</MudButton>
+                    </div>
+
+
+                        
+
+                </div>
 
                 <div class="feature-container">
+                    <MudDivider />
+
+                    <MudText Typo="Typo.h6">Funcionalidades</MudText>
+                    <MudText Typo="Typo.body2" Class="mb-4 mud-text-secondary"> Selecione no mínimo uma funcionalidade para esta camera</MudText>
+
                     @foreach (var feature in _features)
                     {
                         <div class="feature">

@@ -1,10 +1,7 @@
 ﻿using GodsEye.Application.DTOs.Model;
-using GodsEye.Application.DTOs.Response;
 using GodsEye.Application.UseCases.Camera.Commands.CreateCameraRoi;
 using GodsEye.Application.UseCases.Camera.Commands.UpdateCameraRoi;
-using GodsEye.Domain.DTOs.Result;
 using GodsEye.Domain.Enums;
-using GodsEye.WEB.Enum;
 using GodsEye.WEB.Model.Forms;
 using GodsEye.WEB.Services;
 using Microsoft.AspNetCore.Components;
@@ -13,18 +10,12 @@ using MudBlazor;
 
 namespace GodsEye.WEB.Components.CameraComponents
 {
-    public partial class CameraRecognitionComponent
+    public partial class CameraRoiComponent
     {
         #region DI
 
         [Inject]
         CameraWebService CameraService { get; set; }
-
-        [Inject]
-        SectorWebService SectorService { get; set; }
-
-        [Inject]
-        FeatureWebService FeatureWebService { get; set; }
 
         [Inject]
         MediaMtxWebService MediaMtxWebService { get; set; }
@@ -34,13 +25,13 @@ namespace GodsEye.WEB.Components.CameraComponents
 
         #endregion
 
-        [CascadingParameter]
-        private IMudDialogInstance MudDialog { get; set; }
-
         #region PARAMS
 
         [Parameter]
         public int Id { get; set; }
+
+        [CascadingParameter]
+        private IMudDialogInstance MudDialog { get; set; }
 
         #endregion
 
@@ -50,39 +41,29 @@ namespace GodsEye.WEB.Components.CameraComponents
         CameraRoiForm FaceRoi { get; set; } = new();
         CameraRoiForm EnvironmentRoi { get; set; } = new();
 
-        private bool success;
-        private string[] errors = { };
-        private string featureError;
-
         #endregion
+
+        #region VARIABLES
 
         private IJSObjectReference _roiJs;
 
         public CameraModel camera { get; set; }
 
-        ApiResponse<ProcedureResult?>? apiResponse { get; set; } = null;
-
-        private bool visible = false;
 
         private bool _loadingConnection = true;
+        private bool? _mediaMtxStatus = null;
+
         private bool _hasConnectionError = false;
         private string? _connectionErrorMessage = null;
 
         private bool isDrawingActive = false;
-        private string drawingMode = ""; // "rect" ou "polygon"
-        private RoiTypeEnum activeContext = RoiTypeEnum.FaceDetection; // Face ou Camera
-        private int activeTabIndex = 0;
+        private RoiTypeEnum activeContext = RoiTypeEnum.FaceDetection;
 
-        MudForm faceForm;
-        MudForm areaForm;
+        private DotNetObjectReference<CameraRoiComponent>? _objRef;
 
-        bool faceSuccess;
-        string[] faceErrors = { };
+        #endregion
 
-        bool areaSuccess;
-        string[] areaErrors = { };
-
-        private DotNetObjectReference<CameraRecognitionComponent>? _objRef;
+        #region LIFETIME FUNCS
 
         protected override void OnInitialized()
         {
@@ -117,6 +98,8 @@ namespace GodsEye.WEB.Components.CameraComponents
             }
         }
 
+        #endregion
+
         public async ValueTask DisposeAsync()
         {
             await JS.InvokeVoidAsync("streamFunctions.stop", "camera-player");
@@ -124,6 +107,8 @@ namespace GodsEye.WEB.Components.CameraComponents
             // Libere a memória da referência
             _objRef?.Dispose();
         }
+
+        #region DRAW FUNCS
 
         [JSInvokable]
         public async Task OnVideoReady()
@@ -186,17 +171,14 @@ namespace GodsEye.WEB.Components.CameraComponents
             
             if (roiType == RoiTypeEnum.FaceDetection)
             {
-                drawingMode = "rect";
                 await _roiJs.InvokeVoidAsync("startDrawing", "rect");
             }
             else if (roiType == RoiTypeEnum.RestrictedArea)
             {
-                drawingMode = "polygon";
                 await _roiJs.InvokeVoidAsync("startDrawing", "polygon");
             }
         }
 
-        // Ação: Confirmar e Salvar no Objeto C#
         private async Task ConfirmDrawing()
         {
             // O JS retorna um objeto completo com Width, Height e Points
@@ -252,6 +234,10 @@ namespace GodsEye.WEB.Components.CameraComponents
             await _roiJs.InvokeVoidAsync("clearCanvas");
         }
 
+        #endregion
+
+        #region STREAM FUNCS
+
         public async Task StartStream()
         {
             _loadingConnection = true;
@@ -259,6 +245,16 @@ namespace GodsEye.WEB.Components.CameraComponents
             if (string.IsNullOrEmpty(camera.Connection))
             {
                 _loadingConnection = false;
+                return;
+            }
+
+            var isMediaMtxOnline = await MediaMtxWebService.CheckStatus();
+
+            if (!isMediaMtxOnline.Success || !isMediaMtxOnline.Data)
+            {
+                _mediaMtxStatus = false;
+                _loadingConnection = false;
+                await InvokeAsync(StateHasChanged);
                 return;
             }
 
@@ -281,6 +277,10 @@ namespace GodsEye.WEB.Components.CameraComponents
             _hasConnectionError = false;
             _connectionErrorMessage = null;
         }
+
+        #endregion
+
+        #region REQUEST FUNCS
 
         public async Task GetCameraRoi()
         {
@@ -311,7 +311,6 @@ namespace GodsEye.WEB.Components.CameraComponents
                 }
             }
         }
-
 
         private async Task Delete(RoiTypeEnum roiType)
         {
@@ -358,8 +357,6 @@ namespace GodsEye.WEB.Components.CameraComponents
 
         private async Task Submit(RoiTypeEnum roiType)
         {
-            visible = true;
-
             var selectedCameraRoiForm = new CameraRoiForm();
 
             switch (roiType)
@@ -384,9 +381,9 @@ namespace GodsEye.WEB.Components.CameraComponents
                 var updateResult = await CameraService.UpdateRoiAsync(updateRequest);
                 Snackbar.Add("Área atualizada com sucesso.", Severity.Success);
             }
-
-            visible = false;
         }
+
+        #endregion[
 
         private void Cancel() => MudDialog.Cancel();
     }

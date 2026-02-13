@@ -14,6 +14,8 @@
 }
 
 .form-container .feature-container {
+    grid-column: 1/-1;
+
     display: flex;
     flex-direction: column;
     gap: 12px;
@@ -30,11 +32,12 @@
     border: 1px solid var(--gray-050);
 }
 
-.form-container .video-inputs {
+.form-container ::deep form {
     display: grid;
     grid-template-columns: 640px 2fr;
     gap: 12px;
 }
+
 
 .form-container .video-inputs #camera-player {
     border-radius: 7px;

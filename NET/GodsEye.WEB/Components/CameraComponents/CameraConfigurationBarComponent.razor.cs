@@ -77,8 +77,8 @@ namespace GodsEye.WEB.Components.CameraComponents
             MudDialog.CancelAll();
 
             var options = new DialogOptions { CloseOnEscapeKey = true, FullWidth = true, MaxWidth = MaxWidth.False, NoHeader = true };
-            var parameters = new DialogParameters<CameraRecognitionComponent> { { x => x.Id, cameraId } };
-            await DialogService.ShowAsync<CameraRecognitionComponent>(null, parameters, options);
+            var parameters = new DialogParameters<CameraRoiComponent> { { x => x.Id, cameraId } };
+            await DialogService.ShowAsync<CameraRoiComponent>(null, parameters, options);
         }
 
         private async Task OpenDwellTimeMonitoring(int cameraId)
