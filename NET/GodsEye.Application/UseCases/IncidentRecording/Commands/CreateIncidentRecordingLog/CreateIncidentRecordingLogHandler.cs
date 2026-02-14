@@ -24,7 +24,7 @@ namespace GodsEye.Application.UseCases.IncidentRecording.Commands.CreateIncident
         {
             var date = DateTime.Now;
 
-            var result = await _incidentRecordingLogRepository.Create(request.macAddress, date);
+            var sql = "CALL SP_INCIDENT_RECORDING_CREATE_LOG(@P_MAC_ADDRESS, @P_INCIDENT_TIME)";
 
             if (result is null || result.Erro == 1)
                 throw new InvalidOperationException("Falha ao registrar log no banco de dados");
