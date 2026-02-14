@@ -1,8 +1,7 @@
-﻿using GodsEye.Application.DTOs.Response;
+﻿using GodsEye.Application.DTOs.Model;
+using GodsEye.Application.DTOs.Response;
 using GodsEye.Application.Interfaces;
-using GodsEye.Application.Interfaces.QueryRepositories;
 using GodsEye.Domain.DTOs.Result;
-using GodsEye.Domain.Interfaces.Repositories;
 using MediatR;
 
 namespace GodsEye.Application.UseCases.IncidentRecording.Commands.CreateIncidentRecordingLog
@@ -10,30 +9,53 @@ namespace GodsEye.Application.UseCases.IncidentRecording.Commands.CreateIncident
     public class CreateIncidentRecordingLogHandler : IRequestHandler<CreateIncidentRecordingLogRequest, ApiResponse<ProcedureResult>>
     {
         private readonly INotificationSignalR _notification;
-        private readonly IIncidentRecordingRepository _incidentRecordingLogRepository;
-        private readonly IIncidentRecordingQueryRepository _incidentRecordingQueryRepository;
+        private readonly IApplicationDbContext _context;
 
-        public CreateIncidentRecordingLogHandler(INotificationSignalR notification, IIncidentRecordingRepository incidentRecordingLogRepository, IIncidentRecordingQueryRepository incidentRecordingQueryRepository)
+        public CreateIncidentRecordingLogHandler(INotificationSignalR notification, IApplicationDbContext context)
         {
             _notification = notification;
-            _incidentRecordingLogRepository = incidentRecordingLogRepository;
-            _incidentRecordingQueryRepository = incidentRecordingQueryRepository;
+            _context = context;
         }
 
         public async Task<ApiResponse<ProcedureResult>> Handle(CreateIncidentRecordingLogRequest request, CancellationToken cancellationToken)
+        {
+            var result = await CreateLog(request.macAddress, cancellationToken);
+
+            if (result is null || result.Erro == 1)
+                throw new InvalidOperationException("Falha ao registrar log no banco de dados");
+
+            var incidentRecordingLog = await GetLogById(result.Id, cancellationToken);
+
+            await _notification.SendIncidentRecordingCreatedLog(incidentRecordingLog);
+
+            return ApiResponse<ProcedureResult>.Ok(result);
+        }
+
+        private async Task<ProcedureResult?> CreateLog(string macAddress, CancellationToken cancellationToken)
         {
             var date = DateTime.Now;
 
             var sql = "CALL SP_INCIDENT_RECORDING_CREATE_LOG(@P_MAC_ADDRESS, @P_INCIDENT_TIME)";
 
-            if (result is null || result.Erro == 1)
-                throw new InvalidOperationException("Falha ao registrar log no banco de dados");
+            var parameters = new
+            {
+                P_MAC_ADDRESS = macAddress,
+                P_INCIDENT_TIME = date
+            };
 
-            var incidentRecordingLog = await _incidentRecordingQueryRepository.GetByLogId(result.Id, cancellationToken);
+            return await _context.QuerySingleSqlAsync<ProcedureResult>(sql, parameters, cancellationToken);
+        }
 
-            await _notification.SendIncidentRecordingCreatedLog(incidentRecordingLog);
+        private async Task<IncidentRecordingModel?> GetLogById(int logId, CancellationToken cancellationToken)
+        {
+            var sql = "CALL SP_INCIDENT_RECORDING_GET_LOG_BY_ID(@P_ID)";
 
-            return ApiResponse<ProcedureResult>.Ok(result);
+            var parameters = new
+            {
+                P_ID = logId
+            };
+
+            return await _context.QuerySingleSqlAsync<IncidentRecordingModel>(sql, parameters, cancellationToken);
         }
     }
 }

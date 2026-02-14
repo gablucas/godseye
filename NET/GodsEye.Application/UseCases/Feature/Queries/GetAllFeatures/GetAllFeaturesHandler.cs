@@ -1,27 +1,29 @@
-﻿using AutoMapper;
-using GodsEye.Application.DTOs.Model;
+﻿using GodsEye.Application.DTOs.Model;
 using GodsEye.Application.DTOs.Response;
-using GodsEye.Domain.Interfaces.Repositories;
+using GodsEye.Application.Interfaces;
 using MediatR;
 
 namespace GodsEye.Application.UseCases.Feature.Queries.GetAllFeatures
 {
     public class GetAllFeaturesHandler : IRequestHandler<GetAllFeaturesRequest, ApiResponse<IReadOnlyCollection<FeatureModel>>>
     {
-        private readonly IMapper _mapper;
-        private readonly IFeatureRepository _featureRepository;
+        private readonly IApplicationDbContext _context;
 
-        public GetAllFeaturesHandler(IMapper mapper, IFeatureRepository featureRepository)
+        public GetAllFeaturesHandler(IApplicationDbContext context)
         {
-            _mapper = mapper;
-            _featureRepository = featureRepository;
+            _context = context;
         }
 
         public async Task<ApiResponse<IReadOnlyCollection<FeatureModel>>> Handle(GetAllFeaturesRequest request, CancellationToken cancellationToken)
         {
-            var features = await _featureRepository.GetAll();
-            var featuresModel = _mapper.Map<IReadOnlyCollection<FeatureModel>>(features);
-            return ApiResponse<IReadOnlyCollection<FeatureModel>>.Ok(featuresModel);
+
+            var sql = "CALL SP_FEATURE_GET_ALL()";
+
+            var parameters = new { };
+
+            var result = await _context.QuerySqlAsync<FeatureModel>(sql, parameters, cancellationToken);
+
+            return ApiResponse<IReadOnlyCollection<FeatureModel>>.Ok(result);
         }
     }
 }

@@ -19,11 +19,11 @@ namespace GodsEye.Application.UseCases.Camera.Commands.CreateCameraRoi
         {
             var query = "CALL SP_CAMERA_ROI_CREATE(@P_CAMERA_ID, @P_ROI_TYPE, @P_COORDINATES_JSON)";
 
-            var parameters = new Dictionary<string, object?> 
+            var parameters = new
             {
-                ["@P_CAMERA_ID"] = request.CameraId,
-                ["@P_ROI_TYPE"] = request.RoiType,
-                ["@P_COORDINATES_JSON"] = JsonSerializer.Serialize(request.Coordinates),
+                P_CAMERA_ID = request.CameraId,
+                P_ROI_TYPE = request.RoiType,
+                P_COORDINATES_JSON = JsonSerializer.Serialize(request.Coordinates),
             };
 
             var result = await _context.QuerySingleSqlAsync<ProcedureResult>(query, parameters, cancellationToken);

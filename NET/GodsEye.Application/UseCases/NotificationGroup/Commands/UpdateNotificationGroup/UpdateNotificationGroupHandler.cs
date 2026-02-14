@@ -21,11 +21,11 @@ namespace GodsEye.Application.UseCases.NotificationGroup.Commands.UpdateNotifica
             var pNewEmailsJson = JsonSerializer.Serialize(request.NewEmails);
             var pRemoveEmailsJson = JsonSerializer.Serialize(request.RemoveEmails);
 
-            var parameters = new Dictionary<string, object?>
+            var parameters = new
             {
-                ["@P_NOTIFICATION_GROUP_ID"] = request.Id,
-                ["@P_NEW_EMAILS_JSON"] = pNewEmailsJson,
-                ["@P_DELETE_EMAILS_JSON"] = pRemoveEmailsJson,
+                P_NOTIFICATION_GROUP_ID = request.Id,
+                P_NEW_EMAILS_JSON = pNewEmailsJson,
+                P_DELETE_EMAILS_JSON = pRemoveEmailsJson,
             };
 
             var result = await _context.ExecuteSqlAsync(query, parameters, cancellationToken);

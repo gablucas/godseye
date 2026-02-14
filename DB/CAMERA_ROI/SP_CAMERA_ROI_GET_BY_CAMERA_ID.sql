@@ -6,7 +6,7 @@ BEGIN
 		CR.ID,
         CR.CAMERA_ID AS CameraId,
         CR.ROI_TYPE AS RoiType,
-        CR.COORDINATES_JSON AS CoordinatesJSON
+        CR.COORDINATES_JSON AS Coordinates
 	FROM CAMERA_ROI CR
     WHERE CR.CAMERA_ID = P_CAMERA_ID;
 END

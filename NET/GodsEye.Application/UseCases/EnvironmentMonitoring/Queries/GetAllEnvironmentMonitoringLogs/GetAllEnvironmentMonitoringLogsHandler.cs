@@ -18,10 +18,10 @@ namespace GodsEye.Application.UseCases.EnvironmentMonitoring.Queries.GetAllEnvir
         {
             var query = "CALL SP_ENVIRONMENT_MONITORING_GET_ALL_LOGS(@P_PAGE_NUMBER, @P_PAGE_SIZE)";
 
-            var parameters = new Dictionary<string, object?>
+            var parameters = new
             {
-                ["@P_PAGE_NUMBER"] = request.pageNumber,
-                ["@P_PAGE_SIZE"] = request.pageSize,
+                P_PAGE_NUMBER = request.pageNumber,
+                P_PAGE_SIZE = request.pageSize,
             };
 
             var result = await _context.QuerySqlAsync<EnvironmentMonitoringModel>(query, parameters, cancellationToken);

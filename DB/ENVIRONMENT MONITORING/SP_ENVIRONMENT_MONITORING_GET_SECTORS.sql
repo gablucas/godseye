@@ -36,7 +36,7 @@ BEGIN
                     'CreatedAt', DATE_FORMAT(PST.LastSeen, '%Y-%m-%dT%H:%i:%s')
                 )
             )
-        END AS PersonJSON
+        END AS Person
     FROM SECTOR S
     LEFT JOIN CAMERA C ON C.SECTOR_ID = S.ID
     LEFT JOIN PeopleSeenToday PST ON PST.CAMERA_ID = C.ID
@@ -60,7 +60,7 @@ BEGIN
                     'CreatedAt', NULL -- Não foi visto hoje, então data é NULL
                 )
             )
-        END AS PersonJSON
+        END AS Person
     FROM PERSON P
     LEFT JOIN PeopleSeenToday PST ON PST.PERSON_ID = P.ID
     WHERE PST.PERSON_ID IS NULL -- Pega apenas quem NÃO está no "Visto Hoje"

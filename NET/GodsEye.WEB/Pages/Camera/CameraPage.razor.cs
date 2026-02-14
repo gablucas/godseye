@@ -3,7 +3,6 @@ using GodsEye.WEB.Components.CameraComponents;
 using GodsEye.WEB.Services;
 using Microsoft.AspNetCore.Components;
 using MudBlazor;
-using System.Net.NetworkInformation;
 
 
 namespace GodsEye.WEB.Pages.Camera

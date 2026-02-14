@@ -1,27 +1,31 @@
-﻿using AutoMapper;
-using GodsEye.Application.DTOs.Response;
+﻿using GodsEye.Application.DTOs.Response;
+using GodsEye.Application.Interfaces;
 using GodsEye.Domain.DTOs.Result;
-using GodsEye.Domain.Entities;
-using GodsEye.Domain.Interfaces.Repositories;
 using MediatR;
 
 namespace GodsEye.Application.UseCases.NotificationGroup.Commands.CreateNotificationGroup
 {
     public class CreateNotificationGroupHandler : IRequestHandler<CreateNotificationGroupRequest, ApiResponse<ProcedureResult>>
     {
-        private readonly IMapper _mapper;
-        private readonly INotificationGroupRepository _notificationGroupRepository;
+        private readonly IApplicationDbContext _context;
 
-        public CreateNotificationGroupHandler(IMapper mapper, INotificationGroupRepository notificationGroupRepository)
+        public CreateNotificationGroupHandler(IApplicationDbContext context)
         {
-            _mapper = mapper;
-            _notificationGroupRepository = notificationGroupRepository;
+            _context = context;
         }
 
         public async Task<ApiResponse<ProcedureResult>> Handle(CreateNotificationGroupRequest request, CancellationToken cancellationToken)
         {
-            var entity = _mapper.Map<NotificationGroupEntity>(request);
-            var result = await _notificationGroupRepository.Create(entity, cancellationToken);
+            var sql = "CALL SP_NOTIFICATION_GROUP_CREATE(@P_NAME, @P_EMAILS_JSON)";
+
+            var parameters = new
+            {
+                P_NAME = request.name,
+                P_EMAILS_JSON = request.emails
+            };
+
+            var result = await _context.QuerySingleSqlAsync<ProcedureResult>(sql, parameters, cancellationToken);
+
             return ApiResponse<ProcedureResult>.Ok(result);
         }
     }

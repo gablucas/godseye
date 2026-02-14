@@ -1,8 +1,6 @@
 ﻿using GodsEye.Application.DTOs.Response;
 using GodsEye.Domain.DTOs.Result;
 using GodsEye.Application.Interfaces;
-using GodsEye.Domain.Entities;
-using GodsEye.Domain.Interfaces.Repositories;
 using MediatR;
 using System.Text.Json;
 
@@ -11,14 +9,14 @@ namespace GodsEye.Application.UseCases.Person.Commands.CreatePerson
     public class CreatePersonHandler : IRequestHandler<CreatePersonRequest, ApiResponse<ProcedureResult>>
     {
         private readonly IGodsEyeService _godsEye;
-        private readonly IPersonRepository _personRespository;
         private readonly IFolderService _folderService;
+        private readonly IApplicationDbContext _context;
 
-        public CreatePersonHandler(IGodsEyeService godsEye, IPersonRepository personRepository, IFolderService folderService)
+        public CreatePersonHandler(IGodsEyeService godsEye, IFolderService folderService, IApplicationDbContext context)
         {
             _godsEye = godsEye;
-            _personRespository = personRepository;
             _folderService = folderService;
+            _context = context;
         }
 
         public async Task<ApiResponse<ProcedureResult>> Handle(CreatePersonRequest request, CancellationToken cancellationToken)
@@ -31,15 +29,17 @@ namespace GodsEye.Application.UseCases.Person.Commands.CreatePerson
 
             var photoPath = _folderService.GeneratePersonPhotoPath(fileName);
 
-            PersonEntity newPerson = new PersonEntity
+            var sql = "CALL SP_PERSON_CREATE(@P_NAME, @P_EMBEDDING, @P_IMAGE_PATH, @P_SECTORS_ID_JSON)";
+
+            var parameteres = new
             {
-                Name = request.Name,
-                Embedding = jsonEmbedding,
-                ImagePath = photoPath,
-                Sectors = request.Sectors,
+                P_NAME = request.Name,
+                P_EMBEDDING = jsonEmbedding,
+                P_IMAGE_PATH = photoPath,
+                P_SECTORS_ID_JSON = request.Sectors
             };
 
-            var result = await _personRespository.Create(newPerson, cancellationToken);
+            var result = await _context.QuerySingleSqlAsync<ProcedureResult>(sql, parameteres, cancellationToken);
 
             if (result.Erro == 1)
                 throw new InvalidOperationException("Falha ao criar a pessoa no banco de dados.");

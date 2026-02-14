@@ -1,30 +1,31 @@
-﻿using AutoMapper;
-using GodsEye.Application.DTOs.Response;
+﻿using GodsEye.Application.DTOs.Response;
+using GodsEye.Application.Interfaces;
 using GodsEye.Domain.DTOs.Result;
-using GodsEye.Domain.Entities;
-using GodsEye.Domain.Interfaces.Repositories;
 using MediatR;
 
 namespace GodsEye.Application.UseCases.DwellTimeMonitoring.Commands.CreateDwellTimeMonitoring
 {
     public class CreateDwellTimeMonitoringHandler : IRequestHandler<CreateDwellTimeMonitoringRequest, ApiResponse<ProcedureResult>>
     {
-        private readonly IMapper _mapper;
-        private readonly IDwellTimeMonitoringRepository _dwellTimeMonitoringRepository;
+        private readonly IApplicationDbContext _context;
 
-        public CreateDwellTimeMonitoringHandler(IMapper mapper, IDwellTimeMonitoringRepository dwellTimeMonitoringRepository)
+        public CreateDwellTimeMonitoringHandler(IApplicationDbContext context)
         {
-            _mapper = mapper;
-            _dwellTimeMonitoringRepository = dwellTimeMonitoringRepository;
+            _context = context;
         }
+
         public async Task<ApiResponse<ProcedureResult>> Handle(CreateDwellTimeMonitoringRequest request, CancellationToken cancellationToken)
         {
-            var dwellTimeMonitoring = _mapper.Map<DwellTimeMonitoringEntity>(request);
+            const string sql = "CALL SP_DWELL_TIME_MONITORING_CREATE(@P_CAMERA_ID, @P_PERSON_ID, @P_ENTERED_AT)";
 
-            var result = await _dwellTimeMonitoringRepository.Create(dwellTimeMonitoring, cancellationToken);
+            var parameters = new
+            {
+                P_CAMERA_ID = request.cameraId,
+                P_PERSON_ID = request.personId,
+                P_ENTERED_AT = request.enteredAt
+            };
 
-            if (result is null || result.Erro == 1)
-                throw new InvalidOperationException("Falha no registro do controle de permanência");
+            var result = await _context.QuerySingleSqlAsync<ProcedureResult>(sql, parameters, cancellationToken);
 
             return ApiResponse<ProcedureResult>.Ok(result);
         }   

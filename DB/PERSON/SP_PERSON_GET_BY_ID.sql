@@ -15,7 +15,7 @@ BEGIN
 					'SectorName', S.NAME
 				)
 			)
-		END AS SectorsJson
+		END AS Sectors
     FROM PERSON P
     LEFT JOIN PERSON_SECTOR PS ON PS.PERSON_ID = P.ID
     LEFT JOIN SECTOR S ON S.ID = PS.SECTOR_ID

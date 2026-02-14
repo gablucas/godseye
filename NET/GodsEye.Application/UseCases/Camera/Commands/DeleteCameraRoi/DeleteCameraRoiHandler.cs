@@ -18,9 +18,9 @@ namespace GodsEye.Application.UseCases.Camera.Commands.DeleteCameraRoi
         {
             var query = "CALL SP_CAMERA_ROI_DELETE(@P_CAMERA_ROI_ID)";
 
-            var parameters = new Dictionary<string, object?>
+            var parameters = new
             {
-                ["@P_CAMERA_ROI_ID"] = request.cameraRoiId
+                P_CAMERA_ROI_ID = request.cameraRoiId,
             };
 
             var result = await _context.QuerySingleSqlAsync<ProcedureResult>(query, parameters, cancellationToken);

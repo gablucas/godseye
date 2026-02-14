@@ -13,14 +13,8 @@ namespace GodsEye.Application.DTOs.Model
         public DateTime CreatedAt { get; set; }
         public IncidentStatusEnum Status { get; set; }
         public string? FileName { get; set; }
-        public string? PersonsJSON { get; set; }
 
-        public List<IncidentRecordingPersonDTO> Persons
-        {
-            get => string.IsNullOrWhiteSpace(PersonsJSON)
-                ? new List<IncidentRecordingPersonDTO>()
-                : JsonSerializer.Deserialize<List<IncidentRecordingPersonDTO>>(PersonsJSON);
-        }
+        public List<IncidentRecordingPersonDTO> Persons { get; set; } = new();
     }
 
     public class IncidentRecordingPersonDTO

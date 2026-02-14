@@ -1,23 +1,26 @@
 ﻿using GodsEye.Application.DTOs.Model;
-using GodsEye.Application.Interfaces.QueryRepositories;
+using GodsEye.Application.DTOs.Response;
+using GodsEye.Application.Interfaces;
 using MediatR;
 
 namespace GodsEye.Application.UseCases.DwellTimeMonitoring.Queries.GetAllDwellTimeMonitoring
 {
-    public class GetAllDwellTimeMonitoringHandler : IRequestHandler<GetAllDwellTimeMonitoringRequest, List<DwellTimeMonitoringModel>>
+    public class GetAllDwellTimeMonitoringHandler : IRequestHandler<GetAllDwellTimeMonitoringRequest, IEnumerable<DwellTimeMonitoringModel>>
     {
-        private readonly IDwellTimeMonitoringQueryRepository _dwellTimeMonitoringQueryRepository;
+        private readonly IApplicationDbContext _context;
 
-        public GetAllDwellTimeMonitoringHandler(IDwellTimeMonitoringQueryRepository dwellTimeMonitoringQueryRepository)
+        public GetAllDwellTimeMonitoringHandler(IApplicationDbContext context)
         {
-            _dwellTimeMonitoringQueryRepository = dwellTimeMonitoringQueryRepository;
+            _context = context;
         }
 
-        public async Task<List<DwellTimeMonitoringModel>> Handle(GetAllDwellTimeMonitoringRequest request, CancellationToken cancellationToken)
+        public async Task<IEnumerable<DwellTimeMonitoringModel>> Handle(GetAllDwellTimeMonitoringRequest request, CancellationToken cancellationToken)
         {
-            var result = await _dwellTimeMonitoringQueryRepository.GetAll(cancellationToken);
+            var sql = "CALL SP_DWELL_TIME_MONITORING_GET_ALL()";
 
-            return result;
+            var dwellTimeMonitoring = await _context.QuerySqlAsync<DwellTimeMonitoringModel>(sql, cancellationToken);
+
+            return dwellTimeMonitoring;
         }
     }
 }

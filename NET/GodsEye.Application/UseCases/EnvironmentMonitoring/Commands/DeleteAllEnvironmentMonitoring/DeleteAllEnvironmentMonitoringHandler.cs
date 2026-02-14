@@ -15,10 +15,11 @@ namespace GodsEye.Application.UseCases.EnvironmentMonitoring.Commands.DeleteAllE
 
         public async Task<ApiResponse<bool>> Handle(DeleteAllEnvironmentMonitoringRequest request, CancellationToken cancellationToken)
         {
+            var sql = "CALL SP_ENVIRONMENT_MONITORING_DELETE_ALL()";
 
-            var parameters = new Dictionary<string, object?>();
+            var parameters = new { };
 
-            await _context.ExecuteDeleteAsync("CALL SP_ENVIRONMENT_MONITORING_DELETE_ALL()", parameters, cancellationToken);
+            await _context.ExecuteDeleteAsync(sql, parameters, cancellationToken);
             return ApiResponse<bool>.Ok(true);
         }
     }

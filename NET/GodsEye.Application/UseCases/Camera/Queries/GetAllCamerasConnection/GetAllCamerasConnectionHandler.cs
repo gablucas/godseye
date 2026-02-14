@@ -1,23 +1,26 @@
 ﻿using GodsEye.Application.DTOs.Model;
 using GodsEye.Application.DTOs.Response;
-using GodsEye.Application.Interfaces.QueryRepositories;
+using GodsEye.Application.Interfaces;
 using MediatR;
 
 namespace GodsEye.Application.UseCases.Camera.Queries.GetAllCamerasConnection
 {
     public class GetAllCamerasConnectionHandler : IRequestHandler<GetAllCamerasConnectionRequest, ApiResponse<IEnumerable<CameraConnectionModel>>>
     {
-        private readonly ICameraQueryRepository _cameraQueryRespository;
+        private readonly IApplicationDbContext _context;
 
-        public GetAllCamerasConnectionHandler(ICameraQueryRepository cameraQueryRespository)
+        public GetAllCamerasConnectionHandler(IApplicationDbContext context)
         {
-            _cameraQueryRespository = cameraQueryRespository;
+            _context = context;
         }
 
         public async Task<ApiResponse<IEnumerable<CameraConnectionModel>>> Handle(GetAllCamerasConnectionRequest request, CancellationToken cancellationToken)
         {
-            var result = await _cameraQueryRespository.GetAllConnection(cancellationToken);
-            return ApiResponse<IEnumerable<CameraConnectionModel>>.Ok(result);
+            var sql = "CALL SP_GET_ALL_CAMERA_CONNECTION()";
+
+            var cameras = await _context.QuerySqlAsync<CameraConnectionModel>(sql, cancellationToken);
+
+            return ApiResponse<IEnumerable<CameraConnectionModel>>.Ok(cameras);
         }
     }
 }

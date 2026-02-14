@@ -18,9 +18,9 @@ namespace GodsEye.Application.UseCases.NotificationGroup.Queries.GetNotification
         {
             var query = "CALL SP_NOTIFICATION_GROUP_GET_BY_ID(@P_NOTIFICATION_GROUP_ID)";
 
-            var parameters = new Dictionary<string, object?>
+            var parameters = new
             {
-                ["@P_NOTIFICATION_GROUP_ID"] = request.Id,
+                P_NOTIFICATION_GROUP_ID = request.Id,
             };
 
             var result = await _context.QuerySingleSqlAsync<NotificationGroupModel>(query, parameters, cancellationToken);

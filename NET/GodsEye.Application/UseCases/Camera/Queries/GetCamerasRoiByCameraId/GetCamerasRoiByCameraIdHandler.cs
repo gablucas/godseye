@@ -18,9 +18,9 @@ namespace GodsEye.Application.UseCases.Camera.Queries.GetCamerasRoiByCameraId
         {
             var query = "CALL SP_CAMERA_ROI_GET_BY_CAMERA_ID(@P_CAMERA_ID)";
 
-            var parameters = new Dictionary<string, object?>
+            var parameters = new
             {
-                ["@P_CAMERA_ID"] = request.cameraId
+                P_CAMERA_ID = request.cameraId
             };
 
             var result = await _context.QuerySqlAsync<CameraRoiModel>(query, parameters, cancellationToken);

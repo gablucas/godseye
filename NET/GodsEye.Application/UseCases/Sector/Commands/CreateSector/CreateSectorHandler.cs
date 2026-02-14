@@ -1,28 +1,31 @@
-﻿using AutoMapper;
-using GodsEye.Application.DTOs.Response;
+﻿using GodsEye.Application.DTOs.Response;
 using GodsEye.Application.Interfaces;
 using GodsEye.Domain.DTOs.Result;
-using GodsEye.Domain.Entities;
-using GodsEye.Domain.Interfaces.Repositories;
 using MediatR;
 
 namespace GodsEye.Application.UseCases.Sector.Commands.CreateSector
 {
     public class CreateSectorHandler : IRequestHandler<CreateSectorRequest, ApiResponse<ProcedureResult>>
     {
-        private readonly IMapper _mapper;
-        private readonly ISectorRepository _sectorRepository;
+        private readonly IApplicationDbContext _context;
 
-        public CreateSectorHandler(IMapper mapper, ISectorRepository sectorRepository)
+        public CreateSectorHandler(IApplicationDbContext context)
         {
-            _mapper = mapper;
-            _sectorRepository = sectorRepository;
+            _context = context;
         }
 
         public async Task<ApiResponse<ProcedureResult>> Handle(CreateSectorRequest request, CancellationToken cancellationToken)
         {
-            var newSector = _mapper.Map<SectorEntity>(request);
-            var result = await _sectorRepository.Create(newSector, cancellationToken);
+            var sql = "CALL SP_SECTOR_CREATE(@P_NAME, @P_NOTIFICATION_GROUP_JSON)";
+
+            var parameters = new
+            {
+                P_NAME = request.Name,
+                P_NOTIFICATION_GROUP_JSON = request.NotificationGroups
+            };
+
+            var result = await _context.QuerySingleSqlAsync<ProcedureResult>(sql, parameters, cancellationToken);
+
             return ApiResponse<ProcedureResult>.Ok(result);
         }
     }

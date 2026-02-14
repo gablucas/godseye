@@ -1,5 +1,4 @@
 ﻿using System.ComponentModel.DataAnnotations.Schema;
-using System.Text.Json;
 
 namespace GodsEye.Application.DTOs.Model
 {
@@ -15,27 +14,7 @@ namespace GodsEye.Application.DTOs.Model
         [NotMapped]
         public bool? Status { get; set;  }
 
-        public string? FeaturesJson { get; set; }
-
-        public List<FeatureDTO> Features
-        {
-            get
-            {
-                if (string.IsNullOrWhiteSpace(FeaturesJson))
-                    return new List<FeatureDTO>();
-
-                try
-                {
-                    return JsonSerializer.Deserialize<List<FeatureDTO>>(FeaturesJson)
-                           ?? new List<FeatureDTO>();
-                }
-                catch
-                {
-                    // opcional: logar o erro
-                    return new List<FeatureDTO>();
-                }
-            }
-        }
+        public List<FeatureDTO> Features { get; set; } = new();
     }
 
     public class FeatureDTO

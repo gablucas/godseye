@@ -8,16 +8,10 @@ namespace GodsEye.Application.DTOs.Model
         public int SectorId { get; set; }
         public string SectorName { get; set; }
         public int TotalPerson { get; set; }
-        public string? PersonJSON { get; set;  }
 
         public List<EnvironmentMonitoringSectorLog> PersonLog { get; set; } = new();
 
-        public void ParsePersons()
-        {
-            PersonLog = string.IsNullOrWhiteSpace(PersonJSON)
-                ? new List<EnvironmentMonitoringSectorLog>()
-                : JsonSerializer.Deserialize<List<EnvironmentMonitoringSectorLog>>(PersonJSON);
-        }
+
     }
 
     public class EnvironmentMonitoringSectorLog

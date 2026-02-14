@@ -16,7 +16,7 @@ BEGIN
 					"FeatureName", F.NAME
 					)
 				) 
-			END AS FeaturesJson
+			END AS Features
 	FROM CAMERA c
 	LEFT JOIN SECTOR s ON c.SECTOR_ID = s.Id
     LEFT JOIN CAMERA_FEATURE CF ON CF.CAMERA_ID = C.ID AND CF.IS_ACTIVE = 1

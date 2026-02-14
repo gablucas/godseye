@@ -16,8 +16,8 @@ namespace GodsEye.Application.UseCases.EnvironmentMonitoring.Queries.GetEnvironm
 
         public async Task<ApiResponse<IEnumerable<EnvironmentMonitoringSectorModel>>> Handle(GetEnvironmentMonitoringSectorsRequest request, CancellationToken cancellationToken)
         {
-            var query = "CALL SP_ENVIRONMENT_MONITORING_GET_SECTORS()";
-            var result = await _context.QuerySqlAsync<EnvironmentMonitoringSectorModel>(query, cancellationToken);
+            var sql = "CALL SP_ENVIRONMENT_MONITORING_GET_SECTORS()";
+            var result = await _context.QuerySqlAsync<EnvironmentMonitoringSectorModel>(sql, cancellationToken);
             return ApiResponse<IEnumerable<EnvironmentMonitoringSectorModel>>.Ok(result);
         }
     }

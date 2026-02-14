@@ -39,11 +39,6 @@ namespace GodsEye.WEB.Components.Dashboard
             if (result.Success)
             {
                 _logs = result.Data.ToList();
-                
-                foreach(var log in _logs)
-                {
-                    log.ParsePersons();
-                }
             }
 
             _loading = false;

@@ -1,22 +1,26 @@
 ﻿using GodsEye.Application.DTOs.Model;
 using GodsEye.Application.DTOs.Response;
-using GodsEye.Application.Interfaces.QueryRepositories;
+using GodsEye.Application.Interfaces;
 using MediatR;
 
 namespace GodsEye.Application.UseCases.Person.Queries.GetAllPersons
 {
     internal class GetAllPersonHandler : IRequestHandler<GetAllPersonRequest, ApiResponse<IEnumerable<PersonModel>>>
     {
-        private readonly IPersonQueryRepository _personQueryRepository;
+        private readonly IApplicationDbContext _context;
 
-        public GetAllPersonHandler(IPersonQueryRepository personQUeryRepository)
+        public GetAllPersonHandler(IApplicationDbContext context)
         {
-            _personQueryRepository = personQUeryRepository;
+            _context = context;
         }
 
         public async Task<ApiResponse<IEnumerable<PersonModel>>> Handle(GetAllPersonRequest request, CancellationToken cancellationToken)
         {
-            var persons = await _personQueryRepository.GetAll(cancellationToken);
+            var sql = "CALL SP_PERSON_GET_ALL()";
+
+            var parameters = new { };
+
+            var persons = await _context.QuerySqlAsync<PersonModel>(sql, parameters, cancellationToken);
 
             return ApiResponse<IEnumerable<PersonModel>>.Ok(persons);
         }

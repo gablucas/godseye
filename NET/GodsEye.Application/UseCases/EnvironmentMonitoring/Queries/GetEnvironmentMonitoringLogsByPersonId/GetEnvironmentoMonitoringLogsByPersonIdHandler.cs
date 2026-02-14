@@ -18,9 +18,9 @@ namespace GodsEye.Application.UseCases.EnvironmentMonitoring.Queries.GetEnvironm
         {
             var query = "CALL SP_ENVIRONMENT_MONITORING_GET_LOG_BY_PERSON_ID(@P_PERSON_ID)";
 
-            var parameters = new Dictionary<string, object?>
+            var parameters = new
             {
-                ["P_PERSON_ID"] = request.personId,
+                P_PERSON_ID = request.personId,
             };
 
             var result = await _context.QuerySingleSqlAsync<EnvironmentMonitoringPersonModel>(query, parameters, cancellationToken);

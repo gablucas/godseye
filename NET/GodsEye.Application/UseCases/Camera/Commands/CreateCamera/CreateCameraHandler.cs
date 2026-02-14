@@ -1,8 +1,8 @@
 ﻿using AutoMapper;
 using GodsEye.Application.DTOs.Response;
+using GodsEye.Application.Interfaces;
 using GodsEye.Domain.DTOs.Result;
 using GodsEye.Domain.Entities;
-using GodsEye.Domain.Interfaces.Repositories;
 using MediatR;
 
 namespace GodsEye.Application.UseCases.Camera.Commands.CreateCamera
@@ -10,19 +10,27 @@ namespace GodsEye.Application.UseCases.Camera.Commands.CreateCamera
     public class CreateCameraHandler : IRequestHandler<CreateCameraRequest, ApiResponse<ProcedureResult>>
     {
         private readonly IMapper _mapper;
-        private readonly ICameraRepository _cameraRepository;
+        private readonly IApplicationDbContext _context;
 
-        public CreateCameraHandler(IMapper mapper, ICameraRepository cameraRepository)
+        public CreateCameraHandler(IMapper mapper, IApplicationDbContext context)
         {
             _mapper = mapper;
-            _cameraRepository = cameraRepository;
+            _context = context;
         }
 
         public async Task<ApiResponse<ProcedureResult>> Handle(CreateCameraRequest request, CancellationToken cancellationToken)
         {
-            var newCamera = _mapper.Map<CameraEntity>(request);
+            var sql = "CALL SP_CAMERA_CREATE(@P_NAME, @P_CONNECTION, @P_SECTOR_ID, @P_FEATURES_JSON)";
 
-            var result = await _cameraRepository.Create(newCamera, cancellationToken);
+            var parameters = new
+            {
+                P_NAME = request.Name,
+                P_CONNECTION = request.Connection,
+                P_FEATURES_JSON = request.Features
+
+            };
+
+            var result = await _context.QuerySingleSqlAsync<ProcedureResult>(sql, parameters, cancellationToken);
 
             return ApiResponse<ProcedureResult>.Ok(result);
         }

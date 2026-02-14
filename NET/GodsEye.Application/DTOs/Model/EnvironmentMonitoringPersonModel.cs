@@ -1,19 +1,11 @@
-﻿using System.Text.Json;
-
-namespace GodsEye.Application.DTOs.Model
+﻿namespace GodsEye.Application.DTOs.Model
 {
     public class EnvironmentMonitoringPersonModel
     {
         public string PersonName { get; set; }
         public string PersonPhoto { get; set;  }
-        public string? LogsJSON { get; set; }
 
-        public List<EnvironmentMonitoringPersonLog> Logs
-        {
-            get => string.IsNullOrWhiteSpace(LogsJSON)
-                ? new List<EnvironmentMonitoringPersonLog>()
-                : JsonSerializer.Deserialize<List<EnvironmentMonitoringPersonLog>>(LogsJSON);
-        }
+        public List<EnvironmentMonitoringPersonLog> Logs { get; set; } = new();
     }
 
     public class EnvironmentMonitoringPersonLog

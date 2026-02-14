@@ -9,14 +9,7 @@ namespace GodsEye.Application.DTOs.Model
         public string ImagePath { get; set; }
         public int Active { get; set; }
 
-        public string? SectorsJson { get; set; }
-
-        public List<SectorDTO> Sectors
-        {
-            get => string.IsNullOrWhiteSpace(SectorsJson)
-                ? new List<SectorDTO>()
-                : JsonSerializer.Deserialize<List<SectorDTO>>(SectorsJson);
-        }
+        public List<SectorDTO> Sectors { get; set; } = new();
     }
 
     public class SectorDTO

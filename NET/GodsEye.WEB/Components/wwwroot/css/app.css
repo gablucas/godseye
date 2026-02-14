@@ -1,0 +1,348 @@
+:root {
+    --gray-900: #0d0d0d;
+    --gray-800: #1a1a1a;
+    --gray-700: #262626;
+    --gray-600: #333333;
+    --gray-500: #404040;
+    --gray-400: #525252;
+    --gray-300: #676767;
+    --gray-200: #8a8a8a;
+    --gray-100: #b3b3b3;
+    --gray-050: #d1d1d1;
+    --gray-040: #e0e0e0;
+    --gray-030: #e8e8e8;
+    --gray-020: #f0f0f0;
+    --gray-010: #f5f5f5;
+    --gray-005: #fafafa;
+    --gray-000: #ffffff;
+    --primary: #F7F7F7;
+    --secondary: #FFFFFF;
+    --font: #393939;
+}
+
+html, body {
+    font-family: 'Inter', Helvetica, Arial, sans-serif;
+}
+
+h1:focus {
+    outline: none;
+}
+
+a, .btn-link {
+    color: #0071c1;
+}
+
+.btn-primary {
+    color: #fff;
+    background-color: #1b6ec2;
+    border-color: #1861ac;
+}
+
+.btn:focus, .btn:active:focus, .btn-link.nav-link:focus, .form-control:focus, .form-check-input:focus {
+  box-shadow: 0 0 0 0.1rem white, 0 0 0 0.25rem #258cfb;
+}
+
+.content {
+    padding-top: 1.1rem;
+}
+
+.valid.modified:not([type=checkbox]) {
+    outline: 1px solid #26b050;
+}
+
+.invalid {
+    outline: 1px solid red;
+}
+
+.validation-message {
+    color: red;
+}
+
+#blazor-error-ui {
+    background: lightyellow;
+    bottom: 0;
+    box-shadow: 0 -1px 2px rgba(0, 0, 0, 0.2);
+    display: none;
+    left: 0;
+    padding: 0.6rem 1.25rem 0.7rem 1.25rem;
+    position: fixed;
+    width: 100%;
+    z-index: 1000;
+}
+
+    #blazor-error-ui .dismiss {
+        cursor: pointer;
+        position: absolute;
+        right: 0.75rem;
+        top: 0.5rem;
+    }
+
+.blazor-error-boundary {
+    background: url(data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNTYiIGhlaWdodD0iNDkiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyIgeG1sbnM6eGxpbms9Imh0dHA6Ly93d3cudzMub3JnLzE5OTkveGxpbmsiIG92ZXJmbG93PSJoaWRkZW4iPjxkZWZzPjxjbGlwUGF0aCBpZD0iY2xpcDAiPjxyZWN0IHg9IjIzNSIgeT0iNTEiIHdpZHRoPSI1NiIgaGVpZ2h0PSI0OSIvPjwvY2xpcFBhdGg+PC9kZWZzPjxnIGNsaXAtcGF0aD0idXJsKCNjbGlwMCkiIHRyYW5zZm9ybT0idHJhbnNsYXRlKC0yMzUgLTUxKSI+PHBhdGggZD0iTTI2My41MDYgNTFDMjY0LjcxNyA1MSAyNjUuODEzIDUxLjQ4MzcgMjY2LjYwNiA1Mi4yNjU4TDI2Ny4wNTIgNTIuNzk4NyAyNjcuNTM5IDUzLjYyODMgMjkwLjE4NSA5Mi4xODMxIDI5MC41NDUgOTIuNzk1IDI5MC42NTYgOTIuOTk2QzI5MC44NzcgOTMuNTEzIDI5MSA5NC4wODE1IDI5MSA5NC42NzgyIDI5MSA5Ny4wNjUxIDI4OS4wMzggOTkgMjg2LjYxNyA5OUwyNDAuMzgzIDk5QzIzNy45NjMgOTkgMjM2IDk3LjA2NTEgMjM2IDk0LjY3ODIgMjM2IDk0LjM3OTkgMjM2LjAzMSA5NC4wODg2IDIzNi4wODkgOTMuODA3MkwyMzYuMzM4IDkzLjAxNjIgMjM2Ljg1OCA5Mi4xMzE0IDI1OS40NzMgNTMuNjI5NCAyNTkuOTYxIDUyLjc5ODUgMjYwLjQwNyA1Mi4yNjU4QzI2MS4yIDUxLjQ4MzcgMjYyLjI5NiA1MSAyNjMuNTA2IDUxWk0yNjMuNTg2IDY2LjAxODNDMjYwLjczNyA2Ni4wMTgzIDI1OS4zMTMgNjcuMTI0NSAyNTkuMzEzIDY5LjMzNyAyNTkuMzEzIDY5LjYxMDIgMjU5LjMzMiA2OS44NjA4IDI1OS4zNzEgNzAuMDg4N0wyNjEuNzk1IDg0LjAxNjEgMjY1LjM4IDg0LjAxNjEgMjY3LjgyMSA2OS43NDc1QzI2Ny44NiA2OS43MzA5IDI2Ny44NzkgNjkuNTg3NyAyNjcuODc5IDY5LjMxNzkgMjY3Ljg3OSA2Ny4xMTgyIDI2Ni40NDggNjYuMDE4MyAyNjMuNTg2IDY2LjAxODNaTTI2My41NzYgODYuMDU0N0MyNjEuMDQ5IDg2LjA1NDcgMjU5Ljc4NiA4Ny4zMDA1IDI1OS43ODYgODkuNzkyMSAyNTkuNzg2IDkyLjI4MzcgMjYxLjA0OSA5My41Mjk1IDI2My41NzYgOTMuNTI5NSAyNjYuMTE2IDkzLjUyOTUgMjY3LjM4NyA5Mi4yODM3IDI2Ny4zODcgODkuNzkyMSAyNjcuMzg3IDg3LjMwMDUgMjY2LjExNiA4Ni4wNTQ3IDI2My41NzYgODYuMDU0N1oiIGZpbGw9IiNGRkU1MDAiIGZpbGwtcnVsZT0iZXZlbm9kZCIvPjwvZz48L3N2Zz4=) no-repeat 1rem/1.8rem, #b32121;
+    padding: 1rem 1rem 1rem 3.7rem;
+    color: white;
+}
+
+    .blazor-error-boundary::after {
+        content: "An error has occurred."
+    }
+
+.loading-progress {
+    position: relative;
+    display: block;
+    width: 8rem;
+    height: 8rem;
+    margin: 20vh auto 1rem auto;
+}
+
+    .loading-progress circle {
+        fill: none;
+        stroke: #e0e0e0;
+        stroke-width: 0.6rem;
+        transform-origin: 50% 50%;
+        transform: rotate(-90deg);
+    }
+
+        .loading-progress circle:last-child {
+            stroke: #1b6ec2;
+            stroke-dasharray: calc(3.141 * var(--blazor-load-percentage, 0%) * 0.8), 500%;
+            transition: stroke-dasharray 0.05s ease-in-out;
+        }
+
+.loading-progress-text {
+    position: absolute;
+    text-align: center;
+    font-weight: bold;
+    inset: calc(20vh + 3.25rem) 0 auto 0.2rem;
+}
+
+    .loading-progress-text:after {
+        content: var(--blazor-load-percentage-text, "Loading");
+    }
+
+code {
+    color: #c02d76;
+}
+
+.custom-input {
+    display: flex;
+    flex-direction: column;
+    
+   
+}
+
+.custom-input input {
+    padding: 8px;
+    border: 1px solid #CCCCCC;
+    border-radius: 7px;
+}
+
+button {
+    background-color: none;
+    border: 1px solid var(--gray-050);
+}
+
+.animated-logo-intro {
+    display: grid;
+    place-items:center;
+
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+}
+
+.animated-logo-intro img {
+    position: absolute;
+}
+
+
+.animated-logo-intro img:last-of-type {
+    animation: girar 10s linear infinite;
+}
+
+
+@keyframes girar {
+    from {
+        transform: rotate(0deg);
+    }
+
+    to {
+        transform: rotate(360deg);
+    }
+}
+
+.data-info {
+    display: flex;
+    flex-direction: column;
+}
+
+.data-info .actions {
+    display: flex;
+    justify-content: flex-end;
+    margin-top: 1rem;
+}
+
+.data-info .info-container {
+    font-size: 1rem;
+    padding: 4px 0px;
+}
+
+.data-info .info-container > span:first-of-type {
+    font-weight: 600;
+}
+
+.data-info ::deep button {
+    justify-content: end;
+}
+
+.mud-dialog-width-full {
+    height: calc(100% - 64px)
+}
+
+/* GLOBAL */
+
+.page-container {
+    min-height: 100vh;
+    padding-top: 0px;
+    border: 1px solid #e5e5e5;
+    border-radius: 19px;
+    background-color: var(--secondary);
+}
+
+.page-container .content-container {
+    padding: 24px;
+    padding-top: 12px;
+}
+
+.breadcrumb-container {
+    padding-left: 24px;
+    border-bottom: 1px solid var(--primary);
+}
+
+.page-title {
+    margin-bottom: 16px;
+}
+
+.page-title h1 {
+    font-size: 1.4rem;
+}
+
+.page-title p {
+    color: var(--gray-300);
+    font-weight: 500;
+}
+
+.notification-menu {
+    display: grid;
+    grid-template-columns: 1fr auto;
+    justify-content: space-between;
+    /*border: 1px solid var(--gray-050);*/
+    border-radius: 7px;
+    /*padding: 8px 16px;*/
+    margin-bottom: 12px;
+}
+
+.filters {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(240px, 280px));
+    align-items: center;
+    gap: 12px;
+}
+
+video {
+    border-radius: 14px;
+}
+
+/* --- CONTAINER PRINCIPAL --- */
+.mud-table-root {
+    /* Fundo Branco Puro */
+    background-color: #ffffff !important;
+    /* Remove a sombra (elevation) */
+    box-shadow: none !important;
+    /* Borda externa fina e cinza claro */
+    border: 1px solid #e0e0e0;
+    /* Arredondamento leve nos cantos (moderno) */
+    border-radius: 8px !important;
+    /* Garante que o conteúdo não vaze o arredondamento */
+    overflow: hidden;
+}
+
+/* --- CABEÇALHO (Header) --- */
+.mud-table-head {
+    /* Fundo levemente cinza para diferenciar do corpo (opcional, mas recomendado) */
+    background-color: #f9fafb !important;
+}
+
+    .mud-table-head .mud-table-cell {
+        color: #6b7280 !important; /* Cinza médio para o texto */
+        font-weight: 600 !important;
+        font-size: 0.75rem !important;
+        text-transform: uppercase;
+        letter-spacing: 0.05em;
+        /* Borda inferior um pouco mais visível para separar o header */
+        border-bottom: 1px solid #e5e7eb !important;
+        /* Mais espaçamento vertical */
+        padding-top: 16px !important;
+        padding-bottom: 16px !important;
+    }
+
+/* --- CORPO (Body) --- */
+.mud-table-body .mud-table-cell {
+    color: #111827 !important; /* Texto quase preto para leitura fácil */
+    font-size: 0.9rem;
+    /* Linha divisória muito sutil */
+    border-bottom: 1px solid #f3f4f6 !important;
+    /* Espaçamento generoso */
+    padding-top: 16px !important;
+    padding-bottom: 16px !important;
+}
+
+/* --- EFEITO HOVER (Ao passar o mouse) --- */
+.mud-table-hover .mud-table-row:hover {
+    /* Um cinza muito, muito claro */
+    background-color: #f9fafb !important;
+    transition: background-color 0.2s ease;
+}
+
+/* Remove a borda da última linha para não duplicar com a borda do container */
+.mud-table-body .mud-table-row:last-child .mud-table-cell {
+    border-bottom: none !important;
+}
+
+/* --- RODAPÉ / PAGINAÇÃO --- */
+.mud-table-pagination {
+    background-color: transparent !important;
+    border-top: 1px solid #e5e7eb !important;
+    color: #6b7280 !important;
+}
+
+
+.chip-success {
+    background: #cef0d2;
+    color: #22b832;
+    border: 1px solid #22b832; /* Borda real para mais definição */
+}
+
+.chip-error {
+    background: rgba(239, 68, 68, 0.2);
+    color: #f87171;
+    border: 1px solid rgba(239, 68, 68, 0.4);
+}
+
+.chip-warning {
+    background: rgba(234, 179, 8, 0.2);
+    color: #facc15;
+    border: 1px solid rgba(234, 179, 8, 0.4);
+}
+
+.chip-info {
+    background: rgba(59, 130, 246, 0.2); /* Azul Royal mais forte */
+    color: #60a5fa;
+    border: 1px solid rgba(59, 130, 246, 0.4);
+}
+
+.chip-neutral {
+    background: #f3f3f3;
+    color: #7e7e7e;
+}

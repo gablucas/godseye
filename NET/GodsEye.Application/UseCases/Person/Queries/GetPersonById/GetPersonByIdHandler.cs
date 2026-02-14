@@ -18,9 +18,9 @@ namespace GodsEye.Application.UseCases.Person.Queries.GetPersonById
         {
             var query = "CALL SP_PERSON_GET_BY_ID(@P_PERSON_ID)";
 
-            var parameters = new Dictionary<string, object?>
+            var parameters = new
             {
-                ["@P_PERSON_ID"] = request.personId,
+                P_PERSON_ID = request.personId,
             };
 
             var result = await _context.QuerySingleSqlAsync<PersonModel>(query, parameters, cancellationToken);

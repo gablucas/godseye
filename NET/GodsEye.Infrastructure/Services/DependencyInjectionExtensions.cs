@@ -1,11 +1,9 @@
-﻿using GodsEye.Application.Interfaces;
-using GodsEye.Application.Interfaces.QueryRepositories;
-using GodsEye.Domain.Interfaces.Repositories;
+﻿using Dapper;
+using GodsEye.Application.DTOs.Model;
+using GodsEye.Application.Interfaces;
 using GodsEye.Infrastructure.Email;
 using GodsEye.Infrastructure.MediaMtx;
 using GodsEye.Infrastructure.Persistence;
-using GodsEye.Infrastructure.QuerieRepositories;
-using GodsEye.Infrastructure.Repositories;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -19,24 +17,6 @@ namespace GodsEye.Infrastructure.Services
         public static void AddInfrastructure(this IServiceCollection services, IConfiguration configuration)
         {
             services.AddScoped<IFolderService, FolderService>();
-
-            services.AddScoped<IPersonRepository, PersonRepository>();
-            services.AddScoped<ICameraRepository, CameraRepository>();
-            services.AddScoped<ISectorRepository, SectorRepository>();
-            services.AddScoped<IEnvironmentMonitoringLogRepository, EnvironmentMonitoringLogRepository>();
-            services.AddScoped<IIncidentRecordingRepository, IncidentRecordingLogRepository>();
-            services.AddScoped<IDwellTimeMonitoringRepository, DwellTimeMonitoringRepository>();
-            services.AddScoped<IFeatureRepository, FeatureRepository>();
-            services.AddScoped<INotificationGroupRepository, NotificationGroupRepository>();
-
-            services.AddScoped<ICameraQueryRepository, CameraQueryRepository>();
-            services.AddScoped<IPersonQueryRepository, PersonQueryRepository>();
-            services.AddScoped<ISectorQueryRepository, SectorQueryRepository>();
-            services.AddScoped<IGodsEyeQueryRepository, GodsEyeQueryRepository>();
-            services.AddScoped<IEnvironmentMonitoringQueryRepository, EnvironmentMonitoringQueryRepository>();
-            services.AddScoped<IIncidentRecordingQueryRepository, IncidentRecordingQueryRepository>();
-            services.AddScoped<IDwellTimeMonitoringQueryRepository, DwellTimeMonitoringQueryRepository>();
-            services.AddScoped<INotificationGroupQueryRepository, NotificationGroupQueryRepository>();
             services.AddScoped<ICameraConnectionTesterService, RtspCameraConnectionTesterService>();
 
 
@@ -97,6 +77,17 @@ namespace GodsEye.Infrastructure.Services
             services.Configure<SmtpSettings>(configuration.GetSection("SmtpSettings"));
 
             services.AddScoped<IEmailService, MailKitEmailSender>();
+
+            Dapper.DefaultTypeMap.MatchNamesWithUnderscores = true;
+            SqlMapper.AddTypeHandler(new JsonTypeHandler<List<FeatureDTO>>());
+            SqlMapper.AddTypeHandler(new JsonTypeHandler<List<EnvironmentMonitoringPersonLog>>());
+            SqlMapper.AddTypeHandler(new JsonTypeHandler<List<EnvironmentMonitoringSectorLog>>());
+            SqlMapper.AddTypeHandler(new JsonTypeHandler<List<IncidentRecordingPersonDTO>>());
+            SqlMapper.AddTypeHandler(new JsonTypeHandler<List<EmailDTO>>());
+            SqlMapper.AddTypeHandler(new JsonTypeHandler<List<SectorDTO>>());
+            SqlMapper.AddTypeHandler(new JsonTypeHandler<List<CameraDTO>>());
+            SqlMapper.AddTypeHandler(new JsonTypeHandler<List<NotificationGroupDTO>>());
+            SqlMapper.AddTypeHandler(new JsonTypeHandler<RoiModel>());
         }
     }
 }

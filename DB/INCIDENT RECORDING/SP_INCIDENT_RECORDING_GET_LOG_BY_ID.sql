@@ -20,7 +20,7 @@ BEGIN
                         "VideoOffsetSeconds", IRP.VIDEO_OFFSET_SECONDS
 					)
 				) 
-			END AS PERSONSJSON
+			END AS Persons
     FROM INCIDENT_RECORDING IR
     LEFT JOIN CAMERA C ON C.ID = IR.CAMERA_ID
     LEFT JOIN SECTOR S ON S.ID = C.SECTOR_ID

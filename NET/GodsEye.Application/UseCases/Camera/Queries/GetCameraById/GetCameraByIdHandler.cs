@@ -1,23 +1,36 @@
 ﻿using GodsEye.Application.DTOs.Model;
 using GodsEye.Application.DTOs.Response;
-using GodsEye.Application.Interfaces.QueryRepositories;
+using GodsEye.Application.Interfaces;
 using MediatR;
 
 namespace GodsEye.Application.UseCases.Camera.Queries.GetCameraById
 {
     public class GetCameraByIdHandler : IRequestHandler<GetCameraByIdRequest, ApiResponse<CameraModel>>
     {
-        private readonly ICameraQueryRepository _cameraQueryRepository;
+        private readonly IApplicationDbContext _context;
 
-        public GetCameraByIdHandler(ICameraQueryRepository cameraQueryRepository)
+        public GetCameraByIdHandler(IApplicationDbContext context)
         {
-            _cameraQueryRepository = cameraQueryRepository;
+            _context = context;
         }
 
         public async Task<ApiResponse<CameraModel>> Handle(GetCameraByIdRequest request, CancellationToken cancellationToken)
         {
-            var result = await _cameraQueryRepository.GetById(request.cameraId, cancellationToken);
-            return ApiResponse<CameraModel>.Ok(result);
+            const string sql = "CALL SP_CAMERA_GET_BY_ID(@Id)";
+
+            var parameters = new 
+            { 
+                P_CAMERA_ID = request.cameraId 
+            };
+
+            var camera = await _context.QuerySingleSqlAsync<CameraModel>(sql, parameters, cancellationToken);
+
+            if (camera == null)
+            {
+                return ApiResponse<CameraModel>.Fail(404, "Câmera não encontrada.");
+            }
+
+            return ApiResponse<CameraModel>.Ok(camera);
         }
     }
 }
