@@ -170,6 +170,7 @@ namespace GodsEye.WEB.Components.CameraComponents
             _loadingConnection = false;
             _hasConnectionError = false;
             _connectionErrorMessage = null;
+            StateHasChanged();
         }
 
         public async ValueTask DisposeAsync()

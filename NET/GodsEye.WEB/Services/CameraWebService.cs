@@ -1,9 +1,7 @@
 ﻿using GodsEye.Application.DTOs.Model;
 using GodsEye.Application.DTOs.Response;
 using GodsEye.Application.UseCases.Camera.Commands.CreateCameraRoi;
-using GodsEye.Application.UseCases.Camera.Commands.DeleteCameraRoi;
 using GodsEye.Application.UseCases.Camera.Commands.UpdateCameraRoi;
-using GodsEye.Application.UseCases.Camera.Queries.GetCamerasRoiByCameraId;
 using GodsEye.Domain.DTOs.Result;
 using GodsEye.WEB.Model.Forms;
 using System.Net.Http.Json;

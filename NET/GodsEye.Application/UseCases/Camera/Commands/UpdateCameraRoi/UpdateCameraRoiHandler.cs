@@ -17,12 +17,13 @@ namespace GodsEye.Application.UseCases.Camera.Commands.UpdateCameraRoi
 
         public async Task<ApiResponse<int>> Handle(UpdateCameraRoiRequest request, CancellationToken cancellationToken)
         {
-            var query = "CALL SP_CAMERA_ROI_UPDATE(@P_CAMERA_ROI_ID, @P_COORDINATES_JSON)";
+            var query = "CALL SP_CAMERA_ROI_UPDATE(@P_CAMERA_ROI_ID, @P_COORDINATES_JSON, @P_IS_ACTIVE)";
 
             var parameters = new 
             {
                 P_CAMERA_ROI_ID = request.CameraRoiId,
                 P_COORDINATES_JSON = JsonSerializer.Serialize(request.Coordinates),
+                P_IS_ACTIVE = request.IsActive
             };
 
             var result = await _context.QuerySingleSqlAsync<ProcedureResult>(query, parameters, cancellationToken);

@@ -16,7 +16,7 @@ namespace GodsEye.Application.UseCases.Camera.Queries.GetCameraById
 
         public async Task<ApiResponse<CameraModel>> Handle(GetCameraByIdRequest request, CancellationToken cancellationToken)
         {
-            const string sql = "CALL SP_CAMERA_GET_BY_ID(@Id)";
+            const string sql = "CALL SP_CAMERA_GET_BY_ID(@P_CAMERA_ID)";
 
             var parameters = new 
             { 

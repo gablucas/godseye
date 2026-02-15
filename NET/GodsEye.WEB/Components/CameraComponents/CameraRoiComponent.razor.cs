@@ -108,6 +108,19 @@ namespace GodsEye.WEB.Components.CameraComponents
             _objRef?.Dispose();
         }
 
+        public void ToogleActive(RoiTypeEnum roiType)
+        {
+            if (roiType == RoiTypeEnum.FaceDetection)
+            {
+                FaceRoi.IsActive = !FaceRoi.IsActive;
+            }
+                
+            else if (roiType == RoiTypeEnum.RestrictedArea)
+            {
+                EnvironmentRoi.IsActive = !EnvironmentRoi.IsActive;
+            } 
+        }
+
         #region DRAW FUNCS
 
         [JSInvokable]
@@ -298,6 +311,7 @@ namespace GodsEye.WEB.Components.CameraComponents
                         Id = cameraRoi.Id,
                         RoiType = cameraRoi.RoiType,
                         Coordinates = cameraRoi.Coordinates,
+                        IsActive = cameraRoi.IsActive,
                     };
                 }
                 else
@@ -307,6 +321,7 @@ namespace GodsEye.WEB.Components.CameraComponents
                         Id = cameraRoi.Id,
                         RoiType = cameraRoi.RoiType,
                         Coordinates = cameraRoi.Coordinates,
+                        IsActive = cameraRoi.IsActive,
                     };
                 }
             }
@@ -377,13 +392,13 @@ namespace GodsEye.WEB.Components.CameraComponents
             }
             else
             {
-                var updateRequest = new UpdateCameraRoiRequest(selectedCameraRoiForm.Id, selectedCameraRoiForm.Coordinates);
+                var updateRequest = new UpdateCameraRoiRequest(selectedCameraRoiForm.Id, selectedCameraRoiForm.Coordinates, selectedCameraRoiForm.IsActive);
                 var updateResult = await CameraService.UpdateRoiAsync(updateRequest);
                 Snackbar.Add("Área atualizada com sucesso.", Severity.Success);
             }
         }
 
-        #endregion[
+        #endregion
 
         private void Cancel() => MudDialog.Cancel();
     }

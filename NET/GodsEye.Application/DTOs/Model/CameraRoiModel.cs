@@ -8,5 +8,6 @@ namespace GodsEye.Application.DTOs.Model
         public int CameraId { get; set; }
         public RoiTypeEnum RoiType { get; set; }
         public RoiModel Coordinates { get; set; }
+        public bool IsActive { get; set; }
     }
 }

@@ -25,6 +25,16 @@ BEGIN
                     FROM FEATURE F
                     INNER JOIN CAMERA_FEATURE CF ON CF.FEATURE_ID = F.ID AND CF.IS_ACTIVE = 1
                     WHERE CF.CAMERA_ID = C.ID
+                    ),
+                    'Roi', (
+						SELECT JSON_ARRAYAGG(
+							JSON_OBJECT(
+								'RoiType', CR.ROI_TYPE,
+                                'Coordinates', CR.COORDINATES_JSON
+                            )
+                        )
+                        FROM CAMERA_ROI CR
+                        WHERE CR.CAMERA_ID = C.ID AND CR.IS_ACTIVE = 1
                     )
 				)
 			)

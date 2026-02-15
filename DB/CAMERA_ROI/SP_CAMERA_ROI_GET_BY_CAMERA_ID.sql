@@ -6,7 +6,8 @@ BEGIN
 		CR.ID,
         CR.CAMERA_ID AS CameraId,
         CR.ROI_TYPE AS RoiType,
-        CR.COORDINATES_JSON AS Coordinates
+        CR.COORDINATES_JSON AS Coordinates,
+        CR.IS_ACTIVE AS IsActive
 	FROM CAMERA_ROI CR
     WHERE CR.CAMERA_ID = P_CAMERA_ID;
 END

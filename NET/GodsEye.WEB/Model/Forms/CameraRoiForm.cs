@@ -8,5 +8,6 @@ namespace GodsEye.WEB.Model.Forms
         public int Id { get; set; } = 0;
         public RoiTypeEnum RoiType { get; set; }
         public RoiModel Coordinates { get; set; } = new();
+        public bool IsActive { get; set; }
     }
 }

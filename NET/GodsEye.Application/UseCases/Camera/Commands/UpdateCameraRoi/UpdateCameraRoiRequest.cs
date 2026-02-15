@@ -4,6 +4,6 @@ using MediatR;
 
 namespace GodsEye.Application.UseCases.Camera.Commands.UpdateCameraRoi
 {
-    public sealed record UpdateCameraRoiRequest(int CameraRoiId, RoiModel Coordinates) : IRequest<ApiResponse<int>>;
+    public sealed record UpdateCameraRoiRequest(int CameraRoiId, RoiModel Coordinates, bool IsActive) : IRequest<ApiResponse<int>>;
 
 }
