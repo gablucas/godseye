@@ -31,6 +31,7 @@ class MonitorManager:
                 camera_id=cam["Id"],
                 rtsp_url=cam["Connection"],
                 sector_id=cam["SectorId"],
+                roi=cam["Roi"],
                 features=features,
                 face_matcher=self.face_matcher,
                 log_queue=self.log_queue,

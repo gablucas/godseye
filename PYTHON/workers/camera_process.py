@@ -30,6 +30,7 @@ class CameraProcess(Process):
         camera_id,
         rtsp_url,
         sector_id,
+        roi,
         face_matcher: FaceMatcher,
         features=None,
         log_queue=None,
@@ -39,6 +40,7 @@ class CameraProcess(Process):
         self.camera_id = camera_id
         self.rtsp_url = rtsp_url
         self.sector_id = sector_id
+        self.roi = roi
         self.matcher = face_matcher
         self.features = features or {}
         self.stop_event = Event()
@@ -256,8 +258,44 @@ class CameraProcess(Process):
                 faces = self.face_model.get_faces(crop)
                 if not faces:
                     continue
+                
+                # VERIFICA SE A CAMERA TEM UM ROI DE ROSTO DEFINIDO
+                face_roi = next((r for r in self.roi if r["RoiType"] == 1), None)
 
-                emb = faces[0].normed_embedding
+                if face_roi:
+                    coords = face_roi["Coordinates"]
+                    print("COORDENADAS")
+                    print(coords)
+
+                    frame_h, frame_w = frame.shape[:2]
+                    print(f"FRAME VIDEO")
+                    print(frame_h)
+                    print(frame_w)
+
+                    min_face_w_px = coords["Width"] * frame_w
+                    min_face_h_px = coords["Height"] * frame_h
+
+                    print(f"FRAME VIDEO")
+                    print(min_face_w_px)
+                    print(min_face_h_px)
+
+                    # (recomendado) pegar a MAIOR face no crop, não faces[0]
+                    def face_area(f):
+                        x1f, y1f, x2f, y2f = f.bbox
+                        return (x2f - x1f) * (y2f - y1f)
+
+                    face = max(faces, key=face_area)
+
+                    x1f, y1f, x2f, y2f = face.bbox.astype(int)
+                    face_width = x2f - x1f
+                    face_height = y2f - y1f
+
+                    if face_width < min_face_w_px or face_height < min_face_h_px:
+                        continue
+
+                    emb = face.normed_embedding
+                else:
+                    emb = faces[0].normed_embedding
                 person_id, score = self.matcher.match(emb)
 
                 if person_id is None:

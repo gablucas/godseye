@@ -10,12 +10,12 @@
         <div class="form-container">
 
             <div class="menu">
-                <div class="item @(activeContext == RoiTypeEnum.FaceDetection ? "selected" : "")" @onclick="() => SelectTab(RoiTypeEnum.FaceDetection)">
+                <div class="item @(SelectedRoi.RoiType == RoiTypeEnum.FaceDetection ? "selected" : "")" @onclick="() => SelectTab(FaceRoi)">
                     <MudIcon Icon="@Icons.Material.Filled.Face" />
                     <span>Face</span>
                 </div>
 
-                <div class="item @(activeContext == RoiTypeEnum.RestrictedArea ? "selected" : "")" @onclick="() => SelectTab(RoiTypeEnum.RestrictedArea)">
+                <div class="item @(SelectedRoi.RoiType == RoiTypeEnum.RestrictedArea ? "selected" : "")" @onclick="() => SelectTab(EnvironmentRoi)">
                     <MudIcon Icon="@Icons.Material.Filled.AreaChart" />
                     <span>Área</span>
                 </div>
@@ -25,7 +25,7 @@
 
                 @if (!isDrawingActive)
                 {
-                    <div class="item" @onclick="() => StartDrawingFace(activeContext)">
+                    <div class="item" @onclick="() => StartDrawingFace()">
                         <MudIcon Icon="@Icons.Material.Filled.Edit" />
                         <span>Desenhar</span>
                     </div>
@@ -38,7 +38,7 @@
                     </div>
 
 
-                    if (activeContext == RoiTypeEnum.RestrictedArea)
+                    if (SelectedRoi.RoiType == RoiTypeEnum.RestrictedArea)
                     {
                         <div class="item" @onclick="UndoLastPoint">
                             <MudIcon Icon="@Icons.Material.Filled.Undo" />
@@ -46,7 +46,7 @@
                         </div>
                     }
 
-                    <div class="item" @onclick="() => CancelDrawing(activeContext)">
+                    <div class="item" @onclick="() => CancelDrawing()">
                         <MudIcon Icon="@Icons.Material.Filled.Cancel" />
                         <span>Cancelar</span>
                     </div>
@@ -54,27 +54,42 @@
 
                 <MudDivider Vertical="true" Style="margin: 0px 40px" />
 
-                @if (!isDrawingActive && (activeContext == RoiTypeEnum.FaceDetection && FaceRoi.Coordinates.Points.Count() > 0) || (activeContext == RoiTypeEnum.RestrictedArea && EnvironmentRoi.Coordinates.Points.Count() > 0))
+                @if (!isDrawingActive)
                 {
-                    <div class="item" @onclick="() => Submit(activeContext)">
-                        <MudIcon Icon="@Icons.Material.Filled.Save" />
-                        <span>Salvar</span>
-                    </div>
-                }
+                    if (SelectedRoi.RoiType == RoiTypeEnum.FaceDetection && FaceRoi.Coordinates.Points.Count() > 0 || SelectedRoi.RoiType == RoiTypeEnum.RestrictedArea && EnvironmentRoi.Coordinates.Points.Count() > 0)
+                    {
+                        <div class="item" @onclick="() => Submit()">
+                            <MudIcon Icon="@Icons.Material.Filled.Save" />
+                            <span>Salvar</span>
+                        </div>
+                    }
                 
 
-                @if (activeContext == RoiTypeEnum.FaceDetection && FaceRoi.Id > 0 || activeContext == RoiTypeEnum.RestrictedArea && EnvironmentRoi.Id > 0)
-                {
-                    <div class="item" @onclick="() => Delete(activeContext)">
-                        <MudIcon Icon="@Icons.Material.Filled.Delete" />
-                        <span>Excluir</span>
+                    @if (SelectedRoi.RoiType == RoiTypeEnum.FaceDetection && FaceRoi.Id > 0 || SelectedRoi.RoiType == RoiTypeEnum.RestrictedArea && EnvironmentRoi.Id > 0)
+                    {
+                        <div class="item" @onclick="() => Delete()">
+                            <MudIcon Icon="@Icons.Material.Filled.Delete" />
+                            <span>Excluir</span>
+                        </div>
+                    }
+
+                    <div class="item" @onclick="() => ToogleActive()">
+
+                        @if (SelectedRoi.IsActive)
+                        {
+                            <MudIcon Icon="@Icons.Material.Filled.CheckBox" />
+                            <span>Ativo</span>
+                        }
+                        else
+                        {
+                            <MudIcon Icon="@Icons.Material.Filled.CheckBoxOutlineBlank" />
+                            <span>Desativo</span>
+                        }
+
                     </div>
+                
                 }
 
-                <div class="item" @onclick="() => ToogleActive(activeContext)">
-                    <MudIcon Icon="@Icons.Material.Filled.CheckBox" />
-                    <span>Ativo</span>
-                </div>
             </div>
 
 
