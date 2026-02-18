@@ -17,7 +17,7 @@ namespace GodsEye.Application.UseCases.Camera.Commands.CreateCameraRoi
 
         public async Task<ApiResponse<int>> Handle(CreateCameraRoiRequest request, CancellationToken cancellationToken)
         {
-            var query = "CALL SP_CAMERA_ROI_CREATE(@P_CAMERA_ID, @P_ROI_TYPE, @P_COORDINATES_JSON)";
+            var sql = "CALL SP_CAMERA_ROI_CREATE(@P_CAMERA_ID, @P_ROI_TYPE, @P_COORDINATES_JSON)";
 
             var parameters = new
             {
@@ -26,7 +26,7 @@ namespace GodsEye.Application.UseCases.Camera.Commands.CreateCameraRoi
                 P_COORDINATES_JSON = JsonSerializer.Serialize(request.Coordinates),
             };
 
-            var result = await _context.QuerySingleSqlAsync<ProcedureResult>(query, parameters, cancellationToken);
+            var result = await _context.QuerySingleSqlAsync<ProcedureResult>(sql, parameters, cancellationToken);
 
             if (result.Erro == 0)
                 return ApiResponse<int>.Ok(result.Id);

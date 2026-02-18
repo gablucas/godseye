@@ -11,20 +11,6 @@
 
             <MudForm @ref="form" Model="DwellTimeMonitoringForm" @bind-IsValid="@success" @bind-Errors="@errors">
 
-                <MudTextField Label="Tempo máximo de permanência"
-                              HelperText="Tempo máximo que a pessoa pode permanecer no ambiente antes de gerar um alerta"
-                              @bind-Value="DwellTimeMonitoringForm.MaxDwellTime"
-                              T="int"
-                              For="@(() => DwellTimeMonitoringForm.MaxDwellTime)"
-                              Variant="Variant.Outlined" />
-
-                <MudTextField Label="Tolerância sem identificação"
-                              HelperText="Tempo máximo que a pessoa pode ficar sem ser identificada pela câmera antes de gerar um alerta"
-                              @bind-Value="DwellTimeMonitoringForm.RecognitionGracePeriod"
-                              T="int"
-                              For="@(() => DwellTimeMonitoringForm.RecognitionGracePeriod)"
-                              Variant="Variant.Outlined" />
-
                 <MudButton OnClick="Submit" Disabled=@(!success) Class="btn-submit" Variant="Variant.Filled" Color="Color.Primary">Atualizar</MudButton>
 
                 <MudOverlay Visible="visible" LightBackground="true" Absolute="true">

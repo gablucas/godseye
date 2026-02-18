@@ -21,13 +21,13 @@
                         </MudTooltip>
 
                         <MudTextField Label="Tempo"
-                                      @bind-Value="DwellTimeMonitoringForm.MaxDwellTime"
+                                      @bind-Value="DwellTimeMonitoringForm.MaxDwellTimeMinutes"
                                       T="int"
                                       Variant="Variant.Outlined"
                                       Adornment="Adornment.End"
                                       AdornmentText="min"
                                       Style="max-width: 200px;"
-                                      For="@(() => DwellTimeMonitoringForm.MaxDwellTime)" />
+                                      For="@(() => DwellTimeMonitoringForm.MaxDwellTimeMinutes)" />
 
 
                     </div>
@@ -40,13 +40,13 @@
                         </MudTooltip>
 
                         <MudTextField Label="Tempo"
-                                      @bind-Value="DwellTimeMonitoringForm.RecognitionGracePeriod"
+                                      @bind-Value="DwellTimeMonitoringForm.MaxNonIdentificationTimeMinutes"
                                       T="int"
                                       Variant="Variant.Outlined"
                                       Adornment="Adornment.End"
                                       AdornmentText="min"
                                       Style="max-width: 200px;"
-                                      For="@(() => DwellTimeMonitoringForm.RecognitionGracePeriod)" />
+                                      For="@(() => DwellTimeMonitoringForm.MaxNonIdentificationTimeMinutes)" />
                     </div>
                 </div>
 

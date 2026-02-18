@@ -1,7 +1,11 @@
 ﻿using GodsEye.Application.UseCases.Camera.Commands.CreateCamera;
+using GodsEye.Application.UseCases.Camera.Commands.CreateCameraConfigDwellTimeMonitoring;
 using GodsEye.Application.UseCases.Camera.Commands.CreateCameraRoi;
 using GodsEye.Application.UseCases.Camera.Commands.DeleteCameraRoi;
+using GodsEye.Application.UseCases.Camera.Commands.GetCameraConfigDwellTimeMonitoring;
 using GodsEye.Application.UseCases.Camera.Commands.UpdateCamera;
+using GodsEye.Application.UseCases.Camera.Commands.UpdateCameraConfigDwellTimeMonitoring;
+using GodsEye.Application.UseCases.Camera.Commands.UpdateCameraIncidentRecording;
 using GodsEye.Application.UseCases.Camera.Commands.UpdateCameraRoi;
 using GodsEye.Application.UseCases.Camera.Queries.GetAllCameras;
 using GodsEye.Application.UseCases.Camera.Queries.GetAllCamerasConnection;
@@ -10,6 +14,7 @@ using GodsEye.Application.UseCases.Camera.Queries.GetCameraFeatureById;
 using GodsEye.Application.UseCases.Camera.Queries.GetCamerasByFeatureID;
 using GodsEye.Application.UseCases.Camera.Queries.GetCamerasRoiByCameraId;
 using GodsEye.Application.UseCases.Camera.Queries.TestCameraConnection;
+using GodsEye.Application.UseCases.IncidentRecording.Commands.UpdateIncidentRecordingLog;
 using GodsEye.Application.UseCases.Person.Queries.GetCameraLog;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
@@ -129,6 +134,46 @@ namespace GodsEye.API.Controllers
         public async Task<IActionResult> DeleteRoiCamera(int id, CancellationToken cancellationToken)
         {
             var result = await _mediator.Send(new DeleteCameraRoiRequest(id), cancellationToken);
+            return Ok(result);
+        }
+
+        [AllowAnonymous]
+        [HttpPut("incident-recording")]
+        public async Task<IActionResult> UpdateIncidentRecordingCamera([FromBody] UpdateCameraIncidentRecordingRequest request, CancellationToken cancellationToken)
+        {
+            var result = await _mediator.Send(request, cancellationToken);
+            return Ok(result);
+        }
+
+        [AllowAnonymous]
+        [HttpGet("config/dwell-time-monitoring/{id}")]
+        public async Task<IActionResult> GetConfigDwellTimeMonitoring(int id, CancellationToken cancellationToken)
+        {
+            var result = await _mediator.Send(new GetCameraConfigDwellTimeMonitoringRequest(id), cancellationToken);
+
+            if (result.Success)
+                return Ok(result);
+            else
+                return BadRequest(result);
+        }
+
+        [AllowAnonymous]
+        [HttpPost("config/dwell-time-monitoring")]
+        public async Task<IActionResult> CreateConfigDwellTimeMonitoring([FromBody] CreateCameraConfigDwellTimeMonitoringRequest request, CancellationToken cancellationToken)
+        {
+            var result = await _mediator.Send(request, cancellationToken);
+
+            if (result.Success)
+                return Ok(result);
+            else 
+                return BadRequest(result);
+        }
+
+        [AllowAnonymous]
+        [HttpPut("config/dwell-time-monitoring")]
+        public async Task<IActionResult> UpdateRoiCamera(UpdateCameraConfigDwellTimeMonitoringRequest request, CancellationToken cancellationToken)
+        {
+            var result = await _mediator.Send(request, cancellationToken);
             return Ok(result);
         }
     }

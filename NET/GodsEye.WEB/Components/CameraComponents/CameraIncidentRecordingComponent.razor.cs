@@ -1,4 +1,6 @@
-﻿using GodsEye.WEB.Model.Forms;
+﻿using GodsEye.Application.UseCases.Camera.Commands.UpdateCameraIncidentRecording;
+using GodsEye.WEB.Model.Forms;
+using GodsEye.WEB.Services;
 using Microsoft.AspNetCore.Components;
 using MudBlazor;
 
@@ -8,6 +10,8 @@ namespace GodsEye.WEB.Components.CameraComponents
     {
         #region DI
 
+        [Inject]
+        public CameraWebService CameraWebService { get; set; }
 
         #endregion
 
@@ -25,41 +29,27 @@ namespace GodsEye.WEB.Components.CameraComponents
         private string[] errors = { };
 
 
-        private string _email;
-        private bool _hasEmailError;
-        private string _emailErrorMessage;
-
         #endregion
 
         private bool visible = false;
    
         private async Task Submit()
         {
-            //if (!ValidateFeatures())
-            //    return;
 
-            //visible = true;
-            //apiResponse = await _cameraService.UpdateAsync(CameraForm);
-            //visible = false;
+            var updateRequest = new UpdateCameraIncidentRecordingRequest(Id, IncidentRecordingForm.MacAddress);
 
-            //if (apiResponse.Success)
-            //{
-            //    Snackbar.Add("Camera atualizada com sucesso!", Severity.Success);
-            //    success = false;
+            visible = true;
+            var updateResult = await CameraWebService.UpdateIncidentRecordingCamera(updateRequest);
+            visible = false;
 
-            //    var result = await _cameraService.GetById(camera.Id);
-
-            //    if (result.Success && result is not null && result.Data is not null)
-            //    {
-            //        camera = result.Data;
-            //    }
-
-            //    _refreshToken = Guid.NewGuid();
-            //}
-            //else
-            //{
-            //    Snackbar.Add("Houve um erro ao cadastrar a camera, tente novamente mais tarde", Severity.Error);
-            //}
+            if (updateResult.Success)
+            {
+                Snackbar.Add("Camera atualizada com sucesso!", Severity.Success);
+            }
+            else
+            {
+                Snackbar.Add("Houve um erro ao cadastrar a camera, tente novamente mais tarde", Severity.Error);
+            }
         }
 
         private void Cancel() => MudDialog.Cancel();

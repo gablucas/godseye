@@ -17,7 +17,7 @@ namespace GodsEye.WEB.Components.CameraComponents
         #region FORM
 
         MudForm form;
-        UpdateCameraDwellTimeMonitoringForm DwellTimeMonitoringForm { get; set; } = new();
+        CameraDwellTimeMonitoringForm DwellTimeMonitoringForm { get; set; } = new();
         private bool success;
         private string[] errors = { };
         private bool visible = false;
