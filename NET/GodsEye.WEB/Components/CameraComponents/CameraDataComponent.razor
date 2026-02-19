@@ -1,6 +1,8 @@
 ﻿@using GodsEye.Application.DTOs.Model
 @using GodsEye.WEB.Enum
 @inject ISnackbar Snackbar
+@using GodsEye.WEB.Components.StreamCameraComponent
+
 
 <MudDialog>
     <DialogContent>
@@ -10,19 +12,7 @@
 
             <MudForm @ref="form" Model="CameraForm" @bind-IsValid="@success" @bind-Errors="@errors">
 
-                <div class="video-inputs">
-                    <video id="camera-player" controls autoplay></video>
-
-
-                    @if (_loadingConnection == true)
-                    {
-                        <MudChip Style="width: 100%" T="string" Label="true" Text="Conectando-se a camera a camera..." Color="Color.Info" />
-                    }
-                    else if (_mediaMtxStatus == false)
-                    {
-                        <MudChip Style="width: 100%" T="string" Label="true" Text="Não foi possível realizar a transmissão do vídeo, por favor contate um administrador." Color="Color.Error" />
-                    }
-                </div>
+                <StreamCameraComponent Connection="@camera?.Connection" />
 
                 <div class="inputs-container">
                     <MudTextField

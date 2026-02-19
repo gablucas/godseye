@@ -22,12 +22,6 @@ namespace GodsEye.WEB.Components.CameraComponents
         [Inject]
         FeatureWebService FeatureWebService { get; set; }
 
-        [Inject]
-        MediaMtxWebService MediaMtxWebService { get; set; }
-
-        [Inject]
-        public IJSRuntime JS { get; set; }
-
         #endregion
 
         #region PARAMS
@@ -50,11 +44,6 @@ namespace GodsEye.WEB.Components.CameraComponents
         private bool success;
         private string[] errors = { };
 
-        private bool _loadingConnection = false;
-        private bool _hasConnectionError = false;
-        private string? _connectionErrorMessage = null;
-
-        private bool? _mediaMtxStatus = null;
 
         #endregion
 
@@ -83,8 +72,6 @@ namespace GodsEye.WEB.Components.CameraComponents
                     Features = camera.Features.Select(x => x.FeatureId),
                     SectorId = camera.SectorId.ToString()
                 };
-
-                _ = StartStream();
             }
 
             base.OnParametersSet();
@@ -132,51 +119,7 @@ namespace GodsEye.WEB.Components.CameraComponents
             //ValidateFeatures();
         }
 
-        public async Task StartStream()
-        {
-            _loadingConnection = true;
-
-            if (string.IsNullOrEmpty(CameraForm.Connection))
-            {
-                _loadingConnection = false;
-                return;
-            }
-
-            var isMediaMtxOnline = await MediaMtxWebService.CheckStatus();
-
-            if (!isMediaMtxOnline.Success || !isMediaMtxOnline.Data)
-            {
-                _mediaMtxStatus = false;
-                _loadingConnection = false;
-                await InvokeAsync(StateHasChanged);
-                return;
-            }
-
-
-            var cam = await MediaMtxWebService.StartStream(CameraForm.Connection);
-
-            if (cam is null || !cam.Success)
-            {
-                _hasConnectionError = true;
-                _connectionErrorMessage = cam.Error.Message;
-                _loadingConnection = false;
-                return;
-            }
-
-            var webRtcUrl = cam.Data;
-
-            await JS.InvokeVoidAsync("streamFunctions.start", "camera-player", webRtcUrl);
-
-            _loadingConnection = false;
-            _hasConnectionError = false;
-            _connectionErrorMessage = null;
-            StateHasChanged();
-        }
-
-        public async ValueTask DisposeAsync()
-        {
-            await JS.InvokeVoidAsync("streamFunctions.stop", "camera-player");
-        }
+        
 
         private async Task Submit()
         {

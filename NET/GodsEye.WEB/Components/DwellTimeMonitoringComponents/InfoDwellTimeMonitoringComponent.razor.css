@@ -4,11 +4,14 @@
     gap: 24px;
 }
 
-.container .incident-video video {
+.container  .video-inputs #camera-player {
     border-radius: 7px;
+    width: 100%;
+    aspect-ratio: 16 / 9;
+    background: black;
 }
 
-.container .person-list {
+.person-list {
     display: flex;
     flex-direction: column;
     gap: 12px;

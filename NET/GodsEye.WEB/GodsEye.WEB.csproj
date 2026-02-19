@@ -19,8 +19,4 @@
     <ProjectReference Include="..\GodsEye.Infrastructure\GodsEye.Infrastructure.csproj" />
   </ItemGroup>
 
-  <ItemGroup>
-    <Folder Include="Components\EnvironmentMonitoring\" />
-  </ItemGroup>
-
 </Project>

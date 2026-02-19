@@ -1,10 +1,9 @@
 ﻿using GodsEye.Application.DTOs.Model;
-using GodsEye.Application.DTOs.Response;
 using GodsEye.WEB.Services;
 using Microsoft.AspNetCore.Components;
 using Microsoft.JSInterop;
 using MudBlazor;
-using System;
+
 
 namespace GodsEye.WEB.Components.DwellTimeMonitoringComponents
 {
@@ -13,6 +12,7 @@ namespace GodsEye.WEB.Components.DwellTimeMonitoringComponents
         [Inject]
         public GodsEyeWebService GodsEyeWebService { get; set; }
 
+        
         [Inject]
         public DwellTimeMonitoringWebService DwellTimeMonitoringService { get; set; }
 
@@ -44,14 +44,6 @@ namespace GodsEye.WEB.Components.DwellTimeMonitoringComponents
             if (result.Success)
                 _log = result.Data.ToList();
 
-            // Só aceita o objeto CameraModel -> Ver se pode alterar somente para o ID da camera
-            //var cam = await GodsEyeWebService.StartStream(Camera.id);
-
-            //if (cam.Success)
-            //{
-            //    string fullUrl = $"http://localhost:8000/api{Camera.Connection}";
-            //    await JS.InvokeVoidAsync("loadHlsVideo", "camera-player", fullUrl);
-            //}
         }
 
         #region TIMER
@@ -98,6 +90,8 @@ namespace GodsEye.WEB.Components.DwellTimeMonitoringComponents
         }
 
         #endregion
+
+        
 
     }
 }

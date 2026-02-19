@@ -1,4 +1,7 @@
 ﻿@using GodsEye.Application.DTOs.Model
+@using GodsEye.WEB.Shared
+@using GodsEye.WEB.Components.StreamCameraComponent
+
 
 <MudDialog>
     <TitleContent>
@@ -8,9 +11,8 @@
 
     <DialogContent>
         <div class="container">
-            <div class="incident-video">
-                <video id="camera-player" width="100%" height="100%" controls autoplay></video>
-            </div>
+            
+            <StreamCameraComponent Connection="@Camera?.Connection" />
 
             <div class="person-list">
                 @if (_log is not null)

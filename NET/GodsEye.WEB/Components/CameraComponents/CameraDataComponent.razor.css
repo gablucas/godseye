@@ -38,15 +38,7 @@
     gap: 12px;
 }
 
-
-.form-container .video-inputs #camera-player {
-    border-radius: 7px;
-    width: 100%;
-    aspect-ratio: 16 / 9;
-    background: black;
-}
-
-.form-container .video-inputs .inputs-container {
+.form-container .inputs-container {
     display: grid;
     align-content: start;
     gap: 12px;

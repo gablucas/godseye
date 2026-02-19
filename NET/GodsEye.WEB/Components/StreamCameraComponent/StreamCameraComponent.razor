@@ -1,0 +1,13 @@
+﻿<div class="video-inputs">
+    <video id="camera-player" controls autoplay></video>
+
+
+    @if (_loadingConnection == true)
+    {
+        <MudChip Style="width: 100%" T="string" Label="true" Text="Conectando-se a camera a camera..." Color="Color.Info" />
+    }
+    else if (_mediaMtxStatus == false)
+    {
+        <MudChip Style="width: 100%" T="string" Label="true" Text="Não foi possível realizar a transmissão do vídeo, por favor contate um administrador." Color="Color.Error" />
+    }
+</div>
