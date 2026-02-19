@@ -10,6 +10,7 @@ using GodsEye.Application.UseCases.Camera.Commands.UpdateCameraRoi;
 using GodsEye.Application.UseCases.Camera.Queries.GetAllCameras;
 using GodsEye.Application.UseCases.Camera.Queries.GetAllCamerasConnection;
 using GodsEye.Application.UseCases.Camera.Queries.GetCameraById;
+using GodsEye.Application.UseCases.Camera.Queries.GetCameraConfigIncidentRecording;
 using GodsEye.Application.UseCases.Camera.Queries.GetCameraFeatureById;
 using GodsEye.Application.UseCases.Camera.Queries.GetCamerasByFeatureID;
 using GodsEye.Application.UseCases.Camera.Queries.GetCamerasRoiByCameraId;
@@ -138,7 +139,19 @@ namespace GodsEye.API.Controllers
         }
 
         [AllowAnonymous]
-        [HttpPut("incident-recording")]
+        [HttpGet("config/incident-recording/{id}")]
+        public async Task<IActionResult> GetConfigIncidentRecording(int id, CancellationToken cancellationToken)
+        {
+            var result = await _mediator.Send(new GetCameraConfigIncidentRecordingRequest(id), cancellationToken);
+
+            if (result.Success)
+                return Ok(result);
+            else
+                return BadRequest(result);
+        }
+
+        [AllowAnonymous]
+        [HttpPut("config/incident-recording")]
         public async Task<IActionResult> UpdateIncidentRecordingCamera([FromBody] UpdateCameraIncidentRecordingRequest request, CancellationToken cancellationToken)
         {
             var result = await _mediator.Send(request, cancellationToken);

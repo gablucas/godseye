@@ -11,7 +11,9 @@
 
             <MudForm @ref="form" Model="DwellTimeMonitoringForm" @bind-IsValid="@success" @bind-Errors="@errors">
 
-                <MudButton OnClick="Submit" Disabled=@(!success) Class="btn-submit" Variant="Variant.Filled" Color="Color.Primary">Atualizar</MudButton>
+                <h1>Sem configurações</h1>
+
+                @* <MudButton OnClick="Submit" Disabled=@(!success) Class="btn-submit" Variant="Variant.Filled" Color="Color.Primary">Atualizar</MudButton> *@
 
                 <MudOverlay Visible="visible" LightBackground="true" Absolute="true">
                     <MudProgressCircular Color="Color.Default" Indeterminate="true" />

@@ -16,7 +16,7 @@ namespace GodsEye.Application.UseCases.Camera.Commands.UpdateCameraIncidentRecor
 
         public async Task<ApiResponse<int>> Handle(UpdateCameraIncidentRecordingRequest request, CancellationToken cancellationToken)
         {
-            var sql = "CALL SP_CAMERA_INCIDENT_RECORDING_UPDATE(@P_CAMERA_ID, @P_MAC_ADDRESS)";
+            var sql = "CALL SP_CAMERA_CONFIG_INCIDENT_RECORDING_UPDATE(@P_CAMERA_ID, @P_MAC_ADDRESS)";
 
             var parameters = new
             {

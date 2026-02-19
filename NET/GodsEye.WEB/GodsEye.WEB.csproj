@@ -7,23 +7,6 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Content Include="Components\wwwroot\css\app.css" />
-    <Content Include="Components\wwwroot\css\bootstrap\bootstrap.min.css" />
-    <Content Include="Components\wwwroot\css\bootstrap\bootstrap.min.css.map" />
-    <Content Include="Components\wwwroot\css\polygon-tools.css" />
-    <Content Include="Components\wwwroot\favicon.png" />
-    <Content Include="Components\wwwroot\icon-192.png" />
-    <Content Include="Components\wwwroot\index.html" />
-    <Content Include="Components\wwwroot\js\camera.js" />
-    <Content Include="Components\wwwroot\js\roi.js" />
-    <Content Include="Components\wwwroot\js\stream.js" />
-    <Content Include="Components\wwwroot\js\video.js" />
-    <Content Include="Components\wwwroot\loading-logo-1.png" />
-    <Content Include="Components\wwwroot\loading-logo-2.png" />
-    <Content Include="Components\wwwroot\logo.png" />
-  </ItemGroup>
-
-  <ItemGroup>
     <PackageReference Include="FluentValidation" Version="12.1.1" />
     <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly" Version="8.0.22" />
     <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly.DevServer" Version="8.0.22" PrivateAssets="all" />

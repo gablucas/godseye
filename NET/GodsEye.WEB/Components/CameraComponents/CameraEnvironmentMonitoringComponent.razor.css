@@ -1,5 +1,6 @@
 ﻿h1 {
-    margin-top: 2rem;
+    /*margin-top: 2rem;*/
+    text-align: center;
     font-size: 1.6rem;
 }
 
@@ -13,12 +14,12 @@
     border: 1px solid var(--gray-050);
 }
 
-    .form-container ::deep .btn-submit {
-        display: block;
-        margin: 12px 0px;
-    }
+.form-container ::deep .btn-submit {
+    display: block;
+    margin: 12px 0px;
+}
 
-    .form-container .register-success {
-        display: flex;
-        gap: 12px;
-    }
+.form-container .register-success {
+    display: flex;
+    gap: 12px;
+}

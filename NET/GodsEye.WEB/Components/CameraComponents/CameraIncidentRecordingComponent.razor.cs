@@ -32,6 +32,14 @@ namespace GodsEye.WEB.Components.CameraComponents
         #endregion
 
         private bool visible = false;
+
+        protected override async Task OnParametersSetAsync()
+        {
+            var camera = await CameraWebService.GetConfigIncidentRecording(Id);
+
+            if (camera.Success)
+                IncidentRecordingForm.MacAddress = camera.Data.MacAddress;
+        }
    
         private async Task Submit()
         {
@@ -39,7 +47,7 @@ namespace GodsEye.WEB.Components.CameraComponents
             var updateRequest = new UpdateCameraIncidentRecordingRequest(Id, IncidentRecordingForm.MacAddress);
 
             visible = true;
-            var updateResult = await CameraWebService.UpdateIncidentRecordingCamera(updateRequest);
+            var updateResult = await CameraWebService.UpdateConfigIncidentRecording(updateRequest);
             visible = false;
 
             if (updateResult.Success)

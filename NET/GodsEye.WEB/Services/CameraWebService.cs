@@ -124,9 +124,18 @@ namespace GodsEye.WEB.Services
             return json!;
         }
 
-        public async Task<ApiResponse<int>> UpdateIncidentRecordingCamera(UpdateCameraIncidentRecordingRequest incidentRecordingCamera)
+        public async Task<ApiResponse<CameraConfigIncidentRecordingModel>> GetConfigIncidentRecording(int cameraId)
         {
-            var result = await _http.PutAsJsonAsync($"{_baseEndpoint}/incident-recording", incidentRecordingCamera);
+            var result = await _http.GetAsync($"{_baseEndpoint}/config/incident-recording/{cameraId}");
+
+            var json = await result.Content.ReadFromJsonAsync<ApiResponse<CameraConfigIncidentRecordingModel>>();
+
+            return json!;
+        }
+
+        public async Task<ApiResponse<int>> UpdateConfigIncidentRecording(UpdateCameraIncidentRecordingRequest incidentRecordingCamera)
+        {
+            var result = await _http.PutAsJsonAsync($"{_baseEndpoint}/config/incident-recording", incidentRecordingCamera);
 
             var json = await result.Content.ReadFromJsonAsync<ApiResponse<int>>();
 
