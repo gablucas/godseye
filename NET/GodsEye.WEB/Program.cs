@@ -21,6 +21,7 @@ builder.Services.AddScoped<DwellTimeMonitoringWebService>();
 builder.Services.AddScoped<NotificationGroupWebService>();
 builder.Services.AddScoped<DialogWebService>();
 builder.Services.AddScoped<MediaMtxWebService>();
+builder.Services.AddScoped<AccessScheduleWebService>();
 
 
 builder.Services.AddMudServices();

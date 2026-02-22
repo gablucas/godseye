@@ -78,6 +78,7 @@ namespace GodsEye.Infrastructure.Services
 
             services.AddScoped<IEmailService, MailKitEmailSender>();
 
+
             Dapper.DefaultTypeMap.MatchNamesWithUnderscores = true;
             SqlMapper.AddTypeHandler(new JsonTypeHandler<List<FeatureDTO>>());
             SqlMapper.AddTypeHandler(new JsonTypeHandler<List<EnvironmentMonitoringPersonLog>>());
@@ -87,6 +88,7 @@ namespace GodsEye.Infrastructure.Services
             SqlMapper.AddTypeHandler(new JsonTypeHandler<List<SectorDTO>>());
             SqlMapper.AddTypeHandler(new JsonTypeHandler<List<CameraDTO>>());
             SqlMapper.AddTypeHandler(new JsonTypeHandler<List<NotificationGroupDTO>>());
+            SqlMapper.AddTypeHandler(new JsonTypeHandler<List<AccessScheduleRuleModel>>());
             SqlMapper.AddTypeHandler(new JsonTypeHandler<RoiModel>());
         }
     }

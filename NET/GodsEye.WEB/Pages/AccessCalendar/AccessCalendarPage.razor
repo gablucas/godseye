@@ -1,0 +1,49 @@
+﻿@page "/cadastro/calendario-acesso";
+@using GodsEye.WEB.Components
+@using GodsEye.Application.DTOs.Model
+@inject ISnackbar Snackbar
+
+<PageTitle>Calendario de acesso</PageTitle>
+
+<div class="page-container">
+
+    <div class="breadcrumb-container">
+        <MudBreadcrumbs Style="padding: 8px 0px; font-size: 12px; font-weight: 500" Items="_items"></MudBreadcrumbs>
+    </div>
+
+    <div class="content-container">
+
+        <div class="page-title">
+            <h1>Calendário de acesso</h1>
+            <p>Aqui você encontra a lista dos calendários de acesso cadastradas em seu sistema</p>
+        </div>
+
+        <div class="notification-menu">
+            <div class="filters">
+                <div class="option">
+                    <MudTextField @bind-Value="_accessScheduleFilter" TextChanged="ApplyFilters" Immediate="true" Label="Camera" Variant="Variant.Outlined" Margin="Margin.Dense" Clearable="true" />
+                </div>
+            </div>
+
+            <MudButton Variant="Variant.Outlined" OnClick="OpenCreateCamera">Criar calendário de acesso</MudButton>
+        </div>
+
+        <MudTable T="AccessScheduleModel" Elevation="0" @ref="mudTable" Items="@_filteredAccessSchedule" Hover="true" Loading="@_loading" LoadingProgressColor="Color.Info" RowClass="cursor-pointer">
+
+            <HeaderContent>
+                <MudTh>Nome</MudTh>
+                <MudTh>Configurações</MudTh>
+            </HeaderContent>
+            <RowTemplate>
+                <MudTd DataLabel="Name">@context.Name</MudTd>
+               
+                <MudTd>
+                    <MudButton OnClick="() => OpenEditData(context.Id)" Variant="Variant.Outlined" Color="Color.Primary" Size="Size.Small">Configurações</MudButton>
+                </MudTd>
+            </RowTemplate>
+        </MudTable>
+
+        <MudDialog></MudDialog>
+    </div>
+
+</div>

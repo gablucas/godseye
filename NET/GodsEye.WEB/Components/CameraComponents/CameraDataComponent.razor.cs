@@ -4,7 +4,6 @@ using GodsEye.Domain.DTOs.Result;
 using GodsEye.WEB.Model.Forms;
 using GodsEye.WEB.Services;
 using Microsoft.AspNetCore.Components;
-using Microsoft.JSInterop;
 using MudBlazor;
 
 namespace GodsEye.WEB.Components.CameraComponents

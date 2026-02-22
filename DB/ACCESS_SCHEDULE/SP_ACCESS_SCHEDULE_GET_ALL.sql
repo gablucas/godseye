@@ -1,0 +1,24 @@
+CREATE DEFINER=`root`@`localhost` PROCEDURE `SP_ACCESS_SCHEDULE_GET_ALL`()
+BEGIN
+    SELECT 
+		ACS.ID,
+		ACS.NAME,
+        ACS.IS_ACTIVE,
+        CASE
+			WHEN COUNT(ACSR.ID) = 0 THEN NULL
+            ELSE JSON_ARRAYAGG(
+					JSON_OBJECT (
+					"Id", ACSR.ID,
+					"WeekDay", ACSR.WEEKDAY,
+                    "StartTime", ACSR.START_TIME,
+                    "EndTime", ACSR.END_TIME
+					)
+				) 
+			END AS Rules
+	FROM ACCESS_SCHEDULE ACS
+	LEFT JOIN ACCESS_SCHEDULE_RULES ACSR ON ACSR.ACCESS_SCHEDULE_ID = ACS.ID
+    GROUP BY
+		ACS.ID,
+        ACS.NAME,
+        ACS.IS_ACTIVE;
+END

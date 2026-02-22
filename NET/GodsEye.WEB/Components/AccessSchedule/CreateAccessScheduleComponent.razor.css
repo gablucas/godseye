@@ -1,0 +1,65 @@
+﻿::deep form {
+    display: flex;
+    gap: 12px;
+}
+
+
+.form-container .inputs-container {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.form-container .inputs-container .week-days {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 8px;
+}
+
+
+.form-container .inputs-container .week-days .day {
+    display: flex;
+    flex-direction:  column;
+    gap: 12px;
+    padding: 12px;
+    border: 1px solid var(--gray-100);
+    border-radius: 4px;
+}
+
+.form-container .inputs-container .week-days .day .title {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    font-size: 1rem;
+    font-weight: 500;
+}
+
+.form-container .inputs-container .week-days .day .title ::deep svg {
+    height: 32px;
+    width: 32px;
+    padding: 4px;
+    border: 1px solid var(--gray-050);
+    border-radius: 4px;
+}
+
+.form-container .inputs-container .week-days .day .times {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    align-items: center;
+}
+
+.form-container .inputs-container .week-days .day .times .time {
+    display: flex;
+    gap: 8px;
+    align-items: center;
+}
+
+.form-container .inputs-container .week-days .day .times .time ::deep svg {
+    cursor: pointer;
+}
+
+.form-container .inputs-container .week-days .day .times .time ::deep svg:hover {
+    fill: var(--gray-200);
+}
+

@@ -1,0 +1,92 @@
+﻿@using GodsEye.Application.DTOs.Model
+@using GodsEye.Domain.Enums
+@using GodsEye.Domain.Extensions
+@using GodsEye.WEB.Enum
+@inject ISnackbar Snackbar
+
+<MudDialog>
+    <DialogContent>
+
+        <div class="form-container">
+
+            <MudForm @ref="form" Model="_accessScheduleForm" @bind-IsValid="@success" @bind-Errors="@errors">
+
+                <div class="inputs-container">
+
+
+                    <MudTextField Label="Nome"
+                                  @bind-Value="_accessScheduleForm.Name"
+                        T="string"
+                        Variant="Variant.Outlined"
+                        Required="true" 
+                        RequiredError="O nome é obrigatório"
+                                  For="@(() => _accessScheduleForm.Name)" />
+
+                    <div class="week-days">
+
+                        @foreach (var day in Enum.GetValues<WeekDayEnum>())
+                        {
+                            <div class="day">
+                                <div class="title">
+                                    <MudIcon Icon="@Icons.Material.Outlined.Today" />
+                                    <span>@day.GetDescription()</span>
+                                </div>
+                                
+                                <div class="times">
+
+                                    @foreach (var (rule, index) in _accessScheduleForm.Rules.Where(x => x.WeekDay == day).ToList().Select((rule, index) => (rule, index)))
+                                    {
+                                        <div class="time">
+                                            <MudIcon Icon="@Icons.Material.Outlined.Delete" @onclick="() => RemoveRule(day, rule)" Style="color: var(--gray-100)" />
+
+                                            <MudTimePicker 
+                                                Editable="true" 
+                                                Time="rule.StartTime" 
+                                                Required="true"
+                                                TimeChanged="@(value => OnTimeChanged(value, rule, "start", day))" 
+                                                Error=@(HasError(index, "start")) 
+                                                Variant="Variant.Outlined"
+                                                />
+
+                                            <MudIcon Icon="@Icons.Material.Filled.ArrowRightAlt" Style="color: var(--gray-050)" />
+
+                                            <MudTimePicker 
+                                                Editable="true" 
+                                                Time="rule.EndTime"
+                                                Required="true"
+                                                TimeChanged="@(value => OnTimeChanged(value, rule, "end", day))" 
+                                                Error=@(HasError(index, "end")) 
+                                                Variant="Variant.Outlined" 
+                                                />
+                                        </div>
+                                    }
+                                </div>
+
+                                <MudButton Variant="Variant.Outlined" OnClick="() => AddNewRule(day)">
+                                    <MudIcon Icon="@Icons.Material.Rounded.Add" />
+                                    <span>Adicionar</span>
+                                </MudButton>
+                            </div>
+                        }
+
+                    </div>
+                </div>
+
+
+                <MudButton OnClick="Submit" Disabled=@(!success) Class="btn-submit" Variant="Variant.Filled" Color="Color.Primary">Atualizar</MudButton>
+
+                <MudOverlay Visible="visible" LightBackground="true" Absolute="true">
+                    <MudProgressCircular Color="Color.Default" Indeterminate="true" />
+                </MudOverlay>
+
+            </MudForm>
+
+        </div>
+
+      
+    </DialogContent>
+
+    <DialogActions>
+        <MudButton OnClick="Cancel">Sair</MudButton>
+    </DialogActions>
+</MudDialog>

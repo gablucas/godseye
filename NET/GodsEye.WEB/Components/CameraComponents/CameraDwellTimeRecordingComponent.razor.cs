@@ -12,7 +12,6 @@ namespace GodsEye.WEB.Components.CameraComponents
         [Inject]
         public CameraWebService CameraWebService { get; set; }
 
-
         [Parameter]
         public int Id { get; set; }
 
