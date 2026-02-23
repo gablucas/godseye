@@ -58,36 +58,76 @@ namespace GodsEye.WEB.Components.AccessSchedule
             if (value is null)
                 return;
 
-            rulesError = new();
-
+           
             var newTime = value.Value;
 
             if (timeType == "start")
                 time.StartTime = newTime;
             else
                 time.EndTime = newTime;
+        }
 
+        private bool ValidateTimeRules()
+        {
+            rulesError.Clear();
 
-            var selectedDay = _accessScheduleForm.Rules.Where(x => x.WeekDay == dayEnum).ToList();
-
-            foreach (var (rule, index) in selectedDay.Select((rule, index) => (rule, index)))
+            foreach (var dayGroup in _accessScheduleForm.Rules.GroupBy(x => x.WeekDay))
             {
-               
-                if (rule.StartTime > rule.EndTime || rule.EndTime < rule.StartTime || (rule.StartTime == TimeSpan.Zero && rule.EndTime == TimeSpan.Zero))
-                {
-                    rulesError.Add(index, new List<string> { "start", "end" });
-                }
+                var selectedDay = dayGroup.ToList();
 
-
-                if (index > 0)
+                foreach (var (rule, index) in selectedDay.Select((rule, index) => (rule, index)))
                 {
-                    if (rule.StartTime <= selectedDay[index - 1].EndTime)
+                    if (rule.StartTime > rule.EndTime || rule.EndTime < rule.StartTime || (rule.StartTime == TimeSpan.Zero && rule.EndTime == TimeSpan.Zero))
                     {
-                        rulesError.Add(index, new List<string> { "start" });
-                        rulesError.Add(index - 1, new List<string> { "end" });
+                        rulesError.Add(index, new List<string> { "start", "end" });
+                    }
+
+                    if (rule.StartTime is null && rule.EndTime is null)
+                    {
+                        rulesError.Add(index, new List<string> { "start", "end" });
+                    }
+
+                    else if (rule.StartTime is null)
+                    {
+                        rulesError.Add(index, new List<string> { "start"});
+                    }
+
+                    else if (rule.EndTime is null)
+                    {
+                        rulesError.Add(index, new List<string> { "end" });
+                    }
+
+
+                    if (index > 0)
+                    {
+                        if (rule.StartTime <= selectedDay[index - 1].EndTime)
+                        {
+                            rulesError.Add(index, new List<string> { "start" });
+                            rulesError.Add(index - 1, new List<string> { "end" });
+                        }
                     }
                 }
-            } 
+            }
+
+            if (!_accessScheduleForm.Rules.Any())
+            {
+                Snackbar.Add("Adicione pelo menos um horário", Severity.Error);
+                return false;
+            }
+
+            if (_accessScheduleForm.Rules.Any(rule => rule.StartTime is null || rule.EndTime is null))
+            {
+                Snackbar.Add("Existe algum campo de horário vazio", Severity.Error);
+                return false;
+            }
+
+            if (rulesError.Any())
+            {
+                Snackbar.Add("Há campos de horário com erro", Severity.Error);
+                return false;
+            }
+
+            return true;
         }
 
         private bool HasError(int index, string ruleType)
@@ -125,7 +165,18 @@ namespace GodsEye.WEB.Components.AccessSchedule
 
         private async Task Submit()
         {
-            
+            await form.Validate();
+
+            if (string.IsNullOrEmpty(_accessScheduleForm.Name))
+            {
+                Snackbar.Add("Campo de nome vazio", Severity.Error);
+                return;
+            }
+
+            if (!ValidateTimeRules())
+                return;
+
+
             var createRequest = new CreateAccessScheduleRequest(_accessScheduleForm.Id, _accessScheduleForm.Name, true, _accessScheduleForm.Rules);
             var createResult = await AccessScheduleWebService.CreateAsync(createRequest);
 

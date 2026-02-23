@@ -9,18 +9,18 @@
 
         <div class="form-container">
 
-            <MudForm @ref="form" Model="_accessScheduleForm" @bind-IsValid="@success" @bind-Errors="@errors">
+            <MudForm @ref="form" Model="_accessScheduleForm" >
 
                 <div class="inputs-container">
 
 
                     <MudTextField Label="Nome"
-                                  @bind-Value="_accessScheduleForm.Name"
+                        @bind-Value="_accessScheduleForm.Name"
                         T="string"
                         Variant="Variant.Outlined"
                         Required="true" 
                         RequiredError="O nome é obrigatório"
-                                  For="@(() => _accessScheduleForm.Name)" />
+                        For="@(() => _accessScheduleForm.Name)" />
 
                     <div class="week-days">
 
@@ -40,9 +40,8 @@
                                             <MudIcon Icon="@Icons.Material.Outlined.Delete" @onclick="() => RemoveRule(day, rule)" Style="color: var(--gray-100)" />
 
                                             <MudTimePicker 
-                                                Editable="true" 
-                                                Time="rule.StartTime" 
-                                                Required="true"
+                                                Editable="false" 
+                                                Time="rule.StartTime"
                                                 TimeChanged="@(value => OnTimeChanged(value, rule, "start", day))" 
                                                 Error=@(HasError(index, "start")) 
                                                 Variant="Variant.Outlined"
@@ -51,9 +50,8 @@
                                             <MudIcon Icon="@Icons.Material.Filled.ArrowRightAlt" Style="color: var(--gray-050)" />
 
                                             <MudTimePicker 
-                                                Editable="true" 
+                                                Editable="false" 
                                                 Time="rule.EndTime"
-                                                Required="true"
                                                 TimeChanged="@(value => OnTimeChanged(value, rule, "end", day))" 
                                                 Error=@(HasError(index, "end")) 
                                                 Variant="Variant.Outlined" 
@@ -73,7 +71,7 @@
                 </div>
 
 
-                <MudButton OnClick="Submit" Disabled=@(!success) Class="btn-submit" Variant="Variant.Filled" Color="Color.Primary">Atualizar</MudButton>
+                <MudButton OnClick="Submit" Class="btn-submit" Variant="Variant.Filled" Color="Color.Primary">@(Id == 0 ? "Criar" : "Atualizar")</MudButton>
 
                 <MudOverlay Visible="visible" LightBackground="true" Absolute="true">
                     <MudProgressCircular Color="Color.Default" Indeterminate="true" />

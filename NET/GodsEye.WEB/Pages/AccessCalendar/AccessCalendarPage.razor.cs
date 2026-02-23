@@ -33,7 +33,7 @@ namespace GodsEye.WEB.Pages.AccessCalendar
         List<AccessScheduleModel> _accessSchedule = new();
         IEnumerable<AccessScheduleModel> _filteredAccessSchedule = Enumerable.Empty<AccessScheduleModel>();
 
-
+        
 
         private int selectedRowNumber = -1;
         
