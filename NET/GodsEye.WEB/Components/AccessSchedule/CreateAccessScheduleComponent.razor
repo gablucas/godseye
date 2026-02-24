@@ -12,8 +12,6 @@
             <MudForm @ref="form" Model="_accessScheduleForm" >
 
                 <div class="inputs-container">
-
-
                     <MudTextField Label="Nome"
                         @bind-Value="_accessScheduleForm.Name"
                         T="string"
@@ -22,9 +20,18 @@
                         RequiredError="O nome é obrigatório"
                         For="@(() => _accessScheduleForm.Name)" />
 
+                    <div class="select-weekdays">
+                        @foreach (var day in Enum.GetValues<WeekDayEnum>())
+                        {
+                            <div>
+                                <MudSwitch Value="_selectedWeekDays.Contains(day)" ValueChanged="@((bool value) => ToogleWeekDay(day))" Label="@day.GetDescription()" Color="Color.Primary" />
+                            </div>
+                        }
+                    </div>
+
                     <div class="week-days">
 
-                        @foreach (var day in Enum.GetValues<WeekDayEnum>())
+                        @foreach (var day in _selectedWeekDays.Order())
                         {
                             <div class="day">
                                 <div class="title">
@@ -42,8 +49,8 @@
                                             <MudTimePicker 
                                                 Editable="false" 
                                                 Time="rule.StartTime"
-                                                TimeChanged="@(value => OnTimeChanged(value, rule, "start", day))" 
-                                                Error=@(HasError(index, "start")) 
+                                                TimeChanged="@(value => OnTimeChanged(value, rule, day, "start"))" 
+                                                Error=@(HasError(index, day, "start")) 
                                                 Variant="Variant.Outlined"
                                                 />
 
@@ -52,10 +59,16 @@
                                             <MudTimePicker 
                                                 Editable="false" 
                                                 Time="rule.EndTime"
-                                                TimeChanged="@(value => OnTimeChanged(value, rule, "end", day))" 
-                                                Error=@(HasError(index, "end")) 
+                                                TimeChanged="@(value => OnTimeChanged(value, rule, day, "end"))"
+                                                Error=@(HasError(index, day, "end")) 
                                                 Variant="Variant.Outlined" 
                                                 />
+
+                                            @if (_timeRuleErrors.Any(rule => rule.Day == day && rule.Index == index && rule.Message is not null && (rule.IsStartTimeWrong || rule.IsEndTimeWrong))) 
+                                            {
+                                                <p class="time-error">@_timeRuleErrors.First(rule => rule.Day == day && rule.Index == index).Message</p>
+                                            }
+                                            
                                         </div>
                                     }
                                 </div>

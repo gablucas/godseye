@@ -18,6 +18,13 @@
     --primary: #F7F7F7;
     --secondary: #FFFFFF;
     --font: #393939;
+
+    --error: #c7201c;
+    --error-hover: #f79f9f;
+    --success: #28a745;
+    --success-hover: #99ebb0;
+    --warning: #e1af16;
+    --warning-hover: #fbf8ee;
 }
 
 html, body {

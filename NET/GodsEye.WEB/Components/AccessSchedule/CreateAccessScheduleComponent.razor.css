@@ -10,10 +10,23 @@
     gap: 12px;
 }
 
+.form-container .inputs-container .select-weekdays {
+    display: flex;
+    gap: 12px;
+    justify-content: center;
+    border-radius: 7px;
+    border: 1px solid var(--gray-050);
+}
+
+.form-container .inputs-container .select-weekdays div {
+    padding-right: 24px;
+    
+}
+
 .form-container .inputs-container .week-days {
     display: grid;
     grid-template-columns: repeat(3, 1fr);
-    gap: 8px;
+    gap: 24px;
 }
 
 
@@ -30,6 +43,7 @@
     display: flex;
     align-items: center;
     gap: 12px;
+    color: var(--gray-150);
     font-size: 1rem;
     font-weight: 500;
 }
@@ -50,9 +64,17 @@
 }
 
 .form-container .inputs-container .week-days .day .times .time {
-    display: flex;
-    gap: 8px;
+    display: grid;
+    grid-template-columns: auto 1fr auto 1fr;
+    column-gap: 8px;
+    row-gap: 4px;
     align-items: center;
+}
+
+.form-container .inputs-container .week-days .day .times .time .time-error {
+    text-align: center;
+    grid-column: 1/-1;
+    color: var(--error);
 }
 
 .form-container .inputs-container .week-days .day .times .time ::deep svg {

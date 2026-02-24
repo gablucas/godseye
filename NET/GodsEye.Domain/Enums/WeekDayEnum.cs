@@ -4,25 +4,25 @@ namespace GodsEye.Domain.Enums
 {
     public enum WeekDayEnum
     {
-        [Description("Domingo")]
-        Sunday = 0,
-
         [Description("Segunda-feira")]
-        Monday = 1,
+        Monday = 0,
 
         [Description("Terça-feira")]
-        Tuesday = 2,
+        Tuesday = 1,
 
         [Description("Quarta-feira")]
-        Wednesday = 3,
+        Wednesday = 2,
 
         [Description("Quinta-feira")]
-        Thursday = 4,
+        Thursday = 3,
 
         [Description("Sexta-feira")]
-        Friday = 5,
+        Friday = 4,
 
         [Description("Sábado")]
-        Saturday = 6
+        Saturday = 5,
+
+        [Description("Domingo")]
+        Sunday = 6
     }
 }
