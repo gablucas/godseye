@@ -49,22 +49,21 @@ namespace GodsEye.WEB.Components.Dashboard
                 "ReceiveMessage",
                 log =>
                 {
-                    Console.WriteLine("📥 LOG RECEBIDO NO FRONT");
                     _logs = _logs.Select(x =>
                     {
-                        if (x.PersonLog.Any(x => x.PersonId == log.PersonId))
+                        if (x.EnvironmentMonitoringLog.Any(x => x.PersonId == log.PersonId))
                         {
                             x.TotalPerson -= 1;
-                            x.PersonLog.RemoveAll(x => x.PersonId == log.PersonId);
+                            x.EnvironmentMonitoringLog.RemoveAll(x => x.PersonId == log.PersonId);
                         }
 
                         if (log.SectorId == x.SectorId)
                         {
                             x.TotalPerson += 1;
-                            x.PersonLog.Add(new EnvironmentMonitoringSectorLog()
+                            x.EnvironmentMonitoringLog.Add(new EnvironmentMonitoringModel()
                             {
                                 PersonId = log.PersonId,
-                                PersonName = log.Person,
+                                Person = log.Person,
                                 CreatedAt = log.CreatedAt,
                                 PersonPhoto = log.PersonPhoto
                             });

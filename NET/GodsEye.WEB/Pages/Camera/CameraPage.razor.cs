@@ -124,6 +124,7 @@ namespace GodsEye.WEB.Pages.Camera
                 return;
 
             _cameras.Insert(0, newCamera.Data);
+            ApplyFilters();
         }
 
         private async Task OpenEditData(int cameraId)

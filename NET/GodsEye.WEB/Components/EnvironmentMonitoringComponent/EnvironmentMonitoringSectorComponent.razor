@@ -1,0 +1,33 @@
+﻿@using GodsEye.Application.DTOs.Model
+@inject ISnackbar Snackbar
+
+<div class="page-container">
+
+    <div class="content-container">
+        <div class="page-title">
+            <h1>Pessoas</h1>
+            <p>Aqui você encontra a lista de pessoas cadastradas em seu sistema</p>
+        </div>
+
+        <div class="notification-menu">
+            <div class="filters">
+                <div class="option">
+                    <MudTextField @bind-Value="_personNameFilter" TextChanged="ApplyFilters" Immediate="true" Label="Pessoa" Variant="Variant.Outlined" Margin="Margin.Dense" Clearable="true" />
+                </div>
+            </div>
+        </div>
+
+
+        <MudTable T="EnvironmentMonitoringModel" @ref="mudTable" Elevation="0" Items="@_filteredEnvironmentMonitoringLog" Hover="true" Loading="@_loading" LoadingProgressColor="Color.Info" RowClass="cursor-pointer" RowClassFunc="@SelectedRowClassFunc" OnRowClick="RowClickEvent">
+            <HeaderContent>
+                <MudTh>Foto</MudTh>
+                <MudTh>Nome</MudTh>
+            </HeaderContent>
+            <RowTemplate>
+                <MudTd DataLabel="Foto"><MudImage Height="140" Style="border-radius: 7px" src=@($"https://localhost:7010/{context.PersonPhoto}") /></MudTd>
+                <MudTd DataLabel="Nome">@context.Person</MudTd>
+            </RowTemplate>
+        </MudTable>
+    </div>
+
+</div>

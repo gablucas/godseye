@@ -1,4 +1,6 @@
-﻿using GodsEye.WEB.Components.PersonComponents;
+﻿using GodsEye.Application.DTOs.Model;
+using GodsEye.WEB.Components.EnvironmentMonitoringComponent;
+using GodsEye.WEB.Components.PersonComponents;
 using MudBlazor;
 
 namespace GodsEye.WEB.Services
@@ -12,12 +14,20 @@ namespace GodsEye.WEB.Services
             _dialogService = dialogService;
         }
 
-        public async Task OpenPersonInfoDialog(int personId)
+        public async Task<IDialogReference?> OpenPersonInfoDialog(int personId)
         {
             var options = new DialogOptions { CloseOnEscapeKey = true, FullWidth = true, MaxWidth = MaxWidth.False };
             var parameters = new DialogParameters<InfoPersonComponent> { { x => x.Id, personId } };
 
-            await _dialogService.ShowAsync<InfoPersonComponent>("Informações pessoa", parameters, options);
+            return await _dialogService.ShowAsync<InfoPersonComponent>("Informações pessoa", parameters, options);
+        }
+
+        public async Task<IDialogReference?> OpenEnvironmentMonitoringSectorDialog(List<EnvironmentMonitoringModel> logs)
+        {
+            var options = new DialogOptions { CloseOnEscapeKey = true, FullWidth = true, MaxWidth = MaxWidth.False };
+            var parameters = new DialogParameters<EnvironmentMonitoringSectorComponent> { { x => x.EnvironmentMonitoringLog,  logs } };
+
+            return await _dialogService.ShowAsync<EnvironmentMonitoringSectorComponent>("Pessoas no setor", parameters, options);
         }
     }
 }

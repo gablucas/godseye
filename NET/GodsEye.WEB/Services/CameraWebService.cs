@@ -6,7 +6,6 @@ using GodsEye.Application.UseCases.Camera.Commands.GetCameraConfigDwellTimeMonit
 using GodsEye.Application.UseCases.Camera.Commands.UpdateCameraConfigDwellTimeMonitoring;
 using GodsEye.Application.UseCases.Camera.Commands.UpdateCameraIncidentRecording;
 using GodsEye.Application.UseCases.Camera.Commands.UpdateCameraRoi;
-using GodsEye.Application.UseCases.IncidentRecording.Commands.UpdateIncidentRecordingLog;
 using GodsEye.Domain.DTOs.Result;
 using GodsEye.WEB.Model.Forms;
 using System.Net.Http.Json;
@@ -23,11 +22,11 @@ namespace GodsEye.WEB.Services
             _http = http;
         }
 
-        public async Task<ApiResponse<ProcedureResult?>> CreateAsync(CreateCameraForm camera)
+        public async Task<ApiResponse<int>> CreateAsync(CreateCameraForm camera)
         {
             var result = await _http.PostAsJsonAsync(_baseEndpoint, camera);
 
-            var json = await result.Content.ReadFromJsonAsync<ApiResponse<ProcedureResult?>>();
+            var json = await result.Content.ReadFromJsonAsync<ApiResponse<int>>();
 
             return json!;
         }

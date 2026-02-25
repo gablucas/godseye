@@ -251,7 +251,6 @@ namespace GodsEye.WEB.Pages.EnvironmentMonitoring
 
         #endregion
 
-
         #region DEV TOOLS
 
         private async Task DeleteAll()

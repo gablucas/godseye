@@ -50,7 +50,7 @@ namespace GodsEye.WEB.Components.CameraComponents
         private string? _connectionErrorMessage = null;
         private bool _loadingConnection = false;
 
-        ApiResponse<ProcedureResult?>? apiResponse { get; set; } = null;
+        ApiResponse<int>? apiResponse { get; set; } = null;
 
         private bool visible = false;
         private bool _videoExpanded = false;
@@ -122,7 +122,7 @@ namespace GodsEye.WEB.Components.CameraComponents
             if (apiResponse.Success)
             {
                 Snackbar.Add("camera cadastrada com Success!", Severity.Success);
-                MudDialog.Close(DialogResult.Ok(apiResponse.Data.Id));
+                MudDialog.Close(DialogResult.Ok(apiResponse.Data));
             }
             else
             {

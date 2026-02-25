@@ -1,0 +1,8 @@
+﻿using GodsEye.Application.DTOs.Model;
+using GodsEye.Application.DTOs.Response;
+using MediatR;
+
+namespace GodsEye.Application.UseCases.Sector.Queries.GetSectorById
+{
+    public sealed record GetSectorByIdRequest(int SectorId) : IRequest<ApiResponse<SectorModel>>;
+}

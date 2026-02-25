@@ -31,12 +31,12 @@ BEGIN
             ELSE JSON_ARRAYAGG(
                 JSON_OBJECT(
                     'PersonId', P.ID,
-                    'PersonName', P.NAME,
+                    'Person', P.NAME,
                     'PersonPhoto', P.IMAGE_PATH,
                     'CreatedAt', DATE_FORMAT(PST.LastSeen, '%Y-%m-%dT%H:%i:%s')
                 )
             )
-        END AS Person
+        END AS EnvironmentMonitoringLog
     FROM SECTOR S
     LEFT JOIN CAMERA C ON C.SECTOR_ID = S.ID
     LEFT JOIN PeopleSeenToday PST ON PST.CAMERA_ID = C.ID
@@ -55,12 +55,12 @@ BEGIN
             ELSE JSON_ARRAYAGG(
                 JSON_OBJECT(
                     'PersonId', P.ID,
-                    'PersonName', P.NAME,
+                    'Person', P.NAME,
                     'PersonPhoto', P.IMAGE_PATH,
                     'CreatedAt', NULL -- Não foi visto hoje, então data é NULL
                 )
             )
-        END AS Person
+        END AS EnvironmentMonitoringLog
     FROM PERSON P
     LEFT JOIN PeopleSeenToday PST ON PST.PERSON_ID = P.ID
     WHERE PST.PERSON_ID IS NULL -- Pega apenas quem NÃO está no "Visto Hoje"

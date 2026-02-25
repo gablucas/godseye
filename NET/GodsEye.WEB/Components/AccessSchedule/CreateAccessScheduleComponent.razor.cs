@@ -85,9 +85,9 @@ namespace GodsEye.WEB.Components.AccessSchedule
             {
                 time.EndTime = newTime;
                 _accessScheduleForm.Rules = _accessScheduleForm.Rules.OrderBy(rule => rule.StartTime).ThenBy(rule => rule.EndTime).ToList();
+                ValidateTimeRules();
             }
 
-            ValidateTimeRules();
         }
 
         private bool ValidateTimeRules()
@@ -149,17 +149,6 @@ namespace GodsEye.WEB.Components.AccessSchedule
                 }
             }
 
-            if (!_accessScheduleForm.Rules.Any())
-            {
-                Snackbar.Add("Adicione pelo menos um horário", Severity.Error);
-                return false;
-            }
-
-            if (_accessScheduleForm.Rules.Any(rule => rule.StartTime is null || rule.EndTime is null))
-            {
-                Snackbar.Add("Existe algum campo de horário vazio", Severity.Error);
-                return false;
-            }
 
             if (_timeRuleErrors.Any())
             {

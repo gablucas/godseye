@@ -3,6 +3,7 @@ using GodsEye.WEB.Components.SectorComponents;
 using GodsEye.WEB.Services;
 using Microsoft.AspNetCore.Components;
 using MudBlazor;
+using static MudBlazor.CategoryTypes;
 
 namespace GodsEye.WEB.Pages.Sector
 {
@@ -23,8 +24,8 @@ namespace GodsEye.WEB.Pages.Sector
 
         #region TABLE PARAMETERS
 
-        IEnumerable<SectorModel> _sectors = Enumerable.Empty<SectorModel>();
-        IEnumerable<SectorModel> _filteredSectors = Enumerable.Empty<SectorModel>();
+        List<SectorModel> _sectors = new();
+        List<SectorModel> _filteredSectors = new();
         bool _loading;
 
         #endregion
@@ -58,7 +59,7 @@ namespace GodsEye.WEB.Pages.Sector
 
             if (sectorsResult is not null && sectorsResult.Success)
             {
-                _sectors = sectorsResult.Data;
+                _sectors = sectorsResult.Data.ToList();
                 _filteredSectors = _sectors;
             }
 
@@ -70,10 +71,30 @@ namespace GodsEye.WEB.Pages.Sector
             _loading = false;
         }
 
-        private void OpenCreateSector()
+        private async Task OpenCreateSector()
         {
             var options = new DialogOptions { CloseOnEscapeKey = true, FullWidth = true, MaxWidth = MaxWidth.Large };
-            DialogService.ShowAsync<CreateSectorComponent>("Criar setor", options);
+            var dialog = await DialogService.ShowAsync<CreateSectorComponent>("Criar setor", options);
+
+            var result = await dialog.Result;
+
+            if (result.Canceled)
+                return;
+
+            if (result.Data is not int sectorId || sectorId <= 0)
+            {
+                Snackbar.Add("ID inválido retornado", Severity.Error);
+                return;
+            }
+
+            var newSector = await sectorService.GetById(sectorId);
+
+            if (newSector is null || !newSector.Success)
+                return;
+
+            _sectors.Insert(0, newSector.Data);
+            ApplyFilters();
+
         }
 
         private void OnCamerasChanged(IEnumerable<string> values)

@@ -7,7 +7,7 @@
     <div class="sectors-grid">
         @foreach (var sector in _logs.OrderByDescending(x => x.TotalPerson))
         {
-            <div class="sector-card">
+            <div class="sector-card" @onclick="() => DialogWebService.OpenEnvironmentMonitoringSectorDialog(sector.EnvironmentMonitoringLog)">
                 <div class="sector-info">
                     <span class="sector-name">@sector.SectorName</span>
                     <span class="sector-count">@sector.TotalPerson</span>

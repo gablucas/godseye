@@ -1,6 +1,4 @@
 ﻿using GodsEye.Application.DTOs.Model;
-using GodsEye.Application.DTOs.Response;
-using GodsEye.Domain.DTOs.Result;
 using GodsEye.WEB.Model.Forms;
 using GodsEye.WEB.Services;
 using Microsoft.AspNetCore.Components;
@@ -16,9 +14,6 @@ namespace GodsEye.WEB.Components.SectorComponents
         SectorWebService sectorService { get; set; }
 
         [Inject]
-        CameraWebService cameraService { get; set; }
-
-        [Inject]
         NotificationGroupWebService notificationGroupService { get; set; }
 
         #endregion
@@ -29,7 +24,6 @@ namespace GodsEye.WEB.Components.SectorComponents
 
         CreateSectorForm CreateSectorForm { get; set; } = new();
         public IEnumerable<string> NotificationGroups { get; set; }
-        ApiResponse<ProcedureResult?>? apiResponse { get; set; } = null;
 
         bool success;
         string[] errors = { };
@@ -51,11 +45,6 @@ namespace GodsEye.WEB.Components.SectorComponents
             }
         }
 
-        private void BackToRegister()
-        {
-            apiResponse = null;
-        }
-
         private string GetSelectNotificationGroupsName(List<string> ids)
         {
             var names = _notificationGroups
@@ -68,13 +57,13 @@ namespace GodsEye.WEB.Components.SectorComponents
         private async Task Submit()
         {
             visible = true;
-            apiResponse = await sectorService.CreateAsync(CreateSectorForm);
+            var result = await sectorService.CreateAsync(CreateSectorForm);
             visible = false;
 
-            if (apiResponse.Success)
+            if (result.Success)
             {
                 Snackbar.Add("Setor cadastrado com sucesso!", Severity.Success);
-                MudDialog.Close(DialogResult.Ok(1));
+                MudDialog.Close(DialogResult.Ok(result.Data));
             }
             else
             {

@@ -82,7 +82,7 @@ namespace GodsEye.Infrastructure.Services
             Dapper.DefaultTypeMap.MatchNamesWithUnderscores = true;
             SqlMapper.AddTypeHandler(new JsonTypeHandler<List<FeatureDTO>>());
             SqlMapper.AddTypeHandler(new JsonTypeHandler<List<EnvironmentMonitoringPersonLog>>());
-            SqlMapper.AddTypeHandler(new JsonTypeHandler<List<EnvironmentMonitoringSectorLog>>());
+            SqlMapper.AddTypeHandler(new JsonTypeHandler<List<EnvironmentMonitoringModel>>());
             SqlMapper.AddTypeHandler(new JsonTypeHandler<List<IncidentRecordingPersonDTO>>());
             SqlMapper.AddTypeHandler(new JsonTypeHandler<List<EmailDTO>>());
             SqlMapper.AddTypeHandler(new JsonTypeHandler<List<SectorDTO>>());

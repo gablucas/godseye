@@ -5,7 +5,7 @@ using MediatR;
 
 namespace GodsEye.Application.UseCases.Sector.Commands.CreateSector
 {
-    public class CreateSectorHandler : IRequestHandler<CreateSectorRequest, ApiResponse<ProcedureResult>>
+    public class CreateSectorHandler : IRequestHandler<CreateSectorRequest, ApiResponse<int>>
     {
         private readonly IApplicationDbContext _context;
 
@@ -14,7 +14,7 @@ namespace GodsEye.Application.UseCases.Sector.Commands.CreateSector
             _context = context;
         }
 
-        public async Task<ApiResponse<ProcedureResult>> Handle(CreateSectorRequest request, CancellationToken cancellationToken)
+        public async Task<ApiResponse<int>> Handle(CreateSectorRequest request, CancellationToken cancellationToken)
         {
             var sql = "CALL SP_SECTOR_CREATE(@P_NAME, @P_NOTIFICATION_GROUP_JSON)";
 
@@ -26,7 +26,7 @@ namespace GodsEye.Application.UseCases.Sector.Commands.CreateSector
 
             var result = await _context.QuerySingleSqlAsync<ProcedureResult>(sql, parameters, cancellationToken);
 
-            return ApiResponse<ProcedureResult>.Ok(result);
+            return ApiResponse<int>.Ok(result.Id);
         }
     }
 }

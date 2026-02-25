@@ -1,6 +1,6 @@
-﻿using GodsEye.Application.UseCases.Person.Queries.GetAllPersons;
-using GodsEye.Application.UseCases.Sector.Commands.CreateSector;
+﻿using GodsEye.Application.UseCases.Sector.Commands.CreateSector;
 using GodsEye.Application.UseCases.Sector.Queries.GetAllSectors;
+using GodsEye.Application.UseCases.Sector.Queries.GetSectorById;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -31,6 +31,14 @@ namespace GodsEye.API.Controllers
         public async Task<IActionResult> GetAllSectors(CancellationToken cancellationToken)
         {
             var result = await _mediator.Send(new GetAllSectorsRequest(), cancellationToken);
+            return Ok(result);
+        }
+
+        [AllowAnonymous]
+        [HttpGet("{id}")]
+        public async Task<IActionResult> GetById(int id, CancellationToken cancellationToken)
+        {
+            var result = await _mediator.Send(new GetSectorByIdRequest(id), cancellationToken);
             return Ok(result);
         }
     }

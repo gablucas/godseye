@@ -1,6 +1,4 @@
-﻿using System.Text.Json;
-
-namespace GodsEye.Application.DTOs.Model
+﻿namespace GodsEye.Application.DTOs.Model
 {
     public class EnvironmentMonitoringSectorModel
     {
@@ -9,16 +7,15 @@ namespace GodsEye.Application.DTOs.Model
         public string SectorName { get; set; }
         public int TotalPerson { get; set; }
 
-        public List<EnvironmentMonitoringSectorLog> PersonLog { get; set; } = new();
-
+        public List<EnvironmentMonitoringModel> EnvironmentMonitoringLog { get; set; } = new();
 
     }
 
-    public class EnvironmentMonitoringSectorLog
-    {
-        public int PersonId { get; set; }
-        public string PersonName { get; set; }
-        public string PersonPhoto { get; set; }
-        public DateTime? CreatedAt { get; set; }
-    }
+    //public class EnvironmentMonitoringSectorLog
+    //{
+    //    public int PersonId { get; set; }
+    //    public string PersonName { get; set; }
+    //    public string PersonPhoto { get; set; }
+    //    public DateTime? CreatedAt { get; set; }
+    //}
 }

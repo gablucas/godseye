@@ -11,6 +11,7 @@
     <link href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700&display=swap" rel="stylesheet" />
     <!-- Important: Increment the version parameter whenever you update MudBlazor to prevent caching issues -->
     <link href="_content/MudBlazor/MudBlazor.min.css?v=1" rel="stylesheet" />
+    <link href="css/logoloader.css" rel="stylesheet" />
 
     <!--FONTE-->
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -33,9 +34,29 @@
         ="loading-progress-text"></div>
     </div>-->
     <div id="app">
-        <div class="animated-logo-intro">
-            <img src="loading-logo-1.png" />
-            <img src="loading-logo-2.png" />
+
+        <div class="intro-wrapper">
+            <div class="intro-logo">
+                <svg xmlns="http://www.w3.org/2000/svg"
+                     width="212" height="124" viewBox="0 0 212 124" fill="none"
+                     class="logo-svg">
+
+                    <!-- Base azul -->
+                    <path d="M24.8717 54.0749C23.9567 52.5745 23.0785 51.0491 22.2386 49.5H0C4.29484 59.3536 9.83278 68.5408 16.4157 76.8635C21.6191 83.4422 27.4755 89.4807 33.8869 94.8812C55.3401 112.952 83.0083 123.88 113.226 123.999C113.392 124 113.559 124 113.726 124C144.138 124 171.993 113.052 193.565 94.8812C199.976 89.4807 205.832 83.4422 211.036 76.8635C209.138 68.8513 206.276 61.212 202.58 54.0748C198.616 60.574 193.959 66.6042 188.712 72.0628C169.789 91.7488 143.188 104 113.726 104C113.559 104 113.392 104 113.226 103.999C83.9624 103.861 57.5552 91.6373 38.7392 72.0628C33.4921 66.6042 28.8354 60.574 24.8717 54.0749Z" fill="#00AFE2" />
+
+                    <!-- Olho (círculo) em um grupo para animar -->
+                    <g class="logo-eye">
+                        <path d="M133.726 50C133.726 61.0457 124.771 70 113.726 70C102.68 70 93.7258 61.0457 93.7258 50C93.7258 38.9543 102.68 30 113.726 30C124.771 30 133.726 38.9543 133.726 50Z" fill="#0F305C" />
+                    </g>
+
+                    <!-- Arco superior -->
+                    <path d="M200.056 49.5C196.363 43.1989 191.998 37.3382 187.062 32.0157C168.799 12.3238 142.701 0 113.726 0C113.559 0 113.392 0.000411987 113.226 0.0012207V20.0015L113.726 20C138.759 20 161.106 31.4976 175.775 49.5C175.911 49.6661 176.045 49.8328 176.179 50C161.518 68.2893 138.99 80 113.726 80C113.559 80 113.392 79.9995 113.226 79.9985C88.1648 79.8451 65.8365 68.1685 51.272 50C51.1389 49.8339 51.0063 49.6672 50.8745 49.5H26.8154L27.104 50C30.859 56.4913 35.3227 62.5213 40.3893 67.9843C58.5476 87.5629 84.4499 99.8579 113.226 99.9988C113.392 99.9996 113.559 100 113.726 100C142.701 100 168.799 87.6762 187.062 67.9843C192.129 62.5213 196.593 56.4913 200.348 50C200.251 49.833 200.154 49.6664 200.056 49.5Z" fill="#0F305C" />
+                </svg>
+
+                <p id="loading-text" class="loading-text">
+                    Carregando sua página...
+                </p>
+            </div>
         </div>
 
     </div>
@@ -53,6 +74,7 @@
     <script src="https://cdn.jsdelivr.net/npm/hls.js@latest"></script>
     <script src="js/stream.js"></script>
     <script src="js/video.js"></script>
+    <script src="js/logoloader.js"></script>
     <script src="_framework/blazor.webassembly.js"></script>
 </body>
 

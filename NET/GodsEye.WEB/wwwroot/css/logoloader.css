@@ -1,0 +1,76 @@
+﻿/* Centraliza tudo na tela (opcional, mas acho que é o que você quer) */
+.intro-wrapper {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 80vh;
+}
+
+.intro-logo {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 18px;
+}
+
+/* Tamanho da logo */
+.logo-svg {
+    width: 320px; /* ajuste aqui o tamanho */
+    height: auto;
+}
+
+/* Animação do "olho" */
+.logo-eye {
+    transform-box: fill-box;
+    transform-origin: center center;
+    animation: eye-look 2.4s cubic-bezier(0.33, 1, 0.68, 1) infinite;
+}
+
+/*
+ Timeline "natural":
+ - 0% a 20%: centro
+ - 30% a 45%: esquerda
+ - 55% a 70%: direita
+ - 80% a 100%: volta pro centro
+*/
+@keyframes eye-look {
+    0%, 20% {
+        transform: translateX(0);
+    }
+
+    30%, 45% {
+        transform: translateX(-20px); /* olha pra esquerda */
+    }
+
+    55%, 70% {
+        transform: translateX(20px); /* olha pra direita */
+    }
+
+    80%, 100% {
+        transform: translateX(0); /* volta pro centro */
+    }
+}
+
+/* Texto das mensagens */
+.loading-text {
+    font-size: 1.8rem;
+    color: #0F305C;
+    font-weight: 600;
+    letter-spacing: 0.03em;
+    text-transform: none;
+    animation: text-pulse 1.4s ease-in-out infinite;
+}
+
+@keyframes text-pulse {
+    0% {
+        opacity: 0.4;
+    }
+
+    50% {
+        opacity: 1;
+    }
+
+    100% {
+        opacity: 0.4;
+    }
+}
