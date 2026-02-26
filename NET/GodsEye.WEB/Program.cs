@@ -22,6 +22,7 @@ builder.Services.AddScoped<NotificationGroupWebService>();
 builder.Services.AddScoped<DialogWebService>();
 builder.Services.AddScoped<MediaMtxWebService>();
 builder.Services.AddScoped<AccessScheduleWebService>();
+builder.Services.AddScoped<AccessLevelWebService>();
 
 
 builder.Services.AddMudServices();

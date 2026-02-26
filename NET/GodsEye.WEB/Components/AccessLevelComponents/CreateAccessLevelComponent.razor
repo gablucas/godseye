@@ -1,0 +1,97 @@
+﻿@using GodsEye.Application.DTOs.Model
+@using GodsEye.WEB.Enum
+@inject ISnackbar Snackbar
+
+<MudDialog>
+    <DialogContent>
+        <div class="form-container">
+
+            <MudForm @ref="form" Model="AccessLevelForm" @bind-IsValid="@success" @bind-Errors="@errors">
+
+                <div class="inputs-container">
+
+                    <MudTextField 
+                        Label="Nome" 
+                        @bind-Value="AccessLevelForm.Name" 
+                        Required="true" 
+                        RequiredError="O nome é obrigatório" 
+                        T="string" 
+                        For="@(() => AccessLevelForm.Name)" 
+                        Variant="Variant.Outlined" 
+                        />
+
+                    <MudSelect 
+                        T="int" 
+                        Label="Setores permitidos" 
+                        HelperText="Selecione o(s) setor(es) permitidos para esse nível de acesso" 
+                        MultiSelection="true" 
+                        @bind-SelectedValues="AccessLevelForm.Sectors" 
+                        MultiSelectionTextFunc="GetSelectedSectorsName" 
+                        Variant="Variant.Outlined"
+                    >
+
+                        @foreach (var sector in _sectors.Where(x => !AccessLevelForm.NotAllowedSectors.Contains(x.Id)))
+                        {
+                            <MudSelectItem T="int" Value="@sector.Id">@sector.Name</MudSelectItem>
+                        }
+                    </MudSelect>
+
+                    <MudSelect 
+                        T="int" 
+                        Label="Setores não permitidos" 
+                        HelperText="Selecione o(s) setor(es) que não permitidos nesse nível de acesso" 
+                        MultiSelection="true" 
+                        @bind-SelectedValues="AccessLevelForm.NotAllowedSectors" 
+                        MultiSelectionTextFunc="GetSelectedSectorsName" 
+                        Variant="Variant.Outlined">
+
+                        @foreach (var sector in _sectors.Where(x => !AccessLevelForm.Sectors.Contains(x.Id)))
+                        {
+                            <MudSelectItem T="int" Value="@sector.Id">@sector.Name</MudSelectItem>
+                        }
+                    </MudSelect>
+
+                    <MudSelect 
+                        Label="Calendário de acesso"
+                        T="int?"
+                        @bind-Value="AccessLevelForm.AccessLevel"
+                        HelperText="Selecione o calendário de acesso"
+                        Required="true"
+                        RequiredError="Selecione um setor"
+                        Clearable="true"
+                        Variant="Variant.Outlined">
+
+                        @foreach (var accessSchedule in _accessSchedule)
+                        {
+                            <MudSelectItem T="int?" Value="@accessSchedule.Id">@accessSchedule.Name</MudSelectItem>
+                        }
+                    </MudSelect>
+
+                </div>
+
+                <MudDivider />
+
+                @if (apiResponse != null)
+                {
+                    if (!apiResponse.Success)
+                    {
+                        <MudAlert Severity="Severity.Error" Variant="Variant.Outlined">@_errorMessage</MudAlert>
+                    }
+                }
+
+                <MudButton OnClick="Submit" Disabled=@(!success) Class="btn-submit" Variant="Variant.Filled" Color="Color.Primary">Registrar</MudButton>
+
+                <MudOverlay Visible="visible" LightBackground="true" Absolute="true">
+                    <MudProgressCircular Color="Color.Default" Indeterminate="true" />
+                </MudOverlay>
+
+            </MudForm>
+
+        </div>
+    </DialogContent>
+
+
+    <DialogActions>
+        <MudButton OnClick="Cancel">Sair</MudButton>
+    </DialogActions>
+</MudDialog>

@@ -1,30 +1,30 @@
 ﻿<div class="camera-bar">
 
-    <div class="item @(Pagina == "dados" ? "selected" : "")" @onclick="() => OpenCameraData(Id)">
+    <div class="item @(Pagina == "dados" ? "selected" : "")" @onclick="() => dialogWebService.OpenCameraData(Id, MudDialog)">
         <span>Dados</span>
     </div>
 
-    <div class="item @(Pagina == "reconhecimento" ? "selected" : "")" @onclick="() => OpenCameraRecognition(Id)">
+    <div class="item @(Pagina == "reconhecimento" ? "selected" : "")" @onclick="() => dialogWebService.OpenCameraRecognition(Id, MudDialog)">
         <span>Reconhecimento</span>
     </div>
 
     @if (HasFeature(1))
     {
-        <div class="item @(Pagina == "monitoramento-ambiente" ? "selected" : "")" @onclick="() => OpenEnvironmentMonitoring(Id)">
+        <div class="item @(Pagina == "monitoramento-ambiente" ? "selected" : "")" @onclick="() => dialogWebService.OpenEnvironmentMonitoring(Id, MudDialog)">
             <span>Monitoramento de ambientes</span>
         </div>
     }
 
     @if (HasFeature(2))
     {
-        <div class="item @(Pagina == "registro-incidente" ? "selected" : "")" @onclick="() => OpenIncidentRecording(Id)">
+        <div class="item @(Pagina == "registro-incidente" ? "selected" : "")" @onclick="() => dialogWebService.OpenIncidentRecording(Id, MudDialog)">
             <span>Registro de incidente</span>
         </div>
     }
 
     @if (HasFeature(3))
     {
-        <div class="item @(Pagina == "controle-permanencia" ? "selected" : "")" @onclick="() => OpenDwellTimeMonitoring(Id)">
+        <div class="item @(Pagina == "controle-permanencia" ? "selected" : "")" @onclick="() => dialogWebService.OpenDwellTimeMonitoring(Id, MudDialog)">
             <span>Controle de permanência</span>
         </div>
     }

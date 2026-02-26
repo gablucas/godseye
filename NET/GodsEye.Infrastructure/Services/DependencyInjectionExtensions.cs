@@ -85,11 +85,14 @@ namespace GodsEye.Infrastructure.Services
             SqlMapper.AddTypeHandler(new JsonTypeHandler<List<EnvironmentMonitoringModel>>());
             SqlMapper.AddTypeHandler(new JsonTypeHandler<List<IncidentRecordingPersonDTO>>());
             SqlMapper.AddTypeHandler(new JsonTypeHandler<List<EmailDTO>>());
-            SqlMapper.AddTypeHandler(new JsonTypeHandler<List<SectorDTO>>());
             SqlMapper.AddTypeHandler(new JsonTypeHandler<List<CameraDTO>>());
             SqlMapper.AddTypeHandler(new JsonTypeHandler<List<NotificationGroupDTO>>());
             SqlMapper.AddTypeHandler(new JsonTypeHandler<List<AccessScheduleRuleModel>>());
+            SqlMapper.AddTypeHandler(new JsonTypeHandler<SectorDTO>());
             SqlMapper.AddTypeHandler(new JsonTypeHandler<RoiModel>());
+            SqlMapper.AddTypeHandler(new JsonTypeHandler<List<SectorAccessLevelDTO>>());
+            SqlMapper.AddTypeHandler(new JsonTypeHandler<AccessLevelScheduleDTO>());
+            SqlMapper.AddTypeHandler(new JsonTypeHandler<AccessLevelScheduleRuleDTO>());
         }
     }
 }

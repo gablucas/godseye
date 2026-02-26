@@ -10,6 +10,9 @@ namespace GodsEye.WEB.Components.CameraComponents
         [Inject]
         public CameraWebService cameraService { get; set;  }
 
+        [Inject]
+        public DialogWebService dialogWebService { get; set; }
+
         [Parameter]
         public Guid RefreshToken { get; set; }
 
@@ -36,58 +39,6 @@ namespace GodsEye.WEB.Components.CameraComponents
         private bool HasFeature(int featureId)
         {
             return _cameraFeatures.Any(x => x.Id == featureId);
-        }
-
-        
-        private async Task OpenCameraData(int cameraId)
-        {
-            MudDialog.CancelAll();
-
-            var options = new DialogOptions { CloseOnEscapeKey = true, FullWidth = true, MaxWidth = MaxWidth.False, NoHeader = true };
-            var parameters = new DialogParameters<CameraDataComponent> { { x => x.Id, cameraId } };
-            var dialog = await DialogService.ShowAsync<CameraDataComponent>(null, parameters, options);
-
-            var result = await dialog.Result;
-        }
-
-        private async Task OpenEnvironmentMonitoring(int cameraId)
-        {
-            MudDialog.CancelAll();
-
-            var options = new DialogOptions { CloseOnEscapeKey = true, FullWidth = true, MaxWidth = MaxWidth.False, NoHeader = true };
-            var parameters = new DialogParameters<CameraEnvironmentMonitoringComponent> { { x => x.Id, cameraId } };
-            var dialog = await DialogService.ShowAsync<CameraEnvironmentMonitoringComponent>(null, parameters, options);
-
-            var result = await dialog.Result;
-        }
-
-        private async Task OpenIncidentRecording(int cameraId)
-        {
-            MudDialog.CancelAll();
-
-            var options = new DialogOptions { CloseOnEscapeKey = true, FullWidth = true, MaxWidth = MaxWidth.False, NoHeader = true };
-            var parameters = new DialogParameters<CameraIncidentRecordingComponent> { { x => x.Id, cameraId } };
-            var dialog = await DialogService.ShowAsync<CameraIncidentRecordingComponent>(null, parameters, options);
-
-            var result = await dialog.Result;
-        }
-
-        private async Task OpenCameraRecognition(int cameraId)
-        {
-            MudDialog.CancelAll();
-
-            var options = new DialogOptions { CloseOnEscapeKey = true, FullWidth = true, MaxWidth = MaxWidth.False, NoHeader = true };
-            var parameters = new DialogParameters<CameraRoiComponent> { { x => x.Id, cameraId } };
-            await DialogService.ShowAsync<CameraRoiComponent>(null, parameters, options);
-        }
-
-        private async Task OpenDwellTimeMonitoring(int cameraId)
-        {
-            MudDialog.CancelAll();
-
-            var options = new DialogOptions { CloseOnEscapeKey = true, FullWidth = true, MaxWidth = MaxWidth.False, NoHeader = true };
-            var parameters = new DialogParameters<CameraDwellTimeRecordingComponent> { { x => x.Id, cameraId } };
-            await DialogService.ShowAsync<CameraDwellTimeRecordingComponent>(null, parameters, options);
         }
     }
 }

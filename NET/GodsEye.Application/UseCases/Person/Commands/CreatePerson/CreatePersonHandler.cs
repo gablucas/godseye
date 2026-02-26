@@ -29,14 +29,14 @@ namespace GodsEye.Application.UseCases.Person.Commands.CreatePerson
 
             var photoPath = _folderService.GeneratePersonPhotoPath(fileName);
 
-            var sql = "CALL SP_PERSON_CREATE(@P_NAME, @P_EMBEDDING, @P_IMAGE_PATH, @P_SECTORS_ID_JSON)";
+            var sql = "CALL SP_PERSON_CREATE(@P_NAME, @P_EMBEDDING, @P_IMAGE_PATH, @P_MAIN_SECTOR_ID)";
 
             var parameteres = new
             {
                 P_NAME = request.Name,
                 P_EMBEDDING = jsonEmbedding,
                 P_IMAGE_PATH = photoPath,
-                P_SECTORS_ID_JSON = request.Sectors
+                P_MAIN_SECTOR_ID = request.SectorId
             };
 
             var result = await _context.QuerySingleSqlAsync<ProcedureResult>(sql, parameteres, cancellationToken);

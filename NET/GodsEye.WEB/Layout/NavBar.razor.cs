@@ -1,6 +1,5 @@
 ﻿using GodsEye.WEB.Helpers;
 using MudBlazor;
-using System;
 
 namespace GodsEye.WEB.Layout
 {
@@ -31,6 +30,7 @@ namespace GodsEye.WEB.Layout
                     new() { Title = "Câmeras", Url = "/cadastro/cameras" },
                     new() { Title = "Notificações", Url = "/cadastro/notificacoes" },
                     new() { Title = "Calendário de acesso", Url = "/cadastro/calendario-acesso" },
+                    new() { Title = "Nível de acesso", Url = "/cadastro/nivel-acesso" },
                 }
             },
 

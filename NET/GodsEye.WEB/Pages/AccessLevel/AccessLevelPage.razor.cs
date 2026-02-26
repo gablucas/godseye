@@ -1,19 +1,19 @@
 ﻿using GodsEye.Application.DTOs.Model;
+using GodsEye.WEB.Components.AccessLevelComponents;
 using GodsEye.WEB.Components.PersonComponents;
 using GodsEye.WEB.Services;
 using Microsoft.AspNetCore.Components;
 using MudBlazor;
 
-
-namespace GodsEye.WEB.Pages.Person
+namespace GodsEye.WEB.Pages.AccessLevel
 {
-    public partial class PersonPage
+    public partial class AccessLevelPage
     {
         [Inject]
-        public PersonService personService { get; set; }
+        public SectorWebService SectorService { get; set; }
 
         [Inject]
-        public SectorWebService SectorService { get; set; }
+        public AccessLevelWebService AccessLevelWebService { get; set; }
 
         [Inject]
         public DialogWebService DialogWebService { get; set; }
@@ -23,9 +23,9 @@ namespace GodsEye.WEB.Pages.Person
 
         #region TABLE PARAMETERS
 
-        private MudTable<PersonModel> mudTable;
-        List<PersonModel> _persons = new();
-        IEnumerable<PersonModel> _filteredPersons = Enumerable.Empty<PersonModel>();
+        private MudTable<AccessLevelModel> mudTable;
+        List<AccessLevelModel> _accessLevel = new();
+        IEnumerable<AccessLevelModel> _filteredAccessLevel = Enumerable.Empty<AccessLevelModel>();
         private int selectedRowNumber = -1;
 
         #endregion
@@ -47,29 +47,21 @@ namespace GodsEye.WEB.Pages.Person
             new("Pessoas", href: null, disabled: true)
         ];
 
-
-
         bool _loading;
 
-        
+
         protected override async Task OnInitializedAsync()
         {
             _loading = true;
 
-            var personsResult = await personService.GetAllAsync();
-
-            if (personsResult is not null && personsResult.Success)
-                _persons = personsResult.Data.ToList();
-                _filteredPersons = _persons;
-
-            _loading = false;
-
             var sectorsRequest = await SectorService.GetAllAsync();
             if (sectorsRequest.Success)
                 _sectors = sectorsRequest.Data.ToList();
+
+            _loading = false;
         }
 
-        private async Task RowClickEvent(TableRowClickEventArgs<PersonModel> args)
+        private async Task RowClickEvent(TableRowClickEventArgs<AccessLevelModel> args)
         {
             if (args?.Item == null)
                 return;
@@ -80,7 +72,7 @@ namespace GodsEye.WEB.Pages.Person
             await DialogWebService.OpenPersonInfoDialog(args.Item.Id);
         }
 
-        private string SelectedRowClassFunc(PersonModel element, int rowNumber)
+        private string SelectedRowClassFunc(AccessLevelModel element, int rowNumber)
         {
             if (selectedRowNumber == rowNumber)
             {
@@ -98,10 +90,10 @@ namespace GodsEye.WEB.Pages.Person
             }
         }
 
-        private async Task OpenCreatePerson()
+        private async Task OpenCreateAcessLevel()
         {
             var options = new DialogOptions { CloseOnEscapeKey = true, FullWidth = true, MaxWidth = MaxWidth.False };
-            var dialog = await DialogService.ShowAsync<CreatePersonComponent>("Criar pessoa", options);
+            var dialog = await DialogService.ShowAsync<CreateAccessLevelComponent>("Criar pessoa", options);
 
             var result = await dialog.Result;
 
@@ -114,12 +106,12 @@ namespace GodsEye.WEB.Pages.Person
                 return;
             }
 
-            var newPerson = await personService.GetById(personId);
+            var newAccessLevel = await AccessLevelWebService.GetById(personId);
 
-            if (newPerson is null || !newPerson.Success)
+            if (newAccessLevel is null || !newAccessLevel.Success)
                 return;
 
-            _persons.Insert(0, newPerson.Data);
+            _accessLevel.Insert(0, newAccessLevel.Data);
         }
 
         private void OnSectorsChanged(IEnumerable<string> values)
@@ -135,7 +127,7 @@ namespace GodsEye.WEB.Pages.Person
 
         void ApplyFilters()
         {
-            _filteredPersons = _persons
+            _filteredAccessLevel = _accessLevel
                 .Where(x =>
                     (string.IsNullOrWhiteSpace(_personNameFilter) || x.Name.Contains(_personNameFilter, StringComparison.OrdinalIgnoreCase))
                     //(_selectedSectors.Count() == 0 || x.Sectors.Any(s => _selectedSectors.ToList().Contains(s.SectorId.ToString())))

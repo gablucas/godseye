@@ -1,8 +1,8 @@
-﻿@page "/cadastro/pessoas";
+﻿@page "/cadastro/nivel-acesso";
 @using GodsEye.Application.DTOs.Model
 @inject ISnackbar Snackbar
 
-<PageTitle>Pessoas</PageTitle>
+<PageTitle>Nível de acesso</PageTitle>
 
 <div class="page-container">
     <div class="breadcrumb-container">
@@ -11,8 +11,7 @@
 
     <div class="content-container">
         <div class="page-title">
-            <h1>Pessoas</h1>
-            <p>Aqui você encontra a lista de pessoas cadastradas em seu sistema</p>
+            <h1>Nível de acesso</h1>
         </div>
 
         <div class="notification-menu">
@@ -31,34 +30,16 @@
                 </div>
             </div>
 
-            <MudButton Variant="Variant.Outlined" OnClick="OpenCreatePerson">Criar pessoa</MudButton>
+            <MudButton Variant="Variant.Outlined" OnClick="OpenCreateAcessLevel">Criar pessoa</MudButton>
         </div>
 
 
-        <MudTable T="PersonModel" @ref="mudTable" Elevation="0" Items="@_filteredPersons" Hover="true" Loading="@_loading" LoadingProgressColor="Color.Info" RowClass="cursor-pointer" RowClassFunc="@SelectedRowClassFunc" OnRowClick="RowClickEvent">
+        <MudTable T="AccessLevelModel" @ref="mudTable" Elevation="0" Items="@_filteredAccessLevel" Hover="true" Loading="@_loading" LoadingProgressColor="Color.Info" RowClass="cursor-pointer" RowClassFunc="@SelectedRowClassFunc" OnRowClick="RowClickEvent">
             <HeaderContent>
-                <MudTh>Foto</MudTh>
                 <MudTh>Nome</MudTh>
-                @* <MudTh>Setor(es)</MudTh> *@
             </HeaderContent>
             <RowTemplate>
-                <MudTd DataLabel="Foto"><MudImage Height="140" Style="border-radius: 7px" src=@($"https://localhost:7010/{context.ImagePath}") /></MudTd>
                 <MudTd DataLabel="Nome">@context.Name</MudTd>
-
-                @* <MudTd DataLabel="Cameras">
-                    @if (context.Sectors.Count > 0)
-                    {
-                        foreach (var sec in context.Sectors)
-                        {
-                            <MudChip T="string" Color="Color.Info">@sec.SectorName</MudChip>
-                        }
-                    }
-                    else
-                    {
-                        <MudChip T="string">Nenhum Setor</MudChip>
-                    }
-
-                </MudTd> *@
             </RowTemplate>
         </MudTable>
     </div>

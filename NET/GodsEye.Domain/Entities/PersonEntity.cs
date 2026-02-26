@@ -8,8 +8,8 @@ namespace GodsEye.Domain.Entities
         public string Embedding { get; set; }
         [Column("IMAGE_PATH")]
         public string ImagePath { get; set; }
+        public int MainSectorId { get; set; }
+        public int AccessLevelId { get; set; }
         public int Active { get; set; }
-
-        public IEnumerable<string> Sectors { get; set; }
     }
 }

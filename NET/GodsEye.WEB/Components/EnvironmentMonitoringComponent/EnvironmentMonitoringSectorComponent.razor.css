@@ -1,4 +1,8 @@
-﻿.selected {
+﻿.page-container {
+    border: none;
+}
+
+.selected {
     background-color: #1E88E5 !important;
 }
 

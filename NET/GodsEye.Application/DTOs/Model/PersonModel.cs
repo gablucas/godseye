@@ -1,6 +1,4 @@
-﻿using System.Text.Json;
-
-namespace GodsEye.Application.DTOs.Model
+﻿namespace GodsEye.Application.DTOs.Model
 {
     public class PersonModel
     {
@@ -9,12 +7,13 @@ namespace GodsEye.Application.DTOs.Model
         public string ImagePath { get; set; }
         public int Active { get; set; }
 
-        public List<SectorDTO> Sectors { get; set; } = new();
+        public SectorDTO Sector { get; set; }
+        public AccessLevelModel AccessLevel { get; set; }
     }
 
     public class SectorDTO
     {
-        public int SectorId { get; set; }
-        public string SectorName { get; set; }
+        public int Id { get; set; }
+        public string Name { get; set; }
     }
 }

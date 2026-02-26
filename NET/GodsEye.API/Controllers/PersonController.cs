@@ -23,7 +23,7 @@ namespace GodsEye.API.Controllers
         [AllowAnonymous]
         [HttpPost]
         [Consumes("multipart/form-data")]
-        public async Task<IActionResult> CreatePerson([FromForm] string Name, [FromForm] string Photo, [FromForm] IEnumerable<string> Sectors, CancellationToken cancellationToken)
+        public async Task<IActionResult> CreatePerson([FromForm] string Name, [FromForm] string Photo, [FromForm] int SectorId, CancellationToken cancellationToken)
         {
             if (string.IsNullOrWhiteSpace(Photo))
                 return BadRequest("Foto inválida.");
@@ -35,7 +35,7 @@ namespace GodsEye.API.Controllers
 
             var photoBytes = Convert.FromBase64String(base64);
 
-            var result = await _mediator.Send(new CreatePersonRequest(Name, photoBytes, Sectors));
+            var result = await _mediator.Send(new CreatePersonRequest(Name, photoBytes, SectorId));
             return Ok(result);
         }
 

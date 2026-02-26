@@ -31,7 +31,7 @@ namespace GodsEye.WEB.Pages.AccessCalendar
 
         private MudTable<AccessScheduleModel> mudTable;
         List<AccessScheduleModel> _accessSchedule = new();
-        IEnumerable<AccessScheduleModel> _filteredAccessSchedule = Enumerable.Empty<AccessScheduleModel>();
+        List<AccessScheduleModel> _filteredAccessSchedule = new();
 
         
 
@@ -53,7 +53,7 @@ namespace GodsEye.WEB.Pages.AccessCalendar
 
             var accessScheduleResult = await AccessScheduleWebSerice.GetAllAsync();
 
-            if (accessScheduleResult is not null && accessScheduleResult.Success)
+            if (accessScheduleResult is not null && accessScheduleResult.Success && accessScheduleResult.Data is not null)
             {
                 _accessSchedule = accessScheduleResult.Data.ToList();
                 _filteredAccessSchedule = _accessSchedule.ToList();
