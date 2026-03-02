@@ -3,8 +3,8 @@
     public class AccessLevelForm
     {
         public string Name { get; set; }
-        public IEnumerable<int> Sectors { get; set; } = Enumerable.Empty<int>();
-        public IEnumerable<int> NotAllowedSectors { get; set; } = Enumerable.Empty<int>();
+        public IEnumerable<int> AllowedSectors { get; set; } = new List<int>();
+        public IEnumerable<int> BlacklistSectors { get; set; } = new List<int>();
         public int? AccessLevel { get; set; }
     }
 }

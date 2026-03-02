@@ -78,6 +78,7 @@ namespace GodsEye.Infrastructure.Services
 
             services.AddScoped<IEmailService, MailKitEmailSender>();
 
+            services.AddScoped<IDapperContext, DapperContext>();
 
             Dapper.DefaultTypeMap.MatchNamesWithUnderscores = true;
             SqlMapper.AddTypeHandler(new JsonTypeHandler<List<FeatureDTO>>());

@@ -20,22 +20,6 @@ namespace GodsEye.WEB.Layout
 
             new NavMenuGroup
             {
-                Key = "cadastros",
-                Title = "Cadastros",
-                Icon = Icons.Material.Filled.Inventory2,
-                Items =
-                {
-                    new() { Title = "Pessoas", Url = "/cadastro/pessoas" },
-                    new() { Title = "Setores", Url = "/cadastro/setores" },
-                    new() { Title = "Câmeras", Url = "/cadastro/cameras" },
-                    new() { Title = "Notificações", Url = "/cadastro/notificacoes" },
-                    new() { Title = "Calendário de acesso", Url = "/cadastro/calendario-acesso" },
-                    new() { Title = "Nível de acesso", Url = "/cadastro/nivel-acesso" },
-                }
-            },
-
-            new NavMenuGroup
-            {
                 Key = "monitoramentos",
                 Title = "Monitoramento",
                 Icon = Icons.Material.Filled.Visibility,
@@ -47,27 +31,40 @@ namespace GodsEye.WEB.Layout
                 }
             },
 
-            //new NavMenuGroup
-            //{
-            //    Key = "relatorios",
-            //    Title = "Relatórios",
-            //    Icon = Icons.Material.Filled.BarChart,
-            //    Items =
-            //    {
-            //        new() { Title = "Ambientes", Url = "/relatorio/monitoramento-ambientes" },
-            //        new() { Title = "Incidentes", Url = "/relatorio/captura-incidentes" },
-            //        new() { Title = "Permanência", Url = "/relatorio/controle-permanencia" }
-            //    }
-            //},
+            new NavMenuGroup
+            {
+                Key = "organizacao",
+                Title = "Organização",
+                Icon = Icons.Material.Filled.BusinessCenter,
+                Items =
+                {
+                    new() { Title = "Pessoas", Url = "/organizacao/pessoas" },
+                    new() { Title = "Setores", Url = "/organizacao/setores" },
+
+                }
+            },
 
             new NavMenuGroup
             {
-                Key = "configuracoes",
-                Title = "Configurações",
-                Icon = Icons.Material.Filled.Settings,
+                Key = "dispositivos",
+                Title = "Dispositivos",
+                Icon = Icons.Material.Filled.Devices,
                 Items =
                 {
-                    new() { Title = "Notificações", Url = "/configuracao/notificacao" }
+                    new() { Title = "Câmeras", Url = "/dispositivos/cameras" },
+
+                }
+            },
+
+            new NavMenuGroup
+            {
+                Key = "controle-acesso",
+                Title = "Controle de Acesso",
+                Icon = Icons.Material.Filled.LockPerson,
+                Items =
+                {
+                    new() { Title = "Níveis de Acesso", Url = "/controle-acesso/nivel" },
+                    new() { Title = "Horários de acesso", Url = "/controle-acesso/horarios" }
                 }
             }
         };

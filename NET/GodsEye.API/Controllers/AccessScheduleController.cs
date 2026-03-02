@@ -1,7 +1,6 @@
 ﻿using GodsEye.Application.UseCases.AccessSchedule.Commands.CreateAccessSchedule;
 using GodsEye.Application.UseCases.AccessSchedule.Queries.GetAccessSchedulesById;
 using GodsEye.Application.UseCases.AccessSchedule.Queries.GetAllAccessSchedules;
-using GodsEye.Application.UseCases.Person.Queries.GetCameraLog;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;

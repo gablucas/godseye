@@ -39,7 +39,12 @@
     border-radius: 4px;
 }
 
-.form-container .inputs-container .week-days .day .title {
+.form-container .inputs-container .week-days .day .menu {
+    display: flex;
+    justify-content: space-between;
+}
+
+.form-container .inputs-container .week-days .day .menu .title {
     display: flex;
     align-items: center;
     gap: 12px;
@@ -48,7 +53,7 @@
     font-weight: 500;
 }
 
-.form-container .inputs-container .week-days .day .title ::deep svg {
+.form-container .inputs-container .week-days .day .menu .title ::deep svg {
     height: 32px;
     width: 32px;
     padding: 4px;

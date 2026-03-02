@@ -6,7 +6,6 @@ using GodsEye.WEB.Services;
 using Microsoft.AspNetCore.Components;
 using MudBlazor;
 
-
 namespace GodsEye.WEB.Components.AccessSchedule
 {
     public partial class CreateAccessScheduleComponent
@@ -45,16 +44,16 @@ namespace GodsEye.WEB.Components.AccessSchedule
 
         protected override async Task OnParametersSetAsync()
         {
-
-            var result = await AccessScheduleWebService.GetById(Id);
-
-            if (result.Success && result is not null && result.Data is not null)
+            if (Id != 0)
             {
-                _accessScheduleForm = result.Data;
-                _selectedWeekDays = _accessScheduleForm.Rules.Select(x => x.WeekDay).ToList();
-            }
+                var result = await AccessScheduleWebService.GetById(Id);
 
-            base.OnParametersSet();
+                if (result.Success && result is not null && result.Data is not null)
+                {
+                    _accessScheduleForm = result.Data;
+                    _selectedWeekDays = _accessScheduleForm.Rules.Select(x => x.WeekDay).Distinct().ToList();
+                }
+            }
         }
 
         private void ToogleWeekDay(WeekDayEnum day)
@@ -87,7 +86,23 @@ namespace GodsEye.WEB.Components.AccessSchedule
                 _accessScheduleForm.Rules = _accessScheduleForm.Rules.OrderBy(rule => rule.StartTime).ThenBy(rule => rule.EndTime).ToList();
                 ValidateTimeRules();
             }
+        }
 
+        private void CopyAccessSchedule(WeekDayEnum dayPaste, WeekDayEnum dayCopy)
+        {
+            var copies = _accessScheduleForm.Rules
+                .Where(x => x.WeekDay == dayCopy)
+                .Select(x => new AccessScheduleRuleModel
+                {
+                    StartTime = x.StartTime,
+                    EndTime = x.EndTime,
+                    WeekDay = dayPaste
+                })
+                .ToList();
+
+
+            _accessScheduleForm.Rules.RemoveAll(x => x.WeekDay == dayPaste && x.StartTime == TimeSpan.Zero && x.EndTime == TimeSpan.Zero);
+            _accessScheduleForm.Rules.AddRange(copies);
         }
 
         private bool ValidateTimeRules()
@@ -219,8 +234,6 @@ namespace GodsEye.WEB.Components.AccessSchedule
             {
                 Snackbar.Add("Houve um erro ao criar o calendário.", Severity.Error);
             }
-
-            
         }
 
         private void Cancel() => MudDialog.Cancel();

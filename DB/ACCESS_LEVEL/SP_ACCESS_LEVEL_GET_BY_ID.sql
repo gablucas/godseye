@@ -11,7 +11,7 @@ BEGIN
                     JSON_OBJECT(
                         'Id', S.ID,
                         'Name', S.NAME,
-                        'RuleType', ALS.RULE_TYPE
+                        'RuleType', CAST(ALS.RULE_TYPE AS UNSIGNED) 
                     )
                 ), 
                 JSON_ARRAY()

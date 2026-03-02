@@ -1,6 +1,6 @@
 ﻿using GodsEye.Application.DTOs.Model;
 using GodsEye.WEB.Components.AccessLevelComponents;
-using GodsEye.WEB.Components.PersonComponents;
+using GodsEye.WEB.Components.AccessSchedule;
 using GodsEye.WEB.Services;
 using Microsoft.AspNetCore.Components;
 using MudBlazor;
@@ -9,8 +9,7 @@ namespace GodsEye.WEB.Pages.AccessLevel
 {
     public partial class AccessLevelPage
     {
-        [Inject]
-        public SectorWebService SectorService { get; set; }
+        #region DI
 
         [Inject]
         public AccessLevelWebService AccessLevelWebService { get; set; }
@@ -20,6 +19,8 @@ namespace GodsEye.WEB.Pages.AccessLevel
 
         [Inject]
         public IDialogService DialogService { get; set; }
+
+        #endregion
 
         #region TABLE PARAMETERS
 
@@ -54,10 +55,14 @@ namespace GodsEye.WEB.Pages.AccessLevel
         {
             _loading = true;
 
-            var sectorsRequest = await SectorService.GetAllAsync();
-            if (sectorsRequest.Success)
-                _sectors = sectorsRequest.Data.ToList();
+            var accessLevelRequest = await AccessLevelWebService.GetAllAsync();
 
+            if (accessLevelRequest.Success)
+            {
+                _accessLevel = accessLevelRequest.Data.ToList();
+                _filteredAccessLevel = _accessLevel.ToList();
+            }
+                
             _loading = false;
         }
 
@@ -93,7 +98,7 @@ namespace GodsEye.WEB.Pages.AccessLevel
         private async Task OpenCreateAcessLevel()
         {
             var options = new DialogOptions { CloseOnEscapeKey = true, FullWidth = true, MaxWidth = MaxWidth.False };
-            var dialog = await DialogService.ShowAsync<CreateAccessLevelComponent>("Criar pessoa", options);
+            var dialog = await DialogService.ShowAsync<CreateAccessLevelComponent>("Criar nível de acesso", options);
 
             var result = await dialog.Result;
 
@@ -123,6 +128,15 @@ namespace GodsEye.WEB.Pages.AccessLevel
         private string GetMultiSelectionText(List<string> selectedValues)
         {
             return $"{selectedValues.Count} setor{(selectedValues.Count > 1 ? "es foram selecionados" : " foi selecionado")}";
+        }
+
+        private async Task OpenEditData(int accessLevelId)
+        {
+            var options = new DialogOptions { CloseOnEscapeKey = true, FullWidth = true, MaxWidth = MaxWidth.False, NoHeader = true };
+            var parameters = new DialogParameters<CreateAccessLevelComponent> { { x => x.Id, accessLevelId } };
+            var dialog = await DialogService.ShowAsync<CreateAccessLevelComponent>("Atualizar calendário de acesso", parameters, options);
+
+            var result = await dialog.Result;
         }
 
         void ApplyFilters()

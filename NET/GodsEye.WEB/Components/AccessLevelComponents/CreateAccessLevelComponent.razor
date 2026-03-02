@@ -1,4 +1,6 @@
 ﻿@using GodsEye.Application.DTOs.Model
+@using GodsEye.Domain.Enums
+@using GodsEye.Domain.Extensions
 @using GodsEye.WEB.Enum
 @inject ISnackbar Snackbar
 
@@ -20,56 +22,126 @@
                         Variant="Variant.Outlined" 
                         />
 
-                    <MudSelect 
-                        T="int" 
-                        Label="Setores permitidos" 
-                        HelperText="Selecione o(s) setor(es) permitidos para esse nível de acesso" 
-                        MultiSelection="true" 
-                        @bind-SelectedValues="AccessLevelForm.Sectors" 
-                        MultiSelectionTextFunc="GetSelectedSectorsName" 
-                        Variant="Variant.Outlined"
-                    >
+                    <div class="wrapper">
+                        <span class="label">Setores permitidos</span>
 
-                        @foreach (var sector in _sectors.Where(x => !AccessLevelForm.NotAllowedSectors.Contains(x.Id)))
+                        <MudSelect 
+                            T="int" 
+                            MultiSelection="true" 
+                            SelectedValuesChanged="(e) => OnSectorsChanged(e, AccessLevelSectorRuleEnum.WHITELIST)" 
+                            SelectedValues="AccessLevelForm.Sectors.Where(x => x.RuleType == AccessLevelSectorRuleEnum.WHITELIST).Select(x => x.SectorId)"
+                            MultiSelectionTextFunc="@(new Func<IReadOnlyList<string>, string>(GetMultiSelectionText))"
+                            Variant="Variant.Outlined"
+                        >
+
+                            @foreach (var sector in _sectors.Where(x => !AccessLevelForm.Sectors.Any(y => y.SectorId == x.Id && y.RuleType == AccessLevelSectorRuleEnum.BLACKLIST)))
+                            {
+                                <MudSelectItem T="int" Value="@sector.Id">@sector.Name</MudSelectItem>
+                            }
+                        </MudSelect>
+
+                        @if (AccessLevelForm.Sectors.Any(x => x.RuleType == AccessLevelSectorRuleEnum.WHITELIST))
                         {
-                            <MudSelectItem T="int" Value="@sector.Id">@sector.Name</MudSelectItem>
+                            <div class="allowed-sectors">
+                                @foreach (var sector in AccessLevelForm.Sectors.Where(x => x.RuleType == AccessLevelSectorRuleEnum.WHITELIST))
+                                {
+                                    <MudChip T="string" Variant="Variant.Outlined" Color="Color.Success" OnClick="() => RemoveSector(sector.SectorId)" Label="true" Icon="@Icons.Material.Filled.Close">@_sectors.First(x => x.Id == sector.SectorId).Name</MudChip>
+                                }
+                            </div>
                         }
-                    </MudSelect>
+                    </div>
 
-                    <MudSelect 
-                        T="int" 
-                        Label="Setores não permitidos" 
-                        HelperText="Selecione o(s) setor(es) que não permitidos nesse nível de acesso" 
-                        MultiSelection="true" 
-                        @bind-SelectedValues="AccessLevelForm.NotAllowedSectors" 
-                        MultiSelectionTextFunc="GetSelectedSectorsName" 
-                        Variant="Variant.Outlined">
+                    <MudDivider />
 
-                        @foreach (var sector in _sectors.Where(x => !AccessLevelForm.Sectors.Contains(x.Id)))
+                    <div class="wrapper blacklist">
+                        <MudChip Label="true" Variant="Variant.Outlined" Icon="@Icons.Material.Filled.Warning" Style="justify-self: start; grid-column: 1/-1" T="string">Os setores adicionados a lista negra, permite configurar uma notificação além de apenas um registro, podendo notificar por email, registrar um vídeo do momento etc...</MudChip>
+                        <span class="label">Setores proibidos (Lista negra)</span>
+
+                        <MudSelect 
+                            T="int" 
+                            SelectedValuesChanged="(e) => OnSectorsChanged(e, AccessLevelSectorRuleEnum.BLACKLIST)" 
+                            SelectedValues="AccessLevelForm.Sectors.Where(x => x.RuleType == AccessLevelSectorRuleEnum.BLACKLIST).Select(x => x.SectorId)"
+                            Required="false"
+                            MultiSelection="true" 
+                            MultiSelectionTextFunc="GetMultiSelectionTextBlacklist"
+                            Variant="Variant.Outlined">
+
+                            @foreach (var sector in _sectors.Where(x => !AccessLevelForm.Sectors.Any(y => y.SectorId == x.Id && y.RuleType == AccessLevelSectorRuleEnum.WHITELIST)))
+                            {
+                                <MudSelectItem T="int" Value="@sector.Id">@sector.Name</MudSelectItem>
+                            }
+                        </MudSelect>
+
+                        @if (AccessLevelForm.Sectors.Any(x => x.RuleType == AccessLevelSectorRuleEnum.BLACKLIST))
                         {
-                            <MudSelectItem T="int" Value="@sector.Id">@sector.Name</MudSelectItem>
+                            <div class="allowed-sectors">
+                                @foreach (var sector in AccessLevelForm.Sectors.Where(x => x.RuleType == AccessLevelSectorRuleEnum.BLACKLIST))
+                                {
+                                    <MudChip T="string" Variant="Variant.Outlined" Color="Color.Error" OnClick="() => RemoveSector(sector.SectorId)" Label="true" Icon="@Icons.Material.Filled.Close">@_sectors.First(x => x.Id == sector.SectorId).Name</MudChip>
+                                }
+                            </div>
                         }
-                    </MudSelect>
+                    </div>
 
-                    <MudSelect 
-                        Label="Calendário de acesso"
-                        T="int?"
-                        @bind-Value="AccessLevelForm.AccessLevel"
-                        HelperText="Selecione o calendário de acesso"
-                        Required="true"
-                        RequiredError="Selecione um setor"
-                        Clearable="true"
-                        Variant="Variant.Outlined">
+                    <MudDivider />
 
-                        @foreach (var accessSchedule in _accessSchedule)
+                    <div class="wrapper not-allowed">
+                        <MudChip Label="true" Variant="Variant.Outlined" Icon="@Icons.Material.Filled.Warning" Style="justify-self: start; grid-column: 1/-1" T="string">Os setores não permitidos são todos aqueles que não estão na lista de permitidos ou lista negra, os setores aqui apenas geram uma notificação no sistema.</MudChip>
+                        <span class="label">Setores não permitidos</span>
+
+                        <div>
+                            @foreach (var sector in _sectors.Where(x => !AccessLevelForm.Sectors.Any(y => y.SectorId == x.Id)))
+                            {
+                                <MudChip T="string" Variant="Variant.Outlined" Label="true" Icon="@Icons.Material.Filled.Close">@sector.Name</MudChip>
+                            }
+                        </div>
+
+                    </div>
+
+                    <MudDivider />
+                    
+                    <div>
+                        <MudSelect 
+                            Label="Calendário de acesso"
+                            T="int?"
+                            @bind-Value="AccessLevelForm.AccessScheduleId"
+                            Required="true"
+                            RequiredError="Selecione um setor"
+                            Clearable="true"
+                            Variant="Variant.Outlined">
+
+                            @foreach (var accessSchedule in _accessSchedule)
+                            {
+                                <MudSelectItem T="int?" Value="@accessSchedule.Id">@accessSchedule.Name</MudSelectItem>
+                            }
+                        </MudSelect>
+
+                        @if (AccessLevelForm.AccessScheduleId is not null)
                         {
-                            <MudSelectItem T="int?" Value="@accessSchedule.Id">@accessSchedule.Name</MudSelectItem>
-                        }
-                    </MudSelect>
+                            @foreach(var scheduleGroup in _accessSchedule.First(x => x.Id == AccessLevelForm.AccessScheduleId).Rules.GroupBy(x => x.WeekDay))
+                            {
+                                <div class="access-level">
 
+                                    <div class="title">
+                                        <MudIcon Icon="@Icons.Material.Outlined.Today" />
+                                        <span>@scheduleGroup.First().WeekDay.GetDescription()</span>
+                                    </div>
+
+                                    @foreach (var rule in scheduleGroup)
+                                    {
+                                        <div class="rule">
+                                            <span>@rule.StartTime?.ToString(@"hh\:mm")</span>
+                                            <MudIcon Icon="@Icons.Material.Filled.ArrowRightAlt" Style="color: var(--gray-050)" />
+                                            <span>@rule.EndTime?.ToString(@"hh\:mm")</span>
+                                        </div>
+                                    }
+                                </div>
+
+                            
+                            }
+                        }
+                    </div>
                 </div>
-
-                <MudDivider />
 
                 @if (apiResponse != null)
                 {

@@ -1,5 +1,6 @@
-﻿@page "/cadastro/nivel-acesso";
+﻿@page "/controle-acesso/nivel";
 @using GodsEye.Application.DTOs.Model
+@using GodsEye.Domain.Enums
 @inject ISnackbar Snackbar
 
 <PageTitle>Nível de acesso</PageTitle>
@@ -30,16 +31,26 @@
                 </div>
             </div>
 
-            <MudButton Variant="Variant.Outlined" OnClick="OpenCreateAcessLevel">Criar pessoa</MudButton>
+            <MudButton Variant="Variant.Outlined" OnClick="OpenCreateAcessLevel">Criar nível de acesso</MudButton>
         </div>
 
 
         <MudTable T="AccessLevelModel" @ref="mudTable" Elevation="0" Items="@_filteredAccessLevel" Hover="true" Loading="@_loading" LoadingProgressColor="Color.Info" RowClass="cursor-pointer" RowClassFunc="@SelectedRowClassFunc" OnRowClick="RowClickEvent">
             <HeaderContent>
                 <MudTh>Nome</MudTh>
+                <MudTh>Setores permitidos</MudTh>
+                <MudTh>Setores proibidos</MudTh>
+                <MudTh>Calendário de acesso</MudTh>
+                <MudTh>Configurações</MudTh>
             </HeaderContent>
             <RowTemplate>
                 <MudTd DataLabel="Nome">@context.Name</MudTd>
+                <MudTd DataLabel="Setores permitidos">@context.Sectors.Count(x => x.RuleType == AccessLevelSectorRuleEnum.WHITELIST)</MudTd>
+                <MudTd DataLabel="Setores proibidos">@context.Sectors.Count(x => x.RuleType == AccessLevelSectorRuleEnum.BLACKLIST)</MudTd>
+                <MudTd DataLabel="Nome">@context.SectorSchedule.Name</MudTd>
+                <MudTd>
+                    <MudButton OnClick="() => OpenEditData(context.Id)" Variant="Variant.Outlined" Color="Color.Primary" Size="Size.Small">Configurações</MudButton>
+                </MudTd>
             </RowTemplate>
         </MudTable>
     </div>

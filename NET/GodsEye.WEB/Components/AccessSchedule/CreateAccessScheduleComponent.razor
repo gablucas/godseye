@@ -34,9 +34,20 @@
                         @foreach (var day in _selectedWeekDays.Order())
                         {
                             <div class="day">
-                                <div class="title">
-                                    <MudIcon Icon="@Icons.Material.Outlined.Today" />
-                                    <span>@day.GetDescription()</span>
+                                <div class="menu">
+                                    <div class="title">
+                                        <MudIcon Icon="@Icons.Material.Outlined.Today" />
+                                        <span>@day.GetDescription()</span>
+                                    </div>
+
+                                    <div class="action">
+                                        <MudMenu Label="Copiar de" Color="Color.Tertiary" Size="Size.Small" Variant="Variant.Outlined" TransformOrigin="Origin.TopCenter">
+                                            @foreach (var dayOption in _accessScheduleForm.Rules.Where(x => x.WeekDay != day && x.StartTime != TimeSpan.Zero && x.EndTime != TimeSpan.Zero).DistinctBy(x => x.WeekDay))
+                                            {
+                                                <MudMenuItem Label="@dayOption.WeekDay.GetDescription()" OnClick="() => CopyAccessSchedule(day, dayOption.WeekDay)" />
+                                            }
+                                        </MudMenu>
+                                    </div>
                                 </div>
                                 
                                 <div class="times">

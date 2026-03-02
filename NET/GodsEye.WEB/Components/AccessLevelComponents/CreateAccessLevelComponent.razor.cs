@@ -1,11 +1,13 @@
 ﻿using GodsEye.Application.DTOs.Model;
 using GodsEye.Application.DTOs.Response;
+using GodsEye.Application.UseCases.AccessLevel.Commands.CreateOrUpdateAccessLevel;
 using GodsEye.Domain.DTOs.Result;
-using GodsEye.WEB.Model.Forms;
+using GodsEye.Domain.Enums;
 using GodsEye.WEB.Services;
 using Microsoft.AspNetCore.Components;
 using Microsoft.JSInterop;
 using MudBlazor;
+
 
 namespace GodsEye.WEB.Components.AccessLevelComponents
 {
@@ -17,13 +19,20 @@ namespace GodsEye.WEB.Components.AccessLevelComponents
         AccessScheduleWebService AccessScheduleWebService { get; set; }
 
         [Inject]
-        SectorWebService SectorWebService { get; set; }
+        AccessLevelWebService AccessLevelWebService { get; set; }
 
         [Inject]
-        IJSRuntime JS { get; set; }
+        SectorWebService SectorWebService { get; set; }
 
         [CascadingParameter]
         private IMudDialogInstance MudDialog { get; set; }
+
+        #endregion
+
+        #region PARAMS
+
+        [Parameter]
+        public int Id { get; set; }
 
         #endregion
 
@@ -32,9 +41,12 @@ namespace GodsEye.WEB.Components.AccessLevelComponents
         MudForm form;
         private bool success;
         private string[] errors = { };
-        public AccessLevelForm AccessLevelForm { get; set; } = new();
+        public CreateOrUpdateAccessLevelRequest AccessLevelForm { get; set; } = new();
 
         private bool shouldStartCamera;
+
+        private bool _multiselectionTextChoice;
+        private bool _multiselectionTextChoiceBlackList;
 
         ApiResponse<ProcedureResult?>? apiResponse { get; set; } = null;
 
@@ -43,18 +55,33 @@ namespace GodsEye.WEB.Components.AccessLevelComponents
         IEnumerable<SectorModel> _sectors = Enumerable.Empty<SectorModel>();
         IEnumerable<AccessScheduleModel> _accessSchedule = Enumerable.Empty<AccessScheduleModel>();
 
+        List<SectorModel> NotAllowed = new();
+
         #endregion
 
         private string _errorMessage = "";
 
-        protected override async Task OnAfterRenderAsync(bool firstRender)
+        protected override async Task OnParametersSetAsync()
         {
-            if (shouldStartCamera)
+            if (Id != 0)
             {
-                shouldStartCamera = false;
-                await JS.InvokeVoidAsync("cameraFunctions.startCamera");
-            }
+                var accessLevelResult = await AccessLevelWebService.GetById(Id);
 
+                if (accessLevelResult.Success && accessLevelResult is not null && accessLevelResult.Data is not null)
+                {
+                    AccessLevelForm = new CreateOrUpdateAccessLevelRequest()
+                    {
+                        Id = accessLevelResult.Data.Id,
+                        Name = accessLevelResult.Data.Name,
+                        Sectors = accessLevelResult.Data.Sectors.Select(x => new SectorAccessLevelInput(x.Id, x.RuleType)).ToList(),
+                        AccessScheduleId = accessLevelResult.Data.SectorSchedule.Id,
+                    };
+                }
+            }
+        }
+
+        protected override async Task OnInitializedAsync()
+        {
             var accessScheduleResult = await AccessScheduleWebService.GetAllAsync();
             if (accessScheduleResult is not null && accessScheduleResult.Success)
             {
@@ -66,36 +93,54 @@ namespace GodsEye.WEB.Components.AccessLevelComponents
             {
                 _sectors = sectorResult.Data;
             }
-
         }
 
-        private string GetSelectedSectorsName(List<string> ids)
+        private void OnSectorsChanged(IEnumerable<int> values, AccessLevelSectorRuleEnum rule)
         {
-            var names = _sectors
-                .Where(c => ids.Contains(c.Id.ToString()))
-                .Select(c => c.Name);
+            AccessLevelForm.Sectors.RemoveAll(x => x.RuleType == rule);
+            var newList = values.Select(id => new SectorAccessLevelInput(id, rule)).ToList();
+            AccessLevelForm.Sectors.AddRange(newList);
+        }
 
-            return string.Join(", ", names);
+        private string GetMultiSelectionText(IReadOnlyList<string> selectedValues)
+        {
+            if (_multiselectionTextChoice)
+            {
+                return $"Setor{(selectedValues.Count > 1 ? "es selecionados" : " selecionado")}: {string.Join(", ", selectedValues.Select(x => x))}";
+            }
+
+            return $"{selectedValues.Count} setor{(selectedValues.Count > 1 ? "es selecionados" : " selecionado")}";
+        }
+
+        private string GetMultiSelectionTextBlacklist(IReadOnlyList<string> selectedValues)
+        {
+            if (_multiselectionTextChoiceBlackList)
+            {
+                return $"Setor{(selectedValues.Count > 1 ? "es selecionados" : " selecionado")}: {string.Join(", ", selectedValues.Select(x => x))}";
+            }
+
+            return $"{selectedValues.Count} setor{(selectedValues.Count > 1 ? "es selecionados" : " selecionado")}";
+        }
+
+        private void RemoveSector(int sectorId)
+        {
+            AccessLevelForm.Sectors = AccessLevelForm.Sectors.Where(x => x.SectorId != sectorId).ToList();
         }
 
 
         private async Task Submit()
         {
-            //visible = true;
-            //apiResponse = await personService.CreateAsync(AccessLevelForm);
-            //visible = false;
+            var result = await AccessLevelWebService.CreateOrUpdateAsync(AccessLevelForm);
 
-            //if (apiResponse.Success)
-            //{
-            //    Snackbar.Add("Pessoa cadastrada com sucesso!", Severity.Success);
-            //    MudDialog.Close(DialogResult.Ok(apiResponse.Data.Id));
-            //}
-            //else
-            //{
-            //    _errorMessage = apiResponse?.Error?.Message ?? "Houve um erro ao cadastrar a pessoa, tente novamente mais tarde";
-            //    Snackbar.Add(_errorMessage, Severity.Error);
-            //}
-                
+            if (result.Success)
+            {
+                Snackbar.Add($"Nível de acesso {(AccessLevelForm.Id == 0 ? "criado" : "atualizado")} com sucesso.", Severity.Success);
+                MudDialog.Close(DialogResult.Ok(result.Data));
+            }
+            else
+            {
+                Snackbar.Add("Houve um erro ao criar o nível de acesso.", Severity.Error);
+            }
         }
 
         private void Cancel() => MudDialog.Cancel();
