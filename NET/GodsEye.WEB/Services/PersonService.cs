@@ -2,10 +2,7 @@
 using GodsEye.Application.DTOs.Response;
 using GodsEye.Domain.DTOs.Result;
 using GodsEye.WEB.Model.Forms;
-using MudBlazor;
 using System.Net.Http.Json;
-using System.Text;
-using System.Text.Json;
 
 namespace GodsEye.WEB.Services
 {
@@ -24,11 +21,7 @@ namespace GodsEye.WEB.Services
 
             content.Add(new StringContent(person.Name), "Name");
             content.Add(new StringContent(person.Photo), "Photo");
-
-            foreach (var sector in person.Sectors)
-            {
-                content.Add(new StringContent(sector.ToString()), "Sectors");
-            }
+            content.Add(new StringContent(person.Sector.ToString()), "Sector");
 
             var result = await _http.PostAsync("api/person", content);
 

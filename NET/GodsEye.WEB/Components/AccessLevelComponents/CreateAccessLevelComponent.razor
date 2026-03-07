@@ -151,7 +151,7 @@
                     }
                 }
 
-                <MudButton OnClick="Submit" Disabled=@(!success) Class="btn-submit" Variant="Variant.Filled" Color="Color.Primary">Registrar</MudButton>
+                <MudButton OnClick="Submit" Disabled=@(!success) Class="btn-submit" Variant="Variant.Filled" Color="Color.Primary">@(AccessLevelForm.Id == 0 ? "Registrar" : "Atualizar")</MudButton>
 
                 <MudOverlay Visible="visible" LightBackground="true" Absolute="true">
                     <MudProgressCircular Color="Color.Default" Indeterminate="true" />

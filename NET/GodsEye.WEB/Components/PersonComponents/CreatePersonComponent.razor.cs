@@ -111,15 +111,6 @@ namespace GodsEye.WEB.Components.PersonComponents
             CreatePersonForm.Photo = dataUrl;
         }
 
-        private string GetSelectedSectorsName(List<string> ids)
-        {
-            var names = _sectors
-                .Where(c => ids.Contains(c.Id.ToString()))
-                .Select(c => c.Name);
-
-            return string.Join(", ", names);
-        }
-
 
         private async Task Submit()
         {

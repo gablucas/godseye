@@ -5,7 +5,6 @@ using GodsEye.Domain.DTOs.Result;
 using GodsEye.Domain.Enums;
 using GodsEye.WEB.Services;
 using Microsoft.AspNetCore.Components;
-using Microsoft.JSInterop;
 using MudBlazor;
 
 

@@ -4,6 +4,6 @@
     {
         public string Name { get; set; }
         public string Photo { get; set; }
-        public IEnumerable<string> Sectors { get; set; }
+        public int? Sector { get; set; } = null;
     }
 }

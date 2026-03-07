@@ -12,10 +12,10 @@
 
                     <MudTextField Label="Nome" @bind-Value="CreatePersonForm.Name" Required="true" RequiredError="O nome é obrigatório" T="string" For="@(() => CreatePersonForm.Name)" Variant="Variant.Outlined" />
 
-                    <MudSelect T="string" Label="Setores" HelperText="Selecione o(s) setor(es) que essa pessoa pertence" MultiSelection="true" @bind-SelectedValues="CreatePersonForm.Sectors" MultiSelectionTextFunc="GetSelectedSectorsName" Variant="Variant.Outlined">
+                    <MudSelect T="int?" Label="Setores" HelperText="Selecione o(s) setor(es) que essa pessoa pertence" @bind-Value="CreatePersonForm.Sector" Variant="Variant.Outlined">
                         @foreach (var sector in _sectors)
                         {
-                            <MudSelectItem T="string" Value="@sector.Id.ToString()">@sector.Name</MudSelectItem>
+                            <MudSelectItem T="int?" Value="@sector.Id">@sector.Name</MudSelectItem>
                         }
                     </MudSelect>
 
