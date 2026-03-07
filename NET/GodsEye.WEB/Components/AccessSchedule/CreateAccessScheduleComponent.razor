@@ -33,7 +33,7 @@
 
                         @foreach (var day in _selectedWeekDays.Order())
                         {
-                            <div class="day">
+                            <div class="day" @key="day">
                                 <div class="menu">
                                     <div class="title">
                                         <MudIcon Icon="@Icons.Material.Outlined.Today" />
@@ -54,7 +54,7 @@
 
                                     @foreach (var (rule, index) in _accessScheduleForm.Rules.Where(x => x.WeekDay == day).ToList().Select((rule, index) => (rule, index)))
                                     {
-                                        <div class="time">
+                                        <div class="time" @key="rule">
                                             <MudIcon Icon="@Icons.Material.Outlined.Delete" @onclick="() => RemoveRule(day, rule)" Style="color: var(--gray-100)" />
 
                                             <MudTimePicker 

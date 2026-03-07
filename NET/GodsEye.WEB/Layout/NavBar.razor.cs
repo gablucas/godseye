@@ -64,7 +64,7 @@ namespace GodsEye.WEB.Layout
                 Items =
                 {
                     new() { Title = "Níveis de Acesso", Url = "/controle-acesso/nivel" },
-                    new() { Title = "Horários de acesso", Url = "/controle-acesso/horarios" }
+                    new() { Title = "Calendário de acesso", Url = "/controle-acesso/calendario" }
                 }
             }
         };

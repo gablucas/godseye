@@ -188,8 +188,9 @@ namespace GodsEye.WEB.Components.AccessSchedule
 
         private void AddNewRule(WeekDayEnum day)
         {
+            var selectedDay = _accessScheduleForm.Rules.Where(x => x.WeekDay == day).ToList();
 
-            if (!_accessScheduleForm.Rules.Any(x => x.WeekDay == day && x.StartTime == TimeSpan.Zero && x.EndTime == TimeSpan.Zero))
+            if (selectedDay.Count() == 0)
             {
                 _accessScheduleForm.Rules.Add(
                 new AccessScheduleRuleModel()
