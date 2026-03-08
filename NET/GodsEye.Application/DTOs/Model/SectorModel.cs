@@ -1,6 +1,4 @@
-﻿using System.Text.Json;
-
-namespace GodsEye.Application.DTOs.Model
+﻿namespace GodsEye.Application.DTOs.Model
 {
     public class SectorModel
     {

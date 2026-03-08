@@ -21,7 +21,8 @@ namespace GodsEye.WEB.Services
 
             content.Add(new StringContent(person.Name), "Name");
             content.Add(new StringContent(person.Photo), "Photo");
-            content.Add(new StringContent(person.Sector.ToString()), "Sector");
+            content.Add(new StringContent(person.SectorId.ToString()), "SectorId");
+            content.Add(new StringContent(person.AcessLevelId.ToString()), "AccessLevelId");
 
             var result = await _http.PostAsync("api/person", content);
 

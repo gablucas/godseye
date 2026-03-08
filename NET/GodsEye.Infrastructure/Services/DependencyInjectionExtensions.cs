@@ -94,6 +94,7 @@ namespace GodsEye.Infrastructure.Services
             SqlMapper.AddTypeHandler(new JsonTypeHandler<List<SectorAccessLevelDTO>>());
             SqlMapper.AddTypeHandler(new JsonTypeHandler<AccessLevelScheduleDTO>());
             SqlMapper.AddTypeHandler(new JsonTypeHandler<AccessLevelScheduleRuleDTO>());
+            SqlMapper.AddTypeHandler(new JsonTypeHandler<AccessLevelDTO>());
         }
     }
 }

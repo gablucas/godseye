@@ -4,6 +4,7 @@
     {
         public string Name { get; set; }
         public string Photo { get; set; }
-        public int? Sector { get; set; } = null;
+        public int? SectorId { get; set; } = null;
+        public int? AcessLevelId { get; set; } = null;
     }
 }

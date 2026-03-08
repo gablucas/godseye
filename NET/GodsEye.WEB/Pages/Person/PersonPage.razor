@@ -39,26 +39,14 @@
             <HeaderContent>
                 <MudTh>Foto</MudTh>
                 <MudTh>Nome</MudTh>
-                @* <MudTh>Setor(es)</MudTh> *@
+                <MudTh>Setor</MudTh>
+                <MudTh>Nível de acesso</MudTh>
             </HeaderContent>
             <RowTemplate>
                 <MudTd DataLabel="Foto"><MudImage Height="140" Style="border-radius: 7px" src=@($"https://localhost:7010/{context.ImagePath}") /></MudTd>
                 <MudTd DataLabel="Nome">@context.Name</MudTd>
-
-                @* <MudTd DataLabel="Cameras">
-                    @if (context.Sectors.Count > 0)
-                    {
-                        foreach (var sec in context.Sectors)
-                        {
-                            <MudChip T="string" Color="Color.Info">@sec.SectorName</MudChip>
-                        }
-                    }
-                    else
-                    {
-                        <MudChip T="string">Nenhum Setor</MudChip>
-                    }
-
-                </MudTd> *@
+                <MudTd DataLabel="Setor">@context.Sector.Name</MudTd>
+                <MudTd DataLabel="NivelAcesso">@context.AccessLevel.Name</MudTd>
             </RowTemplate>
         </MudTable>
     </div>

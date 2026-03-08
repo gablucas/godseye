@@ -10,9 +10,9 @@ namespace GodsEye.Application.UseCases.Person.Commands.CreatePerson
     {
         private readonly IGodsEyeService _godsEye;
         private readonly IFolderService _folderService;
-        private readonly IApplicationDbContext _context;
+        private readonly IDapperContext _context;
 
-        public CreatePersonHandler(IGodsEyeService godsEye, IFolderService folderService, IApplicationDbContext context)
+        public CreatePersonHandler(IGodsEyeService godsEye, IFolderService folderService, IDapperContext context)
         {
             _godsEye = godsEye;
             _folderService = folderService;
@@ -24,19 +24,19 @@ namespace GodsEye.Application.UseCases.Person.Commands.CreatePerson
             var embedding = await _godsEye.GenerateEmbedding(request.Photo);
             var jsonEmbedding = JsonSerializer.Serialize(embedding);
 
-
             var fileName = $"{Guid.NewGuid()}.jpg";
 
             var photoPath = _folderService.GeneratePersonPhotoPath(fileName);
 
-            var sql = "CALL SP_PERSON_CREATE(@P_NAME, @P_EMBEDDING, @P_IMAGE_PATH, @P_MAIN_SECTOR_ID)";
+            var sql = "CALL SP_PERSON_CREATE(@P_NAME, @P_EMBEDDING, @P_IMAGE_PATH, @P_MAIN_SECTOR_ID, @P_ACCESS_LEVEL_ID)";
 
             var parameteres = new
             {
                 P_NAME = request.Name,
                 P_EMBEDDING = jsonEmbedding,
                 P_IMAGE_PATH = photoPath,
-                P_MAIN_SECTOR_ID = request.SectorId
+                P_MAIN_SECTOR_ID = request.SectorId,
+                P_ACCESS_LEVEL_ID = request.AccessLevelId
             };
 
             var result = await _context.QuerySingleSqlAsync<ProcedureResult>(sql, parameteres, cancellationToken);

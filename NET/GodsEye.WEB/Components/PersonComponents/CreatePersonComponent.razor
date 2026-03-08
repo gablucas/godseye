@@ -10,12 +10,46 @@
 
                 <div class="inputs-container">
 
-                    <MudTextField Label="Nome" @bind-Value="CreatePersonForm.Name" Required="true" RequiredError="O nome é obrigatório" T="string" For="@(() => CreatePersonForm.Name)" Variant="Variant.Outlined" />
+                    <MudTextField 
+                        Label="Nome" 
+                        @bind-Value="CreatePersonForm.Name"
+                        Required="true" 
+                        RequiredError="O nome é obrigatório" 
+                        T="string" 
+                        For="@(() => CreatePersonForm.Name)" 
+                        Variant="Variant.Outlined" />
 
-                    <MudSelect T="int?" Label="Setores" HelperText="Selecione o(s) setor(es) que essa pessoa pertence" @bind-Value="CreatePersonForm.Sector" Variant="Variant.Outlined">
+                    <MudSelect 
+                        T="int?" 
+                        ValueChanged="OnSectorChanged"
+                        For="@(() => CreatePersonForm.SectorId)"
+                        Error="@_sectorError"
+                        ErrorText="@_sectorErrorMessage"
+                        Required="true" 
+                        Label="Setor" 
+                        HelperText="Selecione o setor que essa pessoa pertence" 
+                        Variant="Variant.Outlined">
+
                         @foreach (var sector in _sectors)
                         {
                             <MudSelectItem T="int?" Value="@sector.Id">@sector.Name</MudSelectItem>
+                        }
+                    </MudSelect>
+
+                    <MudSelect 
+                        T="int?" 
+                        ValueChanged="OnAccessLevelChanged"
+                        For="@(() => CreatePersonForm.AcessLevelId)"
+                        Error="@_sectorError"
+                        ErrorText="@_sectorErrorMessage"
+                        Required="true"
+                        Label="Nível de acesso" 
+                        HelperText="Selecione o nível de acesso da pessoa" 
+                        Variant="Variant.Outlined">
+
+                        @foreach (var accessLevel in _accessLevels)
+                        {
+                            <MudSelectItem T="int?" Value="@accessLevel.Id">@accessLevel.Name</MudSelectItem>
                         }
                     </MudSelect>
 

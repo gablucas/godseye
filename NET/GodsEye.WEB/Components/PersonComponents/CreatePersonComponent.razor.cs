@@ -1,6 +1,7 @@
 ﻿using GodsEye.Application.DTOs.Model;
 using GodsEye.Application.DTOs.Response;
 using GodsEye.Domain.DTOs.Result;
+using GodsEye.Domain.Enums;
 using GodsEye.WEB.Enum;
 using GodsEye.WEB.Model.Forms;
 using GodsEye.WEB.Services;
@@ -20,6 +21,9 @@ namespace GodsEye.WEB.Components.PersonComponents
 
         [Inject]
         SectorWebService sectorService { get; set; }
+
+        [Inject]
+        AccessLevelWebService AccessLevelService { get; set; }
 
         [Inject]
         IJSRuntime JS { get; set; }
@@ -49,7 +53,10 @@ namespace GodsEye.WEB.Components.PersonComponents
         private bool visible = false;
 
         IEnumerable<SectorModel> _sectors = Enumerable.Empty<SectorModel>();
+        IEnumerable<AccessLevelModel> _accessLevels = Enumerable.Empty<AccessLevelModel>();
 
+        private bool _sectorError = false;
+        private string _sectorErrorMessage = "";
 
         #endregion
 
@@ -69,6 +76,52 @@ namespace GodsEye.WEB.Components.PersonComponents
                 _sectors = response.Data;
             }
 
+            var accessLevelResponse = await AccessLevelService.GetAllAsync();
+            if (accessLevelResponse is not null && accessLevelResponse.Success)
+            {
+                _accessLevels = accessLevelResponse.Data;
+            }
+
+        }
+
+        public void OnSectorChanged(int? sectorId)
+        {
+            CreatePersonForm.SectorId = sectorId;
+
+            ValidateSectorAccessLevel();
+        }
+
+        public void OnAccessLevelChanged(int? accessLevelId)
+        {
+            CreatePersonForm.AcessLevelId = accessLevelId;
+            ValidateSectorAccessLevel();
+        }
+
+        private void ValidateSectorAccessLevel()
+        {
+            _sectorError = false;
+            _sectorErrorMessage = "";
+
+            if (CreatePersonForm.AcessLevelId is not null && CreatePersonForm.SectorId is not null)
+            {
+                var selectedAccessLevel = _accessLevels.First(x => x.Id == CreatePersonForm.AcessLevelId);
+
+                if (!selectedAccessLevel.Sectors.Any(x => x.Id == CreatePersonForm.SectorId))
+                {
+                    _sectorError = true;
+                    _sectorErrorMessage = "O setor selecionado para a pessoa está como não permitido no nível de acesso";
+                    Snackbar.Add(_sectorErrorMessage, Severity.Error);
+                    return;
+                }
+
+                if (selectedAccessLevel.Sectors.Any(x => x.RuleType == AccessLevelSectorRuleEnum.BLACKLIST && x.Id == CreatePersonForm.SectorId))
+                {
+                    _sectorError = true;
+                    _sectorErrorMessage = "O setor selecionado para a pessoa está na lista negra do nível de acesso";
+                    Snackbar.Add(_sectorErrorMessage, Severity.Error);
+                    return;
+                }
+            }
         }
 
         private async Task OpenCamera(EventArgs e)
