@@ -1,5 +1,6 @@
 ﻿using GodsEye.Application.DTOs.Model;
 using GodsEye.Application.DTOs.Response;
+using GodsEye.Application.UseCases.Sector.Commands.CreateSector;
 using GodsEye.Domain.DTOs.Result;
 using GodsEye.WEB.Model.Forms;
 using System.Net.Http.Json;
@@ -16,7 +17,7 @@ namespace GodsEye.WEB.Services
             _http = http;
         }
 
-        public async Task<ApiResponse<int>> CreateAsync(CreateSectorForm sector)
+        public async Task<ApiResponse<int>> CreateAsync(CreateSectorRequest sector)
         {
             var result = await _http.PostAsJsonAsync(_baseEndpoint, sector);
 

@@ -14,6 +14,9 @@ namespace GodsEye.WEB.Pages.AccessCalendar
         AccessScheduleWebService AccessScheduleWebSerice { get; set; }
 
         [Inject]
+        DialogWebService DialogWebService { get; set; }
+
+        [Inject]
         public IDialogService DialogService { get; set; }
 
         #endregion
@@ -64,23 +67,9 @@ namespace GodsEye.WEB.Pages.AccessCalendar
 
         #region DIALOG FUNCS
 
-        private async Task OpenCreateCamera()
+        private async Task CreateAccessScheduleCallback(int accessScheduleId)
         {
-            var options = new DialogOptions { CloseOnEscapeKey = true, FullWidth = true, MaxWidth = MaxWidth.False };
-            var dialog = await DialogService.ShowAsync<CreateAccessScheduleComponent>("Criar calendário de acesso", options);
-
-            var result = await dialog.Result;
-
-            if (result.Canceled)
-                return;
-
-            if (result.Data is not int cameraId || cameraId <= 0)
-            {
-                Snackbar.Add("ID inválido retornado", Severity.Error);
-                return;
-            }
-
-            var newAccessSchedule = await AccessScheduleWebSerice.GetById(cameraId);
+            var newAccessSchedule = await AccessScheduleWebSerice.GetById(accessScheduleId);
 
             if (newAccessSchedule is null || !newAccessSchedule.Success)
                 return;

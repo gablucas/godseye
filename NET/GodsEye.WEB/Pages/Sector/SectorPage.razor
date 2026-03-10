@@ -31,7 +31,7 @@
                 </div>
             </div>
 
-            <MudButton Variant="Variant.Outlined" OnClick="OpenCreateSector">Criar Setor</MudButton>
+            <MudButton Variant="Variant.Outlined" OnClick="() => DialogWebService.OpenCreateSector(CreateSectorCallback)">Criar Setor</MudButton>
         </div>
 
         <MudTable Items="@_filteredSectors" Hover="true" Loading="@_loading" Elevation="0" LoadingProgressColor="Color.Info">

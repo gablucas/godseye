@@ -1,8 +1,11 @@
 ﻿using GodsEye.Application.DTOs.Response;
-using GodsEye.Domain.DTOs.Result;
 using MediatR;
 
 namespace GodsEye.Application.UseCases.Sector.Commands.CreateSector
 {
-    public sealed record CreateSectorRequest(string Name, IEnumerable<string> NotificationGroups) : IRequest<ApiResponse<int>>;
+    public sealed record CreateSectorRequest : IRequest<ApiResponse<int>>
+    {
+        public string Name { get; set; }
+        public IEnumerable<int> NotificationGroups { get; set; } = new List<int>();
+    }
 }

@@ -29,7 +29,10 @@ namespace GodsEye.Application.UseCases.AccessLevel.Commands.CreateOrUpdateAccess
 
             var result = await _dapperContext.QuerySingleSqlAsync<ProcedureResult>(sql, parameters, cancellationToken);
 
-            return ApiResponse<int>.Ok(result.Id);
+            if (result.Erro == 0)
+                return ApiResponse<int>.Ok(result.Id);
+            else
+                return ApiResponse<int>.Fail(500, "Houve um erro ao cadastra o nível de acesso");
         }
     }
 }

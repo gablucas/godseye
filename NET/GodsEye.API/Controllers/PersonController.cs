@@ -5,7 +5,6 @@ using GodsEye.Application.UseCases.Person.Queries.GetPersonById;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using System.Text.Json;
 
 namespace GodsEye.API.Controllers
 {

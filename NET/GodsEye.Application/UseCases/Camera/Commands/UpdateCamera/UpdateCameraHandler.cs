@@ -2,6 +2,7 @@
 using GodsEye.Application.Interfaces;
 using GodsEye.Domain.DTOs.Result;
 using MediatR;
+using System.Text.Json;
 
 namespace GodsEye.Application.UseCases.Camera.Commands.UpdateCamera
 {
@@ -24,7 +25,7 @@ namespace GodsEye.Application.UseCases.Camera.Commands.UpdateCamera
                 P_NAME = request.Name,
                 P_CONNECTION = request.Connection,
                 P_SECTOR_ID = request.SectorId,
-                P_FEATURES_JSON = request.Features
+                P_FEATURES_JSON = JsonSerializer.Serialize(request.Features)
 
             };
 

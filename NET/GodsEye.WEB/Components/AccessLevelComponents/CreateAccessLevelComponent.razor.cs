@@ -3,6 +3,7 @@ using GodsEye.Application.DTOs.Response;
 using GodsEye.Application.UseCases.AccessLevel.Commands.CreateOrUpdateAccessLevel;
 using GodsEye.Domain.DTOs.Result;
 using GodsEye.Domain.Enums;
+using GodsEye.WEB.Model.Forms;
 using GodsEye.WEB.Services;
 using Microsoft.AspNetCore.Components;
 using MudBlazor;
@@ -22,6 +23,9 @@ namespace GodsEye.WEB.Components.AccessLevelComponents
 
         [Inject]
         SectorWebService SectorWebService { get; set; }
+
+        [Inject]
+        DialogWebService DialogWebService { get; set; }
 
         [CascadingParameter]
         private IMudDialogInstance MudDialog { get; set; }
@@ -126,6 +130,17 @@ namespace GodsEye.WEB.Components.AccessLevelComponents
             AccessLevelForm.Sectors = AccessLevelForm.Sectors.Where(x => x.SectorId != sectorId).ToList();
         }
 
+        private async Task CreateNewAccessScheduleCallback(int accessScheduleId)
+        {
+            var newAccessSchedule = await AccessScheduleWebService.GetById(accessScheduleId);
+
+            if (newAccessSchedule.Success)
+            {
+                AccessLevelForm.AccessScheduleId = accessScheduleId;
+                _accessSchedule = _accessSchedule.Append(newAccessSchedule.Data).ToList();
+                StateHasChanged();
+            }
+        }
 
         private async Task Submit()
         {

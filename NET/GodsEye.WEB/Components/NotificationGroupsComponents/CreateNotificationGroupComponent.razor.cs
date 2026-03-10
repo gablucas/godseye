@@ -91,7 +91,7 @@ namespace GodsEye.WEB.Components.NotificationGroupsComponents
             {
                 Snackbar.Add("Camera atualizada com sucesso!", Severity.Success);
                 success = false;
-                MudDialog.Close(DialogResult.Ok(1));
+                MudDialog.Close(DialogResult.Ok(apiResponse.Data.Id));
             }
             else
             {

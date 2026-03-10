@@ -4,8 +4,8 @@
         <span>Dados</span>
     </div>
 
-    <div class="item @(Pagina == "reconhecimento" ? "selected" : "")" @onclick="() => dialogWebService.OpenCameraRecognition(Id, MudDialog)">
-        <span>Reconhecimento</span>
+    <div class="item @(Pagina == "regiao-interesse" ? "selected" : "")" @onclick="() => dialogWebService.OpenCameraRecognition(Id, MudDialog)">
+        <span>Região de interesse</span>
     </div>
 
     @if (HasFeature(1))

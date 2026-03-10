@@ -27,6 +27,10 @@ builder.Services.AddScoped<AccessLevelWebService>();
 
 builder.Services.AddMudServices();
 
+// Teste Externo
+//builder.Services.AddScoped(sp =>
+//    new HttpClient { BaseAddress = new Uri("https://rccjh4sr-7010.brs.devtunnels.ms") });
+
 builder.Services.AddScoped(sp =>
     new HttpClient { BaseAddress = new Uri("https://localhost:7010") });
 

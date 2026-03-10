@@ -4,3 +4,14 @@
     border-radius: 7px;
     margin-bottom: 12px;
 }
+
+.input-create {
+    display: flex;
+    gap: 12px;
+}
+
+.input-create ::deep button {
+    height: 56px;
+    margin-top: 8px;
+}
+

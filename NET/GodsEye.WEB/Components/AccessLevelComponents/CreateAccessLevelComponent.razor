@@ -101,20 +101,24 @@
                     <MudDivider />
                     
                     <div>
-                        <MudSelect 
-                            Label="Calendário de acesso"
-                            T="int?"
-                            @bind-Value="AccessLevelForm.AccessScheduleId"
-                            Required="true"
-                            RequiredError="Selecione um setor"
-                            Clearable="true"
-                            Variant="Variant.Outlined">
+                        <div class="input-create">
+                            <MudSelect 
+                                Label="Calendário de acesso"
+                                T="int?"
+                                @bind-Value="AccessLevelForm.AccessScheduleId"
+                                Required="true"
+                                RequiredError="Selecione um setor"
+                                Clearable="true"
+                                Variant="Variant.Outlined">
 
-                            @foreach (var accessSchedule in _accessSchedule)
-                            {
-                                <MudSelectItem T="int?" Value="@accessSchedule.Id">@accessSchedule.Name</MudSelectItem>
-                            }
-                        </MudSelect>
+                                @foreach (var accessSchedule in _accessSchedule)
+                                {
+                                    <MudSelectItem T="int?" Value="@accessSchedule.Id">@accessSchedule.Name</MudSelectItem>
+                                }
+                            </MudSelect>
+
+                            <MudButton OnClick="() => DialogWebService.OpenCreateAccessSchedule(CreateNewAccessScheduleCallback)" Variant="Variant.Outlined">Criar novo calendário de acesso</MudButton>
+                        </div>
 
                         @if (AccessLevelForm.AccessScheduleId is not null)
                         {

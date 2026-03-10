@@ -15,6 +15,9 @@ namespace GodsEye.WEB.Pages.Notification
         [Inject]
         public NotificationGroupWebService notificationGroupWebService { get; set; }
 
+        [Inject]
+        public DialogWebService DialogWebService { get; set; }
+
         #region TABLE PARAMETERS
 
         private List<NotificationGroupModel> _logs = new();

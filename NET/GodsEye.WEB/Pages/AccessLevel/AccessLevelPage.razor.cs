@@ -95,22 +95,9 @@ namespace GodsEye.WEB.Pages.AccessLevel
             }
         }
 
-        private async Task OpenCreateAcessLevel()
+        private async Task CreateAccessLevelCallback(int personId)
         {
-            var options = new DialogOptions { CloseOnEscapeKey = true, FullWidth = true, MaxWidth = MaxWidth.False };
-            var dialog = await DialogService.ShowAsync<CreateAccessLevelComponent>("Criar nível de acesso", options);
-
-            var result = await dialog.Result;
-
-            if (result.Canceled)
-                return;
-
-            if (result.Data is not int personId || personId <= 0)
-            {
-                Snackbar.Add("ID inválido retornado", Severity.Error);
-                return;
-            }
-
+            
             var newAccessLevel = await AccessLevelWebService.GetById(personId);
 
             if (newAccessLevel is null || !newAccessLevel.Success)

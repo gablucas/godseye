@@ -14,16 +14,19 @@ namespace GodsEye.WEB.Components.CameraComponents
         #region DI
 
         [Inject]
-        CameraWebService cameraService { get; set; }
+        CameraWebService CameraService { get; set; }
 
         [Inject]
-        SectorWebService sectorService { get; set; }
+        SectorWebService SectorService { get; set; }
 
         [Inject]
-        FeatureWebService featureWebService { get; set; }
+        FeatureWebService FeatureService { get; set; }
 
         [Inject]
-        MediaMtxWebService mediaMtxWebService { get; set; }
+        MediaMtxWebService MediaMtxWebService { get; set; }
+
+        [Inject]
+        DialogWebService DialogWebService { get; set; }
 
         [Inject]
         public IJSRuntime JS { get; set; }
@@ -42,7 +45,7 @@ namespace GodsEye.WEB.Components.CameraComponents
         private bool success;
         private string[] errors = { };
         private string featureError;
-        public CreateCameraForm CameraModel { get; set; } = new();
+        public CreateCameraForm CameraForm { get; set; } = new();
         IEnumerable<SectorModel> _sectors = Enumerable.Empty<SectorModel>();
         IEnumerable<FeatureModel> _features = Enumerable.Empty<FeatureModel>();
 
@@ -60,13 +63,13 @@ namespace GodsEye.WEB.Components.CameraComponents
 
         protected override async Task OnInitializedAsync()
         {
-            var response = await sectorService.GetAllAsync();
+            var response = await SectorService.GetAllAsync();
             if (response is not null && response.Success)
             {
                 _sectors = response.Data;
             }
 
-            var featureResponse = await featureWebService.GetAllAsync();
+            var featureResponse = await FeatureService.GetAllAsync();
             if (featureResponse is not null && featureResponse.Success)
             {
                 _features = featureResponse.Data;
@@ -76,7 +79,7 @@ namespace GodsEye.WEB.Components.CameraComponents
         private void OnFeatureToggled(int featureId, bool isChecked)
         {
 
-            var list = CameraModel.Features.ToList();
+            var list = CameraForm.Features.ToList();
 
             if (isChecked)
             {
@@ -88,14 +91,14 @@ namespace GodsEye.WEB.Components.CameraComponents
                 list.Remove(featureId);
             }
 
-            CameraModel.Features = list;
+            CameraForm.Features = list;
 
             ValidateFeatures();
         }
 
         private bool ValidateFeatures()
         {
-            if (CameraModel.Features == null || !CameraModel.Features.Any())
+            if (CameraForm.Features == null || !CameraForm.Features.Any())
             {
                 featureError = "Selecione pelo menos uma funcionalidade";
                 success = false;
@@ -116,7 +119,7 @@ namespace GodsEye.WEB.Components.CameraComponents
                 return;
 
             visible = true;
-            apiResponse = await cameraService.CreateAsync(CameraModel);
+            apiResponse = await CameraService.CreateAsync(CameraForm);
             visible = false;
 
             if (apiResponse.Success)
@@ -134,7 +137,7 @@ namespace GodsEye.WEB.Components.CameraComponents
 
         private void OnConnectionChanged(string value)
         {
-            CameraModel.Connection = value;
+            CameraForm.Connection = value;
             _hasConnectionError = false;
             _connectionErrorMessage = null;
         }
@@ -144,14 +147,14 @@ namespace GodsEye.WEB.Components.CameraComponents
         {
             _loadingConnection = true;
 
-            if (string.IsNullOrEmpty(CameraModel.Connection))
+            if (string.IsNullOrEmpty(CameraForm.Connection))
             {
                 _loadingConnection = false;
                 return;
             }
                 
 
-            var cam = await mediaMtxWebService.StartStream(CameraModel.Connection);
+            var cam = await MediaMtxWebService.StartStream(CameraForm.Connection);
 
             if (cam is null || !cam.Success)
             {
@@ -174,6 +177,18 @@ namespace GodsEye.WEB.Components.CameraComponents
         public async ValueTask DisposeAsync()
         {
             await JS.InvokeVoidAsync("streamFunctions.stop", "camera-player");
+        }
+
+        private async Task CreateNewSectorCallback(int sectorId)
+        {
+            var newSector = await SectorService.GetById(sectorId);
+
+            if (newSector.Success)
+            {
+                CameraForm.SectorId = sectorId;
+                _sectors = _sectors.Append(newSector.Data).ToList();
+                StateHasChanged();
+            }
         }
     }
 }

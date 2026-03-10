@@ -1,4 +1,4 @@
-﻿@page "/cadastro/notificacoes"
+﻿@page "/notificacao/emails"
 @using GodsEye.WEB.Components
 @using GodsEye.WEB.Enum
 @using GodsEye.Application.DTOs.Model;
@@ -28,7 +28,7 @@
                 </div>
             </div>
 
-            <MudButton Variant="Variant.Outlined" OnClick="OpenCreateNotificationGroup">Criar grupo de notificação</MudButton>
+            <MudButton Variant="Variant.Outlined" OnClick="() => DialogWebService.OpenCreateNotificationGroup(null)">Criar grupo de notificação</MudButton>
         </div>
 
         <MudTable T="NotificationGroupModel" @ref="_mudTable" Items="@_filteredLogs" Elevation="0" Hover="true" Loading="@_loading" LoadingProgressColor="Color.Info" RowClass="cursor-pointer">

@@ -5,37 +5,39 @@
 
         <div class="form-container">
 
-            <MudForm @ref="form" Model="CameraModel" @bind-IsValid="@success" @bind-Errors="@errors">
+            <MudForm @ref="form" Model="CameraForm" @bind-IsValid="@success" @bind-Errors="@errors">
 
                 <div class="inputs-container">
 
                     <MudTextField 
                         Label="Nome" 
                         T="string" 
-                        @bind-Value="CameraModel.Name" 
-                        For="@(() => CameraModel.Name)" 
+                        @bind-Value="CameraForm.Name" 
+                        For="@(() => CameraForm.Name)" 
                         HelperText="Identificação da câmera" 
                         Required="true" 
                         RequiredError="O nome é obrigatório" 
                         Variant="Variant.Outlined" 
                         />
                     
+                    <div class="input-create">
+                        <MudSelect 
+                            Label="Selecione um setor" 
+                            T="int?" 
+                            @bind-Value="CameraForm.SectorId" 
+                            HelperText="Selecione um setor que será vinculado a câmera" 
+                            Required="true"
+                            RequiredError="Selecione um setor"
+                            Variant="Variant.Outlined">
 
-                    <MudSelect 
-                        Label="Selecione um setor" 
-                        T="string" 
-                        @bind-Value="CameraModel.SectorId" 
-                        HelperText="Selecione o setor que será vinculado a câmera" 
-                        Required="true"
-                        RequiredError="Selecione um setor" 
-                        Clearable="true" 
-                        Variant="Variant.Outlined">
+                            @foreach (var sector in _sectors)
+                            {
+                                <MudSelectItem T="int?" Value="@sector.Id">@sector.Name</MudSelectItem>
+                            }
+                        </MudSelect>
 
-                        @foreach (var sector in _sectors)
-                        {
-                            <MudSelectItem T="string" Value="@sector.Id.ToString()">@sector.Name</MudSelectItem>
-                        }
-                    </MudSelect>
+                        <MudButton OnClick="() => DialogWebService.OpenCreateSector(CreateNewSectorCallback)" Variant="Variant.Outlined">Criar novo setor</MudButton>
+                    </div>
 
                     <div class="video-inputs">
 
@@ -54,13 +56,12 @@
 
                             <MudButton 
                                 OnClick="StartStream" 
-                                Disabled="string.IsNullOrEmpty(CameraModel.Connection) || _loadingConnection"
+                                Disabled="string.IsNullOrEmpty(CameraForm.Connection) || _loadingConnection"
                                 Variant="Variant.Outlined" 
                                 Style="height: 56px; margin-top: 8px" 
                                 Color="Color.Success"
 
                                 >Testar conexão</MudButton>
-
 
                             @if(_loadingConnection) 
                             {
@@ -91,7 +92,7 @@
                     {
                         <div class="feature">
                             <MudCheckBox T="bool"
-                                         Value="@(CameraModel.Features.Contains(feature.Id))"
+                                         Value="@(CameraForm.Features.Contains(feature.Id))"
                                          ValueChanged="@((bool isChecked) => OnFeatureToggled(feature.Id, isChecked))"
                                          Label="@feature.Name"
                                          Color="Color.Primary"

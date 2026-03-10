@@ -2,6 +2,7 @@
 using GodsEye.Application.Interfaces;
 using GodsEye.Domain.DTOs.Result;
 using MediatR;
+using System.Text.Json;
 
 namespace GodsEye.Application.UseCases.NotificationGroup.Commands.CreateNotificationGroup
 {
@@ -21,7 +22,7 @@ namespace GodsEye.Application.UseCases.NotificationGroup.Commands.CreateNotifica
             var parameters = new
             {
                 P_NAME = request.name,
-                P_EMAILS_JSON = request.emails
+                P_EMAILS_JSON = JsonSerializer.Serialize(request.emails)
             };
 
             var result = await _context.QuerySingleSqlAsync<ProcedureResult>(sql, parameters, cancellationToken);

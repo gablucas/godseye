@@ -25,7 +25,7 @@
                 </div>
             </div>
 
-            <MudButton Variant="Variant.Outlined" OnClick="OpenCreateCamera">Criar calendário de acesso</MudButton>
+            <MudButton Variant="Variant.Outlined" OnClick="() => DialogWebService.OpenCreateAccessSchedule(CreateAccessScheduleCallback)">Criar calendário de acesso</MudButton>
         </div>
 
         <MudTable T="AccessScheduleModel" Elevation="0" @ref="mudTable" Items="@_filteredAccessSchedule" Hover="true" Loading="@_loading" LoadingProgressColor="Color.Info" RowClass="cursor-pointer">

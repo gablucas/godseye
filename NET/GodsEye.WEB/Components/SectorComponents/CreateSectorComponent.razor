@@ -12,16 +12,22 @@
 
 
                     <div class="selected-emails-preview">
-                        <MudSelect T="string" Label="Grupos de notificação" HelperText="Selecione os grupos que irão receber notificaçõe neste setor" MultiSelection="true" @bind-SelectedValues="CreateSectorForm.NotificationGroups" MultiSelectionTextFunc="GetSelectNotificationGroupsName" Variant="Variant.Outlined">
-                            @foreach (var notificationGroup in _notificationGroups)
-                            {
-                                <MudSelectItem T="string" Value="@notificationGroup.Id.ToString()">@notificationGroup.Name</MudSelectItem>
-                            }
-                        </MudSelect>
+
+                        <div class="input-create">
+                            <MudSelect T="int" Label="Grupos de email para notificação" HelperText="Selecione os grupos que irão receber notificaçõe neste setor" MultiSelection="true" @bind-SelectedValues="CreateSectorForm.NotificationGroups" MultiSelectionTextFunc="GetSelectNotificationGroupsName" Variant="Variant.Outlined">
+                                @foreach (var notificationGroup in _notificationGroups)
+                                {
+                                    <MudSelectItem T="int" Value="@notificationGroup.Id">@notificationGroup.Name</MudSelectItem>
+                                }
+                            </MudSelect>
+
+                            <MudButton @onclick="() => DialogWebService.OpenCreateNotificationGroup(CreateNewEmailGroupCallback)" Variant="Variant.Outlined">Criar novo grupo de email</MudButton>
+                        </div>
+                        
 
                         <MudText Typo="Typo.overline" Style="display: block">Emails que receberão a notificação</MudText>
 
-                        @foreach (var group in _notificationGroups.Where(x => CreateSectorForm.NotificationGroups.Contains(x.Id.ToString())))
+                        @foreach (var group in _notificationGroups.Where(x => CreateSectorForm.NotificationGroups.Contains(x.Id)))
                         {
                             foreach(var email in group.Emails)
                             {

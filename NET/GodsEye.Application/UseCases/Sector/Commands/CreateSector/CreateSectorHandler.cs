@@ -2,6 +2,7 @@
 using GodsEye.Application.Interfaces;
 using GodsEye.Domain.DTOs.Result;
 using MediatR;
+using System.Text.Json;
 
 namespace GodsEye.Application.UseCases.Sector.Commands.CreateSector
 {
@@ -21,7 +22,7 @@ namespace GodsEye.Application.UseCases.Sector.Commands.CreateSector
             var parameters = new
             {
                 P_NAME = request.Name,
-                P_NOTIFICATION_GROUP_JSON = request.NotificationGroups
+                P_NOTIFICATION_GROUP_JSON = JsonSerializer.Serialize(request.NotificationGroups)
             };
 
             var result = await _context.QuerySingleSqlAsync<ProcedureResult>(sql, parameters, cancellationToken);

@@ -75,3 +75,13 @@
     width: 300px;
     border-radius: 7px;
 }
+
+.input-create {
+    display: flex;
+    gap: 12px;
+}
+
+.input-create ::deep button {
+    height: 56px;
+    margin-top: 8px;
+}

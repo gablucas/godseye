@@ -19,39 +19,49 @@
                         For="@(() => CreatePersonForm.Name)" 
                         Variant="Variant.Outlined" />
 
-                    <MudSelect 
-                        T="int?" 
-                        ValueChanged="OnSectorChanged"
-                        For="@(() => CreatePersonForm.SectorId)"
-                        Error="@_sectorError"
-                        ErrorText="@_sectorErrorMessage"
-                        Required="true" 
-                        Label="Setor" 
-                        HelperText="Selecione o setor que essa pessoa pertence" 
-                        Variant="Variant.Outlined">
+                    <div class="input-create">
+                        <MudSelect 
+                            T="int?"
+                            Value="CreatePersonForm.SectorId"
+                            ValueChanged="OnSectorChanged"
+                            For="@(() => CreatePersonForm.SectorId)"
+                            Error="@_sectorError"
+                            ErrorText="@_sectorErrorMessage"
+                            Required="true" 
+                            Label="Setor" 
+                            HelperText="Selecione o setor que essa pessoa pertence" 
+                            Variant="Variant.Outlined">
 
-                        @foreach (var sector in _sectors)
-                        {
-                            <MudSelectItem T="int?" Value="@sector.Id">@sector.Name</MudSelectItem>
-                        }
-                    </MudSelect>
+                            @foreach (var sector in _sectors)
+                            {
+                                <MudSelectItem T="int?" Value="@sector.Id">@sector.Name</MudSelectItem>
+                            }
+                        </MudSelect>
 
-                    <MudSelect 
-                        T="int?" 
-                        ValueChanged="OnAccessLevelChanged"
-                        For="@(() => CreatePersonForm.AcessLevelId)"
-                        Error="@_sectorError"
-                        ErrorText="@_sectorErrorMessage"
-                        Required="true"
-                        Label="Nível de acesso" 
-                        HelperText="Selecione o nível de acesso da pessoa" 
-                        Variant="Variant.Outlined">
+                        <MudButton OnClick="() => DialogWebService.OpenCreateSector(CreateNewSectorCallback)" Variant="Variant.Outlined">Criar novo setor</MudButton>
+                     </div>
 
-                        @foreach (var accessLevel in _accessLevels)
-                        {
-                            <MudSelectItem T="int?" Value="@accessLevel.Id">@accessLevel.Name</MudSelectItem>
-                        }
-                    </MudSelect>
+                     <div class="input-create">
+                        <MudSelect T="int?"
+                                   Value="CreatePersonForm.AcessLevelId"
+                                   ValueChanged="OnAccessLevelChanged"
+                                   For="@(() => CreatePersonForm.AcessLevelId)"
+                                   Error="@_sectorError"
+                                   ErrorText="@_sectorErrorMessage"
+                                   Required="true"
+                                   Label="Nível de acesso"
+                                   HelperText="Selecione o nível de acesso da pessoa"
+                                   Variant="Variant.Outlined">
+
+                            @foreach (var accessLevel in _accessLevels)
+                            {
+                                <MudSelectItem T="int?" Value="@accessLevel.Id">@accessLevel.Name</MudSelectItem>
+                            }
+                        </MudSelect>
+
+                        <MudButton OnClick="() => DialogWebService.OpenCreateAcessLevel(CreateNewAccessLevelCallback)" Variant="Variant.Outlined">Criar novo nível de acesso</MudButton>
+                     </div>
+                    
 
                     <MudDivider Style="margin: 12px 0px" />
 

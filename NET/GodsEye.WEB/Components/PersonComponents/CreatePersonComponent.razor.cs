@@ -17,13 +17,16 @@ namespace GodsEye.WEB.Components.PersonComponents
         #region DI
 
         [Inject]
-        PersonService personService { get; set; }
+        PersonService PersonService { get; set; }
 
         [Inject]
-        SectorWebService sectorService { get; set; }
+        SectorWebService SectorService { get; set; }
 
         [Inject]
         AccessLevelWebService AccessLevelService { get; set; }
+
+        [Inject]
+        DialogWebService DialogWebService { get; set; }
 
         [Inject]
         IJSRuntime JS { get; set; }
@@ -52,7 +55,7 @@ namespace GodsEye.WEB.Components.PersonComponents
 
         private bool visible = false;
 
-        IEnumerable<SectorModel> _sectors = Enumerable.Empty<SectorModel>();
+        IEnumerable<SectorModel> _sectors = new List<SectorModel>();
         IEnumerable<AccessLevelModel> _accessLevels = Enumerable.Empty<AccessLevelModel>();
 
         private bool _sectorError = false;
@@ -70,7 +73,7 @@ namespace GodsEye.WEB.Components.PersonComponents
                 await JS.InvokeVoidAsync("cameraFunctions.startCamera");
             }
 
-            var response = await sectorService.GetAllAsync();
+            var response = await SectorService.GetAllAsync();
             if (response is not null && response.Success)
             {
                 _sectors = response.Data;
@@ -124,6 +127,30 @@ namespace GodsEye.WEB.Components.PersonComponents
             }
         }
 
+        private async Task CreateNewSectorCallback(int sectorId)
+        {
+            var newSector = await SectorService.GetById(sectorId);
+
+            if (newSector.Success)
+            {
+                CreatePersonForm.SectorId = sectorId;
+                _sectors = _sectors.Append(newSector.Data).ToList();
+                StateHasChanged();
+            }
+        }
+
+        private async Task CreateNewAccessLevelCallback(int accessLevelId)
+        {
+            var newSector = await AccessLevelService.GetById(accessLevelId);
+
+            if (newSector.Success)
+            {
+                CreatePersonForm.AcessLevelId = accessLevelId;
+                _accessLevels = _accessLevels.Append(newSector.Data).ToList();
+                StateHasChanged();
+            }
+        }
+
         private async Task OpenCamera(EventArgs e)
         {
             photoMethod = PhotoCaptureMethodEnum.CAMERA;
@@ -168,7 +195,7 @@ namespace GodsEye.WEB.Components.PersonComponents
         private async Task Submit()
         {
             visible = true;
-            apiResponse = await personService.CreateAsync(CreatePersonForm);
+            apiResponse = await PersonService.CreateAsync(CreatePersonForm);
             visible = false;
 
             if (apiResponse.Success)

@@ -66,6 +66,17 @@ namespace GodsEye.WEB.Layout
                     new() { Title = "Níveis de Acesso", Url = "/controle-acesso/nivel" },
                     new() { Title = "Calendário de acesso", Url = "/controle-acesso/calendario" }
                 }
+            },
+
+            new NavMenuGroup
+            {
+                Key = "notificacoes",
+                Title = "Notificações",
+                Icon = Icons.Material.Filled.Notifications,
+                Items =
+                {
+                    new() { Title = "Emails", Url = "/notificacao/emails" }
+                }
             }
         };
 

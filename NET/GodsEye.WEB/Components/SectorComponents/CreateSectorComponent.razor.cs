@@ -1,8 +1,10 @@
 ﻿using GodsEye.Application.DTOs.Model;
+using GodsEye.Application.UseCases.Sector.Commands.CreateSector;
 using GodsEye.WEB.Model.Forms;
 using GodsEye.WEB.Services;
 using Microsoft.AspNetCore.Components;
 using MudBlazor;
+using System.Threading.Tasks;
 
 namespace GodsEye.WEB.Components.SectorComponents
 {
@@ -16,13 +18,16 @@ namespace GodsEye.WEB.Components.SectorComponents
         [Inject]
         NotificationGroupWebService notificationGroupService { get; set; }
 
+        [Inject]
+        DialogWebService DialogWebService { get; set; }
+
         #endregion
 
         #region FORM
 
         MudForm form;
 
-        CreateSectorForm CreateSectorForm { get; set; } = new();
+        CreateSectorRequest CreateSectorForm { get; set; } = new();
         public IEnumerable<string> NotificationGroups { get; set; }
 
         bool success;
@@ -52,6 +57,18 @@ namespace GodsEye.WEB.Components.SectorComponents
                 .Select(c => c.Name);
 
             return string.Join(", ", names);
+        }
+
+        private async Task CreateNewEmailGroupCallback(int newEmailGroupId)
+        {
+            var newEmailGroup = await notificationGroupService.GetById(newEmailGroupId);
+
+            if (newEmailGroup.Success)
+            {
+                _notificationGroups = _notificationGroups.Append(newEmailGroup.Data).ToList();
+
+                CreateSectorForm.NotificationGroups = CreateSectorForm.NotificationGroups.Append(newEmailGroupId);
+            }
         }
 
         private async Task Submit()

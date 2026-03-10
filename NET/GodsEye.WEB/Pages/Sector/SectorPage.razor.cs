@@ -18,6 +18,9 @@ namespace GodsEye.WEB.Pages.Sector
         public CameraWebService cameraService { get; set; }
 
         [Inject]
+        public DialogWebService DialogWebService { get; set; }
+
+        [Inject]
         public IDialogService DialogService { get; set; }
 
         #endregion
@@ -71,22 +74,8 @@ namespace GodsEye.WEB.Pages.Sector
             _loading = false;
         }
 
-        private async Task OpenCreateSector()
+        private async Task CreateSectorCallback(int sectorId)
         {
-            var options = new DialogOptions { CloseOnEscapeKey = true, FullWidth = true, MaxWidth = MaxWidth.Large };
-            var dialog = await DialogService.ShowAsync<CreateSectorComponent>("Criar setor", options);
-
-            var result = await dialog.Result;
-
-            if (result.Canceled)
-                return;
-
-            if (result.Data is not int sectorId || sectorId <= 0)
-            {
-                Snackbar.Add("ID inválido retornado", Severity.Error);
-                return;
-            }
-
             var newSector = await sectorService.GetById(sectorId);
 
             if (newSector is null || !newSector.Success)
@@ -94,7 +83,6 @@ namespace GodsEye.WEB.Pages.Sector
 
             _sectors.Insert(0, newSector.Data);
             ApplyFilters();
-
         }
 
         private void OnCamerasChanged(IEnumerable<string> values)

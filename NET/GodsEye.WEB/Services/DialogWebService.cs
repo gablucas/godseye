@@ -1,8 +1,13 @@
 ﻿using GodsEye.Application.DTOs.Model;
+using GodsEye.WEB.Components.AccessLevelComponents;
+using GodsEye.WEB.Components.AccessSchedule;
 using GodsEye.WEB.Components.CameraComponents;
 using GodsEye.WEB.Components.EnvironmentMonitoringComponent;
+using GodsEye.WEB.Components.NotificationGroupsComponents;
 using GodsEye.WEB.Components.PersonComponents;
+using GodsEye.WEB.Components.SectorComponents;
 using MudBlazor;
+using MudBlazor.Extensions;
 
 namespace GodsEye.WEB.Services
 {
@@ -73,5 +78,83 @@ namespace GodsEye.WEB.Services
             await _dialogService.ShowAsync<CameraDwellTimeRecordingComponent>(null, parameters, _options);
         }
 
+        public async Task OpenCreateNotificationGroup(Func<int, Task>? callback = null)
+        {
+            var dialog = await _dialogService.ShowAsync<CreateNotificationGroupComponent>("Criar grupo email", _options);
+
+            var result = await dialog.Result;
+
+            if (result.Canceled)
+                return;
+
+            if (callback is not null)
+            {
+                var emailGroupId = result.Data.As<int>();
+                await callback(emailGroupId);
+            }
+        }
+
+        public async Task OpenCreateSector(Func<int, Task>? callback = null)
+        {
+            var dialog = await _dialogService.ShowAsync<CreateSectorComponent>("Criar setor", _options);
+
+            var result = await dialog.Result;
+
+            if (result.Canceled)
+                return;
+
+            if (callback is not null)
+            {
+                var sectorId = result.Data.As<int>();
+                await callback(sectorId);
+            }
+        }
+        public async Task OpenCreatePerson(Func<int, Task>? callback = null)
+        {
+            var dialog = await _dialogService.ShowAsync<CreatePersonComponent>("Criar pessoa", _options);
+
+            var result = await dialog.Result;
+
+            if (result.Canceled)
+                return;
+
+            if (callback is not null)
+            {
+                var personId = result.Data.As<int>();
+                await callback(personId);
+            }
+        }
+
+        public async Task OpenCreateAcessLevel(Func<int, Task>? callback = null)
+        {
+            var dialog = await _dialogService.ShowAsync<CreateAccessLevelComponent>("Criar nível de acesso", _options);
+
+            var result = await dialog.Result;
+
+            if (result.Canceled)
+                return;
+
+            if (callback is not null)
+            {
+                var personId = result.Data.As<int>();
+                await callback(personId);
+            }
+        }
+
+        public async Task OpenCreateAccessSchedule(Func<int, Task>? callback = null)
+        {
+            var dialog = await _dialogService.ShowAsync<CreateAccessScheduleComponent>("Criar calendário de acesso", _options);
+
+            var result = await dialog.Result;
+
+            if (result.Canceled)
+                return;
+
+            if (callback is not null)
+            {
+                var personId = result.Data.As<int>();
+                await callback(personId);
+            }
+        }
     }
 }

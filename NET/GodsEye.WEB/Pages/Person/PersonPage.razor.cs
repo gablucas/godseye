@@ -98,22 +98,8 @@ namespace GodsEye.WEB.Pages.Person
             }
         }
 
-        private async Task OpenCreatePerson()
+        private async Task CreatePersonCallback(int personId)
         {
-            var options = new DialogOptions { CloseOnEscapeKey = true, FullWidth = true, MaxWidth = MaxWidth.False };
-            var dialog = await DialogService.ShowAsync<CreatePersonComponent>("Criar pessoa", options);
-
-            var result = await dialog.Result;
-
-            if (result.Canceled)
-                return;
-
-            if (result.Data is not int personId || personId <= 0)
-            {
-                Snackbar.Add("ID inválido retornado", Severity.Error);
-                return;
-            }
-
             var newPerson = await personService.GetById(personId);
 
             if (newPerson is null || !newPerson.Success)
