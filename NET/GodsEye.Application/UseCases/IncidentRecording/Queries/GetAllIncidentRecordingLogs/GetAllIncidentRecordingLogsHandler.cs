@@ -16,9 +16,15 @@ namespace GodsEye.Application.UseCases.IncidentRecording.Queries.GetAllIncidentR
 
         public async Task<ApiResponse<IEnumerable<IncidentRecordingModel>>> Handle(GetAllIncidentRecordingLogsRequest request, CancellationToken cancellationToken)
         {
-            var sql = "CALL SP_INCIDENT_RECORDING_GET_ALL_LOGS()";
+            var sql = "CALL SP_INCIDENT_RECORDING_GET_ALL_LOGS(@P_PAGE_NUMBER, @P_PAGE_SIZE)";
 
-            var result = await _context.QuerySqlAsync<IncidentRecordingModel>(sql, cancellationToken);
+            var parameters = new
+            {
+                P_PAGE_SIZE = request.pageSize,
+                P_PAGE_NUMBER = request.pageNumber,
+            };
+
+            var result = await _context.QuerySqlAsync<IncidentRecordingModel>(sql, parameters, cancellationToken);
 
             return ApiResponse<IEnumerable<IncidentRecordingModel>>.Ok(result);
         }

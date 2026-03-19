@@ -19,9 +19,9 @@ namespace GodsEye.API.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> GetAllLogs(CancellationToken cancellationToken)
+        public async Task<IActionResult> GetAllLogs([FromQuery] int pageNumber, [FromQuery] int pageSize, CancellationToken cancellationToken)
         {
-            var result = await _mediator.Send(new GetAllIncidentRecordingLogsRequest(), cancellationToken);
+            var result = await _mediator.Send(new GetAllIncidentRecordingLogsRequest(pageNumber, pageSize), cancellationToken);
             return Ok(result);
         }
 

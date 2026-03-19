@@ -43,7 +43,7 @@ namespace GodsEye.WEB.Pages.IncidentRecording
         {
             _loading = true;
 
-            var result = await incidentRecordingWebService.GetAllLogs();
+            var result = await incidentRecordingWebService.GetAllLogs(1, 5);
 
             if (result.Success)
                 _log = result.Data.ToList();
@@ -69,6 +69,9 @@ namespace GodsEye.WEB.Pages.IncidentRecording
 
             await SignalR.StartAsync();
         }
+
+        
+
 
         #region TABLE FUNCTIONS
         private void RowClickEvent(TableRowClickEventArgs<IncidentRecordingModel> tableRowClickEventArgs)

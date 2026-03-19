@@ -3,9 +3,11 @@ using GodsEye.WEB.Components.AccessLevelComponents;
 using GodsEye.WEB.Components.AccessSchedule;
 using GodsEye.WEB.Components.CameraComponents;
 using GodsEye.WEB.Components.EnvironmentMonitoringComponent;
+using GodsEye.WEB.Components.IncidentRecordingComponents;
 using GodsEye.WEB.Components.NotificationGroupsComponents;
 using GodsEye.WEB.Components.PersonComponents;
 using GodsEye.WEB.Components.SectorComponents;
+using Microsoft.Extensions.Options;
 using MudBlazor;
 using MudBlazor.Extensions;
 
@@ -76,6 +78,13 @@ namespace GodsEye.WEB.Services
 
             var parameters = new DialogParameters<CameraDwellTimeRecordingComponent> { { x => x.Id, cameraId } };
             await _dialogService.ShowAsync<CameraDwellTimeRecordingComponent>(null, parameters, _options);
+        }
+
+        public async Task OpenIncidentRecording(IncidentRecordingModel incidentRecording)
+        {
+            var parameters = new DialogParameters<InfoIncidentRecordingComponent> { { x => x.IncidentRecording, incidentRecording } };
+
+            await _dialogService.ShowAsync<InfoIncidentRecordingComponent>("Registro de incidentes", parameters, _options);
         }
 
         public async Task OpenCreateNotificationGroup(Func<int, Task>? callback = null)

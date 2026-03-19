@@ -22,6 +22,8 @@ namespace GodsEye.Application.UseCases.IncidentRecording.Queries.GetIncidentReco
 
             var result = await _context.QuerySingleSqlAsync<IncidentRecordingProcessModel>(sql, parameters, cancellationToken);
 
+
+
             return ApiResponse<IncidentRecordingProcessModel>.Ok(result);
         }
     }

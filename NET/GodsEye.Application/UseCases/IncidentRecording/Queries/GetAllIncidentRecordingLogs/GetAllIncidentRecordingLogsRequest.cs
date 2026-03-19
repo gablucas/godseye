@@ -4,5 +4,5 @@ using MediatR;
 
 namespace GodsEye.Application.UseCases.IncidentRecording.Queries.GetAllIncidentRecordingLogs
 {
-    public class GetAllIncidentRecordingLogsRequest() : IRequest<ApiResponse<IEnumerable<IncidentRecordingModel>>>;
+    public sealed record GetAllIncidentRecordingLogsRequest(int pageNumber, int pageSize) : IRequest<ApiResponse<IEnumerable<IncidentRecordingModel>>>;
 }

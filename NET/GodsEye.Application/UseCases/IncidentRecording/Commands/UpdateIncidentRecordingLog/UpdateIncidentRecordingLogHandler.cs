@@ -71,7 +71,7 @@ namespace GodsEye.Application.UseCases.IncidentRecording.Commands.UpdateIncident
             var parameters = new
             {
                 P_ID = id,
-                P_PERSONS_IDS_JSON = persons,
+                P_PERSONS_IDS_JSON = JsonSerializer.Serialize(persons),
                 P_FILE_NAME = fileName,
             };
 

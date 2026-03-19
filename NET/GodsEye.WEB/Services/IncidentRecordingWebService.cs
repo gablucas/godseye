@@ -13,9 +13,9 @@ namespace GodsEye.WEB.Services
             _http = http;
         }
 
-        public async Task<ApiResponse<IEnumerable<IncidentRecordingModel>>> GetAllLogs()
+        public async Task<ApiResponse<IEnumerable<IncidentRecordingModel>>> GetAllLogs(int pageNumber, int pageSize)
         {
-            var result = await _http.GetAsync($"api/incidentrecording");
+            var result = await _http.GetAsync($"api/incidentrecording?pageNumber={pageNumber}&pageSize={pageSize}");
 
             var json = await result.Content.ReadFromJsonAsync<ApiResponse<IEnumerable<IncidentRecordingModel>>>();
 

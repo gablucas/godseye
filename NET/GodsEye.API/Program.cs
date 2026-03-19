@@ -50,6 +50,7 @@ app.UseCors("Default");
 
 // Teste Externo
 //app.UseCors("DevTunnel");
+
 app.UseAuthorization();
 app.UseStaticFiles();
 app.MapControllers();

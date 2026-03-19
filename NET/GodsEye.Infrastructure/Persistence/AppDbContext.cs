@@ -52,6 +52,7 @@ namespace GodsEye.Infrastructure.Persistence
             return result.ToList();
         }
 
+
         // Se quiser manter o delete separado, ok, mas o ExecuteSqlAsync já faria isso.
         public async Task<int> ExecuteDeleteAsync(string sql, object? parameters, CancellationToken cancellationToken)
         {

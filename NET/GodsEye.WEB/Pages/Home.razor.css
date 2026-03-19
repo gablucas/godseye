@@ -1,7 +1,7 @@
 ﻿.home-container {
     display: grid;
     grid-template-columns: 600px 1fr;
-    grid-template-rows: 274px 1fr;
+    grid-template-rows: 274px 274px;
     justify-content: start;
     gap: 12px;
     padding: 12px;

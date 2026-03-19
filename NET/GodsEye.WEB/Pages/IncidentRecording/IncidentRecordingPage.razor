@@ -18,7 +18,7 @@
                 <MudTh>Data/Hora do Incidente</MudTh>
                 <MudTh>Status</MudTh>
                 <MudTh>Pessoas Identificadas</MudTh>
-                <MudTh>Ver detalhes</MudTh>
+                @* <MudTh>Ver detalhes</MudTh> *@
             </HeaderContent>
             <RowTemplate>
                 @* <MudTd DataLabel="PersonPhoto"><MudImage Height="160" Style="border-radius: 7px" src=@($"https://localhost:7010/{context.PersonPhoto}") /></MudTd>
@@ -27,7 +27,7 @@
                 <MudTd DataLabel="IncidentTime">@context.IncidentTime</MudTd>
                 <MudTd DataLabel="IncidentTime">@context.Status</MudTd>
                 <MudTd DataLabel="QuantityPerson">@context.Persons.Count()</MudTd>
-                <MudTd><MudButton Variant="Variant.Outlined" Size="Size.Small">Ver Detalhes</MudButton></MudTd>
+                @* <MudTd><MudButton Variant="Variant.Outlined" Size="Size.Small">Ver Detalhes</MudButton></MudTd> *@
             </RowTemplate>
         </MudTable>
     </div>
