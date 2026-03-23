@@ -2,6 +2,7 @@
 using GodsEye.WEB.Components.PersonComponents;
 using GodsEye.WEB.Services;
 using Microsoft.AspNetCore.Components;
+using Microsoft.EntityFrameworkCore;
 using MudBlazor;
 
 
@@ -17,6 +18,9 @@ namespace GodsEye.WEB.Pages.Person
 
         [Inject]
         public DialogWebService DialogWebService { get; set; }
+
+        [Inject]
+        public SignalRService SignalR { get; set; }
 
         [Inject]
         public IDialogService DialogService { get; set; }
@@ -37,6 +41,8 @@ namespace GodsEye.WEB.Pages.Person
         private IEnumerable<string> _selectedSectors { get; set; } = new HashSet<string>() { };
 
         private string _personFilter = "";
+
+        private bool _toggleShowPersonWithNoImage = false;
 
         #endregion
 
@@ -62,11 +68,33 @@ namespace GodsEye.WEB.Pages.Person
                 _persons = personsResult.Data.ToList();
                 _filteredPersons = _persons;
 
-            _loading = false;
+            
 
             var sectorsRequest = await SectorService.GetAllAsync();
             if (sectorsRequest.Success)
                 _sectors = sectorsRequest.Data.ToList();
+
+
+            SignalR.Create("https://localhost:7010/createdDataHub");
+
+            SignalR.On<PersonModel>(
+                "CreatedPerson",
+                person =>
+                {
+                    _persons = _persons.Where(x => x.Id != person.Id).ToList();
+                    _persons.Insert(0, person);
+                    ApplyFilters();
+
+                    InvokeAsync(() =>
+                    {
+                        mudTable?.ReloadServerData();
+                        StateHasChanged();
+                    });
+                });
+
+            await SignalR.StartAsync();
+
+            _loading = false;
         }
 
         private async Task RowClickEvent(TableRowClickEventArgs<PersonModel> args)
@@ -77,7 +105,7 @@ namespace GodsEye.WEB.Pages.Person
             if (args.Item.Id <= 0)
                 return;
 
-            await DialogWebService.OpenPersonInfoDialog(args.Item.Id);
+            await DialogWebService.OpenPersonUpdateDialog(args.Item.Id, null);
         }
 
         private string SelectedRowClassFunc(PersonModel element, int rowNumber)
@@ -117,6 +145,20 @@ namespace GodsEye.WEB.Pages.Person
         private string GetMultiSelectionText(List<string> selectedValues)
         {
             return $"{selectedValues.Count} setor{(selectedValues.Count > 1 ? "es foram selecionados" : " foi selecionado")}";
+        }
+
+        private void FilterPersonsWithNoImage()
+        {
+            if (!_toggleShowPersonWithNoImage)
+            {
+                _filteredPersons = _persons.Where(x => x.ImagePath == null).ToList();
+                _toggleShowPersonWithNoImage = true;
+            } 
+            else
+            {
+                ApplyFilters();
+                _toggleShowPersonWithNoImage = false;
+            }
         }
 
         void ApplyFilters()

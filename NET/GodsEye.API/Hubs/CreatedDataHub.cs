@@ -2,7 +2,7 @@
 
 namespace GodsEye.API.Hubs
 {
-    public class NotificationsHub : Hub
+    public class CreatedDataHub : Hub
     {
     }
 }

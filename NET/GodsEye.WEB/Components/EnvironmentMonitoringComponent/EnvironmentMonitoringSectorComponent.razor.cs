@@ -53,7 +53,7 @@ namespace GodsEye.WEB.Components.EnvironmentMonitoringComponent
 
             MudDialog.Close();
 
-            var dialog = await DialogWebService.OpenPersonInfoDialog(args.Item.PersonId);
+            var dialog = await DialogWebService.OpenPersonUpdateDialog(args.Item.PersonId, null);
         }
 
         private string SelectedRowClassFunc(EnvironmentMonitoringModel element, int rowNumber)

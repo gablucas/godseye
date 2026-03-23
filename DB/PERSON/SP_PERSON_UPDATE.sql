@@ -1,0 +1,39 @@
+CREATE DEFINER=`root`@`localhost` PROCEDURE `SP_PERSON_UPDATE`(
+	IN P_PERSON_ID INT,
+    IN P_NAME VARCHAR(100),
+    IN P_MAIN_SECTOR_ID INT,
+    IN P_ACCESS_LEVEL_ID INT
+)
+BEGIN
+    DECLARE ERRO INT DEFAULT 0;
+    DECLARE MENSAGEM VARCHAR(100) DEFAULT 'SUCESSO';
+    DECLARE NEW_ID INT DEFAULT 0;
+
+    DECLARE EXIT HANDLER FOR SQLEXCEPTION
+    BEGIN
+        SET ERRO = 1;
+        SET MENSAGEM = 'ERRO AO INSERIR PESSOA';
+        ROLLBACK;
+        
+		SELECT 
+            ERRO AS Erro,
+            MENSAGEM AS Mensagem,
+            0 AS Id;
+    END;
+
+    START TRANSACTION;
+
+        UPDATE person 
+        SET
+			NAME = P_NAME,
+            MAIN_SECTOR_ID = P_MAIN_SECTOR_ID,
+            ACCESS_LEVEL_ID = P_ACCESS_LEVEL_ID
+		WHERE ID = P_PERSON_ID;
+
+    COMMIT;
+
+    SELECT 
+        Erro AS Erro,
+        MENSAGEM AS Mensagem,
+        NEW_ID AS Id;
+END

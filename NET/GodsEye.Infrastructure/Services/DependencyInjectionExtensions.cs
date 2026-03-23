@@ -1,9 +1,11 @@
 ﻿using Dapper;
 using GodsEye.Application.DTOs.Model;
 using GodsEye.Application.Interfaces;
+using GodsEye.Application.Interfaces.Queries;
 using GodsEye.Infrastructure.Email;
 using GodsEye.Infrastructure.MediaMtx;
 using GodsEye.Infrastructure.Persistence;
+using GodsEye.Infrastructure.Queries;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -18,6 +20,8 @@ namespace GodsEye.Infrastructure.Services
         {
             services.AddScoped<IFolderService, FolderService>();
             services.AddScoped<ICameraConnectionTesterService, RtspCameraConnectionTesterService>();
+
+            services.AddScoped<IPersonQuerie, PersonQuerie>();
 
 
             services.AddDbContext<AppDbContext>(options =>

@@ -55,7 +55,6 @@ app.UseAuthorization();
 app.UseStaticFiles();
 app.MapControllers();
 
-app.MapHub<NotificationsHub>("/environmentMonitoringHub");
-app.MapHub<NotificationsHub>("/incidentRecordingHub");
+app.MapHub<CreatedDataHub>("/createdDataHub");
 
 app.Run();

@@ -2,39 +2,30 @@
 using GodsEye.Domain.DTOs.Result;
 using GodsEye.Application.Interfaces;
 using MediatR;
-using System.Text.Json;
+using GodsEye.Application.Interfaces.Queries;
 
 namespace GodsEye.Application.UseCases.Person.Commands.CreatePerson
 {
     public class CreatePersonHandler : IRequestHandler<CreatePersonRequest, ApiResponse<ProcedureResult>>
     {
-        private readonly IGodsEyeService _godsEye;
-        private readonly IFolderService _folderService;
         private readonly IDapperContext _context;
+        private readonly IPersonQuerie _personQuerie;
+        private readonly INotificationSignalR _notification;
 
-        public CreatePersonHandler(IGodsEyeService godsEye, IFolderService folderService, IDapperContext context)
+        public CreatePersonHandler(IDapperContext context, IPersonQuerie personQuerie, INotificationSignalR notification)
         {
-            _godsEye = godsEye;
-            _folderService = folderService;
             _context = context;
+            _personQuerie = personQuerie;
+            _notification = notification;
         }
 
         public async Task<ApiResponse<ProcedureResult>> Handle(CreatePersonRequest request, CancellationToken cancellationToken)
         {
-            var embedding = await _godsEye.GenerateEmbedding(request.Photo);
-            var jsonEmbedding = JsonSerializer.Serialize(embedding);
-
-            var fileName = $"{Guid.NewGuid()}.jpg";
-
-            var photoPath = _folderService.GeneratePersonPhotoPath(fileName);
-
-            var sql = "CALL SP_PERSON_CREATE(@P_NAME, @P_EMBEDDING, @P_IMAGE_PATH, @P_MAIN_SECTOR_ID, @P_ACCESS_LEVEL_ID)";
+            var sql = "CALL SP_PERSON_CREATE(@P_NAME, @P_MAIN_SECTOR_ID, @P_ACCESS_LEVEL_ID)";
 
             var parameteres = new
             {
                 P_NAME = request.Name,
-                P_EMBEDDING = jsonEmbedding,
-                P_IMAGE_PATH = photoPath,
                 P_MAIN_SECTOR_ID = request.SectorId,
                 P_ACCESS_LEVEL_ID = request.AccessLevelId
             };
@@ -43,8 +34,11 @@ namespace GodsEye.Application.UseCases.Person.Commands.CreatePerson
 
             if (result.Erro == 1)
                 throw new InvalidOperationException("Falha ao criar a pessoa no banco de dados.");
-            
-            await _folderService.SavePersonPhoto(request.Photo, fileName, cancellationToken);
+
+            var createdPerson = await _personQuerie.GetById(result.Id, cancellationToken);
+
+            if (createdPerson is not null)
+                await _notification.SendCreatedPerson(createdPerson);
 
             return ApiResponse<ProcedureResult>.Ok(result);
         }

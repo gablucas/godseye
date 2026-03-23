@@ -7,7 +7,6 @@ using GodsEye.WEB.Components.IncidentRecordingComponents;
 using GodsEye.WEB.Components.NotificationGroupsComponents;
 using GodsEye.WEB.Components.PersonComponents;
 using GodsEye.WEB.Components.SectorComponents;
-using Microsoft.Extensions.Options;
 using MudBlazor;
 using MudBlazor.Extensions;
 
@@ -23,18 +22,49 @@ namespace GodsEye.WEB.Services
             _dialogService = dialogService;
         }
 
-        public async Task<IDialogReference?> OpenPersonInfoDialog(int personId)
+        #region PERSON DIALOGS
+        public async Task OpenCreatePerson(Func<int, Task>? callback = null)
         {
-            var parameters = new DialogParameters<InfoPersonComponent> { { x => x.Id, personId } };
-            return await _dialogService.ShowAsync<InfoPersonComponent>(null, parameters, _options);
+            var dialog = await _dialogService.ShowAsync<CreatePersonComponent>("Criar pessoa", _options);
+
+            var result = await dialog.Result;
+
+            if (result.Canceled)
+                return;
+
+            if (callback is not null)
+            {
+                var personId = result.Data.As<int>();
+                await callback(personId);
+            }
         }
 
-        public async Task<IDialogReference?> OpenEnvironmentMonitoringSectorDialog(List<EnvironmentMonitoringModel> logs)
+        public async Task<IDialogReference?> OpenPersonUpdateDialog(int personId, IMudDialogInstance? mudDialog)
         {
-            var parameters = new DialogParameters<EnvironmentMonitoringSectorComponent> { { x => x.EnvironmentMonitoringLog,  logs } };
-            return await _dialogService.ShowAsync<EnvironmentMonitoringSectorComponent>(null, parameters, _options);
+            if (mudDialog is not null)
+                mudDialog.CancelAll();
+
+            var parameters = new DialogParameters<UpdatePersonComponent> { { x => x.PersonId, personId } };
+            return await _dialogService.ShowAsync<UpdatePersonComponent>(null, parameters, _options);
         }
 
+        public async Task OpenCreateRecognizePerson(int personId, IMudDialogInstance? mudDialog)
+        {
+            if (mudDialog is not null)
+                mudDialog.CancelAll();
+
+            var parameters = new DialogParameters<UpdatePersonComponent> { { x => x.PersonId, personId } };
+            var dialog = await _dialogService.ShowAsync<RecognizePersonComponent>(null, parameters, _options);
+
+            var result = await dialog.Result;
+
+            if (result.Canceled)
+                return;
+        }
+
+        #endregion
+
+        #region CAMERA DIALOGS
         public async Task OpenCameraData(int cameraId, IMudDialogInstance? mudDialog)
         {
             if (mudDialog is not null)
@@ -80,6 +110,14 @@ namespace GodsEye.WEB.Services
             await _dialogService.ShowAsync<CameraDwellTimeRecordingComponent>(null, parameters, _options);
         }
 
+        #endregion
+
+        public async Task<IDialogReference?> OpenEnvironmentMonitoringSectorDialog(List<EnvironmentMonitoringModel> logs)
+        {
+            var parameters = new DialogParameters<EnvironmentMonitoringSectorComponent> { { x => x.EnvironmentMonitoringLog, logs } };
+            return await _dialogService.ShowAsync<EnvironmentMonitoringSectorComponent>(null, parameters, _options);
+        }
+
         public async Task OpenIncidentRecording(IncidentRecordingModel incidentRecording)
         {
             var parameters = new DialogParameters<InfoIncidentRecordingComponent> { { x => x.IncidentRecording, incidentRecording } };
@@ -118,21 +156,7 @@ namespace GodsEye.WEB.Services
                 await callback(sectorId);
             }
         }
-        public async Task OpenCreatePerson(Func<int, Task>? callback = null)
-        {
-            var dialog = await _dialogService.ShowAsync<CreatePersonComponent>("Criar pessoa", _options);
-
-            var result = await dialog.Result;
-
-            if (result.Canceled)
-                return;
-
-            if (callback is not null)
-            {
-                var personId = result.Data.As<int>();
-                await callback(personId);
-            }
-        }
+        
 
         public async Task OpenCreateAcessLevel(Func<int, Task>? callback = null)
         {
@@ -165,5 +189,7 @@ namespace GodsEye.WEB.Services
                 await callback(personId);
             }
         }
+
+        
     }
 }

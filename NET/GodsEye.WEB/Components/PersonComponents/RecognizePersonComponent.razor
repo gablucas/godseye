@@ -1,0 +1,92 @@
+﻿@using GodsEye.Application.DTOs.Model
+@using GodsEye.WEB.Enum
+@inject ISnackbar Snackbar
+
+<MudDialog>
+    <DialogContent>
+        <div class="form-container">
+            <PersonBarComponent Pagina="reconhecimento" PersonId="PersonId" />
+
+            <MudForm @ref="form" Model="PersonRecognizeForm.Photo" @bind-IsValid="@success" @bind-Errors="@errors">
+
+                <div class="inputs-container">
+
+                    <div class="title">
+                        <h2>Insira uma foto</h2>
+                        <p>Certifique-se de que a imagem seja de perfil, com uma boa iluminação do rosto.</p>
+                    </div>
+
+                    <div class="person-image">
+                        @if (PreviewImage == null && photoMethod == PhotoCaptureMethodEnum.CAMERA)
+                        {
+                            <div class="image-preview">
+                                <video id="video" autoplay playsinline></video>
+
+                                <canvas id="canvas" style="display:none"></canvas>
+
+                                <div class="btns-actions">
+                                    <MudButton OnClick="@TakePhoto" Variant="Variant.Filled" Color="Color.Primary">Tirar Foto</MudButton>
+                                    <MudButton Class="back" OnClick="BackToRegister" Variant="Variant.Outlined" Color="Color.Primary">Voltar</MudButton>
+                                </div>
+
+                            </div>
+                        }
+                        else if (PreviewImage == null)
+                        {
+                            <div class="image-actions">
+                                <MudFileUpload T="IBrowserFile" Accept=".png, .jpg" FilesChanged="UploadFile" MaximumFileCount="1" Required="true" RequiredError="A imagem é obrigatória">
+                                    <ActivatorContent>
+                                        <MudButton Variant="Variant.Outlined"
+                                                   Color="Color.Primary"
+                                                   StartIcon="@Icons.Material.Filled.CloudUpload" OnClick="() => photoMethod = PhotoCaptureMethodEnum.IMPORT">
+                                            Buscar imagem no computador
+                                        </MudButton>
+                                    </ActivatorContent>
+                                </MudFileUpload>
+
+                                <MudButton Variant="Variant.Outlined"
+                                           Color="Color.Primary"
+                                           StartIcon="@Icons.Material.Filled.CameraAlt"
+                                           OnClick="OpenCamera">
+                                    Tirar uma foto
+                                </MudButton>
+                            </div>
+
+                        }
+                        else if (PreviewImage != null)
+                        {
+                            <div class="image-preview">
+                                <img Src="@PreviewImage" />
+                                <MudButton Class="back" OnClick="BackToRegister" Variant="Variant.Outlined" Color="Color.Primary" Style="padding: 12px">Voltar</MudButton>
+                            </div>
+                        }
+
+                    </div>
+                </div>
+
+                <MudDivider />
+
+                @if (apiResponse != null)
+                {
+                    if (!apiResponse.Success)
+                    {
+                        <MudAlert Severity="Severity.Error" Variant="Variant.Outlined">@_errorMessage</MudAlert>
+                    }
+                }
+
+                <MudButton OnClick="Submit" Disabled=@(!success) Class="btn-submit" Variant="Variant.Filled" Color="Color.Primary">Registrar</MudButton>
+
+                <MudOverlay Visible="visible" LightBackground="true" Absolute="true">
+                    <MudProgressCircular Color="Color.Default" Indeterminate="true" />
+                </MudOverlay>
+
+            </MudForm>
+
+        </div>
+    </DialogContent>
+
+
+    <DialogActions>
+        <MudButton OnClick="Cancel">Sair</MudButton>
+    </DialogActions>
+</MudDialog>

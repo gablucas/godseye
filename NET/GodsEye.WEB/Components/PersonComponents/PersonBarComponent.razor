@@ -1,0 +1,11 @@
+﻿<div class="camera-bar">
+
+    <div class="item @(Pagina == "dados" ? "selected" : "")" @onclick="() => dialogWebService.OpenPersonUpdateDialog(PersonId, MudDialog)">
+        <span>Dados</span>
+    </div>
+
+    <div class="item @(Pagina == "reconhecimento" ? "selected" : "")" @onclick="() => dialogWebService.OpenCreateRecognizePerson(PersonId, MudDialog)">
+        <span>Reconhecimento</span>
+    </div>
+
+</div>

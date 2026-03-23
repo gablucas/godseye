@@ -1,0 +1,81 @@
+﻿@using GodsEye.Application.DTOs.Model
+@using GodsEye.WEB.Enum
+@inject ISnackbar Snackbar
+
+
+<div class="form-container">
+
+    <MudForm @ref="form" Model="PersonForm" @bind-IsValid="@success" @bind-Errors="@errors">
+
+        <div class="inputs-container">
+
+            <MudTextField Label="Nome"
+                            @bind-Value="PersonForm.Name"
+                            Required="true"
+                            RequiredError="O nome é obrigatório"
+                            T="string"
+                            For="@(() => PersonForm.Name)"
+                            Variant="Variant.Outlined" />
+
+            <div class="input-create">
+                <MudSelect T="int?"
+                            Value="PersonForm.SectorId"
+                            ValueChanged="OnSectorChanged"
+                            For="@(() => PersonForm.SectorId)"
+                            Error="@_sectorError"
+                            ErrorText="@_sectorErrorMessage"
+                            Required="true"
+                            Label="Setor"
+                            HelperText="Selecione o setor que essa pessoa pertence"
+                            Variant="Variant.Outlined">
+
+                    @foreach (var sector in _sectors)
+                    {
+                        <MudSelectItem T="int?" Value="@sector.Id">@sector.Name</MudSelectItem>
+                    }
+                </MudSelect>
+
+                <MudButton OnClick="() => DialogWebService.OpenCreateSector(CreateNewSectorCallback)" Variant="Variant.Outlined">Criar novo setor</MudButton>
+            </div>
+
+            <div class="input-create">
+                <MudSelect T="int?"
+                            Value="PersonForm.AccessLevelId"
+                            ValueChanged="OnAccessLevelChanged"
+                            For="@(() => PersonForm.AccessLevelId)"
+                            Error="@_sectorError"
+                            ErrorText="@_sectorErrorMessage"
+                            Required="true"
+                            Label="Nível de acesso"
+                            HelperText="Selecione o nível de acesso da pessoa"
+                            Variant="Variant.Outlined">
+
+                    @foreach (var accessLevel in _accessLevels)
+                    {
+                        <MudSelectItem T="int?" Value="@accessLevel.Id">@accessLevel.Name</MudSelectItem>
+                    }
+                </MudSelect>
+
+                <MudButton OnClick="() => DialogWebService.OpenCreateAcessLevel(CreateNewAccessLevelCallback)" Variant="Variant.Outlined">Criar novo nível de acesso</MudButton>
+            </div>
+        </div>
+
+        <MudDivider />
+
+        @if (apiResponse != null)
+        {
+            if (!apiResponse.Success)
+            {
+                <MudAlert Severity="Severity.Error" Variant="Variant.Outlined">@_errorMessage</MudAlert>
+            }
+        }
+
+        <MudButton OnClick="Submit" Disabled=@(!success) Class="btn-submit" Variant="Variant.Filled" Color="Color.Primary">Registrar</MudButton>
+
+        <MudOverlay Visible="visible" LightBackground="true" Absolute="true">
+            <MudProgressCircular Color="Color.Default" Indeterminate="true" />
+        </MudOverlay>
+
+    </MudForm>
+
+</div>

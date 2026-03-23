@@ -1,4 +1,7 @@
+using GodsEye.Application.DTOs.Request;
 using GodsEye.Application.UseCases.Person.Commands.CreatePerson;
+using GodsEye.Application.UseCases.Person.Commands.CreateRecognize;
+using GodsEye.Application.UseCases.Person.Commands.UpdatePerson;
 using GodsEye.Application.UseCases.Person.Queries.GetAllPersonEmbedding;
 using GodsEye.Application.UseCases.Person.Queries.GetAllPersons;
 using GodsEye.Application.UseCases.Person.Queries.GetPersonById;
@@ -8,6 +11,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace GodsEye.API.Controllers
 {
+    [AllowAnonymous]
     [ApiController]
     [Route("api/[controller]")]
     public class PersonController : ControllerBase
@@ -19,26 +23,21 @@ namespace GodsEye.API.Controllers
             _mediator = mediator;
         }
 
-        [AllowAnonymous]
+        
         [HttpPost]
-        [Consumes("multipart/form-data")]
-        public async Task<IActionResult> CreatePerson([FromForm] string Name, [FromForm] string Photo, [FromForm] int SectorId, [FromForm] int AccessLevelId, CancellationToken cancellationToken)
+        public async Task<IActionResult> CreatePerson(CreatePersonRequest request, CancellationToken cancellationToken)
         {
-            if (string.IsNullOrWhiteSpace(Photo))
-                return BadRequest("Foto inválida.");
-
-            // Remove prefixo "data:image/png;base64,"
-            var base64 = Photo.Contains(",")
-                ? Photo.Split(",")[1]
-                : Photo;
-
-            var photoBytes = Convert.FromBase64String(base64);
-
-            var result = await _mediator.Send(new CreatePersonRequest(Name, photoBytes, SectorId, AccessLevelId));
+            var result = await _mediator.Send(request, cancellationToken);
             return Ok(result);
         }
 
-        [AllowAnonymous]
+        [HttpPut]
+        public async Task<IActionResult> UpdatePerson(UpdatePersonRequest request, CancellationToken cancellationToken)
+        {
+            var result = await _mediator.Send(request, cancellationToken);
+            return Ok(result);
+        }
+
         [HttpGet]
         public async Task<IActionResult> GetAllPerson(CancellationToken cancellationToken)
         {
@@ -46,7 +45,6 @@ namespace GodsEye.API.Controllers
             return Ok(result);
         }
 
-        [AllowAnonymous]
         [HttpGet("{personId}")]
         public async Task<IActionResult> GetById(int personId, CancellationToken cancellationToken)
         {
@@ -54,12 +52,29 @@ namespace GodsEye.API.Controllers
             return Ok(result);
         }
 
-        [AllowAnonymous]
         [HttpGet("embedding")]
         public async Task<IActionResult> GetAllPersonEmbedding(CancellationToken cancellationToken)
         {
             var result = await _mediator.Send(new GetAllPersonsEmbeddingRequest(), cancellationToken);
             return Ok(result);
         }
+
+        [HttpPost("recognize")]
+        public async Task<IActionResult> CreatePersonRecognize([FromBody] PersonRecognizeRequest request, CancellationToken cancellationToken)
+        {
+            if (string.IsNullOrWhiteSpace(request.Photo))
+                return BadRequest("Foto inválida.");
+
+            // Remove prefixo "data:image/png;base64,"
+            var base64 = request.Photo.Contains(",")
+                ? request.Photo.Split(",")[1]
+                : request.Photo;
+
+            var photoBytes = Convert.FromBase64String(base64);
+
+            var result = await _mediator.Send(new CreateRecognizeRequest(request.PersonId, photoBytes), cancellationToken);
+            return Ok(result);
+        }
+
     }
 }

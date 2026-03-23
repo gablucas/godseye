@@ -1,0 +1,12 @@
+﻿.info-person-container {
+    display: grid;
+    grid-template-rows: auto 1fr;
+    gap: 24px;
+    height: 100%;
+}
+
+.info-person-container > div {
+    display: grid;
+    grid-template-columns: auto 1fr;
+    gap: 24px;
+}

@@ -9,6 +9,7 @@ BEGIN
                 )
             )
             FROM PERSON P
+            WHERE P.EMBEDDING IS NOT NULL
     ),
 		'Cameras', (
 			SELECT JSON_ARRAYAGG(

@@ -81,10 +81,10 @@ namespace GodsEye.WEB.Pages.EnvironmentMonitoring
                 
             _loading = false;
 
-            SignalR.Create("https://localhost:7010/environmentMonitoringHub");
+            SignalR.Create("https://localhost:7010/createdDataHub");
 
             SignalR.On<EnvironmentMonitoringModel>(
-                "ReceiveMessage",
+                "CreatedEnvironmentMonitoring",
                 log =>
                 {
                     Console.WriteLine("📥 LOG RECEBIDO NO FRONT");

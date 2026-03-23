@@ -60,8 +60,7 @@
                 <MudTh>Conexão</MudTh>
                 <MudTh Style="text-align:center">Status</MudTh>
                 <MudTh Style="text-align:center">Setor</MudTh>
-                <MudTh Style="text-align:center">Funcionalidades</MudTh>
-                <MudTh Style="text-align:center">Configurações</MudTh>
+                <MudTh>Funcionalidades</MudTh>
             </HeaderContent>
             <RowTemplate>
                 <MudTd DataLabel="Name">@context.Name</MudTd>
@@ -84,9 +83,6 @@
                     {
                         <MudChip T="string" Label="true" Class="chip-neutral" Size="Size.Small" Text="Nenhuma funcionalidade" />
                     }
-                </MudTd>
-                <MudTd>
-                    <MudButton OnClick="() => OpenEditData(context.Id)" Variant="Variant.Outlined" Color="Color.Primary" Size="Size.Small">Configurações</MudButton>
                 </MudTd>
             </RowTemplate>
         </MudTable>

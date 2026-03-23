@@ -73,12 +73,13 @@ namespace GodsEye.WEB.Pages.Camera
         }
 
         #region TABLE FUNCTIONS
-        private void RowClickEvent(TableRowClickEventArgs<CameraModel> tableRowClickEventArgs)
+        private async Task RowClickEvent(TableRowClickEventArgs<CameraModel> tableRowClickEventArgs)
         {
-            var options = new DialogOptions { CloseOnEscapeKey = true, FullWidth = true, MaxWidth = MaxWidth.False };
-            var parameters = new DialogParameters<InfoCameraComponent> { { x => x.Camera, tableRowClickEventArgs.Item } };
+            var options = new DialogOptions { CloseOnEscapeKey = true, FullWidth = true, MaxWidth = MaxWidth.False, NoHeader = true };
+            var parameters = new DialogParameters<CameraDataComponent> { { x => x.Id, tableRowClickEventArgs.Item.Id } };
+            var dialog = await DialogService.ShowAsync<CameraDataComponent>(null, parameters, options);
 
-            DialogService.ShowAsync<InfoCameraComponent>("Dados camera", parameters, options);
+            var result = await dialog.Result;
         }
 
         private string SelectedRowClassFunc(CameraModel element, int rowNumber)

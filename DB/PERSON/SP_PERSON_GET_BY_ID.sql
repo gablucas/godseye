@@ -5,24 +5,27 @@ BEGIN
     SELECT 
         P.ID,
         P.NAME,
-        P.IMAGE_PATH AS ImagePath,
+        P.IMAGE_PATH,
         P.ACTIVE,
-        CASE 
-            WHEN COUNT(S.ID) = 0 THEN NULL
-			ELSE JSON_ARRAYAGG(
-				JSON_OBJECT(
-					'SectorId', S.ID,
-					'SectorName', S.NAME
-				)
+        JSON_OBJECT(
+			'Id', S.ID,
+			'Name', S.NAME
+		) AS SECTOR,
+        (
+			SELECT JSON_OBJECT(
+				'Id', AL.ID,
+				'Name', AL.NAME
 			)
-		END AS Sectors
+            FROM ACCESS_LEVEL AL
+            WHERE AL.ID = P.ACCESS_LEVEL_ID
+        ) AS ACCESSLEVEL
     FROM PERSON P
-    LEFT JOIN PERSON_SECTOR PS ON PS.PERSON_ID = P.ID
-    LEFT JOIN SECTOR S ON S.ID = PS.SECTOR_ID
-    WHERE P.ID = P_PERSON_ID
+    LEFT JOIN SECTOR S ON S.ID = P.MAIN_SECTOR_ID
     GROUP BY 
         P.ID,
         P.NAME,
-        P.IMAGE_PATH
+        P.IMAGE_PATH,
+        P.MAIN_SECTOR_ID,
+        P.ACCESS_LEVEL_ID
 	ORDER BY P.CREATED_AT DESC;
 END

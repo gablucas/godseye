@@ -7,24 +7,31 @@ namespace GodsEye.API.Services
 {
     public class SignalRRealTimeNotification : INotificationSignalR
     {
-        private readonly IHubContext<NotificationsHub> _hub;
+        private readonly IHubContext<CreatedDataHub> _hub;
 
-        public SignalRRealTimeNotification(IHubContext<NotificationsHub> hub)
+        public SignalRRealTimeNotification(IHubContext<CreatedDataHub> hub)
         {
             _hub = hub;
         }
 
-        public async Task SendEnvironmentMonitoringCreatedLog(EnvironmentMonitoringModel message)
+        public async Task SendCreatedEnvironmentMonitoringLog(EnvironmentMonitoringModel message)
         {
             await _hub.Clients.All.SendAsync(
-            "ReceiveMessage",
+            "CreatedEnvironmentMonitoring",
             message);
         }
 
-        public async Task SendIncidentRecordingCreatedLog(IncidentRecordingModel message)
+        public async Task SendCreatedIncidentRecordingLog(IncidentRecordingModel message)
         {
             await _hub.Clients.All.SendAsync(
             "CreatedIncidentRecording",
+            message);
+        }
+
+        public async Task SendCreatedPerson(PersonModel message)
+        {
+            await _hub.Clients.All.SendAsync(
+            "CreatedPerson",
             message);
         }
     }

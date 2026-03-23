@@ -83,7 +83,7 @@
                 <MudTh>Data/Hora</MudTh>
             </HeaderContent>
             <RowTemplate>
-                <MudTd onclick=@(() => DialogWebService.OpenPersonInfoDialog(context.PersonId)) Style="padding: 4px 16px" DataLabel="PersonPhoto"><MudImage Height="40" Style="border-radius: 7px" src=@($"https://localhost:7010/{context.PersonPhoto}") /></MudTd>
+                <MudTd onclick=@(() => DialogWebService.OpenPersonUpdateDialog(context.PersonId, null)) Style="padding: 4px 16px" DataLabel="PersonPhoto"><MudImage Height="40" Style="border-radius: 7px" src=@($"https://localhost:7010/{context.PersonPhoto}") /></MudTd>
                 <MudTd Style="padding: 4px 16px" DataLabel="Person">@context.Person</MudTd>
                 <MudTd Style="padding: 4px 16px" DataLabel="Name">@context.Sector</MudTd>
                 <MudTd Style="padding: 4px 16px" DataLabel="Connection">@context.CreatedAt</MudTd>

@@ -2,11 +2,10 @@
 using GodsEye.WEB.Services;
 using Microsoft.AspNetCore.Components;
 using MudBlazor;
-using System.Text.Json;
 
 namespace GodsEye.WEB.Components.PersonComponents
 {
-    public partial class InfoPersonComponent
+    public partial class UpdatePersonComponent
     {
         [Inject]
         public EnvironmentMonitoringWebService EnvironmentMonitoringWebService { get; set; }
@@ -15,7 +14,7 @@ namespace GodsEye.WEB.Components.PersonComponents
         private IMudDialogInstance MudDialog { get; set; }
 
         [Parameter]
-        public int Id { get; set; }
+        public int PersonId { get; set; }
 
         #region TABLE PARAMETERS
 
@@ -50,7 +49,7 @@ namespace GodsEye.WEB.Components.PersonComponents
 
         protected override async Task OnParametersSetAsync()
         {
-            var result = await EnvironmentMonitoringWebService.GetByPersonId(Id);
+            var result = await EnvironmentMonitoringWebService.GetByPersonId(PersonId);
 
             if (result.Success)
                 _personLogs = result.Data;

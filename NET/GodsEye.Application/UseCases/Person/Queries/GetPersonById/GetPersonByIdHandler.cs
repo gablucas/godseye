@@ -1,30 +1,27 @@
 ﻿using GodsEye.Application.DTOs.Model;
 using GodsEye.Application.DTOs.Response;
-using GodsEye.Application.Interfaces;
+using GodsEye.Application.Interfaces.Queries;
 using MediatR;
 
 namespace GodsEye.Application.UseCases.Person.Queries.GetPersonById
 {
     public class GetPersonByIdHandler : IRequestHandler<GetPersonByIdRequest, ApiResponse<PersonModel>>
     {
-        private readonly IApplicationDbContext _context;
+        private readonly IPersonQuerie _personQuerie;
 
-        public GetPersonByIdHandler(IApplicationDbContext context)
+        public GetPersonByIdHandler(IPersonQuerie personQuerie)
         {
-            _context = context;
+            _personQuerie = personQuerie;
         }
 
         public async Task<ApiResponse<PersonModel>> Handle(GetPersonByIdRequest request, CancellationToken cancellationToken)
         {
-            var query = "CALL SP_PERSON_GET_BY_ID(@P_PERSON_ID)";
+            var person = await _personQuerie.GetById(request.personId, cancellationToken);
 
-            var parameters = new
-            {
-                P_PERSON_ID = request.personId,
-            };
+            if (person is null)
+                return ApiResponse<PersonModel>.Fail(404, "Pessoa não encontrada");
 
-            var result = await _context.QuerySingleSqlAsync<PersonModel>(query, parameters, cancellationToken);
-            return ApiResponse<PersonModel>.Ok(result);
+            return ApiResponse<PersonModel>.Ok(person);
         }
     }
 }

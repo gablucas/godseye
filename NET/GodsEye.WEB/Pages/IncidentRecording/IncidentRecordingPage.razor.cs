@@ -50,7 +50,7 @@ namespace GodsEye.WEB.Pages.IncidentRecording
 
             _loading = false;
 
-            SignalR.Create("https://localhost:7010/incidentRecordingHub");
+            SignalR.Create("https://localhost:7010/createdDataHub");
 
             SignalR.On<IncidentRecordingModel>(
                 "CreatedIncidentRecording",

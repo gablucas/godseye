@@ -26,7 +26,7 @@ namespace GodsEye.Application.UseCases.IncidentRecording.Commands.CreateIncident
 
             var incidentRecordingLog = await GetLogById(result.Id, cancellationToken);
 
-            await _notification.SendIncidentRecordingCreatedLog(incidentRecordingLog);
+            await _notification.SendCreatedIncidentRecordingLog(incidentRecordingLog);
 
             return ApiResponse<ProcedureResult>.Ok(result);
         }

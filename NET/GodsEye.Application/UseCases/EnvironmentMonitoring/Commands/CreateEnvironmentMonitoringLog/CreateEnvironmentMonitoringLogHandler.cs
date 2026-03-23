@@ -27,7 +27,7 @@ namespace GodsEye.Application.UseCases.EnvironmentMonitoring.Commands.CreateEnvi
 
             var environmentMonitoringLog = await Get(result.Id, cancellationToken);
 
-            await _notification.SendEnvironmentMonitoringCreatedLog(environmentMonitoringLog);
+            await _notification.SendCreatedEnvironmentMonitoringLog(environmentMonitoringLog);
 
             return ApiResponse<ProcedureResult>.Ok(result);
         }

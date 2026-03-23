@@ -74,7 +74,7 @@ namespace GodsEye.WEB.Pages.AccessLevel
             if (args.Item.Id <= 0)
                 return;
 
-            await DialogWebService.OpenPersonInfoDialog(args.Item.Id);
+            await DialogWebService.OpenPersonUpdateDialog(args.Item.Id, null);
         }
 
         private string SelectedRowClassFunc(AccessLevelModel element, int rowNumber)
