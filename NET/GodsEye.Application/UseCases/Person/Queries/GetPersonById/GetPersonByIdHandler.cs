@@ -7,9 +7,9 @@ namespace GodsEye.Application.UseCases.Person.Queries.GetPersonById
 {
     public class GetPersonByIdHandler : IRequestHandler<GetPersonByIdRequest, ApiResponse<PersonModel>>
     {
-        private readonly IPersonQuerie _personQuerie;
+        private readonly IPersonQueries _personQuerie;
 
-        public GetPersonByIdHandler(IPersonQuerie personQuerie)
+        public GetPersonByIdHandler(IPersonQueries personQuerie)
         {
             _personQuerie = personQuerie;
         }

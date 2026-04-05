@@ -2,7 +2,7 @@
 
 namespace GodsEye.Application.Interfaces.Queries
 {
-    public interface IPersonQuerie
+    public interface IPersonQueries
     {
         Task<PersonModel?> GetById(int personId, CancellationToken cancellationToken);
     }

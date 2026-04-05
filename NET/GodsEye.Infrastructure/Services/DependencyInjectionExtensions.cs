@@ -21,7 +21,7 @@ namespace GodsEye.Infrastructure.Services
             services.AddScoped<IFolderService, FolderService>();
             services.AddScoped<ICameraConnectionTesterService, RtspCameraConnectionTesterService>();
 
-            services.AddScoped<IPersonQuerie, PersonQuerie>();
+            services.AddScoped<IPersonQueries, PersonQuerie>();
 
 
             services.AddDbContext<AppDbContext>(options =>

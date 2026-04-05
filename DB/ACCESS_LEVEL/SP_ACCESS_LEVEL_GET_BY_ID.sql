@@ -33,7 +33,7 @@ BEGIN
                                 'EndTime', ACCSR.END_TIME
                             )
                         )
-                        FROM ACCESS_SCHEDULE_RULES ACCSR
+                        FROM ACCESS_SCHEDULE_RULE ACCSR
                         WHERE ACCSR.ACCESS_SCHEDULE_ID = ACCS.ID
                     ),
                     JSON_ARRAY()

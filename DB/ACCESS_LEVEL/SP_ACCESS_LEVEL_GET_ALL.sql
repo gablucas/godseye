@@ -9,7 +9,7 @@ BEGIN
                     JSON_OBJECT(
                         'Id', S.ID,
                         'Name', S.NAME,
-                        'RuleType', ALS.RULE_TYPE
+                        'RuleType', CAST(ALS.RULE_TYPE AS UNSIGNED) 
                     )
                 ), 
                 JSON_ARRAY()
@@ -31,7 +31,7 @@ BEGIN
                                 'EndTime', ACCSR.END_TIME
                             )
                         )
-                        FROM ACCESS_SCHEDULE_RULES ACCSR
+                        FROM ACCESS_SCHEDULE_RULE ACCSR
                         WHERE ACCSR.ACCESS_SCHEDULE_ID = ACCS.ID
                     ),
                     JSON_ARRAY()

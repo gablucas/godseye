@@ -4,7 +4,7 @@ using GodsEye.Application.Interfaces.Queries;
 
 namespace GodsEye.Infrastructure.Queries
 {
-    public class PersonQuerie : IPersonQuerie
+    public class PersonQuerie : IPersonQueries
     {
         private readonly IDapperContext _context;
 

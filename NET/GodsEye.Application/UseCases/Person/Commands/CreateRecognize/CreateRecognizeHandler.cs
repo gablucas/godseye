@@ -11,11 +11,11 @@ namespace GodsEye.Application.UseCases.Person.Commands.CreateRecognize
     {
         private readonly IGodsEyeService _godsEye;
         private readonly IFolderService _folderService;
-        private readonly IPersonQuerie _personQuerie;
+        private readonly IPersonQueries _personQuerie;
         private readonly IDapperContext _context;
         private readonly INotificationSignalR _notification;
 
-        public CreateRecognizeHandler(IGodsEyeService godsEye, IFolderService folderService, IPersonQuerie personQuerie, IDapperContext context, INotificationSignalR notification)
+        public CreateRecognizeHandler(IGodsEyeService godsEye, IFolderService folderService, IPersonQueries personQuerie, IDapperContext context, INotificationSignalR notification)
         {
             _godsEye = godsEye;
             _folderService = folderService;

@@ -23,6 +23,7 @@ builder.Services.AddScoped<DialogWebService>();
 builder.Services.AddScoped<MediaMtxWebService>();
 builder.Services.AddScoped<AccessScheduleWebService>();
 builder.Services.AddScoped<AccessLevelWebService>();
+builder.Services.AddScoped<RoutineWebService>();
 
 
 builder.Services.AddMudServices();

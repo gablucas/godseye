@@ -6,6 +6,7 @@ using GodsEye.WEB.Components.EnvironmentMonitoringComponent;
 using GodsEye.WEB.Components.IncidentRecordingComponents;
 using GodsEye.WEB.Components.NotificationGroupsComponents;
 using GodsEye.WEB.Components.PersonComponents;
+using GodsEye.WEB.Components.RoutineComponents;
 using GodsEye.WEB.Components.SectorComponents;
 using MudBlazor;
 using MudBlazor.Extensions;
@@ -156,7 +157,23 @@ namespace GodsEye.WEB.Services
                 await callback(sectorId);
             }
         }
-        
+
+        public async Task OpenCreateRoutine(Func<int, Task>? callback = null)
+        {
+            var dialog = await _dialogService.ShowAsync<CreateRoutineComponent>("Criar rotina", _options);
+
+            var result = await dialog.Result;
+
+            if (result.Canceled)
+                return;
+
+            if (callback is not null)
+            {
+                var sectorId = result.Data.As<int>();
+                await callback(sectorId);
+            }
+        }
+
 
         public async Task OpenCreateAcessLevel(Func<int, Task>? callback = null)
         {

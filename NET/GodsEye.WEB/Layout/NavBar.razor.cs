@@ -40,6 +40,7 @@ namespace GodsEye.WEB.Layout
                 {
                     new() { Title = "Pessoas", Url = "/organizacao/pessoas" },
                     new() { Title = "Setores", Url = "/organizacao/setores" },
+                    new() { Title = "Rotinas", Url = "/organizacao/rotinas" },
 
                 }
             },
