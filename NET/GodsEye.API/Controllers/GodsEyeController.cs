@@ -1,10 +1,13 @@
 ﻿using GodsEye.Application.DTOs.Model;
 using GodsEye.Application.Interfaces;
+using GodsEye.Application.Interfaces.Queries;
 using GodsEye.Application.UseCases.GodsEye.Commands.StartStream;
 using GodsEye.Application.UseCases.GodsEye.Queries.GetMonitoringData;
+using GodsEye.Domain.DTOs.Result;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using System.Text.Json;
 
 namespace GodsEye.API.Controllers
 {
@@ -13,12 +16,16 @@ namespace GodsEye.API.Controllers
     public class GodsEyeController : ControllerBase
     {
         private readonly IMediator _mediator;
-        private readonly IEmailService _emailService;
+        private readonly IPersonQuerie _personQuerie;
+        private readonly IDapperContext _context;
+        private readonly IFaceMatcherService _faceMatcher;
 
-        public GodsEyeController(IMediator mediator, IEmailService emailService)
+        public GodsEyeController(IMediator mediator, IEmailService emailService, IPersonQuerie personQuerie, IDapperContext context, IFaceMatcherService faceMatcher)
         {
             _mediator = mediator;
-            _emailService = emailService;
+            _personQuerie = personQuerie;
+            _context = context;
+            _faceMatcher = faceMatcher;
         }
 
         [AllowAnonymous]

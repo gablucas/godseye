@@ -13,6 +13,11 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GodsEye.Infrastructure", "G
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GodsEye.WEB", "GodsEye.WEB\GodsEye.WEB.csproj", "{7D3077EF-0DEB-490C-EB16-0ABE9F63ECE1}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Itens de Solução", "Itens de Solução", "{EECE7113-AC54-4A4A-90AF-7BEE2279FFBE}"
+	ProjectSection(SolutionItems) = preProject
+		meus_atalhos.json = meus_atalhos.json
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU

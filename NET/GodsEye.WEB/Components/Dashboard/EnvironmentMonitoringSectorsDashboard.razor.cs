@@ -64,7 +64,7 @@ namespace GodsEye.WEB.Components.Dashboard
                             {
                                 PersonId = log.PersonId,
                                 Person = log.Person,
-                                CreatedAt = log.CreatedAt,
+                                IdentifiedAt = log.IdentifiedAt,
                                 PersonPhoto = log.PersonPhoto
                             });
                         }

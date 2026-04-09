@@ -11,7 +11,7 @@ BEGIN
 			JSON_OBJECT(
 				"SectorId", S.ID,
                 "SectorName", S.NAME,
-                "CreatedAt", DATE_FORMAT(EM.CREATED_AT, '%Y-%m-%dT%H:%i:%s')
+                "IdentifiedAt", DATE_FORMAT(EM.IDENTIFIED_AT, '%Y-%m-%dT%H:%i:%s')
             )
         ) END AS Logs
     FROM PERSON P

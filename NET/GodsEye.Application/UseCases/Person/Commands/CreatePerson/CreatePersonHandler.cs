@@ -9,10 +9,10 @@ namespace GodsEye.Application.UseCases.Person.Commands.CreatePerson
     public class CreatePersonHandler : IRequestHandler<CreatePersonRequest, ApiResponse<ProcedureResult>>
     {
         private readonly IDapperContext _context;
-        private readonly IPersonQueries _personQuerie;
+        private readonly IPersonQuerie _personQuerie;
         private readonly INotificationSignalR _notification;
 
-        public CreatePersonHandler(IDapperContext context, IPersonQueries personQuerie, INotificationSignalR notification)
+        public CreatePersonHandler(IDapperContext context, IPersonQuerie personQuerie, INotificationSignalR notification)
         {
             _context = context;
             _personQuerie = personQuerie;

@@ -13,6 +13,7 @@ tzdata
 httpx
 supervision
 torch torchvision torchaudio --index-url https://download.pytorch.org/whl/cu121
+pika
 
 # Para usar com CPU
 #onnxruntime

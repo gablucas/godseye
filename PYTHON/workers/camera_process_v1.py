@@ -5,16 +5,14 @@ from threading import Thread, Lock
 
 import time
 from datetime import datetime
-from zoneinfo import ZoneInfo
 from turtle import width
+from zoneinfo import ZoneInfo
 import cv2
 import cv2
 from ultralytics import YOLO
 import supervision as sv
-from infrastructure.send_extracted_embedding import SendExtractedEmbedding
 from schemas.dwell_time_monitoring import DwellTimeMonitoringCreateRequest
 from schemas.environment_monitoring_schema import EnvironmentMonitoringCreateRequest
-from schemas.extracted_embedding import ExtractedEmbedding
 from services.face_recognition_service import FaceModel
 from services.face_matcher_service import FaceMatcher
 from infrastructure.logger import LogSender
@@ -36,8 +34,7 @@ class CameraProcess(Process):
         face_matcher: FaceMatcher,
         features=None,
         log_queue=None,
-        shared_person=None,
-
+        shared_person=None
     ):
         super().__init__()
         self.camera_id = camera_id
@@ -48,12 +45,10 @@ class CameraProcess(Process):
         self.features = features or {}
         self.stop_event = Event()
         self.log_queue = log_queue
-        self.embedding_sender = None
         self.shared_person = shared_person or {}
         self.frame_queue = Queue(maxsize=1)
         self.width = 640
         self.height = 360
-        
         
 
     def stop(self):
@@ -63,7 +58,6 @@ class CameraProcess(Process):
         self.frame_lock = Lock()
         self.init_models()
 
-        self.embedding_sender = SendExtractedEmbedding()    
         capture_thread = Thread(target=self.capture_loop)
         inference_thread = Thread(target=self.inference_loop)
 
@@ -238,45 +232,22 @@ class CameraProcess(Process):
                 if track_id in self.person_on_frame_by_track_id:
                     person_id = self.person_on_frame_by_track_id[track_id]
 
+                    events = self.evaluate_rules(
+                        personId=person_id,
+                        cameraId=self.camera_id,
+                        sectorId=self.sector_id,
+                        score=None
+                    )
 
-                    # Enviar para o backend apenas 1 vez por segundo por pessoa, por exemplo
-                    # last_send = self.active_tracks.get(f"send_{track_id}", 0)
+                    for event in events:
+                        self.dispatch_log(event)
 
-                    # if now - last_send >= 10.0:
-
-                        # payload = ExtractedEmbedding (
-                        #     CameraId=self.camera_id,
-                        #     SectorId=self.sector_id,
-                        #     PersonId=person_id,
-                        #     MonitoredAt=datetime.now(timezone.utc)
-                        # )
-
-                        # payload = ExtractedEmbedding (
-                        #     CameraId=self.camera_id,
-                        #     Embedding=emb.tolist(),
-                        #     ExtractedAt=datetime.now(timezone.utc)
-                        # )
-
-                        # self.embedding_sender.send_extracted_embedding(payload)
-
-                        # self.active_tracks[f"send_{track_id}"] = now
-
-                    # events = self.evaluate_rules(
-                    #     personId=person_id,
-                    #     cameraId=self.camera_id,
-                    #     sectorId=self.sector_id,
-                    #     score=None
-                    # )
-
-                    # for event in events:
-                    #     self.dispatch_log(event)
-
-                    # self.update_shared_person(
-                    #     personId=person_id,
-                    #     cameraId=self.camera_id,
-                    #     sectorId=self.sector_id,
-                    #     score=None
-                    # )
+                    self.update_shared_person(
+                        personId=person_id,
+                        cameraId=self.camera_id,
+                        sectorId=self.sector_id,
+                        score=None
+                    )
                     continue
 
                 # CASO B: NOVA PESSOA (TENTAR RECONHECIMENTO)
@@ -334,31 +305,22 @@ class CameraProcess(Process):
                 self.person_on_frame_by_track_id[track_id] = person_id
                 print(f"🔗 Associando track {track_id} à pessoa {person_id} (score: {score:.2f})")
 
-                payload = ExtractedEmbedding (
-                            CameraId=self.camera_id,
-                            Embedding=emb.tolist(),
-                            IdentifiedAt=datetime.now(ZoneInfo("America/Sao_Paulo"))
-                        )
+                events = self.evaluate_rules(
+                    personId=person_id,
+                    cameraId=self.camera_id,
+                    sectorId=self.sector_id,
+                    score=score
+                )
 
-                self.embedding_sender.send_extracted_embedding(payload)
+                for event in events:
+                    self.dispatch_log(event)
 
-
-                # events = self.evaluate_rules(
-                #     personId=person_id,
-                #     cameraId=self.camera_id,
-                #     sectorId=self.sector_id,
-                #     score=score
-                # )
-
-                # for event in events:
-                #     self.dispatch_log(event)
-
-                # self.update_shared_person(
-                #     personId=person_id,
-                #     cameraId=self.camera_id,
-                #     sectorId=self.sector_id,
-                #     score=score
-                # )
+                self.update_shared_person(
+                    personId=person_id,
+                    cameraId=self.camera_id,
+                    sectorId=self.sector_id,
+                    score=score
+                )
 
         # ==================================================
         # 2. LIMPEZA DE TRACKS PERDIDOS (A Parte Crítica)

@@ -1,16 +1,20 @@
 ﻿using Dapper;
+using GodsEye.Application.Consumers;
 using GodsEye.Application.DTOs.Model;
 using GodsEye.Application.Interfaces;
 using GodsEye.Application.Interfaces.Queries;
+using GodsEye.Application.Interfaces.Write;
+using GodsEye.Application.Messages;
 using GodsEye.Infrastructure.Email;
 using GodsEye.Infrastructure.MediaMtx;
 using GodsEye.Infrastructure.Persistence;
 using GodsEye.Infrastructure.Queries;
+using GodsEye.Infrastructure.Write;
+using MassTransit;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Options;
-
 
 namespace GodsEye.Infrastructure.Services
 {
@@ -18,10 +22,19 @@ namespace GodsEye.Infrastructure.Services
     {
         public static void AddInfrastructure(this IServiceCollection services, IConfiguration configuration)
         {
+            services.AddSingleton<IFaceMatcherService, FaceMatcherService>();
+            services.AddSingleton<IGodsEyeState, GodsEyeState>();
+
             services.AddScoped<IFolderService, FolderService>();
             services.AddScoped<ICameraConnectionTesterService, RtspCameraConnectionTesterService>();
 
-            services.AddScoped<IPersonQueries, PersonQuerie>();
+            services.AddScoped<IPersonQuerie, PersonQuerie>();
+            services.AddScoped<ICameraQuerie, CameraQuerie>();
+            services.AddScoped<IEnvironmentMonitoringQuerie, EnvironmentMonitoringQuerie>();
+
+            services.AddScoped<IEnvironmentMonitoringWrite, EnvironmentMonitoringWrite>();
+
+
 
 
             services.AddDbContext<AppDbContext>(options =>
@@ -82,6 +95,68 @@ namespace GodsEye.Infrastructure.Services
 
             services.AddScoped<IEmailService, MailKitEmailSender>();
 
+            services.AddMassTransit(x =>
+            {
+                x.AddConsumer<ExtractedEmbeddingConsumer>();
+                //x.AddConsumer<ExtractedEmbeddingConsumerBatch>();
+
+                x.UsingRabbitMq((context, cfg) =>
+                {
+                    cfg.Host("localhost", "/", h =>
+                    {
+                        h.Username("guest");
+                        h.Password("guest");
+                    });
+
+                    cfg.UseRawJsonSerializer();
+
+                    // 1. Define o NOME da exchange atrelada a este evento
+                    cfg.Message<ExtractedEmbeddingEvent>(m =>
+                    {
+                        m.SetEntityName("app-exchange");
+                    });
+
+                    // 2. Define o TIPO da exchange na hora de publicar
+                    cfg.Publish<ExtractedEmbeddingEvent>(p =>
+                    {
+                        p.ExchangeType = "direct";
+                    });
+
+                    // 3. CRUCIAL: Define a Routing Key que será usada quando alguém publicar este evento
+                    cfg.Send<ExtractedEmbeddingEvent>(s =>
+                    {
+                        s.UseRoutingKeyFormatter(ctx => "embedding.created");
+                    });
+
+                    cfg.ReceiveEndpoint("extracted-embedding-queue", e =>
+                    {
+                        // 4. Desabilita a topologia automática do MassTransit para este endpoint.
+                        // Isso impede a criação de bindings extras indesejados e força o uso do seu bind manual.
+                        e.ConfigureConsumeTopology = false;
+
+                        e.ConfigureConsumer<ExtractedEmbeddingConsumer>(context);
+                        //e.ConfigureConsumer<ExtractedEmbeddingConsumerBatch>(context);
+
+                        // 5. Faz o bind manual da sua fila diretamente com a "app-exchange"
+                        e.Bind("app-exchange", b =>
+                        {
+                            b.ExchangeType = "direct";
+                            b.RoutingKey = "embedding.created";
+                        });
+
+                        //e.Batch<ExtractedEmbeddingEvent>(b =>
+                        //{
+                        //    b.MessageLimit = 50;
+                        //    b.TimeLimit = TimeSpan.FromSeconds(1);
+
+                        //    // Aqui você passa **o consumidor via DI**
+                        //    b.Consumer(() => context.GetRequiredService<ExtractedEmbeddingConsumerBatch>());
+                        //});
+                    });
+                });
+            });
+
+
             services.AddScoped<IDapperContext, DapperContext>();
 
             Dapper.DefaultTypeMap.MatchNamesWithUnderscores = true;
@@ -99,6 +174,11 @@ namespace GodsEye.Infrastructure.Services
             SqlMapper.AddTypeHandler(new JsonTypeHandler<AccessLevelScheduleDTO>());
             SqlMapper.AddTypeHandler(new JsonTypeHandler<AccessLevelScheduleRuleDTO>());
             SqlMapper.AddTypeHandler(new JsonTypeHandler<AccessLevelDTO>());
+            SqlMapper.AddTypeHandler(new JsonTypeHandler<List<FeatureCache>>());
+
+            SqlMapper.AddTypeHandler(new JsonTypeHandler<List<CameraCache>>());
+
+            SqlMapper.AddTypeHandler(new FloatArrayHandler());
         }
     }
 }

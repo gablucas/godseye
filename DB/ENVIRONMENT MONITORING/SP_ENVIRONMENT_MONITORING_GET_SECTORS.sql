@@ -5,20 +5,20 @@ BEGIN
     WITH PeopleSeenToday AS (
         SELECT
             EM1.PERSON_ID,
-            EM1.CREATED_AT AS LastSeen,
+            EM1.IDENTIFIED_AT AS LastSeen,
             EM1.CAMERA_ID
         FROM ENVIRONMENT_MONITORING EM1
         INNER JOIN (
             SELECT
                 PERSON_ID,
-                MAX(CREATED_AT) AS LastSeen
+                MAX(IDENTIFIED_AT) AS LastSeen
             FROM ENVIRONMENT_MONITORING
-            WHERE CREATED_AT >= CURDATE()
-              AND CREATED_AT < CURDATE() + INTERVAL 1 DAY
+            WHERE IDENTIFIED_AT >= CURDATE()
+              AND IDENTIFIED_AT < CURDATE() + INTERVAL 1 DAY
             GROUP BY PERSON_ID
         ) LAST_EM
         ON LAST_EM.PERSON_ID = EM1.PERSON_ID
-        AND LAST_EM.LastSeen = EM1.CREATED_AT
+        AND LAST_EM.LastSeen = EM1.IDENTIFIED_AT
     )
 
     -- SETORES - Com e sem pessoas
@@ -33,7 +33,7 @@ BEGIN
                     'PersonId', P.ID,
                     'Person', P.NAME,
                     'PersonPhoto', P.IMAGE_PATH,
-                    'CreatedAt', DATE_FORMAT(PST.LastSeen, '%Y-%m-%dT%H:%i:%s')
+                    'IdentifiedAt', DATE_FORMAT(PST.LastSeen, '%Y-%m-%dT%H:%i:%s')
                 )
             )
         END AS EnvironmentMonitoringLog

@@ -71,7 +71,7 @@ namespace GodsEye.WEB.Pages.EnvironmentMonitoring
         {
             _loading = true;
 
-            var result = await environmentMonitoringService.GetAllLogs(1, 10);
+            var result = await environmentMonitoringService.GetAllLogs(1, 100);
 
             if (result.Success)
             {
@@ -232,8 +232,8 @@ namespace GodsEye.WEB.Pages.EnvironmentMonitoring
                     (_selectedSectors.Count() == 0 || _selectedSectors.Contains(x.SectorId.ToString())) &&
                     (string.IsNullOrWhiteSpace(_personFilter) ||
                      x.Person.Contains(_personFilter, StringComparison.OrdinalIgnoreCase)) &&
-                    (initial == null || x.CreatedAt >= initial) &&
-                    (final == null || x.CreatedAt <= final)
+                    (initial == null || x.IdentifiedAt >= initial) &&
+                    (final == null || x.IdentifiedAt <= final)
                 ).ToList();
         }
 

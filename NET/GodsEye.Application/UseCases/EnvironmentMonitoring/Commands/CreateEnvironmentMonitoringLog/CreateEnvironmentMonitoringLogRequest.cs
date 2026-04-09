@@ -1,8 +1,6 @@
-﻿using GodsEye.Application.DTOs.Response;
-using GodsEye.Domain.DTOs.Result;
-using MediatR;
+﻿using MediatR;
 
 namespace GodsEye.Application.UseCases.EnvironmentMonitoring.Commands.CreateEnvironmentMonitoringLog
 {
-    public sealed record CreateEnvironmentMonitoringLogRequest(int cameraId, int personId, decimal score) : IRequest<ApiResponse<ProcedureResult>>;
+    public sealed record CreateEnvironmentMonitoringLogRequest(int cameraId, int personId, float score, DateTime identifiedAt) : IRequest<Unit>;
 }

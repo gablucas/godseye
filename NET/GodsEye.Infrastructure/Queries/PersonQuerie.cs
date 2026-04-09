@@ -4,7 +4,7 @@ using GodsEye.Application.Interfaces.Queries;
 
 namespace GodsEye.Infrastructure.Queries
 {
-    public class PersonQuerie : IPersonQueries
+    public class PersonQuerie : IPersonQuerie
     {
         private readonly IDapperContext _context;
 
@@ -23,6 +23,15 @@ namespace GodsEye.Infrastructure.Queries
             };
 
             return await _context.QuerySingleSqlAsync<PersonModel>(query, parameters, cancellationToken);
+        }
+
+        public async Task<IEnumerable<PersonCache>> GetAllCache(CancellationToken cancellationToken)
+        {
+            var query = "CALL SP_PERSON_GET_ALL_CACHE()";
+
+            var parameters = new {};
+
+            return await _context.QuerySqlAsync<PersonCache>(query, parameters, cancellationToken);
         }
     }
 }
