@@ -1,4 +1,5 @@
 ﻿using GodsEye.Application.DTOs.Model;
+using GodsEye.Application.UseCases.Routine.Queries;
 using GodsEye.WEB.Services;
 using Microsoft.AspNetCore.Components;
 using MudBlazor;
@@ -10,10 +11,7 @@ namespace GodsEye.WEB.Pages.Routine
         #region DI
 
         [Inject]
-        public SectorWebService sectorService { get; set; }
-
-        [Inject]
-        public CameraWebService cameraService { get; set; }
+        public RoutineWebService RoutineService { get; set; }
 
         [Inject]
         public DialogWebService DialogWebService { get; set; }
@@ -25,15 +23,15 @@ namespace GodsEye.WEB.Pages.Routine
 
         #region TABLE PARAMETERS
 
-        List<SectorModel> _sectors = new();
-        List<SectorModel> _filteredSectors = new();
+        List<GetAllRoutineResponse> _routines = new();
+        List<GetAllRoutineResponse> _filteredRoutines = new();
         bool _loading;
 
         #endregion
 
         #region TABLE FILTERS
 
-        private string _sectorNameFilter = "";
+        private string _routineFilterName = "";
 
         private string _personNameFilter = "";
 
@@ -47,8 +45,8 @@ namespace GodsEye.WEB.Pages.Routine
         private List<BreadcrumbItem> _items =
         [
             new("Home", href: "/"),
-            new("Cadastro", href: null, disabled: true),
-            new("Setores", href: null, disabled: true)
+            new("Organização", href: null, disabled: true),
+            new("Rotinas", href: null, disabled: true)
         ];
 
 
@@ -56,17 +54,13 @@ namespace GodsEye.WEB.Pages.Routine
         {
             _loading = true;
 
-            var sectorsResult = await sectorService.GetAllAsync();
+            var routinesResult = await RoutineService.GetAllAsync();
 
-            if (sectorsResult is not null && sectorsResult.Success)
+            if (routinesResult is not null && routinesResult.Success)
             {
-                _sectors = sectorsResult.Data.ToList();
-                _filteredSectors = _sectors;
+                _routines = routinesResult.Data.ToList();
+                _filteredRoutines = _routines;
             }
-
-            var camerasRequest = await cameraService.GetAllAsync();
-            if (camerasRequest.Success)
-                _camerasFilter = camerasRequest.Data.ToList();
 
 
             _loading = false;
@@ -74,13 +68,13 @@ namespace GodsEye.WEB.Pages.Routine
 
         private async Task CraeteRoutineCallback(int routineId)
         {
-            var newSector = await sectorService.GetById(routineId);
+            //var newSector = await sectorService.GetById(routineId);
 
-            if (newSector is null || !newSector.Success)
-                return;
+            //if (newSector is null || !newSector.Success)
+            //    return;
 
-            _sectors.Insert(0, newSector.Data);
-            ApplyFilters();
+            //_routines.Insert(0, newSector.Data);
+            //ApplyFilters();
         }
 
         private void OnCamerasChanged(IEnumerable<string> values)
@@ -96,10 +90,9 @@ namespace GodsEye.WEB.Pages.Routine
 
         void ApplyFilters()
         {
-            _filteredSectors = _sectors
+            _filteredRoutines = _routines
                 .Where(x =>
-                    (string.IsNullOrWhiteSpace(_sectorNameFilter) || x.Name.Contains(_sectorNameFilter, StringComparison.OrdinalIgnoreCase)) &&
-                    (_selectedCameras.Count() == 0 || x.Cameras.Any(c => _selectedCameras.ToList().Contains(c.Id.ToString())))
+                    (string.IsNullOrWhiteSpace(_routineFilterName) || x.Name.Contains(_routineFilterName, StringComparison.OrdinalIgnoreCase))
                 ).ToList();
         }
     }

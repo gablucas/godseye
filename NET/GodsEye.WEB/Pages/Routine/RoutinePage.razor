@@ -1,7 +1,7 @@
 ﻿@page "/organizacao/rotinas";
 @inject ISnackbar Snackbar
 
-<PageTitle>Setores</PageTitle>
+<PageTitle>Rotinas</PageTitle>
 
 <div class="page-container">
     <div class="breadcrumb-container">
@@ -12,63 +12,25 @@
 
         <div class="page-title">
             <h1>Setores</h1>
-            <p>Aqui você encontra uma lista de setores cadastrados em seu sistema</p>
+            <p>Aqui você encontra uma lista das rotinas cadastradas em seu sistema</p>
         </div>
 
         <div class="notification-menu">
             <div class="filters">
                 <div class="option">
-                    <MudTextField @bind-Value="_sectorNameFilter" TextChanged="ApplyFilters" Immediate="true" Label="Setor" Variant="Variant.Outlined" Margin="Margin.Dense" Clearable="true" />
-                </div>
-
-                <div class="option">
-                    <MudSelect T="string" SelectedValuesChanged="OnCamerasChanged" SelectedValues="_selectedCameras" MultiSelection="true" SelectAll="true" SelectAllText="Selecionar tudo" MultiSelectionTextFunc="@(new Func<List<string>, string>(GetMultiSelectionText))" Label="Cameras" Variant="Variant.Outlined" Margin="Margin.Dense" Clearable="true">
-                        @foreach (var camera in _camerasFilter)
-                        {
-                            <MudSelectItem T="string" Value="@camera.Id.ToString()">@camera.Name</MudSelectItem>
-                        }
-                    </MudSelect>
+                    <MudTextField @bind-Value="_routineFilterName" TextChanged="ApplyFilters" Immediate="true" Label="Setor" Variant="Variant.Outlined" Margin="Margin.Dense" Clearable="true" />
                 </div>
             </div>
 
-            <MudButton Variant="Variant.Outlined" OnClick="() => DialogWebService.OpenCreateRoutine(CraeteRoutineCallback)">Criar Setor</MudButton>
+            <MudButton Variant="Variant.Outlined" OnClick="() => DialogWebService.OpenCreateRoutine(CraeteRoutineCallback)">Criar Rotina</MudButton>
         </div>
 
-        <MudTable Items="@_filteredSectors" Hover="true" Loading="@_loading" Elevation="0" LoadingProgressColor="Color.Info">
+        <MudTable Items="@_filteredRoutines" Hover="true" Loading="@_loading" Elevation="0" LoadingProgressColor="Color.Info">
             <HeaderContent>
                 <MudTh>Nome</MudTh>
-                <MudTh>Cameras vinculadas</MudTh>
-                <MudTh>Grupos de notificação</MudTh>
             </HeaderContent>
             <RowTemplate>
                 <MudTd DataLabel="Name">@context.Name</MudTd>
-                <MudTd DataLabel="Cameras">
-                    @if (context.Cameras.Count > 0)
-                    {
-                        foreach (var cam in context.Cameras)
-                        {
-                            <MudChip Color="Color.Info" T="string">@cam.Name</MudChip>
-                        }
-                    } 
-                    else
-                    {
-                        <MudChip T="string">Sem cameras</MudChip>
-                    }
-                </MudTd>
-                <MudTd DataLabel="NotificationGroups">
-                    @if (context.NotificationGroups.Count > 0)
-                    {
-                        foreach (var notificationGroup in context.NotificationGroups)
-                        {
-                            <MudChip Color="Color.Info" T="string">@notificationGroup.Name</MudChip>
-                        }
-                    }
-                    else
-                    {
-                        <MudChip T="string">Sem grupo</MudChip>
-                    }
-                </MudTd>
-
             </RowTemplate>
         </MudTable>
     </div>

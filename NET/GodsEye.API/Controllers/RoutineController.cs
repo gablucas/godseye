@@ -1,4 +1,5 @@
 ﻿using GodsEye.Application.UseCases.Routine.Commands.CreateRoutine;
+using GodsEye.Application.UseCases.Routine.Queries;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -22,6 +23,14 @@ namespace GodsEye.API.Controllers
         public async Task<IActionResult> CreateRoutine([FromBody] CreateRoutineRequest request, CancellationToken cancellationToken)
         {
             var result = await _mediator.Send(request, cancellationToken);
+            return Ok(result);
+        }
+
+        [AllowAnonymous]
+        [HttpGet]
+        public async Task<IActionResult> GetAllRoutines(CancellationToken cancellationToken)
+        {
+            var result = await _mediator.Send(new GetAllRoutinesRequest(), cancellationToken);
             return Ok(result);
         }
     }
