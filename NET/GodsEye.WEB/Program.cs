@@ -3,6 +3,7 @@ using GodsEye.WEB.Services;
 using Microsoft.AspNetCore.Components.Web;
 using Microsoft.AspNetCore.Components.WebAssembly.Hosting;
 using MudBlazor.Services;
+using System.Reflection;
 
 var builder = WebAssemblyHostBuilder.CreateDefault(args);
 builder.RootComponents.Add<App>("#app");
@@ -25,7 +26,7 @@ builder.Services.AddScoped<AccessScheduleWebService>();
 builder.Services.AddScoped<AccessLevelWebService>();
 builder.Services.AddScoped<RoutineWebService>();
 
-
+builder.Services.AddAutoMapper(cfg => { }, Assembly.GetExecutingAssembly());
 builder.Services.AddMudServices();
 
 // Teste Externo

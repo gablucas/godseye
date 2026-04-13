@@ -158,9 +158,16 @@ namespace GodsEye.WEB.Services
             }
         }
 
-        public async Task OpenCreateRoutine(Func<int, Task>? callback = null)
+        public async Task OpenHandleRoutine(int? routineId = null, Func<int, Task>? callback = null)
         {
-            var dialog = await _dialogService.ShowAsync<CreateRoutineComponent>("Criar rotina", _options);
+            var parameters = new DialogParameters<HandleRoutineComponent>();
+
+            if (routineId.HasValue)
+            {
+                parameters.Add(x => x.Id, routineId.Value);
+            }
+
+            var dialog = await _dialogService.ShowAsync<HandleRoutineComponent>(routineId is null ? "Criar rotina" : "Atualizar rotina", parameters, _options);
 
             var result = await dialog.Result;
 

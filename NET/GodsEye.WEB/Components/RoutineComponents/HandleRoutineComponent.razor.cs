@@ -1,4 +1,5 @@
-﻿using GodsEye.Application.DTOs.Model;
+﻿using AutoMapper;
+using GodsEye.Application.DTOs.Model;
 using GodsEye.Application.UseCases.Routine.Commands.CreateRoutine;
 using GodsEye.Domain.Enums;
 using GodsEye.WEB.Model.Forms;
@@ -8,7 +9,7 @@ using MudBlazor;
 
 namespace GodsEye.WEB.Components.RoutineComponents
 {
-    public partial class CreateRoutineComponent
+    public partial class HandleRoutineComponent
     {
         #region DI
 
@@ -20,6 +21,9 @@ namespace GodsEye.WEB.Components.RoutineComponents
 
         [Inject]
         DialogWebService DialogWebService { get; set; }
+
+        [Inject]
+        IMapper Mapper { get; set; }
 
         #endregion
 
@@ -43,7 +47,7 @@ namespace GodsEye.WEB.Components.RoutineComponents
             }
         }
         
-        protected void ChangeRulePosition(RoutineRuleSectorTransition rule, string type)
+        protected void ChangeRulePosition(RoutineRuleSectorTransitionForm rule, string type)
         {
             var index = RoutineForm.Rules.IndexOf(rule);
 
@@ -62,7 +66,7 @@ namespace GodsEye.WEB.Components.RoutineComponents
             ReorderRules();
         }
 
-        protected void DeleteRule(RoutineRuleSectorTransition rule)
+        protected void DeleteRule(RoutineRuleSectorTransitionForm rule)
         {
             RoutineForm.Rules.Remove(rule);
             ReorderRules();
@@ -94,6 +98,9 @@ namespace GodsEye.WEB.Components.RoutineComponents
         [CascadingParameter]
         private IMudDialogInstance MudDialog { get; set; }
 
+        [Parameter]
+        public int Id { get; set; }
+
         #endregion
 
         #region LIFETIME FUNCTIONS
@@ -107,13 +114,26 @@ namespace GodsEye.WEB.Components.RoutineComponents
             }
         }
 
+        protected override async Task OnParametersSetAsync()
+        {
+            var routine = await RoutineWebService.GetById(Id);
+
+            if (routine is null)
+            {
+                Snackbar.Add("Não foi possível buscar a rotina", Severity.Error);
+                MudDialog.Cancel();
+            }
+
+            RoutineForm = Mapper.Map<RoutineForm>(routine);
+        }
+
         #endregion
 
         #region SECTOR
 
         IEnumerable<SectorModel> _sectors = Enumerable.Empty<SectorModel>();
 
-        public string ValidateSector(RoutineRuleSectorTransition item, int? value)
+        public string ValidateSector(RoutineRuleSectorTransitionForm item, int? value)
         {
             if (value == null)
                 return "Selecione um setor";

@@ -1,4 +1,5 @@
 ﻿@page "/organizacao/rotinas";
+@using GodsEye.Domain.Extensions
 @inject ISnackbar Snackbar
 
 <PageTitle>Rotinas</PageTitle>
@@ -18,19 +19,21 @@
         <div class="notification-menu">
             <div class="filters">
                 <div class="option">
-                    <MudTextField @bind-Value="_routineFilterName" TextChanged="ApplyFilters" Immediate="true" Label="Setor" Variant="Variant.Outlined" Margin="Margin.Dense" Clearable="true" />
+                    <MudTextField @bind-Value="_routineFilterName" TextChanged="ApplyFilters" Immediate="true" Label="Rotina" Variant="Variant.Outlined" Margin="Margin.Dense" Clearable="true" />
                 </div>
             </div>
 
-            <MudButton Variant="Variant.Outlined" OnClick="() => DialogWebService.OpenCreateRoutine()">Criar Rotina</MudButton>
+            <MudButton Variant="Variant.Outlined" OnClick="() => DialogWebService.OpenHandleRoutine()">Criar Rotina</MudButton>
         </div>
 
-        <MudTable @ref="mudTable" Items="@_filteredRoutines" Hover="true" Loading="@_loading" Elevation="0" LoadingProgressColor="Color.Info">
+        <MudTable @ref="mudTable" Items="@_filteredRoutines" Hover="true" Loading="@_loading" Elevation="0" LoadingProgressColor="Color.Info" RowClass="cursor-pointer">
             <HeaderContent>
                 <MudTh>Nome</MudTh>
+                <MudTh>Regra</MudTh>
             </HeaderContent>
             <RowTemplate>
-                <MudTd DataLabel="Name">@context.Name</MudTd>
+                <MudTd DataLabel="Name" @onclick="() => DialogWebService.OpenHandleRoutine(context.Id)">@context.Name</MudTd>
+                <MudTd DataLabel="Type">@context.Type.GetDescription()</MudTd>
             </RowTemplate>
         </MudTable>
     </div>

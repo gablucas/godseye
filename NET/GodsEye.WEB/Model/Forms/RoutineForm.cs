@@ -8,9 +8,9 @@ namespace GodsEye.WEB.Model.Forms
         public string Name { get; set; }
         public RoutineRuleTypeEnum RuleType { get; set; } = RoutineRuleTypeEnum.SectorTransition;
 
-        public List<RoutineRuleSectorTransition> Rules { get; set; } = new();
+        public List<RoutineRuleSectorTransitionForm> Rules { get; set; } = new();
 
-        public bool HasSector(int? sectorId, RoutineRuleSectorTransition ignore = null)
+        public bool HasSector(int? sectorId, RoutineRuleSectorTransitionForm ignore = null)
         {
             return Rules
                 .Where(x => x != ignore)
@@ -21,11 +21,11 @@ namespace GodsEye.WEB.Model.Forms
         {
             var orderIndex = Rules.Count() + 1;
 
-            Rules.Add(new RoutineRuleSectorTransition() { OrderIndex = orderIndex });
+            Rules.Add(new RoutineRuleSectorTransitionForm() { OrderIndex = orderIndex });
         }
     }
 
-    public class RoutineRuleSectorTransition
+    public class RoutineRuleSectorTransitionForm
     {
         public int OrderIndex { get; set; }
         public int? MinTime { get; set; }

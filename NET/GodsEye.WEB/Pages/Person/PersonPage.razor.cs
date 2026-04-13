@@ -1,8 +1,6 @@
 ﻿using GodsEye.Application.DTOs.Model;
-using GodsEye.WEB.Components.PersonComponents;
 using GodsEye.WEB.Services;
 using Microsoft.AspNetCore.Components;
-using Microsoft.EntityFrameworkCore;
 using MudBlazor;
 
 
