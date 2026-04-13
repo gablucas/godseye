@@ -11,7 +11,7 @@
     <div class="content-container">
 
         <div class="page-title">
-            <h1>Setores</h1>
+            <h1>Rotinas</h1>
             <p>Aqui você encontra uma lista das rotinas cadastradas em seu sistema</p>
         </div>
 
@@ -22,10 +22,10 @@
                 </div>
             </div>
 
-            <MudButton Variant="Variant.Outlined" OnClick="() => DialogWebService.OpenCreateRoutine(CraeteRoutineCallback)">Criar Rotina</MudButton>
+            <MudButton Variant="Variant.Outlined" OnClick="() => DialogWebService.OpenCreateRoutine()">Criar Rotina</MudButton>
         </div>
 
-        <MudTable Items="@_filteredRoutines" Hover="true" Loading="@_loading" Elevation="0" LoadingProgressColor="Color.Info">
+        <MudTable @ref="mudTable" Items="@_filteredRoutines" Hover="true" Loading="@_loading" Elevation="0" LoadingProgressColor="Color.Info">
             <HeaderContent>
                 <MudTh>Nome</MudTh>
             </HeaderContent>

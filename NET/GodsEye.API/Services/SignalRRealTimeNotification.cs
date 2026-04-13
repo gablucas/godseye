@@ -34,5 +34,12 @@ namespace GodsEye.API.Services
             "CreatedPerson",
             message);
         }
+
+        public async Task SendCreatedRoutine(RoutineModel message)
+        {
+            await _hub.Clients.All.SendAsync(
+            "CreatedRoutine",
+            message);
+        }
     }
 }

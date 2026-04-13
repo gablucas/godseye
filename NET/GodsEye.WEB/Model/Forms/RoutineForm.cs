@@ -6,7 +6,7 @@ namespace GodsEye.WEB.Model.Forms
     {
         public int? Id { get; set; }
         public string Name { get; set; }
-        public RoutineRuleTypeEnum RuleType { get; set; }
+        public RoutineRuleTypeEnum RuleType { get; set; } = RoutineRuleTypeEnum.SectorTransition;
 
         public List<RoutineRuleSectorTransition> Rules { get; set; } = new();
 

@@ -1,4 +1,5 @@
-﻿using GodsEye.Application.DTOs.Response;
+﻿using GodsEye.Application.DTOs.Model;
+using GodsEye.Application.DTOs.Response;
 using GodsEye.Application.UseCases.Routine.Commands.CreateRoutine;
 using GodsEye.Application.UseCases.Routine.Queries;
 using System.Net.Http.Json;
@@ -24,11 +25,20 @@ namespace GodsEye.WEB.Services
             return json!;
         }
 
-        public async Task<ApiResponse<IEnumerable<GetAllRoutineResponse>>> GetAllAsync()
+        public async Task<ApiResponse<IEnumerable<RoutineModel>>> GetAllAsync()
         {
             var result = await _http.GetAsync(_baseEndpoint);
 
-            var json = await result.Content.ReadFromJsonAsync<ApiResponse<IEnumerable<GetAllRoutineResponse>>>();
+            var json = await result.Content.ReadFromJsonAsync<ApiResponse<IEnumerable<RoutineModel>>>();
+
+            return json!;
+        }
+
+        public async Task<RoutineModel> GetById(int routineId)
+        {
+            var result = await _http.GetAsync($"{_baseEndpoint}/{routineId}");
+
+            var json = await result.Content.ReadFromJsonAsync<RoutineModel>();
 
             return json!;
         }

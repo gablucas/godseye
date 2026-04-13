@@ -7,5 +7,6 @@ namespace GodsEye.Application.Interfaces
         Task SendCreatedEnvironmentMonitoringLog(EnvironmentMonitoringModel message);
         Task SendCreatedIncidentRecordingLog(IncidentRecordingModel message);
         Task SendCreatedPerson(PersonModel message);
+        Task SendCreatedRoutine(RoutineModel message);
     }
 }

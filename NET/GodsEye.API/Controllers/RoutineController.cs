@@ -33,5 +33,13 @@ namespace GodsEye.API.Controllers
             var result = await _mediator.Send(new GetAllRoutinesRequest(), cancellationToken);
             return Ok(result);
         }
+
+        [AllowAnonymous]
+        [HttpGet("{routineId}")]
+        public async Task<IActionResult> GetById(int routineId, CancellationToken cancellationToken)
+        {
+            var result = await _mediator.Send(new GetRoutineByIdRequest(routineId), cancellationToken);
+            return Ok(result);
+        }
     }
 }

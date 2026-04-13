@@ -1,5 +1,6 @@
 ﻿using GodsEye.Application.DTOs.Response;
 using GodsEye.Application.Interfaces;
+using GodsEye.Application.Interfaces.Queries;
 using GodsEye.Domain.DTOs.Result;
 using GodsEye.Domain.Extensions;
 using MediatR;
@@ -7,16 +8,20 @@ using System.Text.Json;
 
 namespace GodsEye.Application.UseCases.Routine.Commands.CreateRoutine
 {
-    public class CreateRoutineHandler : IRequestHandler<CreateRoutineRequest, ApiResponse<ProcedureResult>>
+    public class CreateRoutineHandler : IRequestHandler<CreateRoutineRequest, ApiResponse<int>>
     {
-        public readonly IDapperContext _context;
+        private readonly IDapperContext _context;
+        private readonly IRoutineQuerie _routineQuerie;
+        private readonly INotificationSignalR _notification;
 
-        public CreateRoutineHandler(IDapperContext context)
+        public CreateRoutineHandler(IDapperContext context, IRoutineQuerie routineQuerie, INotificationSignalR notification)
         {
             _context = context;
+            _routineQuerie = routineQuerie;
+            _notification = notification;
         }
 
-        public async Task<ApiResponse<ProcedureResult>> Handle(CreateRoutineRequest request, CancellationToken cancellationToken)
+        public async Task<ApiResponse<int>> Handle(CreateRoutineRequest request, CancellationToken cancellationToken)
         {
             var sql = "CALL SP_ROUTINE_CREATE_OR_UPDATE(@P_ID, @P_NAME, @P_TYPE, @P_ROUTINE_RULES_JSON)";
 
@@ -33,7 +38,12 @@ namespace GodsEye.Application.UseCases.Routine.Commands.CreateRoutine
             if (result.Erro == 1)
                 throw new InvalidOperationException("Falha ao criar a pessoa no banco de dados.");
 
-            return ApiResponse<ProcedureResult>.Ok(result);
+            var createdRoutine = await _routineQuerie.GetById(result.Id, cancellationToken);
+
+            if (createdRoutine is not null)
+                await _notification.SendCreatedRoutine(createdRoutine);
+
+            return ApiResponse<int>.Ok(result.Id);
         }
     }
 }

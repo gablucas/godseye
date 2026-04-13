@@ -1,0 +1,8 @@
+CREATE DEFINER=`root`@`localhost` PROCEDURE `SP_ROUTINE_GET_ALL`()
+BEGIN
+    SELECT
+		R.ID,
+        R.NAME,
+        (R.TYPE + 0) AS TYPE
+    FROM ROUTINE R;
+END

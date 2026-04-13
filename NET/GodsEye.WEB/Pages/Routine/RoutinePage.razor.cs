@@ -19,12 +19,16 @@ namespace GodsEye.WEB.Pages.Routine
         [Inject]
         public IDialogService DialogService { get; set; }
 
+        [Inject]
+        public SignalRService SignalR { get; set; }
+
         #endregion
 
         #region TABLE PARAMETERS
 
-        List<GetAllRoutineResponse> _routines = new();
-        List<GetAllRoutineResponse> _filteredRoutines = new();
+        private MudTable<RoutineModel> mudTable;
+        List<RoutineModel> _routines = new();
+        List<RoutineModel> _filteredRoutines = new();
         bool _loading;
 
         #endregion
@@ -62,30 +66,27 @@ namespace GodsEye.WEB.Pages.Routine
                 _filteredRoutines = _routines;
             }
 
+            SignalR.Create("https://localhost:7010/createdDataHub");
+
+            SignalR.On<RoutineModel>(
+                "CreatedRoutine",
+                routine =>
+                {
+                    _routines = _routines.Where(x => x.Id != routine.Id).ToList();
+                    _routines.Insert(0, routine);
+                    ApplyFilters();
+
+                    InvokeAsync(() =>
+                    {
+                        mudTable?.ReloadServerData();
+                        StateHasChanged();
+                    });
+                });
+
+            await SignalR.StartAsync();
+
 
             _loading = false;
-        }
-
-        private async Task CraeteRoutineCallback(int routineId)
-        {
-            //var newSector = await sectorService.GetById(routineId);
-
-            //if (newSector is null || !newSector.Success)
-            //    return;
-
-            //_routines.Insert(0, newSector.Data);
-            //ApplyFilters();
-        }
-
-        private void OnCamerasChanged(IEnumerable<string> values)
-        {
-            _selectedCameras = values.ToHashSet();
-            ApplyFilters();
-        }
-
-        private string GetMultiSelectionText(List<string> selectedValues)
-        {
-            return $"{selectedValues.Count} setor{(selectedValues.Count > 1 ? "es foram selecionados" : " foi selecionado")}";
         }
 
         void ApplyFilters()

@@ -128,18 +128,6 @@ namespace GodsEye.WEB.Components.RoutineComponents
             return null;
         }
 
-        private async Task CreateNewSectorCallback(int sectorId)
-        {
-            var newSector = await SectorService.GetById(sectorId);
-
-            //if (newSector.Success)
-            //{
-            //    CameraForm.SectorId = sectorId;
-            //    _sectors = _sectors.Append(newSector.Data).ToList();
-            //    StateHasChanged();
-            //}
-        }
-
         #endregion
 
         private async Task Submit()
@@ -168,15 +156,16 @@ namespace GodsEye.WEB.Components.RoutineComponents
             var result = await RoutineWebService.CreateAsync(request);
             visible = false;
 
-            //'if (result.Success)
-            //{
-            //    Snackbar.Add("Setor cadastrado com sucesso!", Severity.Success);
-            //    MudDialog.Close(DialogResult.Ok(result.Data));
-            //}
-            //else
-            //{
-            //    Snackbar.Add("Houve um erro ao cadastrar o setor, tente novamente mais tarde", Severity.Error);
-            //}'
+            if (result.Success)
+            {
+                Snackbar.Add("Rotina cadastrada com sucesso!", Severity.Success);
+                MudDialog.Close(DialogResult.Ok(result.Data));
+            }
+            else
+            {
+                Snackbar.Add("Houve um erro ao cadastrar a rotina, tente novamente mais tarde", Severity.Error);
+            }
+            
 
         }
 

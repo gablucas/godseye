@@ -31,6 +31,7 @@ namespace GodsEye.Infrastructure.Services
             services.AddScoped<IPersonQuerie, PersonQuerie>();
             services.AddScoped<ICameraQuerie, CameraQuerie>();
             services.AddScoped<IEnvironmentMonitoringQuerie, EnvironmentMonitoringQuerie>();
+            services.AddScoped<IRoutineQuerie, RoutineQuerie>();
 
             services.AddScoped<IEnvironmentMonitoringWrite, EnvironmentMonitoringWrite>();
 
@@ -177,6 +178,7 @@ namespace GodsEye.Infrastructure.Services
             SqlMapper.AddTypeHandler(new JsonTypeHandler<List<FeatureCache>>());
 
             SqlMapper.AddTypeHandler(new JsonTypeHandler<List<CameraCache>>());
+            SqlMapper.AddTypeHandler(new JsonTypeHandler<List<RoutineRuleSectorTransitionModel>>());
 
             SqlMapper.AddTypeHandler(new FloatArrayHandler());
         }
