@@ -179,6 +179,7 @@ namespace GodsEye.Infrastructure.Services
 
             SqlMapper.AddTypeHandler(new JsonTypeHandler<List<CameraCache>>());
             SqlMapper.AddTypeHandler(new JsonTypeHandler<List<RoutineRuleSectorTransitionModel>>());
+            SqlMapper.AddTypeHandler(new JsonTypeHandler<List<RoutineAccessLevelDTO>>());
 
             SqlMapper.AddTypeHandler(new FloatArrayHandler());
         }

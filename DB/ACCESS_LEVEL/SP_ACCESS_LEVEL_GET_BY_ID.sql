@@ -41,8 +41,21 @@ BEGIN
             )
             FROM ACCESS_SCHEDULE ACCS
             WHERE ACCS.ID = AL.ACCESS_SCHEDULE_ID
-        ) AS SECTOR_SCHEDULE
-        
+        ) AS SECTOR_SCHEDULE,
+        (
+            SELECT COALESCE(
+                JSON_ARRAYAGG(
+                    JSON_OBJECT(
+                        'Id', R.ID,
+                        'Name', R.NAME
+                    )
+                ), 
+                JSON_ARRAY()
+            )
+            FROM ACCESS_LEVEL_ROUTINE ALR
+            LEFT JOIN ROUTINE R ON R.ID = ALR.ROUTINE_ID
+            WHERE ALR.ACCESS_LEVEL_ID = AL.ID
+        ) AS ROUTINES
     FROM ACCESS_LEVEL AL
     WHERE AL.ID = P_ACCESS_LEVEL_ID;
 END

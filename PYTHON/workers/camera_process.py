@@ -289,7 +289,10 @@ class CameraProcess(Process):
                     continue
                 
                 # VERIFICA SE A CAMERA TEM UM ROI DE ROSTO DEFINIDO
-                face_roi = next((r for r in self.roi if r["RoiType"] == 1), None)
+                if not self.roi:
+                    face_roi = None
+                else:
+                    face_roi = next((r for r in self.roi if r["RoiType"] == 1), None)
 
                 if face_roi:
                     coords = face_roi["Coordinates"]

@@ -9,6 +9,7 @@ namespace GodsEye.Application.DTOs.Model
 
         public List<SectorAccessLevelDTO> Sectors { get; set; } = new();
         public AccessLevelScheduleDTO SectorSchedule { get; set; }
+        public List<RoutineAccessLevelDTO> Routines { get; set; } = new();
 
         public DateTime CreatedAt { get; set; }
         public DateTime UpdatedAt { get; set; }
@@ -34,5 +35,11 @@ namespace GodsEye.Application.DTOs.Model
         public WeekDayEnum WeekDay { get; set; }
         public TimeSpan? StartTime { get; set; }
         public TimeSpan? EndTime { get; set; }
+    }
+    
+    public class RoutineAccessLevelDTO
+    {
+        public int Id { get; set; }
+        public string Name { get; set; }
     }
 }

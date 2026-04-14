@@ -17,13 +17,14 @@ namespace GodsEye.Application.UseCases.AccessLevel.Commands.CreateOrUpdateAccess
 
         public async Task<ApiResponse<int>> Handle(CreateOrUpdateAccessLevelRequest request, CancellationToken cancellationToken)
         {
-            var sql = "CALL SP_ACCESS_LEVEL_CREATE_OR_UPDATE(@P_ID, @P_NAME, @P_SECTORS_JSON, @P_ACCESS_SCHEDULE_ID)";
+            var sql = "CALL SP_ACCESS_LEVEL_CREATE_OR_UPDATE(@P_ID, @P_NAME, @P_SECTORS_JSON, @P_ROUTINES_JSON, @P_ACCESS_SCHEDULE_ID)";
 
             var parameters = new
             {
                 P_ID = request.Id,
                 P_NAME = request.Name,
                 P_SECTORS_JSON = JsonSerializer.Serialize(request.Sectors),
+                P_ROUTINES_JSON = JsonSerializer.Serialize(request.Routines),
                 P_ACCESS_SCHEDULE_ID = request.AccessScheduleId
             };
 

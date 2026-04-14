@@ -118,20 +118,35 @@ namespace GodsEye.Infrastructure.Services
 
                 if (person == null || currentCamera == null) return false;
 
-                var lastCamera = _cache.Cameras.FirstOrDefault(c => c.Id == (person.LastCameraId ?? 0));
+                var currentSector = currentCamera.SectorId;
 
-                // REGRA DE NEGÓCIO: Só bloqueia se for o mesmo setor no mesmo dia
-                if (person.LastCameraId != null &&
-                    lastCamera?.SectorId == currentCamera.SectorId &&
-                    identifiedAt.Date == person.LastSeen?.Date)
+                if (person.LastSeen == null)
                 {
-                    return false; // Bloqueado (duplicado)
+                    person.LastSeen = identifiedAt;
+                    person.LastCameraId = cameraId;
+                    return true;
                 }
 
-                // Se passou da regra, atualiza IMEDIATAMENTE antes de soltar o lock
+                var lastCamera = _cache.Cameras.FirstOrDefault(c => c.Id == person.LastCameraId);
+                var lastSector = lastCamera?.SectorId;
+
+                if (identifiedAt < person.LastSeen)
+                {
+                    if (lastSector == currentSector)
+                        return false;
+
+                    return true;
+                }
+
+                if (lastSector == currentSector)
+                {
+                    return false;
+                }
+
                 person.LastSeen = identifiedAt;
                 person.LastCameraId = cameraId;
-                return true; // Autorizado
+
+                return true;
             }
         }
     }

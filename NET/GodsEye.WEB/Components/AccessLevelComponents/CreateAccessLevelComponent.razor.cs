@@ -27,6 +27,9 @@ namespace GodsEye.WEB.Components.AccessLevelComponents
         [Inject]
         DialogWebService DialogWebService { get; set; }
 
+        [Inject]
+        RoutineWebService RoutineWebService { get; set; }
+
         [CascadingParameter]
         private IMudDialogInstance MudDialog { get; set; }
 
@@ -49,6 +52,7 @@ namespace GodsEye.WEB.Components.AccessLevelComponents
         private bool shouldStartCamera;
 
         private bool _multiselectionTextChoice;
+        private bool _multiselectionTextChoiceRoutine;
         private bool _multiselectionTextChoiceBlackList;
 
         ApiResponse<ProcedureResult?>? apiResponse { get; set; } = null;
@@ -57,6 +61,9 @@ namespace GodsEye.WEB.Components.AccessLevelComponents
 
         IEnumerable<SectorModel> _sectors = Enumerable.Empty<SectorModel>();
         IEnumerable<AccessScheduleModel> _accessSchedule = Enumerable.Empty<AccessScheduleModel>();
+
+        public int? _routine = null;
+        IEnumerable<RoutineModel> _routines = Enumerable.Empty<RoutineModel>();
 
         List<SectorModel> NotAllowed = new();
 
@@ -78,6 +85,7 @@ namespace GodsEye.WEB.Components.AccessLevelComponents
                         Name = accessLevelResult.Data.Name,
                         Sectors = accessLevelResult.Data.Sectors.Select(x => new SectorAccessLevelInput(x.Id, x.RuleType)).ToList(),
                         AccessScheduleId = accessLevelResult.Data.SectorSchedule.Id,
+                        Routines = accessLevelResult.Data.Routines.Select(x => x.Id)
                     };
                 }
             }
@@ -95,6 +103,12 @@ namespace GodsEye.WEB.Components.AccessLevelComponents
             if (sectorResult is not null && sectorResult.Success)
             {
                 _sectors = sectorResult.Data;
+            }
+
+            var routineResult = await RoutineWebService.GetAllAsync();
+            if (routineResult is not null && routineResult.Success)
+            {
+                _routines = routineResult.Data;
             }
         }
 
@@ -140,6 +154,16 @@ namespace GodsEye.WEB.Components.AccessLevelComponents
                 _accessSchedule = _accessSchedule.Append(newAccessSchedule.Data).ToList();
                 StateHasChanged();
             }
+        }
+
+        private string GetMultiSelectionTextRoutine(IReadOnlyList<string> selectedValues)
+        {
+            if (_multiselectionTextChoiceRoutine)
+            {
+                return $"Rotina{(selectedValues.Count > 1 ? "s selecionadas" : " selecionada")}: {string.Join(", ", selectedValues.Select(x => x))}";
+            }
+
+            return $"{selectedValues.Count} rotina{(selectedValues.Count > 1 ? "as selecionadas" : " selecionada")}";
         }
 
         private async Task Submit()
