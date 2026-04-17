@@ -9,14 +9,12 @@ namespace GodsEye.Application.UseCases.EnvironmentMonitoring.Commands.CreateEnvi
 {
     public class CreateEnvironmentMonitoringLogHandler : IRequestHandler<CreateEnvironmentMonitoringLogRequest, Unit>
     {
-        private readonly IGodsEyeState _godsEyeState;
         private readonly INotificationSignalR _notification;
         private readonly IEnvironmentMonitoringQuerie _environmentMonitoringQuerie;
         private readonly IEnvironmentMonitoringWrite _environemntMonitoringWrite;
 
-        public CreateEnvironmentMonitoringLogHandler(IGodsEyeState godsEyeState, INotificationSignalR notification, IEnvironmentMonitoringQuerie environmentMonitoringQuerie, IEnvironmentMonitoringWrite environemntMonitoringWrite)
+        public CreateEnvironmentMonitoringLogHandler(INotificationSignalR notification, IEnvironmentMonitoringQuerie environmentMonitoringQuerie, IEnvironmentMonitoringWrite environemntMonitoringWrite)
         {
-            _godsEyeState = godsEyeState;
             _notification = notification;
             _environmentMonitoringQuerie = environmentMonitoringQuerie;
             _environemntMonitoringWrite = environemntMonitoringWrite;
@@ -24,23 +22,24 @@ namespace GodsEye.Application.UseCases.EnvironmentMonitoring.Commands.CreateEnvi
 
         public async Task<Unit> Handle(CreateEnvironmentMonitoringLogRequest request, CancellationToken cancellationToken)
         {
-            if (!_godsEyeState.TryUpdateDetection(request.personId, request.cameraId, request.identifiedAt))
-            {
-                return Unit.Value;
-            }
-
+           
             try
             {
-                var result = await _environemntMonitoringWrite.Create(request.cameraId, request.personId, request.score, request.identifiedAt, cancellationToken);
+                var result = await _environemntMonitoringWrite.Create(request.cameraId, request.personId, request.score, request.identifiedAt, CancellationToken.None);
 
                 if (result is null || result.Erro == 1)
                     throw new InvalidOperationException("Falha ao registrar log no banco de dados");
 
-                var environmentMonitoringLog = await _environmentMonitoringQuerie.GetById(result.Id, cancellationToken);
+                var timeDiff = DateTime.Now - request.identifiedAt;
 
-                if (environmentMonitoringLog != null)
-                {
-                    await _notification.SendCreatedEnvironmentMonitoringLog(environmentMonitoringLog);
+                if (timeDiff.TotalSeconds < 30) {
+
+                    var environmentMonitoringLog = await _environmentMonitoringQuerie.GetById(result.Id, cancellationToken);
+
+                    if (environmentMonitoringLog != null)
+                    {
+                        await _notification.SendCreatedEnvironmentMonitoringLog(environmentMonitoringLog);
+                    }
                 }
             }
             catch (Exception)

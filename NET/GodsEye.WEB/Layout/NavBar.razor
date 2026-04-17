@@ -36,4 +36,19 @@
             </div>
         }
     }
+
+    <div class="navitem">
+        <NavLink href="/alertas"
+                 class=@(SelectedMenu("/alertas") ? "selected" : _alertCounter > 0 ? "alert-notification" : "")
+                 @onclick="() => _alertCounter = 0">
+            <MudIcon Icon="@Icons.Material.Filled.ReportProblem" />
+            Alertas
+
+            @if (!SelectedMenu("/alertas") && _alertCounter > 0)
+            {
+                <span>( @_alertCounter )</span>
+            }
+            
+        </NavLink>
+    </div>
 </div>

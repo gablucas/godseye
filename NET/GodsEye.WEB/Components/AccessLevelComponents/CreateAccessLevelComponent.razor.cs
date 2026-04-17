@@ -3,7 +3,6 @@ using GodsEye.Application.DTOs.Response;
 using GodsEye.Application.UseCases.AccessLevel.Commands.CreateOrUpdateAccessLevel;
 using GodsEye.Domain.DTOs.Result;
 using GodsEye.Domain.Enums;
-using GodsEye.WEB.Model.Forms;
 using GodsEye.WEB.Services;
 using Microsoft.AspNetCore.Components;
 using MudBlazor;
@@ -48,8 +47,6 @@ namespace GodsEye.WEB.Components.AccessLevelComponents
         private bool success;
         private string[] errors = { };
         public CreateOrUpdateAccessLevelRequest AccessLevelForm { get; set; } = new();
-
-        private bool shouldStartCamera;
 
         private bool _multiselectionTextChoice;
         private bool _multiselectionTextChoiceRoutine;
@@ -96,7 +93,7 @@ namespace GodsEye.WEB.Components.AccessLevelComponents
             var accessScheduleResult = await AccessScheduleWebService.GetAllAsync();
             if (accessScheduleResult is not null && accessScheduleResult.Success)
             {
-                _accessSchedule = accessScheduleResult.Data;
+                _accessSchedule = accessScheduleResult.Data; 
             }
 
             var sectorResult = await SectorWebService.GetAllAsync();

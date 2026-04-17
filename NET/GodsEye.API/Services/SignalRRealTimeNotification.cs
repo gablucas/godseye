@@ -41,5 +41,12 @@ namespace GodsEye.API.Services
             "CreatedRoutine",
             message);
         }
+
+        public async Task SendAlertNotification(int message)
+        {
+            await _hub.Clients.All.SendAsync(
+            "AlertNotification",
+            message);
+        }
     }
 }

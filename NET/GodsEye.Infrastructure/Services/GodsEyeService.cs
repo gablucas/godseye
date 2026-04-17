@@ -2,6 +2,7 @@
 using GodsEye.Application.DTOs.Response;
 using GodsEye.Application.Exceptions;
 using GodsEye.Application.Interfaces;
+using GodsEye.Application.UseCases.AccessLevel.Commands;
 using GodsEye.Application.UseCases.EnvironmentMonitoring.Commands.CreateEnvironmentMonitoringLog;
 using MediatR;
 using System.Net.Http.Headers;
@@ -119,11 +120,17 @@ namespace GodsEye.Infrastructure.Services
             if (personId == 0 || cameraFromRequest is null)
                 return;
 
+            if (!_godsEyeState.TryUpdateDetection(personId, cameraId, identifiedAt))
+                return;
+
             if (cameraFromRequest.Features.Any(x => x.Id == 1))
             {
                 await _mediator.Send(new CreateEnvironmentMonitoringLogRequest(cameraFromRequest.Id, personId, score, identifiedAt));
             }
-            
+
+            await _mediator.Send(new CheckAccessViolationRequest(cameraFromRequest.Id, personId, identifiedAt));
+
+
         }
     }
 }

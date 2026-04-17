@@ -2,124 +2,89 @@
 using GodsEye.Application.Interfaces;
 using GodsEye.Application.Interfaces.Queries;
 using Microsoft.Extensions.DependencyInjection;
+using System.Collections.Concurrent;
 
 namespace GodsEye.Infrastructure.Services
 {
     public class GodsEyeState : IGodsEyeState
     {
         private readonly IServiceScopeFactory _scopeFactory;
-        private GodsEyeCache _cache = new();
-        private readonly object _lock = new();
+        private readonly ConcurrentDictionary<int, PersonCache> _persons = new();
+        private readonly ConcurrentDictionary<int, CameraCache> _cameras = new();
+        private readonly ConcurrentDictionary<int, AccessLevelCache> _accessLevels = new();
 
         public GodsEyeState(IServiceScopeFactory scopeFactory)
         {
             _scopeFactory = scopeFactory;
-            Initialize().GetAwaiter().GetResult();
         }
 
-        public List<PersonCache> GetPersons()
-        {
-            lock (_lock)
-            {
-                // Retornamos uma cópia (.ToList) para que quem lê não trave quem escreve
-                return _cache.Persons.ToList();
-            }
-        }
-
-        public List<CameraCache> GetCameras()
-        {
-            lock (_lock)
-            {
-                return _cache.Cameras.ToList();
-            }
-        }
-
-        public CameraCache? GetCameraById(int cameraId)
-        {
-            lock (_lock)
-            {
-                return _cache.Cameras.FirstOrDefault(x => x.Id == cameraId);
-            }
-        }
-
-        public PersonCache GetPersonById(int personId)
-        {
-            lock (_lock)
-            {
-                return _cache.Persons.First(x => x.Id == personId);
-            }
-        }
-
-        private async Task Initialize()
+        public async Task InitializeAsync()
         {
             using var scope = _scopeFactory.CreateScope();
 
             var personQuery = scope.ServiceProvider.GetRequiredService<IPersonQuerie>();
             var cameraQuery = scope.ServiceProvider.GetRequiredService<ICameraQuerie>();
+            var accessLevelQuery = scope.ServiceProvider.GetRequiredService<IAccessLevelQuerie>();
 
+            // Agora rodará livremente sem travar threads
             var persons = await personQuery.GetAllCache(CancellationToken.None);
             var cameras = await cameraQuery.GetAllCache(CancellationToken.None);
+            var accessLevels = await accessLevelQuery.GetAllCache(CancellationToken.None);
 
-            lock(_lock)
-            {
-                _cache.Persons = persons.ToList();
-                _cache.Cameras = cameras.ToList();
-            }
+            foreach (var p in persons) _persons.TryAdd(p.Id, p);
+            foreach (var c in cameras) _cameras.TryAdd(c.Id, c);
+            foreach (var a in accessLevels) _accessLevels.TryAdd(a.Id, a);
         }
 
-        public void UpdateLastSeen(int personId, int cameraId, DateTime identifiedAt)
+        private T? GetItem<T>(ConcurrentDictionary<int, T> dictionary, int id) where T : IGodsEyeCache
         {
-            lock (_lock)
-            {
-                var person = _cache.Persons.FirstOrDefault(p => p.Id == personId);
-                if (person != null)
-                {
-                    person.LastSeen = identifiedAt;
-                    person.LastCameraId = cameraId;
-                }
-            }
+            dictionary.TryGetValue(id, out var item);
+            return item;
         }
 
-        public void UpsertPerson(PersonCache person)
+        public PersonCache? GetPersonById(int id) => GetItem(_persons, id);
+        public CameraCache? GetCameraById(int id) => GetItem(_cameras, id);
+        public AccessLevelCache? GetAccessLevelById(int id) => GetItem(_accessLevels, id);
+
+        private List<T> GetList<T>(ConcurrentDictionary<int, T> dictionary) where T : IGodsEyeCache
         {
-            lock ( _lock)
-            {
-                var index = _cache.Persons.FindIndex(p => p.Id == person.Id);
-                if (index != -1) _cache.Persons[index] = person;
-                else _cache.Persons.Add(person);
-            }
+            return dictionary.Values.ToList();
         }
 
-        public void RemovePerson(int personId)
+        public List<PersonCache> GetPersons() => GetList(_persons);
+        public List<CameraCache> GetCameras() => GetList(_cameras);
+        public List<AccessLevelCache> GetAccessLevel() => GetList(_accessLevels);
+
+
+        private void Upsert<T>(ConcurrentDictionary<int, T> dictionary, T value) where T : IGodsEyeCache
         {
-            lock (_lock) 
-            {
-                _cache.Persons.RemoveAll(p => p.Id == personId);
-            
-            }
+            dictionary.AddOrUpdate(value.Id, value, (id, oldValue) => value);
         }
 
-        public void UpsertCamera(CameraCache camera)
+        public void UpserPerson(PersonCache person) => Upsert(_persons, person);
+        public void UpsertCamera(CameraCache camera) => Upsert(_cameras, camera);
+        public void UpserAccessLevel(AccessLevelCache accessLevel) => Upsert(_accessLevels, accessLevel);
+
+
+        private void Remove<T>(ConcurrentDictionary<int, T> dictionary, int id) where T : IGodsEyeCache
         {
-            lock (_lock)
-            {
-                var index = _cache.Cameras.FindIndex(c => c.Id == camera.Id);
-                if (index != -1) _cache.Cameras[index] = camera;
-                else _cache.Cameras.Add(camera);
-            }
+            dictionary.TryRemove(id, out _);
         }
+
+        public void RemovePerson(int id) => Remove(_persons, id);
+        public void RemoveCamera(int id) => Remove(_cameras, id);
+        public void RemoveAccessLevel(int id) => Remove(_accessLevels, id);
 
         public bool TryUpdateDetection(int personId, int cameraId, DateTime identifiedAt)
         {
-            lock (_lock)
+            if (!_persons.TryGetValue(personId, out var person)) return false;
+            if (!_cameras.TryGetValue(cameraId, out var currentCamera)) return false;
+            
+            lock (person.SyncRoot)
             {
-                var person = _cache.Persons.FirstOrDefault(p => p.Id == personId);
-                var currentCamera = _cache.Cameras.FirstOrDefault(c => c.Id == cameraId);
-
-                if (person == null || currentCamera == null) return false;
-
                 var currentSector = currentCamera.SectorId;
 
+                // Se nunca foi vista, atualiza e retorna true
                 if (person.LastSeen == null)
                 {
                     person.LastSeen = identifiedAt;
@@ -127,25 +92,21 @@ namespace GodsEye.Infrastructure.Services
                     return true;
                 }
 
-                var lastCamera = _cache.Cameras.FirstOrDefault(c => c.Id == person.LastCameraId);
+                // Busca a última câmera para comparar setores
+                _cameras.TryGetValue(person.LastCameraId ?? 0, out var lastCamera);
                 var lastSector = lastCamera?.SectorId;
 
-                if (identifiedAt < person.LastSeen)
-                {
-                    if (lastSector == currentSector)
-                        return false;
-
-                    return true;
-                }
-
+                // Lógica de descarte por setor (se for o mesmo setor, ignora a detecção)
                 if (lastSector == currentSector)
                 {
+                    // Opcional: mesmo sendo o mesmo setor, se a data for muito superior, 
+                    // você pode querer atualizar o LastSeen. Caso contrário, apenas ignora.
                     return false;
                 }
 
+                // Se chegou aqui, mudou de setor
                 person.LastSeen = identifiedAt;
                 person.LastCameraId = cameraId;
-
                 return true;
             }
         }

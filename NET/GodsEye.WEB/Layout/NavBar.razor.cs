@@ -1,11 +1,18 @@
-﻿using GodsEye.WEB.Helpers;
+﻿using GodsEye.Application.DTOs.Model;
+using GodsEye.WEB.Helpers;
+using GodsEye.WEB.Services;
+using Microsoft.AspNetCore.Components;
 using MudBlazor;
 
 namespace GodsEye.WEB.Layout
 {
     public partial class NavBar
     {
+        [Inject]
+        public SignalRService SignalR { get; set; }
+
         private string _openGroup;
+        private int _alertCounter;
 
         #region LINKS
 
@@ -20,19 +27,6 @@ namespace GodsEye.WEB.Layout
 
             new NavMenuGroup
             {
-                Key = "monitoramentos",
-                Title = "Monitoramento",
-                Icon = Icons.Material.Filled.Visibility,
-                Items =
-                {
-                    new() { Title = "Ambientes", Url = "/monitoramento/monitoramento-ambientes" },
-                    new() { Title = "Incidentes", Url = "/monitoramento/captura-incidentes" },
-                    new() { Title = "Permanência", Url = "/monitoramento/controle-permanencia" }
-                }
-            },
-
-            new NavMenuGroup
-            {
                 Key = "organizacao",
                 Title = "Organização",
                 Icon = Icons.Material.Filled.BusinessCenter,
@@ -40,7 +34,9 @@ namespace GodsEye.WEB.Layout
                 {
                     new() { Title = "Pessoas", Url = "/organizacao/pessoas" },
                     new() { Title = "Setores", Url = "/organizacao/setores" },
-                    new() { Title = "Rotinas", Url = "/organizacao/rotinas" },
+                    new() { Title = "Calendário de acesso", Url = "/organizacao/calendario-de-acesso" },
+                    new() { Title = "Níveis de Acesso", Url = "/organizacao/nivel-de-acesso" },
+                    new() { Title = "Emails", Url = "/organizacao/emails" }
 
                 }
             },
@@ -59,26 +55,42 @@ namespace GodsEye.WEB.Layout
 
             new NavMenuGroup
             {
-                Key = "controle-acesso",
-                Title = "Controle de Acesso",
-                Icon = Icons.Material.Filled.LockPerson,
+                Key = "monitoramentos",
+                Title = "Monitoramento",
+                Icon = Icons.Material.Filled.Visibility,
                 Items =
                 {
-                    new() { Title = "Níveis de Acesso", Url = "/controle-acesso/nivel" },
-                    new() { Title = "Calendário de acesso", Url = "/controle-acesso/calendario" }
+                    new() { Title = "Tempo real", Url = "/monitoramento-de-ambientes/tempo-real" },
+                    new() { Title = "Relatórios", Url = "/monitoramento-de-ambientes/relatorios" },
+                    new() { Title = "Configurações", Url = "/monitoramento-de-ambientes/configuracao" }
                 }
             },
 
             new NavMenuGroup
             {
-                Key = "notificacoes",
-                Title = "Notificações",
-                Icon = Icons.Material.Filled.Notifications,
+                Key = "captura-incidentes",
+                Title = "Incidentes",
+                Icon = Icons.Material.Filled.ReportProblem,
                 Items =
                 {
-                    new() { Title = "Emails", Url = "/notificacao/emails" }
+                    new() { Title = "Tempo real", Url = "/captura-de-incidentes/tempo-real" },
+                    new() { Title = "Relatórios", Url = "/captura-de-incidentes/relatorios" },
+                    new() { Title = "Configurações", Url = "/captura-de-incidentes/configuracao" }
                 }
-            }
+            },
+
+            new NavMenuGroup
+            {
+                Key = "controle-de-permanencia",
+                Title = "Permanência",
+                Icon = Icons.Material.Filled.Timer,
+                Items =
+                {
+                    new() { Title = "Tempo real", Url = "/controle-de-permanencia/tempo-real" },
+                    new() { Title = "Relatórios", Url = "/controle-de-permanencia/relatorios" },
+                    new() { Title = "Configurações", Url = "/controle-de-permanencia/configuracao" }
+                }
+            },
         };
 
         #endregion
@@ -87,6 +99,24 @@ namespace GodsEye.WEB.Layout
         {
             SyncGroupWithRoute();
             Nav.LocationChanged += (_, __) => SyncGroupWithRoute();
+        }
+
+        protected override async Task OnInitializedAsync()
+        {
+
+            SignalR.Create("https://localhost:7010/createdDataHub");
+
+            SignalR.On<int>(
+                "AlertNotification",
+                quantity =>
+                {
+                    _alertCounter += quantity;
+
+                    InvokeAsync(StateHasChanged);
+                });
+
+            await SignalR.StartAsync();
+
         }
 
         private void ToggleGroup(string key)

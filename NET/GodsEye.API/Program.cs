@@ -1,6 +1,7 @@
 using GodsEye.API.Hubs;
 using GodsEye.API.Middlewares;
 using GodsEye.API.Services;
+using GodsEye.Application.Interfaces;
 using GodsEye.Application.Services;
 using GodsEye.Infrastructure.Services;
 
@@ -33,6 +34,14 @@ builder.Services.AddAplication();
 
 
 var app = builder.Build();
+
+using (var scope = app.Services.CreateScope())
+{
+    var godsEyeState = scope.ServiceProvider.GetRequiredService<IGodsEyeState>();
+    // Certifique-se de que mudou o método para async na Interface e na Classe
+    await godsEyeState.InitializeAsync();
+}
+
 
 app.UseResponseCompression();
 

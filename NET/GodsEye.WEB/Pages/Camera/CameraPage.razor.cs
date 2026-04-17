@@ -142,7 +142,7 @@ namespace GodsEye.WEB.Pages.Camera
         private List<BreadcrumbItem> _items =
         [
             new("Home", href: "/"),
-            new("Cadastro", href: null, disabled: true),
+            new("Dispositivos", href: null, disabled: true),
             new("Cameras", href: null, disabled: true)
         ];
 

@@ -16,16 +16,10 @@ namespace GodsEye.API.Controllers
     public class GodsEyeController : ControllerBase
     {
         private readonly IMediator _mediator;
-        private readonly IPersonQuerie _personQuerie;
-        private readonly IDapperContext _context;
-        private readonly IFaceMatcherService _faceMatcher;
 
-        public GodsEyeController(IMediator mediator, IEmailService emailService, IPersonQuerie personQuerie, IDapperContext context, IFaceMatcherService faceMatcher)
+        public GodsEyeController(IMediator mediator)
         {
             _mediator = mediator;
-            _personQuerie = personQuerie;
-            _context = context;
-            _faceMatcher = faceMatcher;
         }
 
         [AllowAnonymous]

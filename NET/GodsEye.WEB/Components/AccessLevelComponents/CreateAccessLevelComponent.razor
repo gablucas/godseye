@@ -25,14 +25,26 @@
                     <div class="wrapper">
                         <span class="label">Setores permitidos</span>
 
-                        <MudSelect 
-                            T="int" 
-                            MultiSelection="true" 
-                            SelectedValuesChanged="(e) => OnSectorsChanged(e, AccessLevelSectorRuleEnum.WHITELIST)" 
-                            SelectedValues="AccessLevelForm.Sectors.Where(x => x.RuleType == AccessLevelSectorRuleEnum.WHITELIST).Select(x => x.SectorId)"
-                            MultiSelectionTextFunc="@(new Func<IReadOnlyList<string>, string>(GetMultiSelectionText))"
-                            Variant="Variant.Outlined"
-                        >
+                        <div>
+                            @foreach (var sector in _sectors.Where(x => !AccessLevelForm.Sectors.Any(y => y.SectorId == x.Id)))
+                            {
+                                <MudChip T="string" Variant="Variant.Outlined" Color="Color.Success" Label="true" Icon="@Icons.Material.Filled.Close">@sector.Name</MudChip>
+                            }
+                        </div>
+                    </div>
+
+
+                    <MudDivider />
+
+                    <div class="wrapper prohibited">
+                        <span class="label">Proibidos</span>
+
+                        <MudSelect T="int"
+                                   MultiSelection="true"
+                                   SelectedValuesChanged="(e) => OnSectorsChanged(e, AccessLevelSectorRuleEnum.PROHIBITED)"
+                                   SelectedValues="AccessLevelForm.Sectors.Where(x => x.RuleType == AccessLevelSectorRuleEnum.PROHIBITED).Select(x => x.SectorId)"
+                                   MultiSelectionTextFunc="@(new Func<IReadOnlyList<string>, string>(GetMultiSelectionText))"
+                                   Variant="Variant.Outlined">
 
                             @foreach (var sector in _sectors.Where(x => !AccessLevelForm.Sectors.Any(y => y.SectorId == x.Id && y.RuleType == AccessLevelSectorRuleEnum.BLACKLIST)))
                             {
@@ -40,33 +52,33 @@
                             }
                         </MudSelect>
 
-                        @if (AccessLevelForm.Sectors.Any(x => x.RuleType == AccessLevelSectorRuleEnum.WHITELIST))
+                        @if (AccessLevelForm.Sectors.Any(x => x.RuleType == AccessLevelSectorRuleEnum.PROHIBITED))
                         {
                             <div class="allowed-sectors">
-                                @foreach (var sector in AccessLevelForm.Sectors.Where(x => x.RuleType == AccessLevelSectorRuleEnum.WHITELIST))
+                                @foreach (var sector in AccessLevelForm.Sectors.Where(x => x.RuleType == AccessLevelSectorRuleEnum.PROHIBITED))
                                 {
-                                    <MudChip T="string" Variant="Variant.Outlined" Color="Color.Success" OnClick="() => RemoveSector(sector.SectorId)" Label="true" Icon="@Icons.Material.Filled.Close">@_sectors.First(x => x.Id == sector.SectorId).Name</MudChip>
+                                    <MudChip T="string" Variant="Variant.Outlined" OnClick="() => RemoveSector(sector.SectorId)" Label="true" Icon="@Icons.Material.Filled.Close">@_sectors.First(x => x.Id == sector.SectorId).Name</MudChip>
                                 }
                             </div>
                         }
+
+                        <MudChip Label="true" Variant="Variant.Outlined" Icon="@Icons.Material.Filled.Warning" Style="justify-self: start; grid-column: 1/-1" T="string">Os setores proibidos geram uma notificação no dashboard e via email quando uma pessoa é detectada</MudChip>
                     </div>
 
                     <MudDivider />
 
                     <div class="wrapper blacklist">
-                        <MudChip Label="true" Variant="Variant.Outlined" Icon="@Icons.Material.Filled.Warning" Style="justify-self: start; grid-column: 1/-1" T="string">Os setores adicionados a lista negra, permite configurar uma notificação além de apenas um registro, podendo notificar por email, registrar um vídeo do momento etc...</MudChip>
-                        <span class="label">Setores proibidos (Lista negra)</span>
+                        <span class="label">Lista negra</span>
 
-                        <MudSelect 
-                            T="int" 
-                            SelectedValuesChanged="(e) => OnSectorsChanged(e, AccessLevelSectorRuleEnum.BLACKLIST)" 
-                            SelectedValues="AccessLevelForm.Sectors.Where(x => x.RuleType == AccessLevelSectorRuleEnum.BLACKLIST).Select(x => x.SectorId)"
-                            Required="false"
-                            MultiSelection="true" 
-                            MultiSelectionTextFunc="GetMultiSelectionTextBlacklist"
-                            Variant="Variant.Outlined">
+                        <MudSelect T="int"
+                                   SelectedValuesChanged="(e) => OnSectorsChanged(e, AccessLevelSectorRuleEnum.BLACKLIST)"
+                                   SelectedValues="AccessLevelForm.Sectors.Where(x => x.RuleType == AccessLevelSectorRuleEnum.BLACKLIST).Select(x => x.SectorId)"
+                                   Required="false"
+                                   MultiSelection="true"
+                                   MultiSelectionTextFunc="GetMultiSelectionTextBlacklist"
+                                   Variant="Variant.Outlined">
 
-                            @foreach (var sector in _sectors.Where(x => !AccessLevelForm.Sectors.Any(y => y.SectorId == x.Id && y.RuleType == AccessLevelSectorRuleEnum.WHITELIST)))
+                            @foreach (var sector in _sectors.Where(x => !AccessLevelForm.Sectors.Any(y => y.SectorId == x.Id && y.RuleType == AccessLevelSectorRuleEnum.PROHIBITED)))
                             {
                                 <MudSelectItem T="int" Value="@sector.Id">@sector.Name</MudSelectItem>
                             }
@@ -81,22 +93,10 @@
                                 }
                             </div>
                         }
+                        <MudChip Label="true" Variant="Variant.Outlined" Icon="@Icons.Material.Filled.Warning" Style="justify-self: start; grid-column: 1/-1" T="string">Os setores na lista negra geram uma notificação igual os setores proibidos, porém é permitido configurar outras coisas como gravação de video do momento, disparo de alarme etc...</MudChip>
                     </div>
 
-                    <MudDivider />
-
-                    <div class="wrapper not-allowed">
-                        <MudChip Label="true" Variant="Variant.Outlined" Icon="@Icons.Material.Filled.Warning" Style="justify-self: start; grid-column: 1/-1" T="string">Os setores não permitidos são todos aqueles que não estão na lista de permitidos ou lista negra, os setores aqui apenas geram uma notificação no sistema.</MudChip>
-                        <span class="label">Setores não permitidos</span>
-
-                        <div>
-                            @foreach (var sector in _sectors.Where(x => !AccessLevelForm.Sectors.Any(y => y.SectorId == x.Id)))
-                            {
-                                <MudChip T="string" Variant="Variant.Outlined" Label="true" Icon="@Icons.Material.Filled.Close">@sector.Name</MudChip>
-                            }
-                        </div>
-
-                    </div>
+                    
 
                     <MudDivider />
                     
@@ -151,6 +151,7 @@
                     <div>
                         <div class="input-create">
                             <MudSelect T="int"
+                                       Label="Rotinas"
                                        @bind-SelectedValues="AccessLevelForm.Routines"
                                        Required="false"
                                        MultiSelection="true"

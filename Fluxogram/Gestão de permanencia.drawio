@@ -1,0 +1,52 @@
+<mxfile host="app.diagrams.net">
+  <diagram name="Página-1" id="qz2xZ-EVTg5-8YVCyQ4W">
+    <mxGraphModel dx="2020" dy="1136" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="827" pageHeight="1169" math="0" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+        <mxCell id="aWZCunmosWC496nECAuW-19" edge="1" parent="1" source="aWZCunmosWC496nECAuW-1" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;" target="aWZCunmosWC496nECAuW-14">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="aWZCunmosWC496nECAuW-1" parent="1" style="rounded=1;whiteSpace=wrap;html=1;" value="Controle de permanencia" vertex="1">
+          <mxGeometry height="80" width="160" x="40" y="280" as="geometry" />
+        </mxCell>
+        <mxCell id="aWZCunmosWC496nECAuW-21" edge="1" parent="1" source="aWZCunmosWC496nECAuW-11" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;" target="aWZCunmosWC496nECAuW-20">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="aWZCunmosWC496nECAuW-11" parent="1" style="rounded=1;whiteSpace=wrap;html=1;" value="Registra o setor onde o usuario esta" vertex="1">
+          <mxGeometry height="80" width="160" x="520" y="280" as="geometry" />
+        </mxCell>
+        <mxCell id="aWZCunmosWC496nECAuW-15" edge="1" parent="1" source="aWZCunmosWC496nECAuW-14" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.5;exitY=0;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;" target="aWZCunmosWC496nECAuW-11">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="aWZCunmosWC496nECAuW-18" connectable="0" parent="aWZCunmosWC496nECAuW-15" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];" value="&lt;div style=&quot;&quot;&gt;&lt;span style=&quot;background-color: light-dark(#ffffff, var(--ge-dark-color, #121212)); color: light-dark(rgb(0, 0, 0), rgb(255, 255, 255));&quot;&gt;Scanner biometrico&lt;/span&gt;&lt;/div&gt;" vertex="1">
+          <mxGeometry relative="1" x="-0.3786" y="2" as="geometry">
+            <mxPoint as="offset" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="aWZCunmosWC496nECAuW-16" edge="1" parent="1" source="aWZCunmosWC496nECAuW-14" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;" target="aWZCunmosWC496nECAuW-11">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="aWZCunmosWC496nECAuW-17" connectable="0" parent="aWZCunmosWC496nECAuW-16" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];" value="Camera" vertex="1">
+          <mxGeometry relative="1" x="-0.4571" y="-1" as="geometry">
+            <mxPoint as="offset" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="aWZCunmosWC496nECAuW-14" parent="1" style="rhombus;whiteSpace=wrap;html=1;" value="Dispositivo" vertex="1">
+          <mxGeometry height="80" width="80" x="280" y="280" as="geometry" />
+        </mxCell>
+        <mxCell id="aWZCunmosWC496nECAuW-24" edge="1" parent="1" source="aWZCunmosWC496nECAuW-20" style="edgeStyle=none;curved=1;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=1;exitY=0.5;exitDx=0;exitDy=0;fontSize=12;startSize=8;endSize=8;">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="1160" y="320" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="aWZCunmosWC496nECAuW-20" parent="1" style="rhombus;whiteSpace=wrap;html=1;align=center;" value="&lt;div style=&quot;&quot;&gt;&lt;span style=&quot;background-color: transparent; color: light-dark(rgb(0, 0, 0), rgb(255, 255, 255));&quot;&gt;Setor está vinculado a&amp;nbsp;&lt;/span&gt;&lt;/div&gt;&lt;div style=&quot;&quot;&gt;&lt;span style=&quot;background-color: transparent; color: light-dark(rgb(0, 0, 0), rgb(255, 255, 255));&quot;&gt;uma rotina na regra&amp;nbsp;&lt;/span&gt;&lt;/div&gt;&lt;div style=&quot;&quot;&gt;&lt;span style=&quot;background-color: transparent; color: light-dark(rgb(0, 0, 0), rgb(255, 255, 255));&quot;&gt;&quot;Transição de setores&quot;?&lt;/span&gt;&lt;/div&gt;" vertex="1">
+          <mxGeometry height="80" width="320" x="760" y="280" as="geometry" />
+        </mxCell>
+        <mxCell id="aWZCunmosWC496nECAuW-25" parent="1" style="rounded=1;whiteSpace=wrap;html=1;" value="Registra o setor onde o usuario esta" vertex="1">
+          <mxGeometry height="80" width="160" x="1160.5" y="280" as="geometry" />
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>

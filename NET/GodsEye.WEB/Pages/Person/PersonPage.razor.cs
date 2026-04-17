@@ -47,7 +47,7 @@ namespace GodsEye.WEB.Pages.Person
         private List<BreadcrumbItem> _items =
         [
             new("Home", href: "/"),
-            new("Cadastro", href: null, disabled: true),
+            new("Organização", href: null, disabled: true),
             new("Pessoas", href: null, disabled: true)
         ];
 

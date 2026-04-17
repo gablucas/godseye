@@ -43,7 +43,7 @@ namespace GodsEye.WEB.Pages.AccessLevel
         private List<BreadcrumbItem> _items =
         [
             new("Home", href: "/"),
-            new("Cadastro", href: null, disabled: true),
+            new("Organização", href: null, disabled: true),
             new("Pessoas", href: null, disabled: true)
         ];
 

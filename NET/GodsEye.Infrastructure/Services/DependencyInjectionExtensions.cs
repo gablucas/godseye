@@ -22,8 +22,8 @@ namespace GodsEye.Infrastructure.Services
     {
         public static void AddInfrastructure(this IServiceCollection services, IConfiguration configuration)
         {
-            services.AddSingleton<IFaceMatcherService, FaceMatcherService>();
             services.AddSingleton<IGodsEyeState, GodsEyeState>();
+            services.AddSingleton<IFaceMatcherService, FaceMatcherService>();
 
             services.AddScoped<IFolderService, FolderService>();
             services.AddScoped<ICameraConnectionTesterService, RtspCameraConnectionTesterService>();
@@ -32,6 +32,8 @@ namespace GodsEye.Infrastructure.Services
             services.AddScoped<ICameraQuerie, CameraQuerie>();
             services.AddScoped<IEnvironmentMonitoringQuerie, EnvironmentMonitoringQuerie>();
             services.AddScoped<IRoutineQuerie, RoutineQuerie>();
+            services.AddScoped<IAccessLevelQuerie, AccessLevelQuerie>();
+            services.AddScoped<IAccessViolationQuerie, AccessViolationQuerie>();
 
             services.AddScoped<IEnvironmentMonitoringWrite, EnvironmentMonitoringWrite>();
 
@@ -131,6 +133,9 @@ namespace GodsEye.Infrastructure.Services
 
                     cfg.ReceiveEndpoint("extracted-embedding-queue", e =>
                     {
+                        e.ConcurrentMessageLimit = 1;
+                        e.PrefetchCount = 1;
+
                         // 4. Desabilita a topologia automática do MassTransit para este endpoint.
                         // Isso impede a criação de bindings extras indesejados e força o uso do seu bind manual.
                         e.ConfigureConsumeTopology = false;
@@ -176,10 +181,12 @@ namespace GodsEye.Infrastructure.Services
             SqlMapper.AddTypeHandler(new JsonTypeHandler<AccessLevelScheduleRuleDTO>());
             SqlMapper.AddTypeHandler(new JsonTypeHandler<AccessLevelDTO>());
             SqlMapper.AddTypeHandler(new JsonTypeHandler<List<FeatureCache>>());
-
-            SqlMapper.AddTypeHandler(new JsonTypeHandler<List<CameraCache>>());
+            SqlMapper.AddTypeHandler(new JsonTypeHandler<List<AccessLevelSectorRuleCache>>());
+            SqlMapper.AddTypeHandler(new JsonTypeHandler<List<AccessLevelRoutinesCache>>());
+            SqlMapper.AddTypeHandler(new JsonTypeHandler<List<RoutineRuleSectorTransitionCache>>());
             SqlMapper.AddTypeHandler(new JsonTypeHandler<List<RoutineRuleSectorTransitionModel>>());
             SqlMapper.AddTypeHandler(new JsonTypeHandler<List<RoutineAccessLevelDTO>>());
+            SqlMapper.AddTypeHandler(new JsonTypeHandler<List<AccessViolationEmailsDTO>>());
 
             SqlMapper.AddTypeHandler(new FloatArrayHandler());
         }

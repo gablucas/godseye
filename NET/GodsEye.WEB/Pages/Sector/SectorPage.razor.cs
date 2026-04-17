@@ -49,7 +49,7 @@ namespace GodsEye.WEB.Pages.Sector
         private List<BreadcrumbItem> _items =
         [
             new("Home", href: "/"),
-            new("Cadastro", href: null, disabled: true),
+            new("Organização", href: null, disabled: true),
             new("Setores", href: null, disabled: true)
         ];
 

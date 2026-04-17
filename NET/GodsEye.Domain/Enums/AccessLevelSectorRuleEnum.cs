@@ -2,7 +2,7 @@
 {
     public enum AccessLevelSectorRuleEnum
     {
-        WHITELIST = 1,
+        PROHIBITED = 1,
         BLACKLIST = 2
     }
 }

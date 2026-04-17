@@ -25,7 +25,7 @@ namespace GodsEye.WEB.Pages.AccessCalendar
         private List<BreadcrumbItem> _items =
         [
             new("Home", href: "/"),
-            new("Cadastro", href: null, disabled: true),
+            new("Organização", href: null, disabled: true),
             new("Calendário de acesso", href: null, disabled: true)
         ];
 

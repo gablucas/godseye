@@ -1,4 +1,4 @@
-﻿@page "/controle-acesso/nivel";
+﻿@page "/organizacao/nivel-de-acesso";
 @using GodsEye.Application.DTOs.Model
 @using GodsEye.Domain.Enums
 @inject ISnackbar Snackbar
@@ -45,7 +45,7 @@
             </HeaderContent>
             <RowTemplate>
                 <MudTd DataLabel="Nome">@context.Name</MudTd>
-                <MudTd DataLabel="Setores permitidos">@context.Sectors.Count(x => x.RuleType == AccessLevelSectorRuleEnum.WHITELIST)</MudTd>
+                <MudTd DataLabel="Setores permitidos">@context.Sectors.Count(x => x.RuleType == AccessLevelSectorRuleEnum.PROHIBITED)</MudTd>
                 <MudTd DataLabel="Setores proibidos">@context.Sectors.Count(x => x.RuleType == AccessLevelSectorRuleEnum.BLACKLIST)</MudTd>
                 <MudTd DataLabel="Nome">@context.SectorSchedule.Name</MudTd>
                 <MudTd>

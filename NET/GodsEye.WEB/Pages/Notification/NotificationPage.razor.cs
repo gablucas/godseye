@@ -41,7 +41,7 @@ namespace GodsEye.WEB.Pages.Notification
         private List<BreadcrumbItem> _items =
         [
             new("Home", href: "/"),
-            new("Cadastro", href: null, disabled: true),
+            new("Organização", href: null, disabled: true),
             new("Notificações", href: null, disabled: true)
         ];
 

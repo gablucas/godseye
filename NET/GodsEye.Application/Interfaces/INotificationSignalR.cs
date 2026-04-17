@@ -8,5 +8,6 @@ namespace GodsEye.Application.Interfaces
         Task SendCreatedIncidentRecordingLog(IncidentRecordingModel message);
         Task SendCreatedPerson(PersonModel message);
         Task SendCreatedRoutine(RoutineModel message);
+        Task SendAlertNotification(int message);
     }
 }
