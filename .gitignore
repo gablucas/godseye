@@ -40,3 +40,4 @@ RTSPTest/mediamtx*
 .env
 .DS_Store
 Thumbs.db
+/CROWDTest/__pycache__
