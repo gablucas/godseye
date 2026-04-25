@@ -1,5 +1,5 @@
 ﻿using GodsEye.Application.DTOs.Response;
-using GodsEye.Domain.Enums;
+using GodsEye.Shared.Enums;
 using MediatR;
 
 namespace GodsEye.Application.UseCases.AccessLevel.Commands.CreateOrUpdateAccessLevel
@@ -10,7 +10,6 @@ namespace GodsEye.Application.UseCases.AccessLevel.Commands.CreateOrUpdateAccess
         public string Name { get; set; } = string.Empty;
         public List<SectorAccessLevelInput> Sectors { get; set; } = new();
         public int? AccessScheduleId { get; set; }
-        public IEnumerable<int> Routines { get; set; } = Enumerable.Empty<int>();
     }
 
     public class SectorAccessLevelInput

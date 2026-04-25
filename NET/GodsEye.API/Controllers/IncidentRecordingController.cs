@@ -18,32 +18,32 @@ namespace GodsEye.API.Controllers
             _mediator = mediator;
         }
 
-        [HttpGet]
-        public async Task<IActionResult> GetAllLogs([FromQuery] int pageNumber, [FromQuery] int pageSize, CancellationToken cancellationToken)
-        {
-            var result = await _mediator.Send(new GetAllIncidentRecordingLogsRequest(pageNumber, pageSize), cancellationToken);
-            return Ok(result);
-        }
+        //[HttpGet]
+        //public async Task<IActionResult> GetAllLogs([FromQuery] int pageNumber, [FromQuery] int pageSize, CancellationToken cancellationToken)
+        //{
+        //    var result = await _mediator.Send(new GetAllIncidentRecordingLogsRequest(pageNumber, pageSize), cancellationToken);
+        //    return Ok(result);
+        //}
 
-        [HttpGet("process")]
-        public async Task<IActionResult> GetProcessLogs(CancellationToken cancellationToken)
-        {
-            var result = await _mediator.Send(new GetIncidentRecordingToProcessingRequest(), cancellationToken);
-            return Ok(result);
-        }
+        //[HttpGet("process")]
+        //public async Task<IActionResult> GetProcessLogs(CancellationToken cancellationToken)
+        //{
+        //    var result = await _mediator.Send(new GetIncidentRecordingToProcessingRequest(), cancellationToken);
+        //    return Ok(result);
+        //}
 
-        [HttpPost]
-        public async Task<IActionResult> GenerateLog(CreateIncidentRecordingLogRequest request, CancellationToken cancellationToken)
-        {
-            var result = await _mediator.Send(request);
-            return Ok(result);
-        }
+        //[HttpPost]
+        //public async Task<IActionResult> GenerateLog(CreateIncidentRecordingLogRequest request, CancellationToken cancellationToken)
+        //{
+        //    var result = await _mediator.Send(request);
+        //    return Ok(result);
+        //}
 
-        [HttpPut("process/done")]
-        public async Task<IActionResult> UpdateLog(UpdateIncidentRecordingLogRequest request, CancellationToken cancellationToken)
-        {
-            var result = await _mediator.Send(request); 
-            return Ok(result);
-        }
+        //[HttpPut("process/done")]
+        //public async Task<IActionResult> UpdateLog(UpdateIncidentRecordingLogRequest request, CancellationToken cancellationToken)
+        //{
+        //    var result = await _mediator.Send(request); 
+        //    return Ok(result);
+        //}
     }
 }

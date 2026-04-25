@@ -1,4 +1,6 @@
 ﻿using GodsEye.Application.DTOs.Model;
+using GodsEye.Shared.Response.AccessLevel;
+using GodsEye.Shared.Response.Sector;
 using GodsEye.WEB.Components.AccessLevelComponents;
 using GodsEye.WEB.Services;
 using Microsoft.AspNetCore.Components;
@@ -23,9 +25,9 @@ namespace GodsEye.WEB.Pages.AccessLevel
 
         #region TABLE PARAMETERS
 
-        private MudTable<AccessLevelModel> mudTable;
-        List<AccessLevelModel> _accessLevel = new();
-        IEnumerable<AccessLevelModel> _filteredAccessLevel = Enumerable.Empty<AccessLevelModel>();
+        private MudTable<AccessLevelResponse> mudTable;
+        List<AccessLevelResponse> _accessLevel = new();
+        IEnumerable<AccessLevelResponse> _filteredAccessLevel = Enumerable.Empty<AccessLevelResponse>();
         private int selectedRowNumber = -1;
 
         #endregion
@@ -33,7 +35,7 @@ namespace GodsEye.WEB.Pages.AccessLevel
         #region TABLE FILTERS
         private string _personNameFilter = "";
 
-        private List<SectorModel> _sectors = new();
+        private List<SectorResponse> _sectors = new();
         private IEnumerable<string> _selectedSectors { get; set; } = new HashSet<string>() { };
 
         private string _personFilter = "";
@@ -56,16 +58,16 @@ namespace GodsEye.WEB.Pages.AccessLevel
 
             var accessLevelRequest = await AccessLevelWebService.GetAllAsync();
 
-            if (accessLevelRequest.Success)
+            if (accessLevelRequest is not null)
             {
-                _accessLevel = accessLevelRequest.Data.ToList();
+                _accessLevel = accessLevelRequest.ToList();
                 _filteredAccessLevel = _accessLevel.ToList();
             }
                 
             _loading = false;
         }
 
-        private async Task RowClickEvent(TableRowClickEventArgs<AccessLevelModel> args)
+        private async Task RowClickEvent(TableRowClickEventArgs<AccessLevelResponse> args)
         {
             if (args?.Item == null)
                 return;
@@ -76,7 +78,7 @@ namespace GodsEye.WEB.Pages.AccessLevel
             await DialogWebService.OpenPersonUpdateDialog(args.Item.Id, null);
         }
 
-        private string SelectedRowClassFunc(AccessLevelModel element, int rowNumber)
+        private string SelectedRowClassFunc(AccessLevelResponse element, int rowNumber)
         {
             if (selectedRowNumber == rowNumber)
             {
@@ -99,10 +101,10 @@ namespace GodsEye.WEB.Pages.AccessLevel
             
             var newAccessLevel = await AccessLevelWebService.GetById(personId);
 
-            if (newAccessLevel is null || !newAccessLevel.Success)
+            if (newAccessLevel is null)
                 return;
 
-            _accessLevel.Insert(0, newAccessLevel.Data);
+            _accessLevel.Insert(0, newAccessLevel);
         }
 
         private void OnSectorsChanged(IEnumerable<string> values)

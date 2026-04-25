@@ -1,9 +1,9 @@
 ﻿using GodsEye.Application.DTOs.Model;
-using GodsEye.WEB.Components.SectorComponents;
+using GodsEye.Shared.Response.Camera;
+using GodsEye.Shared.Response.Sector;
 using GodsEye.WEB.Services;
 using Microsoft.AspNetCore.Components;
 using MudBlazor;
-using static MudBlazor.CategoryTypes;
 
 namespace GodsEye.WEB.Pages.Sector
 {
@@ -27,8 +27,8 @@ namespace GodsEye.WEB.Pages.Sector
 
         #region TABLE PARAMETERS
 
-        List<SectorModel> _sectors = new();
-        List<SectorModel> _filteredSectors = new();
+        List<SectorResponse> _sectors = new();
+        List<SectorResponse> _filteredSectors = new();
         bool _loading;
 
         #endregion
@@ -39,7 +39,7 @@ namespace GodsEye.WEB.Pages.Sector
 
         private string _personNameFilter = "";
 
-        private List<CameraModel> _camerasFilter = new();
+        private List<CameraResponse> _camerasFilter = new();
         private IEnumerable<string> _selectedCameras { get; set; } = new HashSet<string>() { };
 
         private string _personFilter = "";
@@ -60,15 +60,15 @@ namespace GodsEye.WEB.Pages.Sector
 
             var sectorsResult = await sectorService.GetAllAsync();
 
-            if (sectorsResult is not null && sectorsResult.Success)
+            if (sectorsResult is not null)
             {
-                _sectors = sectorsResult.Data.ToList();
+                _sectors = sectorsResult.ToList();
                 _filteredSectors = _sectors;
             }
 
             var camerasRequest = await cameraService.GetAllAsync();
-            if (camerasRequest.Success)
-                _camerasFilter = camerasRequest.Data.ToList();
+            if (camerasRequest is not null)
+                _camerasFilter = camerasRequest.ToList();
 
 
             _loading = false;
@@ -78,10 +78,10 @@ namespace GodsEye.WEB.Pages.Sector
         {
             var newSector = await sectorService.GetById(sectorId);
 
-            if (newSector is null || !newSector.Success)
+            if (newSector is null)
                 return;
 
-            _sectors.Insert(0, newSector.Data);
+            _sectors.Insert(0, newSector);
             ApplyFilters();
         }
 

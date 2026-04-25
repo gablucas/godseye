@@ -1,4 +1,5 @@
 ﻿using GodsEye.Application.DTOs.Model;
+using GodsEye.Shared.Response.Sector;
 using GodsEye.WEB.Services;
 using Microsoft.AspNetCore.Components;
 using MudBlazor;
@@ -35,7 +36,7 @@ namespace GodsEye.WEB.Pages.Person
         #region TABLE FILTERS
         private string _personNameFilter = "";
 
-        private List<SectorModel> _sectors = new();
+        private List<SectorResponse> _sectors = new();
         private IEnumerable<string> _selectedSectors { get; set; } = new HashSet<string>() { };
 
         private string _personFilter = "";
@@ -69,8 +70,8 @@ namespace GodsEye.WEB.Pages.Person
             
 
             var sectorsRequest = await SectorService.GetAllAsync();
-            if (sectorsRequest.Success)
-                _sectors = sectorsRequest.Data.ToList();
+            if (sectorsRequest is not null)
+                _sectors = sectorsRequest.ToList();
 
 
             SignalR.Create("https://localhost:7010/createdDataHub");

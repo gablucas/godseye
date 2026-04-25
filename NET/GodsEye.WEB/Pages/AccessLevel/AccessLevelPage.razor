@@ -1,6 +1,7 @@
 ﻿@page "/organizacao/nivel-de-acesso";
-@using GodsEye.Application.DTOs.Model
-@using GodsEye.Domain.Enums
+@using GodsEye.Shared.Enums
+@using GodsEye.Shared.Response
+@using GodsEye.Shared.Response.AccessLevel
 @inject ISnackbar Snackbar
 
 <PageTitle>Nível de acesso</PageTitle>
@@ -35,7 +36,7 @@
         </div>
 
 
-        <MudTable T="AccessLevelModel" @ref="mudTable" Elevation="0" Items="@_filteredAccessLevel" Hover="true" Loading="@_loading" LoadingProgressColor="Color.Info" RowClass="cursor-pointer" RowClassFunc="@SelectedRowClassFunc" OnRowClick="RowClickEvent">
+        <MudTable T="AccessLevelResponse" @ref="mudTable" Elevation="0" Items="@_filteredAccessLevel" Hover="true" Loading="@_loading" LoadingProgressColor="Color.Info" RowClass="cursor-pointer" RowClassFunc="@SelectedRowClassFunc" OnRowClick="RowClickEvent">
             <HeaderContent>
                 <MudTh>Nome</MudTh>
                 <MudTh>Setores permitidos</MudTh>

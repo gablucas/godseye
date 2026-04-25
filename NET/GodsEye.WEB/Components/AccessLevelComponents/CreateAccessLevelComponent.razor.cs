@@ -1,8 +1,9 @@
-﻿using GodsEye.Application.DTOs.Model;
-using GodsEye.Application.DTOs.Response;
+﻿using GodsEye.Application.DTOs.Response;
 using GodsEye.Application.UseCases.AccessLevel.Commands.CreateOrUpdateAccessLevel;
 using GodsEye.Domain.DTOs.Result;
-using GodsEye.Domain.Enums;
+using GodsEye.Shared.Enums;
+using GodsEye.Shared.Response.AccessSchedule;
+using GodsEye.Shared.Response.Sector;
 using GodsEye.WEB.Services;
 using Microsoft.AspNetCore.Components;
 using MudBlazor;
@@ -26,9 +27,6 @@ namespace GodsEye.WEB.Components.AccessLevelComponents
         [Inject]
         DialogWebService DialogWebService { get; set; }
 
-        [Inject]
-        RoutineWebService RoutineWebService { get; set; }
-
         [CascadingParameter]
         private IMudDialogInstance MudDialog { get; set; }
 
@@ -49,20 +47,16 @@ namespace GodsEye.WEB.Components.AccessLevelComponents
         public CreateOrUpdateAccessLevelRequest AccessLevelForm { get; set; } = new();
 
         private bool _multiselectionTextChoice;
-        private bool _multiselectionTextChoiceRoutine;
         private bool _multiselectionTextChoiceBlackList;
 
         ApiResponse<ProcedureResult?>? apiResponse { get; set; } = null;
 
         private bool visible = false;
 
-        IEnumerable<SectorModel> _sectors = Enumerable.Empty<SectorModel>();
-        IEnumerable<AccessScheduleModel> _accessSchedule = Enumerable.Empty<AccessScheduleModel>();
+        IEnumerable<SectorResponse> _sectors = Enumerable.Empty<SectorResponse>();
+        IEnumerable<AccessScheduleResponse> _accessSchedule = Enumerable.Empty<AccessScheduleResponse>();
 
-        public int? _routine = null;
-        IEnumerable<RoutineModel> _routines = Enumerable.Empty<RoutineModel>();
-
-        List<SectorModel> NotAllowed = new();
+        List<SectorResponse> NotAllowed = new();
 
         #endregion
 
@@ -74,15 +68,14 @@ namespace GodsEye.WEB.Components.AccessLevelComponents
             {
                 var accessLevelResult = await AccessLevelWebService.GetById(Id);
 
-                if (accessLevelResult.Success && accessLevelResult is not null && accessLevelResult.Data is not null)
+                if (accessLevelResult is not null)
                 {
                     AccessLevelForm = new CreateOrUpdateAccessLevelRequest()
                     {
-                        Id = accessLevelResult.Data.Id,
-                        Name = accessLevelResult.Data.Name,
-                        Sectors = accessLevelResult.Data.Sectors.Select(x => new SectorAccessLevelInput(x.Id, x.RuleType)).ToList(),
-                        AccessScheduleId = accessLevelResult.Data.SectorSchedule.Id,
-                        Routines = accessLevelResult.Data.Routines.Select(x => x.Id)
+                        Id = accessLevelResult.Id,
+                        Name = accessLevelResult.Name,
+                        Sectors = accessLevelResult.Sectors.Select(x => new SectorAccessLevelInput(x.Id, x.RuleType)).ToList(),
+                        AccessScheduleId = accessLevelResult.SectorSchedule.Id
                     };
                 }
             }
@@ -91,21 +84,15 @@ namespace GodsEye.WEB.Components.AccessLevelComponents
         protected override async Task OnInitializedAsync()
         {
             var accessScheduleResult = await AccessScheduleWebService.GetAllAsync();
-            if (accessScheduleResult is not null && accessScheduleResult.Success)
+            if (accessScheduleResult is not null)
             {
-                _accessSchedule = accessScheduleResult.Data; 
+                _accessSchedule = accessScheduleResult.ToList(); 
             }
 
             var sectorResult = await SectorWebService.GetAllAsync();
-            if (sectorResult is not null && sectorResult.Success)
+            if (sectorResult is not null)
             {
-                _sectors = sectorResult.Data;
-            }
-
-            var routineResult = await RoutineWebService.GetAllAsync();
-            if (routineResult is not null && routineResult.Success)
-            {
-                _routines = routineResult.Data;
+                _sectors = sectorResult.ToList();
             }
         }
 
@@ -145,32 +132,22 @@ namespace GodsEye.WEB.Components.AccessLevelComponents
         {
             var newAccessSchedule = await AccessScheduleWebService.GetById(accessScheduleId);
 
-            if (newAccessSchedule.Success)
+            if (newAccessSchedule is not null)
             {
                 AccessLevelForm.AccessScheduleId = accessScheduleId;
-                _accessSchedule = _accessSchedule.Append(newAccessSchedule.Data).ToList();
+                _accessSchedule = _accessSchedule.Append(newAccessSchedule).ToList();
                 StateHasChanged();
             }
-        }
-
-        private string GetMultiSelectionTextRoutine(IReadOnlyList<string> selectedValues)
-        {
-            if (_multiselectionTextChoiceRoutine)
-            {
-                return $"Rotina{(selectedValues.Count > 1 ? "s selecionadas" : " selecionada")}: {string.Join(", ", selectedValues.Select(x => x))}";
-            }
-
-            return $"{selectedValues.Count} rotina{(selectedValues.Count > 1 ? "as selecionadas" : " selecionada")}";
         }
 
         private async Task Submit()
         {
             var result = await AccessLevelWebService.CreateOrUpdateAsync(AccessLevelForm);
 
-            if (result.Success)
+            if (result > 0)
             {
                 Snackbar.Add($"Nível de acesso {(AccessLevelForm.Id == 0 ? "criado" : "atualizado")} com sucesso.", Severity.Success);
-                MudDialog.Close(DialogResult.Ok(result.Data));
+                MudDialog.Close(DialogResult.Ok(result));
             }
             else
             {

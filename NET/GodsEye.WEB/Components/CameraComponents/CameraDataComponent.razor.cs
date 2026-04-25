@@ -1,6 +1,8 @@
 ﻿using GodsEye.Application.DTOs.Model;
 using GodsEye.Application.DTOs.Response;
 using GodsEye.Domain.DTOs.Result;
+using GodsEye.Shared.Response.Camera;
+using GodsEye.Shared.Response.Sector;
 using GodsEye.WEB.Model.Forms;
 using GodsEye.WEB.Services;
 using Microsoft.AspNetCore.Components;
@@ -37,7 +39,7 @@ namespace GodsEye.WEB.Components.CameraComponents
 
         MudForm form;
         UpdateCameraForm CameraForm { get; set; } = new();
-        IEnumerable<SectorModel> _sectors = Enumerable.Empty<SectorModel>();
+        IEnumerable<SectorResponse> _sectors = Enumerable.Empty<SectorResponse>();
         IEnumerable<FeatureModel> _features = Enumerable.Empty<FeatureModel>();
 
         private bool success;
@@ -46,9 +48,9 @@ namespace GodsEye.WEB.Components.CameraComponents
 
         #endregion
 
-        public CameraModel camera { get; set; }
+        public CameraResponse camera { get; set; }
 
-        ApiResponse<ProcedureResult?>? apiResponse { get; set; } = null;
+        int? apiResponse { get; set; } = null;
 
         private bool visible = false;
 
@@ -59,9 +61,9 @@ namespace GodsEye.WEB.Components.CameraComponents
 
             var result = await CameraWebService.GetById(Id);
 
-            if (result.Success && result is not null && result.Data is not null)
+            if (result is not null)
             {
-                camera = result.Data;
+                camera = result;
 
                 CameraForm = new UpdateCameraForm()
                 {
@@ -86,15 +88,15 @@ namespace GodsEye.WEB.Components.CameraComponents
         protected override async Task OnInitializedAsync()
         {
             var response = await SectorWebService.GetAllAsync();
-            if (response is not null && response.Success)
+            if (response is not null)
             {
-                _sectors = response.Data;
+                _sectors = response;
             }
 
             var featureResponse = await FeatureWebService.GetAllAsync();
             if (featureResponse is not null && featureResponse.Success)
             {
-                _features = featureResponse.Data;
+                _features = featureResponse.Data.ToList();
             }
         }
 
@@ -126,7 +128,7 @@ namespace GodsEye.WEB.Components.CameraComponents
             apiResponse = await CameraWebService.UpdateAsync(CameraForm);
             visible = false;
 
-            if (apiResponse.Success)
+            if (apiResponse > 0)
             {
                 Snackbar.Add("Camera atualizada com sucesso!", Severity.Success);
                 //MudDialog.Close(DialogResult.Ok(1));

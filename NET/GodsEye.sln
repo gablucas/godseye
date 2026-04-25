@@ -18,6 +18,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Itens de Solução", "Itens
 		meus_atalhos.json = meus_atalhos.json
 	EndProjectSection
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GodsEye.Shared", "GodsEye.Shared\GodsEye.Shared.csproj", "{6D183FAB-B06E-49B4-921B-937EF6971139}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -44,6 +46,10 @@ Global
 		{7D3077EF-0DEB-490C-EB16-0ABE9F63ECE1}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{7D3077EF-0DEB-490C-EB16-0ABE9F63ECE1}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{7D3077EF-0DEB-490C-EB16-0ABE9F63ECE1}.Release|Any CPU.Build.0 = Release|Any CPU
+		{6D183FAB-B06E-49B4-921B-937EF6971139}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{6D183FAB-B06E-49B4-921B-937EF6971139}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{6D183FAB-B06E-49B4-921B-937EF6971139}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{6D183FAB-B06E-49B4-921B-937EF6971139}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

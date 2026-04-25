@@ -1,7 +1,8 @@
 ﻿using GodsEye.API.Hubs;
-using GodsEye.Application.DTOs.Model;
-using GodsEye.Application.Interfaces;
+using GodsEye.API.DTO;
+
 using Microsoft.AspNetCore.SignalR;
+using GodsEye.API.Interfaces;
 
 namespace GodsEye.API.Services
 {
@@ -14,28 +15,28 @@ namespace GodsEye.API.Services
             _hub = hub;
         }
 
-        public async Task SendCreatedEnvironmentMonitoringLog(EnvironmentMonitoringModel message)
+        public async Task SendCreatedEnvironmentMonitoringLog(EnvironmentMonitoringDTO message)
         {
             await _hub.Clients.All.SendAsync(
             "CreatedEnvironmentMonitoring",
             message);
         }
 
-        public async Task SendCreatedIncidentRecordingLog(IncidentRecordingModel message)
+        public async Task SendCreatedIncidentRecordingLog(IncidentRecordingDTO message)
         {
             await _hub.Clients.All.SendAsync(
             "CreatedIncidentRecording",
             message);
         }
 
-        public async Task SendCreatedPerson(PersonModel message)
+        public async Task SendCreatedPerson(PersonDTO message)
         {
             await _hub.Clients.All.SendAsync(
             "CreatedPerson",
             message);
         }
 
-        public async Task SendCreatedRoutine(RoutineModel message)
+        public async Task SendCreatedRoutine(RoutineDTO message)
         {
             await _hub.Clients.All.SendAsync(
             "CreatedRoutine",

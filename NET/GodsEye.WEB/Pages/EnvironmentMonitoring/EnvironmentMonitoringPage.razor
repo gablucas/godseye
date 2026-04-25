@@ -1,5 +1,5 @@
 ﻿@page "/monitoramento-de-ambientes/tempo-real"
-@using GodsEye.Application.DTOs.Model
+@using GodsEye.Shared.Response.EnvironmentMonitoring
 @using GodsEye.WEB.Model
 
 
@@ -75,7 +75,7 @@
         </div>
         
 
-        <MudTable T="EnvironmentMonitoringModel" @ref="_mudTable" Elevation="0" Items="@_filteredLogs" Hover="true" Loading="@_loading" LoadingProgressColor="Color.Info" RowClass="cursor-pointer">
+        <MudTable T="EnvironmentMonitoringLogResponse" @ref="_mudTable" Elevation="0" Items="@_filteredLogs" Hover="true" Loading="@_loading" LoadingProgressColor="Color.Info" RowClass="cursor-pointer">
             <HeaderContent>
                 <MudTh></MudTh>
                 <MudTh>Pessoa</MudTh>

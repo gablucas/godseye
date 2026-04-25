@@ -2,6 +2,7 @@
 using GodsEye.Application.UseCases.Camera.Commands.CreateCameraRoi;
 using GodsEye.Application.UseCases.Camera.Commands.UpdateCameraRoi;
 using GodsEye.Domain.Enums;
+using GodsEye.Shared.Response.Camera;
 using GodsEye.WEB.Model.Forms;
 using GodsEye.WEB.Services;
 using Microsoft.AspNetCore.Components;
@@ -48,7 +49,7 @@ namespace GodsEye.WEB.Components.CameraComponents
 
         private IJSObjectReference _roiJs;
 
-        public CameraModel camera { get; set; }
+        public CameraResponse camera { get; set; }
 
 
         private bool _loadingConnection = true;
@@ -87,9 +88,9 @@ namespace GodsEye.WEB.Components.CameraComponents
 
                 var cameraRequest = await CameraService.GetById(Id);
 
-                if (cameraRequest.Success)
+                if (cameraRequest is not null)
                 {
-                    camera = cameraRequest.Data;
+                    camera = cameraRequest;
                     await StartStream();
                     
                 }

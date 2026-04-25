@@ -22,20 +22,20 @@ namespace GodsEye.API.Controllers
             _mediator = mediator;
         }
 
-        [AllowAnonymous]
-        [HttpPost("start-stream")]
-        public async Task<IActionResult> StartStream([FromBody] CameraModel request, CancellationToken cancellationToken)
-        {
-            var result = await _mediator.Send(new StartStreamRequest(request.Name, request.Connection), cancellationToken);
-            return Ok(result);
-        }
+        //[AllowAnonymous]
+        //[HttpPost("start-stream")]
+        //public async Task<IActionResult> StartStream([FromBody] CameraModel request, CancellationToken cancellationToken)
+        //{
+        //    var result = await _mediator.Send(new StartStreamRequest(request.Name, request.Connection), cancellationToken);
+        //    return Ok(result);
+        //}
 
-        [AllowAnonymous]
-        [HttpGet]
-        public async Task<IActionResult> GetMonitoringData(CancellationToken cancellationToken)
-        {
-            var result = await _mediator.Send(new GetMonitoringDataRequest(), cancellationToken);
-            return Ok(result);
-        }
+        //[AllowAnonymous]
+        //[HttpGet]
+        //public async Task<IActionResult> GetMonitoringData(CancellationToken cancellationToken)
+        //{
+        //    var result = await _mediator.Send(new GetMonitoringDataRequest(), cancellationToken);
+        //    return Ok(result);
+        //}
     }
 }

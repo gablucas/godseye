@@ -1,4 +1,5 @@
 ﻿using GodsEye.Application.DTOs.Model;
+using GodsEye.Shared.Response.EnvironmentMonitoring;
 using GodsEye.WEB.Services;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.SignalR.Client;
@@ -21,7 +22,7 @@ namespace GodsEye.WEB.Components.Dashboard
         public DialogWebService DialogWebService { get; set; }
 
 
-        private List<EnvironmentMonitoringSectorModel> _logs = new();
+        private List<GetEnviromentMonitoringPerSectorResponse> _logs = new();
 
         private HubConnection? hubConnection;
         bool _loading;
@@ -36,16 +37,16 @@ namespace GodsEye.WEB.Components.Dashboard
 
             var result = await environmentMonitoringService.GetSectors();
 
-            if (result.Success)
+            if (result is null)
             {
-                _logs = result.Data.ToList();
+                _logs = result.ToList();
             }
 
             _loading = false;
 
             SignalR.Create("https://localhost:7010/createdDataHub");
 
-            SignalR.On<EnvironmentMonitoringModel>(
+            SignalR.On<EnvironmentMonitoringLogResponse>(
                 "CreatedEnvironmentMonitoring",
                 log =>
                 {
@@ -60,7 +61,7 @@ namespace GodsEye.WEB.Components.Dashboard
                         if (log.SectorId == x.SectorId)
                         {
                             x.TotalPerson += 1;
-                            x.EnvironmentMonitoringLog.Add(new EnvironmentMonitoringModel()
+                            x.EnvironmentMonitoringLog.Add(new EnvironmentMonitoringLogResponse()
                             {
                                 PersonId = log.PersonId,
                                 Person = log.Person,

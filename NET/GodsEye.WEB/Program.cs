@@ -1,5 +1,7 @@
+using GodsEye.Application.DTOs.Model;
 using GodsEye.WEB;
 using GodsEye.WEB.Services;
+using GodsEye.WEB.Services.Interfaces;
 using Microsoft.AspNetCore.Components.Web;
 using Microsoft.AspNetCore.Components.WebAssembly.Hosting;
 using MudBlazor.Services;
@@ -25,6 +27,10 @@ builder.Services.AddScoped<MediaMtxWebService>();
 builder.Services.AddScoped<AccessScheduleWebService>();
 builder.Services.AddScoped<AccessLevelWebService>();
 builder.Services.AddScoped<RoutineWebService>();
+
+builder.Services.AddScoped<ComplianceWebService>();
+builder.Services.AddScoped<IWebService<CompliancePolicyDTO>, ComplianceWebService>();
+builder.Services.AddScoped<NewDialogWebService>();
 
 builder.Services.AddAutoMapper(cfg => { }, Assembly.GetExecutingAssembly());
 builder.Services.AddMudServices();

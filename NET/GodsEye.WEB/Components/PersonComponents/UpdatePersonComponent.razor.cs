@@ -1,4 +1,4 @@
-﻿using GodsEye.Application.DTOs.Model;
+﻿using GodsEye.Shared.Response.EnvironmentMonitoring;
 using GodsEye.WEB.Services;
 using Microsoft.AspNetCore.Components;
 using MudBlazor;
@@ -18,10 +18,10 @@ namespace GodsEye.WEB.Components.PersonComponents
 
         #region TABLE PARAMETERS
 
-        private EnvironmentMonitoringPersonModel _personLogs = new();
-        private List<EnvironmentMonitoringPersonLog> _logs = new();
+        private EnvironmentMonitoringPersonResponse _personLogs = new();
+        private List<EnvironmentMonitoringPersonLogResponse> _logs = new();
 
-        private MudTable<EnvironmentMonitoringPersonLog> _mudTable;
+        private MudTable<EnvironmentMonitoringPersonLogResponse> _mudTable;
         bool _loading;
 
         #endregion
@@ -51,8 +51,8 @@ namespace GodsEye.WEB.Components.PersonComponents
         {
             var result = await EnvironmentMonitoringWebService.GetByPersonId(PersonId);
 
-            if (result.Success)
-                _personLogs = result.Data;
+            if (result is not null)
+                _personLogs = result;
 
                 if (_personLogs.Logs.Count() > 0)
                 {

@@ -1,0 +1,71 @@
+﻿@inject ISnackbar Snackbar
+
+<MudForm @ref="form" Model="ComplianceRuleForm" @bind-Errors="@errors">
+
+    <div class="inputs-container">
+        <MudTextField Label="Nome da política"
+                      @bind-Value="ComplianceRuleForm.Name"
+                      Required="true"
+                      RequiredError="O nome da rotina é obrigatório"
+                      T="string"
+                      For="@(() => ComplianceRuleForm.Name)" Variant="Variant.Outlined" />
+ 
+        <div class="rules">
+            @foreach (var routine in ComplianceRuleForm.Rules.OrderBy(x => x.OrderIndex))
+            {
+                <div class="rule">
+
+                    <div class="position">
+                        <MudIcon @onclick=@(() => ChangeRulePosition(routine, "UP")) Icon="@Icons.Material.Filled.ArrowCircleUp" />
+                        <MudIcon @onclick=@(() => ChangeRulePosition(routine, "DOWN")) Icon="@Icons.Material.Filled.ArrowCircleDown" />
+                    </div>
+
+                    <span class="order-index">@routine.OrderIndex</span>
+
+                    <div class="input-sector">
+                        <MudSelect T="int?"
+                                    @bind-Value="routine.SectorId"
+                                    For="@(() => routine.SectorId)"
+                                    Required="true"
+                                    Validation="@( (int? value) => ValidateSector(routine, value) )"
+                                    Label="Setor"
+                                    Variant="Variant.Outlined">
+
+                            @foreach (var sector in _sectors)
+                            {
+                                <MudSelectItem T="int?"
+                                                Value="@sector.Id"
+                                                Disabled="@ComplianceRuleForm.HasSector(sector.Id, routine)">
+                                    @sector.Name
+                                </MudSelectItem>
+                            }
+                        </MudSelect>
+
+                        <MudButton Style="height: 56px; margin-top: 8px" OnClick="() => DialogWebService.OpenCreateSector()" Variant="Variant.Outlined">Criar novo setor</MudButton>
+                    </div>
+
+                    <MudNumericField @bind-Value="routine.MinTime" Label="Tempo mínimo" Variant="Variant.Outlined" Adornment="Adornment.End" AdornmentText="minutos" Min="0" HideSpinButtons="true" />
+                    <MudNumericField @bind-Value="routine.MaxTime" Label="Tempo máximo" Variant="Variant.Outlined" Adornment="Adornment.End" AdornmentText="minutos" Min="0" Max="59" HideSpinButtons="true" />
+
+
+                    <MudIcon Class="delete" @onclick=@(() => DeleteRule(routine)) Icon="@Icons.Material.Filled.Delete" />
+                </div>
+                
+            }
+            <MudButton Variant="Variant.Outlined" OnClick=AddNewRule>
+                <MudIcon Icon="@Icons.Material.Rounded.Add" />
+                <span>Adicionar nova regra</span>
+            </MudButton>
+
+        </div>
+    </div>
+
+    <MudDivider />
+
+    <MudButton OnClick="Submit" Class="btn-submit" Variant="Variant.Filled" Color="Color.Primary">Registrar</MudButton>
+
+    <MudOverlay Visible="visible" LightBackground="true" Absolute="true">
+        <MudProgressCircular Color="Color.Default" Indeterminate="true" />
+    </MudOverlay>
+
+</MudForm>

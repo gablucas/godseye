@@ -1,0 +1,54 @@
+﻿using GodsEye.Application.DTOs.Model;
+using GodsEye.Application.Hubs;
+using GodsEye.Application.Interfaces;
+using GodsEye.Shared.Response.EnvironmentMonitoring;
+using Microsoft.AspNetCore.SignalR;
+
+
+namespace GodsEye.Application.Services
+{
+    public class SignalRRealTimeNotification : INotificationSignalR
+    {
+        private readonly IHubContext<CreatedDataHub> _hub;
+
+        public SignalRRealTimeNotification(IHubContext<CreatedDataHub> hub)
+        {
+            _hub = hub;
+        }
+
+        public async Task SendCreatedEnvironmentMonitoringLog(EnvironmentMonitoringLogResponse message)
+        {
+            await _hub.Clients.All.SendAsync(
+            "CreatedEnvironmentMonitoring",
+            message);
+        }
+
+        public async Task SendCreatedIncidentRecordingLog(IncidentRecordingModel message)
+        {
+            await _hub.Clients.All.SendAsync(
+            "CreatedIncidentRecording",
+            message);
+        }
+
+        public async Task SendCreatedPerson(PersonModel message)
+        {
+            await _hub.Clients.All.SendAsync(
+            "CreatedPerson",
+            message);
+        }
+
+        public async Task SendCreatedRoutine(RoutineModel message)
+        {
+            await _hub.Clients.All.SendAsync(
+            "CreatedRoutine",
+            message);
+        }
+
+        public async Task SendAlertNotification(int message)
+        {
+            await _hub.Clients.All.SendAsync(
+            "AlertNotification",
+            message);
+        }
+    }
+}

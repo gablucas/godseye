@@ -1,10 +1,8 @@
 ﻿using GodsEye.Application.DTOs.Model;
-using GodsEye.Application.UseCases.Sector.Commands.CreateSector;
 using GodsEye.WEB.Model.Forms;
 using GodsEye.WEB.Services;
 using Microsoft.AspNetCore.Components;
 using MudBlazor;
-using System.Threading.Tasks;
 
 namespace GodsEye.WEB.Components.SectorComponents
 {
@@ -27,7 +25,7 @@ namespace GodsEye.WEB.Components.SectorComponents
 
         MudForm form;
 
-        CreateSectorRequest CreateSectorForm { get; set; } = new();
+        CreateSectorForm CreateSectorForm { get; set; } = new();
         public IEnumerable<string> NotificationGroups { get; set; }
 
         bool success;
@@ -77,10 +75,10 @@ namespace GodsEye.WEB.Components.SectorComponents
             var result = await sectorService.CreateAsync(CreateSectorForm);
             visible = false;
 
-            if (result.Success)
+            if (result != 0)
             {
                 Snackbar.Add("Setor cadastrado com sucesso!", Severity.Success);
-                MudDialog.Close(DialogResult.Ok(result.Data));
+                MudDialog.Close(DialogResult.Ok(result));
             }
             else
             {

@@ -1,0 +1,52 @@
+﻿@using GodsEye.Application.DTOs.Model
+@using GodsEye.Domain.Enums
+@using GodsEye.Domain.Extensions
+@using GodsEye.WEB.Components.Compliance.Rules
+@using GodsEye.WEB.Enum
+@using GodsEye.WEB.Services
+@inject ISnackbar Snackbar
+@inherits UpsertComponentBase<ComplianceWebService, CompliancePolicyDTO>
+
+<MudDialog>
+    <DialogContent>
+        <div class="form-container">
+
+                <div class="inputs-container">
+
+                    <MudSelect Label="Tipo de regra"
+                                T="ComplianceRuleEnum"
+                                @bind-Value="RuleType"
+                                Required="true"
+                                RequiredError="Selecione um setor"
+                                Variant="Variant.Outlined">
+                        @foreach (var tipo in Enum.GetValues<ComplianceRuleEnum>())
+                        {
+                            <MudSelectItem T="ComplianceRuleEnum" Value="@tipo">@tipo.GetDescription()</MudSelectItem>
+                        }
+                    </MudSelect>
+
+                    @if (RuleType == ComplianceRuleEnum.SectorTransition)
+                    {
+                        <MudChip T="string" Label="true" Variant="Variant.Outlined" Color="Color.Info" Style="width: 100%; margin: 0px; margin-top: 4px; margin-bottom: 24px" Icon="@Icons.Material.Filled.LabelImportant">A regra Transição de Setor permite especificar um ou mais setores em sequencia onde a pessoa deve estar</MudChip>
+                    }
+                </div>
+                
+
+                <MudDivider />
+
+                @if (RuleType == ComplianceRuleEnum.SectorTransition)
+                {
+                    <SectorTransitionRule />
+                }
+
+                <MudOverlay Visible="visible" LightBackground="true" Absolute="true">
+                    <MudProgressCircular Color="Color.Default" Indeterminate="true" />
+                </MudOverlay>
+        </div>
+    </DialogContent>
+
+
+    <DialogActions>
+        <MudButton OnClick="Cancel">Sair</MudButton>
+    </DialogActions>
+</MudDialog>

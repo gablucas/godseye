@@ -1,0 +1,8 @@
+﻿namespace GodsEye.Shared.Enums
+{
+    public enum AccessLevelSectorRuleEnum
+    {
+        PROHIBITED = 1,
+        BLACKLIST = 2
+    }
+}

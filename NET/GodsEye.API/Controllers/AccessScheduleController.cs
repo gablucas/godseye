@@ -18,28 +18,28 @@ namespace GodsEye.API.Controllers
             _mediator = mediator;
         }
 
-        [AllowAnonymous]
-        [HttpPost]
-        public async Task<IActionResult> CreateAccessSchedule([FromBody] CreateAccessScheduleRequest request, CancellationToken cancellationToken)
-        {
-            var result = await _mediator.Send(request, cancellationToken);
-            return Ok(result);
-        }
+        //[AllowAnonymous]
+        //[HttpPost]
+        //public async Task<IActionResult> CreateAccessSchedule([FromBody] CreateAccessScheduleRequest request, CancellationToken cancellationToken)
+        //{
+        //    var result = await _mediator.Send(request, cancellationToken);
+        //    return Ok(result);
+        //}
 
-        [AllowAnonymous]
-        [HttpGet]
-        public async Task<IActionResult> GetAllAccessSchedules(CancellationToken cancellationToken)
-        {
-            var result = await _mediator.Send(new GetAllAccessSchedulesRequest(), cancellationToken);
-            return Ok(result);
-        }
+        //[AllowAnonymous]
+        //[HttpGet]
+        //public async Task<IActionResult> GetAllAccessSchedules(CancellationToken cancellationToken)
+        //{
+        //    var result = await _mediator.Send(new GetAllAccessSchedulesRequest(), cancellationToken);
+        //    return Ok(result);
+        //}
 
-        [AllowAnonymous]
-        [HttpGet("{Id}")]
-        public async Task<IActionResult> GetCameraLogs(int Id, CancellationToken cancellationToken)
-        {
-            var result = await _mediator.Send(new GetAccessSchedulesByIdRequest(Id), cancellationToken);
-            return Ok(result);
-        }
+        //[AllowAnonymous]
+        //[HttpGet("{Id}")]
+        //public async Task<IActionResult> GetCameraLogs(int Id, CancellationToken cancellationToken)
+        //{
+        //    var result = await _mediator.Send(new GetAccessSchedulesByIdRequest(Id), cancellationToken);
+        //    return Ok(result);
+        //}
     }
 }

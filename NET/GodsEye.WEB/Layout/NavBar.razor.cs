@@ -75,20 +75,20 @@ namespace GodsEye.WEB.Layout
                 {
                     new() { Title = "Tempo real", Url = "/captura-de-incidentes/tempo-real" },
                     new() { Title = "Relatórios", Url = "/captura-de-incidentes/relatorios" },
-                    new() { Title = "Configurações", Url = "/captura-de-incidentes/configuracao" }
+                    new() { Title = "Configurações", Url = "/captura-de-incidentes/configuracoes" }
                 }
             },
 
             new NavMenuGroup
             {
-                Key = "controle-de-permanencia",
-                Title = "Permanência",
+                Key = "compliance",
+                Title = "Compliance",
                 Icon = Icons.Material.Filled.Timer,
                 Items =
                 {
-                    new() { Title = "Tempo real", Url = "/controle-de-permanencia/tempo-real" },
-                    new() { Title = "Relatórios", Url = "/controle-de-permanencia/relatorios" },
-                    new() { Title = "Configurações", Url = "/controle-de-permanencia/configuracao" }
+                    new() { Title = "Tempo real", Url = "/compliance/tempo-real" },
+                    new() { Title = "Relatórios", Url = "/compliance/relatorios" },
+                    new() { Title = "Politicas", Url = "/compliance/politicas" }
                 }
             },
         };

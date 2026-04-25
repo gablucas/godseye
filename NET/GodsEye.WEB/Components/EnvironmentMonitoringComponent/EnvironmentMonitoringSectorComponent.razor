@@ -1,4 +1,4 @@
-﻿@using GodsEye.Application.DTOs.Model
+﻿@using GodsEye.Shared.Response.EnvironmentMonitoring
 @inject ISnackbar Snackbar
 
 <div class="page-container">
@@ -17,7 +17,7 @@
         </div>
 
 
-        <MudTable T="EnvironmentMonitoringModel" @ref="mudTable" Elevation="0" Items="@_filteredEnvironmentMonitoringLog" Hover="true" Loading="@_loading" LoadingProgressColor="Color.Info" RowClass="cursor-pointer" RowClassFunc="@SelectedRowClassFunc" OnRowClick="RowClickEvent">
+        <MudTable T="EnvironmentMonitoringLogResponse" @ref="mudTable" Elevation="0" Items="@_filteredEnvironmentMonitoringLog" Hover="true" Loading="@_loading" LoadingProgressColor="Color.Info" RowClass="cursor-pointer" RowClassFunc="@SelectedRowClassFunc" OnRowClick="RowClickEvent">
             <HeaderContent>
                 <MudTh>Foto</MudTh>
                 <MudTh>Nome</MudTh>

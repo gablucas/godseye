@@ -32,6 +32,7 @@
   <ItemGroup>
     <ProjectReference Include="..\GodsEye.Application\GodsEye.Application.csproj" />
     <ProjectReference Include="..\GodsEye.Domain\GodsEye.Domain.csproj" />
+    <ProjectReference Include="..\GodsEye.Shared\GodsEye.Shared.csproj" />
   </ItemGroup>
 
 </Project>

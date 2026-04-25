@@ -1,7 +1,8 @@
-﻿using GodsEye.Application.DTOs.Model;
-using GodsEye.Application.DTOs.Response;
+﻿using GodsEye.Application.DTOs.Response;
 using GodsEye.Domain.DTOs.Result;
-using GodsEye.Domain.Enums;
+using GodsEye.Shared.Enums;
+using GodsEye.Shared.Response.AccessLevel;
+using GodsEye.Shared.Response.Sector;
 using GodsEye.WEB.Model.Forms;
 using GodsEye.WEB.Services;
 using Microsoft.AspNetCore.Components;
@@ -46,8 +47,8 @@ namespace GodsEye.WEB.Components.PersonComponents
 
         private bool visible = false;
 
-        IEnumerable<SectorModel> _sectors = new List<SectorModel>();
-        IEnumerable<AccessLevelModel> _accessLevels = Enumerable.Empty<AccessLevelModel>();
+        IEnumerable<SectorResponse> _sectors = new List<SectorResponse>();
+        IEnumerable<AccessLevelResponse> _accessLevels = Enumerable.Empty<AccessLevelResponse>();
 
         private bool _sectorError = false;
         private string _sectorErrorMessage = "";
@@ -60,15 +61,15 @@ namespace GodsEye.WEB.Components.PersonComponents
         protected override async Task OnInitializedAsync()
         {
             var response = await SectorService.GetAllAsync();
-            if (response is not null && response.Success)
+            if (response is not null)
             {
-                _sectors = response.Data;
+                _sectors = response;
             }
 
             var accessLevelResponse = await AccessLevelService.GetAllAsync();
-            if (accessLevelResponse is not null && accessLevelResponse.Success)
+            if (accessLevelResponse is not null)
             {
-                _accessLevels = accessLevelResponse.Data;
+                _accessLevels = accessLevelResponse;
             }
         }
 
@@ -127,10 +128,10 @@ namespace GodsEye.WEB.Components.PersonComponents
         {
             var newSector = await SectorService.GetById(sectorId);
 
-            if (newSector.Success)
+            if (newSector is not null)
             {
                 PersonForm.SectorId = sectorId;
-                _sectors = _sectors.Append(newSector.Data).ToList();
+                _sectors = _sectors.Append(newSector).ToList();
                 StateHasChanged();
             }
         }
@@ -139,10 +140,10 @@ namespace GodsEye.WEB.Components.PersonComponents
         {
             var newSector = await AccessLevelService.GetById(accessLevelId);
 
-            if (newSector.Success)
+            if (newSector is not null)
             {
                 PersonForm.AccessLevelId = accessLevelId;
-                _accessLevels = _accessLevels.Append(newSector.Data).ToList();
+                _accessLevels = _accessLevels.Append(newSector).ToList();
                 StateHasChanged();
             }
         }

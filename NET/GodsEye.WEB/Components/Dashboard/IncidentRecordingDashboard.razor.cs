@@ -1,4 +1,5 @@
 ﻿using GodsEye.Application.DTOs.Model;
+using GodsEye.Shared.Response.Sector;
 using GodsEye.WEB.Services;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.SignalR.Client;
@@ -27,7 +28,7 @@ namespace GodsEye.WEB.Components.Dashboard
         private List<IncidentRecordingModel> _logs = new();
         private List<IncidentRecordingModel> _filteredLogs = new();
 
-        private List<SectorModel> _sector = new();
+        private List<SectorResponse> _sector = new();
         private int _selectedSector = 0;
 
         private HubConnection? hubConnection;
@@ -51,9 +52,9 @@ namespace GodsEye.WEB.Components.Dashboard
 
             var sectorResult = await sectorWebService.GetAllAsync();
 
-            if (sectorResult.Success)
+            if (sectorResult is not null)
             {
-                _sector = sectorResult.Data.ToList();
+                _sector = sectorResult.ToList();
             }
 
             _loading = false;

@@ -17,25 +17,25 @@ namespace GodsEye.API.Controllers
             _mediator = mediator;
         }
 
-        [HttpPost]
-        public async Task<IActionResult> CreateOrUpdateAccessLevel([FromBody] CreateOrUpdateAccessLevelRequest request, CancellationToken cancellationToken)
-        {
-            var result = await _mediator.Send(request, cancellationToken);
-            return Ok(result);
-        }
+        //[HttpPost]
+        //public async Task<IActionResult> CreateOrUpdateAccessLevel([FromBody] CreateOrUpdateAccessLevelRequest request, CancellationToken cancellationToken)
+        //{
+        //    var result = await _mediator.Send(request, cancellationToken);
+        //    return Ok(result);
+        //}
 
-        [HttpGet]
-        public async Task<IActionResult> GettAllAccessLevel(CancellationToken cancellationToken)
-        {
-            var result = await _mediator.Send(new GetAllAccessLevelRequest(), cancellationToken);
-            return Ok(result);
-        }
+        //[HttpGet]
+        //public async Task<IActionResult> GettAllAccessLevel(CancellationToken cancellationToken)
+        //{
+        //    var result = await _mediator.Send(new GetAllAccessLevelRequest(), cancellationToken);
+        //    return Ok(result);
+        //}
 
-        [HttpGet("{id}")]
-        public async Task<IActionResult> GettAllAccessLevel(int Id, CancellationToken cancellationToken)
-        {
-            var result = await _mediator.Send(new GetAccessLevelByIdRequest(Id), cancellationToken);
-            return Ok(result);
-        }
+        //[HttpGet("{id}")]
+        //public async Task<IActionResult> GettAllAccessLevel(int Id, CancellationToken cancellationToken)
+        //{
+        //    var result = await _mediator.Send(new GetAccessLevelByIdRequest(Id), cancellationToken);
+        //    return Ok(result);
+        //}
     }
 }

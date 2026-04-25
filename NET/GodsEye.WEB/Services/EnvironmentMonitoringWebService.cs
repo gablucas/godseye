@@ -1,5 +1,7 @@
-﻿using GodsEye.Application.DTOs.Model;
+﻿
+using GodsEye.Application.DTOs.Model;
 using GodsEye.Application.DTOs.Response;
+using GodsEye.Shared.Response.EnvironmentMonitoring;
 using System.Net.Http.Json;
 
 namespace GodsEye.WEB.Services
@@ -13,46 +15,46 @@ namespace GodsEye.WEB.Services
             _http = http;
         }
 
-        public async Task<ApiResponse<IEnumerable<EnvironmentMonitoringModel>>> GetAllLogs(int pageNumber, int pageSize)
+        public async Task<IEnumerable<EnvironmentMonitoringLogResponse>> GetAllLogs(int pageNumber, int pageSize)
         {
-            var result = await _http.GetAsync($"api/environmentmonitoring?pageNumber={pageNumber}&pageSize={pageSize}");
+            var result = await _http.GetAsync($"api/environmentmonitoring/log?pageNumber={pageNumber}&pageSize={pageSize}");
 
-            var json = await result.Content.ReadFromJsonAsync<ApiResponse<IEnumerable<EnvironmentMonitoringModel>>>();
+            var json = await result.Content.ReadFromJsonAsync<IEnumerable<EnvironmentMonitoringLogResponse>>();
 
             return json!;
         }
 
-        public async Task<ApiResponse<IEnumerable<EnvironmentMonitoringModel>>> GetLastRegisterPerPerson()
+        public async Task<IEnumerable<EnvironmentMonitoringLogResponse>> GetLastRegisterPerPerson()
         {
-            var result = await _http.GetAsync($"api/environmentmonitoring/last-register-per-person");
+            var result = await _http.GetAsync($"api/environmentmonitoring/log/last-per-person");
 
-            var json = await result.Content.ReadFromJsonAsync<ApiResponse<IEnumerable<EnvironmentMonitoringModel>>>();
+            var json = await result.Content.ReadFromJsonAsync<IEnumerable<EnvironmentMonitoringLogResponse>>();
 
             return json!;
         }
 
-        public async Task<ApiResponse<IEnumerable<EnvironmentMonitoringSectorModel>>> GetSectors()
+        public async Task<IEnumerable<GetEnviromentMonitoringPerSectorResponse>> GetSectors()
         {
             var result = await _http.GetAsync($"api/environmentmonitoring/sectors");
 
-            var json = await result.Content.ReadFromJsonAsync<ApiResponse<IEnumerable<EnvironmentMonitoringSectorModel>>>();
+            var json = await result.Content.ReadFromJsonAsync<IEnumerable<GetEnviromentMonitoringPerSectorResponse>>();
 
             return json!;
         }
 
-        public async Task<ApiResponse<EnvironmentMonitoringPersonModel>> GetByPersonId(int personId)
+        public async Task<EnvironmentMonitoringPersonResponse> GetByPersonId(int personId)
         {
             var result = await _http.GetAsync($"api/environmentmonitoring/person/{personId}");
 
-            var json = await result.Content.ReadFromJsonAsync<ApiResponse<EnvironmentMonitoringPersonModel>>();
+            var json = await result.Content.ReadFromJsonAsync<EnvironmentMonitoringPersonResponse>();
 
             return json!;
         }
 
-        public async Task<ApiResponse<bool>> DeleteAllLogs()
+        public async Task<bool> DeleteAllLogs()
         {
             var result = await _http.DeleteAsync($"api/environmentmonitoring");
-            var json = await result.Content.ReadFromJsonAsync<ApiResponse<bool>>();
+            var json = await result.Content.ReadFromJsonAsync<bool>();
             return json!;
         }
     }

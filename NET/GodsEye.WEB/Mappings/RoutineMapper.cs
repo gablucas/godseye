@@ -8,7 +8,7 @@ namespace GodsEye.WEB.Mappings
     {
         public RoutineMapper() 
         {
-            CreateMap<RoutineModel, RoutineForm>();
+            CreateMap<RoutineModel, ComplianceSectorTransitionRule>();
             CreateMap<RoutineRuleSectorTransitionModel, RoutineRuleSectorTransitionForm>();
         }
     }

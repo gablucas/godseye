@@ -1,5 +1,5 @@
 ﻿@using GodsEye.Application.DTOs.Model
-@using GodsEye.Domain.Enums
+@using GodsEye.Shared.Enums
 @using GodsEye.Domain.Extensions
 @using GodsEye.WEB.Enum
 @inject ISnackbar Snackbar
@@ -145,36 +145,6 @@
                             }
                         }
                     </div>
-
-                    <MudDivider />
-
-                    <div>
-                        <div class="input-create">
-                            <MudSelect T="int"
-                                       Label="Rotinas"
-                                       @bind-SelectedValues="AccessLevelForm.Routines"
-                                       Required="false"
-                                       MultiSelection="true"
-                                       MultiSelectionTextFunc="GetMultiSelectionTextRoutine"
-                                       Variant="Variant.Outlined">
-
-                                @foreach (var routine in _routines)
-                                {
-                                    <MudSelectItem T="int" Value="@routine.Id">@routine.Name</MudSelectItem>
-                                }
-                            </MudSelect>
-
-                            <MudButton OnClick="() => DialogWebService.OpenCreateAccessSchedule(CreateNewAccessScheduleCallback)" Variant="Variant.Outlined">Criar nova rotina</MudButton>
-                        </div>
-
-                        <div>
-                            @foreach (var routine in _routines.Where(x => AccessLevelForm.Routines.Contains(x.Id)))
-                            {
-                            <MudChip T="string" Variant="Variant.Outlined" Label="true" Icon="@Icons.Material.Filled.Close">@routine.Name</MudChip>
-                            }
-                        </div>
-                    </div>
-
                 </div>
 
                 @if (apiResponse != null)

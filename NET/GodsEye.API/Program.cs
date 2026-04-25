@@ -1,7 +1,7 @@
+using GodsEye.API.DI;
 using GodsEye.API.Hubs;
+using GodsEye.API.Interfaces;
 using GodsEye.API.Middlewares;
-using GodsEye.API.Services;
-using GodsEye.Application.Interfaces;
 using GodsEye.Application.Services;
 using GodsEye.Infrastructure.Services;
 
@@ -11,11 +11,14 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddControllers();
 
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
+builder.Services.AddMassTransit(builder.Configuration);
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
-builder.Services.AddAPI();
+builder.Services.AddAPI(builder.Configuration);
+builder.Services.AddDapperDI();
 builder.Services.AddInfrastructure(builder.Configuration);
 builder.Services.AddAplication();
+
 
 // Teste Externo
 //builder.Services.AddCors(options =>
@@ -62,6 +65,7 @@ app.UseCors("Default");
 
 app.UseAuthorization();
 app.UseStaticFiles();
+app.MapEndpoints();
 app.MapControllers();
 
 app.MapHub<CreatedDataHub>("/createdDataHub");

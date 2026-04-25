@@ -17,6 +17,7 @@
   <ItemGroup>
     <ProjectReference Include="..\GodsEye.Application\GodsEye.Application.csproj" />
     <ProjectReference Include="..\GodsEye.Infrastructure\GodsEye.Infrastructure.csproj" />
+    <ProjectReference Include="..\GodsEye.Shared\GodsEye.Shared.csproj" />
   </ItemGroup>
 
 </Project>

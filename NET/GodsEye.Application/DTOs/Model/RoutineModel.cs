@@ -6,7 +6,7 @@ namespace GodsEye.Application.DTOs.Model
     {
         public int Id { get; set; }
         public string Name { get; set; }
-        public RoutineRuleTypeEnum Type { get; set; }
+        public ComplianceRuleEnum Type { get; set; }
         public List<RoutineRuleSectorTransitionModel> Rules { get; set; }
     }
 

@@ -1,7 +1,9 @@
 ﻿using GodsEye.Application.DTOs.Model;
 using GodsEye.Application.UseCases.AccessSchedule.Commands.CreateAccessSchedule;
-using GodsEye.Domain.Enums;
+using GodsEye.Shared.Enums;
+using GodsEye.Shared.Response.AccessSchedule;
 using GodsEye.WEB.Helpers;
+using GodsEye.WEB.Model.Forms;
 using GodsEye.WEB.Services;
 using Microsoft.AspNetCore.Components;
 using MudBlazor;
@@ -31,7 +33,7 @@ namespace GodsEye.WEB.Components.AccessSchedule
         #region FORM
 
         MudForm form;
-        private AccessScheduleModel _accessScheduleForm { get; set; } = new();
+        private AccessScheduleForm _accessScheduleForm { get; set; } = new();
         private bool success;
         private string[] errors = { };
         private bool visible = false;
@@ -48,9 +50,13 @@ namespace GodsEye.WEB.Components.AccessSchedule
             {
                 var result = await AccessScheduleWebService.GetById(Id);
 
-                if (result.Success && result is not null && result.Data is not null)
+                if (result is not null)
                 {
-                    _accessScheduleForm = result.Data;
+                    _accessScheduleForm.Id = result.Id;
+                    _accessScheduleForm.Name = result.Name;
+                    _accessScheduleForm.IsActive = result.IsActive;
+                    _accessScheduleForm.Rules = result.Rules.Select(x => new ScheduleRuleDTO() { Id = x.Id, WeekDay = x.WeekDay, StartTime = x.StartTime, EndTime = x.EndTime }).ToList();
+
                     _selectedWeekDays = _accessScheduleForm.Rules.Select(x => x.WeekDay).Distinct().ToList();
                 }
             }
@@ -69,7 +75,7 @@ namespace GodsEye.WEB.Components.AccessSchedule
             }
         }
 
-        private void OnTimeChanged(TimeSpan? value, AccessScheduleRuleModel time, WeekDayEnum dayEnum, string timeType)
+        private void OnTimeChanged(TimeSpan? value, ScheduleRuleDTO time, WeekDayEnum dayEnum, string timeType)
         {
             if (value is null)
                 return;
@@ -92,7 +98,7 @@ namespace GodsEye.WEB.Components.AccessSchedule
         {
             var copies = _accessScheduleForm.Rules
                 .Where(x => x.WeekDay == dayCopy)
-                .Select(x => new AccessScheduleRuleModel
+                .Select(x => new ScheduleRuleDTO
                 {
                     StartTime = x.StartTime,
                     EndTime = x.EndTime,
@@ -193,7 +199,7 @@ namespace GodsEye.WEB.Components.AccessSchedule
             if (selectedDay.Count() == 0)
             {
                 _accessScheduleForm.Rules.Add(
-                new AccessScheduleRuleModel()
+                new ScheduleRuleDTO()
                 {
                     WeekDay = day,
                     StartTime = TimeSpan.Zero,
@@ -202,7 +208,7 @@ namespace GodsEye.WEB.Components.AccessSchedule
             }
         }
 
-        private void RemoveRule(WeekDayEnum day, AccessScheduleRuleModel rule)
+        private void RemoveRule(WeekDayEnum day, ScheduleRuleDTO rule)
         {
             _accessScheduleForm.Rules.Remove(rule);
         }
@@ -222,14 +228,12 @@ namespace GodsEye.WEB.Components.AccessSchedule
             if (!ValidateTimeRules())
                 return;
 
+            var createResult = await AccessScheduleWebService.CreateAsync(_accessScheduleForm);
 
-            var createRequest = new CreateAccessScheduleRequest(_accessScheduleForm.Id, _accessScheduleForm.Name, true, _accessScheduleForm.Rules);
-            var createResult = await AccessScheduleWebService.CreateAsync(createRequest);
-
-            if (createResult.Success)
+            if (createResult > 0)
             {
                 Snackbar.Add("Calendário salvo com sucesso.", Severity.Success);
-                MudDialog.Close(DialogResult.Ok(createResult.Data));
+                MudDialog.Close(DialogResult.Ok(createResult));
             }
             else
             {

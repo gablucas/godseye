@@ -1,5 +1,6 @@
-﻿using GodsEye.Application.DTOs.Model;
+﻿using GodsEye.Shared.Response.AccessSchedule;
 using GodsEye.WEB.Components.AccessSchedule;
+using GodsEye.WEB.Model.Forms;
 using GodsEye.WEB.Services;
 using Microsoft.AspNetCore.Components;
 using MudBlazor;
@@ -31,9 +32,9 @@ namespace GodsEye.WEB.Pages.AccessCalendar
 
         #region TABLE PARAMETERS
 
-        private MudTable<AccessScheduleModel> mudTable;
-        List<AccessScheduleModel> _accessSchedule = new();
-        List<AccessScheduleModel> _filteredAccessSchedule = new();
+        private MudTable<AccessScheduleResponse> mudTable;
+        List<AccessScheduleResponse> _accessSchedule = new();
+        List<AccessScheduleResponse> _filteredAccessSchedule = new();
 
         
 
@@ -55,9 +56,9 @@ namespace GodsEye.WEB.Pages.AccessCalendar
 
             var accessScheduleResult = await AccessScheduleWebSerice.GetAllAsync();
 
-            if (accessScheduleResult is not null && accessScheduleResult.Success && accessScheduleResult.Data is not null)
+            if (accessScheduleResult is not null)
             {
-                _accessSchedule = accessScheduleResult.Data.ToList();
+                _accessSchedule = accessScheduleResult.ToList();
                 _filteredAccessSchedule = _accessSchedule.ToList();
 
             }
@@ -71,10 +72,10 @@ namespace GodsEye.WEB.Pages.AccessCalendar
         {
             var newAccessSchedule = await AccessScheduleWebSerice.GetById(accessScheduleId);
 
-            if (newAccessSchedule is null || !newAccessSchedule.Success)
+            if (newAccessSchedule is null)
                 return;
 
-            _accessSchedule.Insert(0, newAccessSchedule.Data);
+            _accessSchedule.Insert(0, newAccessSchedule);
             ApplyFilters();
         }
 

@@ -1,6 +1,7 @@
 ﻿using GodsEye.Application.DTOs.Model;
 using GodsEye.Application.DTOs.Response;
 using GodsEye.Domain.DTOs.Result;
+using GodsEye.Shared.Response.Sector;
 using GodsEye.WEB.Model.Forms;
 using GodsEye.WEB.Services;
 using Microsoft.AspNetCore.Components;
@@ -46,14 +47,14 @@ namespace GodsEye.WEB.Components.CameraComponents
         private string[] errors = { };
         private string featureError;
         public CreateCameraForm CameraForm { get; set; } = new();
-        IEnumerable<SectorModel> _sectors = Enumerable.Empty<SectorModel>();
+        IEnumerable<SectorResponse> _sectors = Enumerable.Empty<SectorResponse>();
         IEnumerable<FeatureModel> _features = Enumerable.Empty<FeatureModel>();
 
         private bool _hasConnectionError = false;
         private string? _connectionErrorMessage = null;
         private bool _loadingConnection = false;
 
-        ApiResponse<int>? apiResponse { get; set; } = null;
+        int? apiResponse { get; set; } = null;
 
         private bool visible = false;
         private bool _videoExpanded = false;
@@ -64,9 +65,9 @@ namespace GodsEye.WEB.Components.CameraComponents
         protected override async Task OnInitializedAsync()
         {
             var response = await SectorService.GetAllAsync();
-            if (response is not null && response.Success)
+            if (response is not null)
             {
-                _sectors = response.Data;
+                _sectors = response;
             }
 
             var featureResponse = await FeatureService.GetAllAsync();
@@ -122,10 +123,10 @@ namespace GodsEye.WEB.Components.CameraComponents
             apiResponse = await CameraService.CreateAsync(CameraForm);
             visible = false;
 
-            if (apiResponse.Success)
+            if (apiResponse > 0)
             {
                 Snackbar.Add("camera cadastrada com Success!", Severity.Success);
-                MudDialog.Close(DialogResult.Ok(apiResponse.Data));
+                MudDialog.Close(DialogResult.Ok(apiResponse));
             }
             else
             {
@@ -183,10 +184,10 @@ namespace GodsEye.WEB.Components.CameraComponents
         {
             var newSector = await SectorService.GetById(sectorId);
 
-            if (newSector.Success)
+            if (newSector is not null)
             {
                 CameraForm.SectorId = sectorId;
-                _sectors = _sectors.Append(newSector.Data).ToList();
+                _sectors = _sectors.Append(newSector).ToList();
                 StateHasChanged();
             }
         }

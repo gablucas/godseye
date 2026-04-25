@@ -32,7 +32,6 @@ namespace GodsEye.Application.DTOs.Model
     {
         public int Id { get; set; }
         public List<AccessLevelSectorRuleCache> Sectors { get; set; }
-        public List<AccessLevelRoutinesCache>? Routines { get; set; }
 
     }
 
@@ -41,20 +40,5 @@ namespace GodsEye.Application.DTOs.Model
         public int Id { get; set; }
         [JsonConverter(typeof(JsonStringEnumConverter))]
         public AccessLevelSectorRuleEnum RuleType { get; set; }
-    }
-
-    public class AccessLevelRoutinesCache
-    {
-        public int Id { get; set; }
-        [JsonConverter(typeof(JsonStringEnumConverter))]
-        public RoutineRuleTypeEnum RuleType { get; set; }
-        public List<RoutineRuleSectorTransitionCache> Rules { get; set; }
-    }
-
-    public class RoutineRuleSectorTransitionCache
-    {
-        public int OrderIndex { get; set; }
-        public int MinTime { get; set; }
-        public int MaxTime { get; set; }
     }
 }

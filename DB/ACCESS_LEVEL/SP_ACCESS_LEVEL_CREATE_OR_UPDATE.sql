@@ -2,7 +2,6 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `SP_ACCESS_LEVEL_CREATE_OR_UPDATE`(
 	IN P_ID INT,
 	IN P_NAME VARCHAR(100),
     IN P_SECTORS_JSON JSON,
-    IN P_ROUTINES_JSON JSON,
     IN P_ACCESS_SCHEDULE_ID INT
 )
 BEGIN
@@ -46,16 +45,6 @@ BEGIN
             rule_type INT PATH '$.RuleType'
 		)
 	) jt;
-    
-    INSERT INTO ACCESS_LEVEL_ROUTINE (ACCESS_LEVEL_ID, ROUTINE_ID)
-	SELECT P_ID, jt.value
-	FROM JSON_TABLE(
-		P_ROUTINES_JSON,
-		'$[*]' COLUMNS (
-			value INT PATH '$'
-		)
-	) jt;
-		
     COMMIT;
     
     SELECT 

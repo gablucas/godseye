@@ -1,6 +1,6 @@
 ﻿using GodsEye.Application.DTOs.Model;
-using GodsEye.Application.DTOs.Response;
 using GodsEye.Application.UseCases.AccessLevel.Commands.CreateOrUpdateAccessLevel;
+using GodsEye.Shared.Response.AccessLevel;
 using System.Net.Http.Json;
 
 namespace GodsEye.WEB.Services
@@ -8,36 +8,36 @@ namespace GodsEye.WEB.Services
     public class AccessLevelWebService
     {
         private readonly HttpClient _http;
-        private readonly string _baseEndpoint = "api/accesslevel";
+        private readonly string _baseEndpoint = "api/access-level";
 
         public AccessLevelWebService(HttpClient http)
         {
             _http = http;
         }
 
-        public async Task<ApiResponse<int>> CreateOrUpdateAsync(CreateOrUpdateAccessLevelRequest accessLevel)
+        public async Task<int> CreateOrUpdateAsync(CreateOrUpdateAccessLevelRequest accessLevel)
         {
             var result = await _http.PostAsJsonAsync(_baseEndpoint, accessLevel);
 
-            var json = await result.Content.ReadFromJsonAsync<ApiResponse<int>>();
+            var json = await result.Content.ReadFromJsonAsync<int>();
 
             return json!;
         }
 
-        public async Task<ApiResponse<IEnumerable<AccessLevelModel>>> GetAllAsync()
+        public async Task<IEnumerable<AccessLevelResponse>> GetAllAsync()
         {
             var result = await _http.GetAsync(_baseEndpoint);
 
-            var json = await result.Content.ReadFromJsonAsync<ApiResponse<IEnumerable<AccessLevelModel>>>();
+            var json = await result.Content.ReadFromJsonAsync<IEnumerable<AccessLevelResponse>>();
 
             return json!;
         }
 
-        public async Task<ApiResponse<AccessLevelModel>> GetById(int accessLevelId)
+        public async Task<AccessLevelResponse> GetById(int accessLevelId)
         {
             var result = await _http.GetAsync($"{_baseEndpoint}/{accessLevelId}");
 
-            var json = await result.Content.ReadFromJsonAsync<ApiResponse<AccessLevelModel>>();
+            var json = await result.Content.ReadFromJsonAsync<AccessLevelResponse>();
 
             return json!;
         }

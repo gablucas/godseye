@@ -1,4 +1,6 @@
 ﻿using GodsEye.Application.DTOs.Model;
+using GodsEye.Shared.Response.Camera;
+using GodsEye.Shared.Response.Sector;
 using GodsEye.WEB.Components.CameraComponents;
 using GodsEye.WEB.Services;
 using Microsoft.AspNetCore.Components;
@@ -28,11 +30,11 @@ namespace GodsEye.WEB.Pages.Camera
 
         #region TABLE PARAMETERS
 
-        List<CameraModel> _cameras = new();
-        IEnumerable<CameraModel> _filteredCameras = Enumerable.Empty<CameraModel>();
+        List<CameraResponse> _cameras = new();
+        IEnumerable<CameraResponse> _filteredCameras = Enumerable.Empty<CameraResponse>();
 
         private int selectedRowNumber = -1;
-        private MudTable<CameraModel> mudTable;
+        private MudTable<CameraResponse> mudTable;
         bool _loading;
 
         #endregion
@@ -43,7 +45,7 @@ namespace GodsEye.WEB.Pages.Camera
         private string _conectionNameFilter = "";
         private string _featuresNameFilter = "";
 
-        private List<SectorModel> _sectors = new();
+        private List<SectorResponse> _sectors = new();
         private IEnumerable<string> _selectedSectors { get; set; } = new HashSet<string>() { };
 
         #endregion
@@ -57,23 +59,23 @@ namespace GodsEye.WEB.Pages.Camera
 
             var camerasResult = await cameraService.GetAllAsync();
 
-            if (camerasResult is not null && camerasResult.Success)
+            if (camerasResult is not null)
             {
-                _cameras = camerasResult.Data.ToList();
+                _cameras = camerasResult.ToList();
                 _filteredCameras = _cameras.ToList();
 
                 _ = GetCameraStatusAsync();
 
                 var sectorsRequest = await SectorService.GetAllAsync();
-                if (sectorsRequest.Success)
-                    _sectors = sectorsRequest.Data.ToList();
+                if (sectorsRequest is not null)
+                    _sectors = sectorsRequest.ToList();
             }
                 
             _loading = false;
         }
 
         #region TABLE FUNCTIONS
-        private async Task RowClickEvent(TableRowClickEventArgs<CameraModel> tableRowClickEventArgs)
+        private async Task RowClickEvent(TableRowClickEventArgs<CameraResponse> tableRowClickEventArgs)
         {
             var options = new DialogOptions { CloseOnEscapeKey = true, FullWidth = true, MaxWidth = MaxWidth.False, NoHeader = true };
             var parameters = new DialogParameters<CameraDataComponent> { { x => x.Id, tableRowClickEventArgs.Item.Id } };
@@ -82,7 +84,7 @@ namespace GodsEye.WEB.Pages.Camera
             var result = await dialog.Result;
         }
 
-        private string SelectedRowClassFunc(CameraModel element, int rowNumber)
+        private string SelectedRowClassFunc(CameraResponse element, int rowNumber)
         {
             if (selectedRowNumber == rowNumber)
             {
@@ -121,10 +123,10 @@ namespace GodsEye.WEB.Pages.Camera
 
             var newCamera = await cameraService.GetById(cameraId);
 
-            if (newCamera is null || !newCamera.Success)
+            if (newCamera is null)
                 return;
 
-            _cameras.Insert(0, newCamera.Data);
+            _cameras.Insert(0, newCamera);
             ApplyFilters();
         }
 

@@ -1,12 +1,13 @@
 ﻿using GodsEye.Application.DTOs.Model;
+using GodsEye.Shared.Response.EnvironmentMonitoring;
 using GodsEye.WEB.Components.AccessLevelComponents;
 using GodsEye.WEB.Components.AccessSchedule;
 using GodsEye.WEB.Components.CameraComponents;
+using GodsEye.WEB.Components.Compliance;
 using GodsEye.WEB.Components.EnvironmentMonitoringComponent;
 using GodsEye.WEB.Components.IncidentRecordingComponents;
 using GodsEye.WEB.Components.NotificationGroupsComponents;
 using GodsEye.WEB.Components.PersonComponents;
-using GodsEye.WEB.Components.RoutineComponents;
 using GodsEye.WEB.Components.SectorComponents;
 using MudBlazor;
 using MudBlazor.Extensions;
@@ -16,7 +17,7 @@ namespace GodsEye.WEB.Services
     public class DialogWebService
     {
         private readonly IDialogService _dialogService;
-        private readonly DialogOptions _options = new DialogOptions { CloseOnEscapeKey = true, FullWidth = true, MaxWidth = MaxWidth.False, NoHeader = true };
+        private readonly DialogOptions _options = new DialogOptions { CloseOnEscapeKey = true, FullWidth = false, MaxWidth = MaxWidth.False, NoHeader = true };
 
         public DialogWebService(IDialogService dialogService)
         {
@@ -26,6 +27,7 @@ namespace GodsEye.WEB.Services
         #region PERSON DIALOGS
         public async Task OpenCreatePerson(Func<int, Task>? callback = null)
         {
+            
             var dialog = await _dialogService.ShowAsync<CreatePersonComponent>("Criar pessoa", _options);
 
             var result = await dialog.Result;
@@ -113,7 +115,7 @@ namespace GodsEye.WEB.Services
 
         #endregion
 
-        public async Task<IDialogReference?> OpenEnvironmentMonitoringSectorDialog(List<EnvironmentMonitoringModel> logs)
+        public async Task<IDialogReference?> OpenEnvironmentMonitoringSectorDialog(List<EnvironmentMonitoringLogResponse> logs)
         {
             var parameters = new DialogParameters<EnvironmentMonitoringSectorComponent> { { x => x.EnvironmentMonitoringLog, logs } };
             return await _dialogService.ShowAsync<EnvironmentMonitoringSectorComponent>(null, parameters, _options);
@@ -160,14 +162,14 @@ namespace GodsEye.WEB.Services
 
         public async Task OpenHandleRoutine(int? routineId = null, Func<int, Task>? callback = null)
         {
-            var parameters = new DialogParameters<HandleRoutineComponent>();
+            var parameters = new DialogParameters<UpsertPolicyComponent>();
 
             if (routineId.HasValue)
             {
                 parameters.Add(x => x.Id, routineId.Value);
             }
 
-            var dialog = await _dialogService.ShowAsync<HandleRoutineComponent>(routineId is null ? "Criar rotina" : "Atualizar rotina", parameters, _options);
+            var dialog = await _dialogService.ShowAsync<UpsertPolicyComponent>(routineId is null ? "Criar rotina" : "Atualizar rotina", parameters, _options);
 
             var result = await dialog.Result;
 
@@ -214,6 +216,29 @@ namespace GodsEye.WEB.Services
             }
         }
 
-        
+        public async Task OpenCreateCompliance(int? complianceId = null, Func<int, Task>? callback = null)
+        {
+            var parameters = new DialogParameters<UpsertPolicyComponent>();
+
+            if (complianceId.HasValue)
+            {
+                parameters.Add(x => x.Id, complianceId.Value);
+            }
+
+            var dialog = await _dialogService.ShowAsync<UpsertPolicyComponent>(complianceId is null ? "Criar política" : "Atualizar política", parameters, _options);
+
+            var result = await dialog.Result;
+
+            if (result.Canceled)
+                return;
+
+            if (callback is not null)
+            {
+                var sectorId = result.Data.As<int>();
+                await callback(sectorId);
+            }
+        }
+
+
     }
 }

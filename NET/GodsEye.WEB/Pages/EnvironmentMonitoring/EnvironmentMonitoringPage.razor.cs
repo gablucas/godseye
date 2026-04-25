@@ -1,4 +1,6 @@
 ﻿using GodsEye.Application.DTOs.Model;
+using GodsEye.Shared.Response.EnvironmentMonitoring;
+using GodsEye.Shared.Response.Sector;
 using GodsEye.WEB.Services;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.SignalR.Client;
@@ -25,18 +27,18 @@ namespace GodsEye.WEB.Pages.EnvironmentMonitoring
 
         #region TABLE PARAMETERS
 
-        private List<EnvironmentMonitoringModel> _logs = new();
-        private List<EnvironmentMonitoringModel> _filteredLogs = new();
+        private List<EnvironmentMonitoringLogResponse> _logs = new();
+        private List<EnvironmentMonitoringLogResponse> _filteredLogs = new();
 
 
-        private MudTable<EnvironmentMonitoringModel> _mudTable;
+        private MudTable<EnvironmentMonitoringLogResponse> _mudTable;
         private HubConnection? hubConnection;
         bool _loading;
         #endregion
 
         #region TABLE FILTERS
 
-        private List<SectorModel> _sectors = new();
+        private List<SectorResponse> _sectors = new();
         private string value { get; set; } = "Nothing selected";
         private IEnumerable<string> _selectedSectors { get; set; } = new HashSet<string>() { };
 
@@ -73,9 +75,9 @@ namespace GodsEye.WEB.Pages.EnvironmentMonitoring
 
             var result = await environmentMonitoringService.GetAllLogs(1, 100);
 
-            if (result.Success)
+            if (result is not null)
             {
-                _logs = result.Data.ToList();
+                _logs = result.ToList();
                 _filteredLogs = _logs;
             }
                 
@@ -83,7 +85,7 @@ namespace GodsEye.WEB.Pages.EnvironmentMonitoring
 
             SignalR.Create("https://localhost:7010/createdDataHub");
 
-            SignalR.On<EnvironmentMonitoringModel>(
+            SignalR.On<EnvironmentMonitoringLogResponse>(
                 "CreatedEnvironmentMonitoring",
                 log =>
                 {
@@ -101,8 +103,8 @@ namespace GodsEye.WEB.Pages.EnvironmentMonitoring
             await SignalR.StartAsync();
 
             var sectorsRequest = await SectorService.GetAllAsync();
-            if (sectorsRequest.Success)
-                _sectors = sectorsRequest.Data.ToList();
+            if (sectorsRequest is not null)
+                _sectors = sectorsRequest.ToList();
         }
 
         #region FILTER FUNCS

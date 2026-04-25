@@ -1,0 +1,39 @@
+﻿@page "/compliance/politicas"
+@using GodsEye.Application.DTOs.Model
+@using GodsEye.WEB.Components.Compliance
+@using GodsEye.WEB.Services
+@using GodsEye.WEB.Shared
+@inherits InfoPageBase<ComplianceWebService, CompliancePolicyDTO>
+
+<PageTitle>Políticas</PageTitle>
+
+<div class="page-container">
+    <div class="breadcrumb-container">
+        <MudBreadcrumbs Style="padding: 8px 0px; font-size: 12px; font-weight: 500" Items="_breadCrumb"></MudBreadcrumbs>
+    </div>
+
+    <div class="content-container">
+        <div class="page-title">
+            <h1>Políticas</h1>
+        </div>
+
+        <div class="notification-menu">
+            <div class="filters">
+                <div class="option">
+                    <MudTextField @bind-Value="_policyNameFilter" TextChanged="ApplyFilters" Immediate="true" Label="Politica" Variant="Variant.Outlined" Margin="Margin.Dense" Clearable="true" />
+                </div>
+            </div>
+
+            <MudButton Variant="Variant.Outlined" OnClick="() => DialogWebService.OpenCreateAsync<UpsertPolicyComponent>()">Criar política</MudButton>
+        </div>
+
+        <MudTable T="CompliancePolicyDTO" @ref="mudTable" Elevation="0" Items="@_filteredItems" Hover="true" Loading="@_loading" LoadingProgressColor="Color.Info" RowClass="cursor-pointer" RowClassFunc="@SelectedRowClassFunc" OnRowClick="RowClickEvent">
+            <HeaderContent>
+                <MudTh>Politica</MudTh>
+            </HeaderContent>
+            <RowTemplate>
+                <MudTd @onclick="() => DialogWebService.OpenHandleAsync<UpsertPolicyComponent>(context.Id)" DataLabel="ComplianceName">@context.Name</MudTd>
+            </RowTemplate>
+        </MudTable>
+    </div>
+</div>

@@ -1,7 +1,6 @@
 ﻿using GodsEye.Application.DTOs.Model;
 using GodsEye.Application.DTOs.Response;
-using GodsEye.Application.UseCases.Sector.Commands.CreateSector;
-using GodsEye.Domain.DTOs.Result;
+using GodsEye.Shared.Response.Sector;
 using GodsEye.WEB.Model.Forms;
 using System.Net.Http.Json;
 
@@ -17,29 +16,29 @@ namespace GodsEye.WEB.Services
             _http = http;
         }
 
-        public async Task<ApiResponse<int>> CreateAsync(CreateSectorRequest sector)
+        public async Task<int> CreateAsync(CreateSectorForm sector)
         {
             var result = await _http.PostAsJsonAsync(_baseEndpoint, sector);
 
-            var json = await result.Content.ReadFromJsonAsync<ApiResponse<int>>();
+            var json = await result.Content.ReadFromJsonAsync<int>();
 
             return json!;
         }
 
-        public async Task<ApiResponse<SectorModel>> GetById(int sectorId)
+        public async Task<SectorResponse> GetById(int sectorId)
         {
             var result = await _http.GetAsync($"{_baseEndpoint}/{sectorId}");
 
-            var json = await result.Content.ReadFromJsonAsync<ApiResponse<SectorModel>>();
+            var json = await result.Content.ReadFromJsonAsync<SectorResponse>();
 
             return json!;
         }
 
-        public async Task<ApiResponse<IEnumerable<SectorModel>>> GetAllAsync()
+        public async Task<IEnumerable<SectorResponse>> GetAllAsync()
         {
             var result = await _http.GetAsync(_baseEndpoint);
 
-            var json = await result.Content.ReadFromJsonAsync<ApiResponse<IEnumerable<SectorModel>>>();
+            var json = await result.Content.ReadFromJsonAsync<IEnumerable<SectorResponse>>();
 
             return json!;
         }

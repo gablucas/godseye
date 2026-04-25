@@ -1,4 +1,5 @@
 ﻿@page "/organizacao/calendario-de-acesso";
+@using GodsEye.Shared.Response.AccessSchedule
 @using GodsEye.WEB.Components
 @using GodsEye.Application.DTOs.Model
 @inject ISnackbar Snackbar
@@ -28,7 +29,7 @@
             <MudButton Variant="Variant.Outlined" OnClick="() => DialogWebService.OpenCreateAccessSchedule(CreateAccessScheduleCallback)">Criar calendário de acesso</MudButton>
         </div>
 
-        <MudTable T="AccessScheduleModel" Elevation="0" @ref="mudTable" Items="@_filteredAccessSchedule" Hover="true" Loading="@_loading" LoadingProgressColor="Color.Info" RowClass="cursor-pointer">
+        <MudTable T="AccessScheduleResponse" Elevation="0" @ref="mudTable" Items="@_filteredAccessSchedule" Hover="true" Loading="@_loading" LoadingProgressColor="Color.Info" RowClass="cursor-pointer">
 
             <HeaderContent>
                 <MudTh>Nome</MudTh>

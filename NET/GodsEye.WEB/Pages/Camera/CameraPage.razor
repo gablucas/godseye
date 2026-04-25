@@ -1,6 +1,6 @@
 ﻿@page "/dispositivos/cameras";
+@using GodsEye.Shared.Response.Camera
 @using GodsEye.WEB.Components
-@using GodsEye.Application.DTOs.Model
 @inject ISnackbar Snackbar
 
 <PageTitle>Cameras</PageTitle>
@@ -45,7 +45,7 @@
             <MudButton Variant="Variant.Outlined" OnClick="OpenCreateCamera">Criar camera</MudButton>
         </div>
 
-        <MudTable T="CameraModel" Elevation="0" @ref="mudTable" Items="@_filteredCameras" Hover="true" Loading="@_loading" LoadingProgressColor="Color.Info" RowClass="cursor-pointer" RowClassFunc="@SelectedRowClassFunc" OnRowClick="RowClickEvent">
+        <MudTable T="CameraResponse" Elevation="0" @ref="mudTable" Items="@_filteredCameras" Hover="true" Loading="@_loading" LoadingProgressColor="Color.Info" RowClass="cursor-pointer" RowClassFunc="@SelectedRowClassFunc" OnRowClick="RowClickEvent">
              <ColGroup>
                 <col style="width: 20%" />
                 <col />
