@@ -63,8 +63,8 @@ namespace GodsEye.WEB.Pages.Person
 
             var personsResult = await personService.GetAllAsync();
 
-            if (personsResult is not null && personsResult.Success)
-                _persons = personsResult.Data.ToList();
+            if (personsResult is not null)
+                _persons = personsResult.ToList();
                 _filteredPersons = _persons;
 
             
@@ -129,10 +129,10 @@ namespace GodsEye.WEB.Pages.Person
         {
             var newPerson = await personService.GetById(personId);
 
-            if (newPerson is null || !newPerson.Success)
+            if (newPerson is null)
                 return;
 
-            _persons.Insert(0, newPerson.Data);
+            _persons.Insert(0, newPerson);
         }
 
         private void OnSectorsChanged(IEnumerable<string> values)

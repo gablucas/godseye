@@ -104,10 +104,10 @@ namespace GodsEye.WEB.Components.NotificationGroupsComponents
         private async Task Submit()
         {
             visible = true;
-            var apiResponse = await notificationGroupWebService.UpdateAsync(NotificationGroupForm);
+            var result = await notificationGroupWebService.UpdateAsync(NotificationGroupForm);
             visible = false;
 
-            if (apiResponse.Success)
+            if (result > 0)
             {
                 Snackbar.Add("Camera atualizada com sucesso!", Severity.Success);
                 success = false;

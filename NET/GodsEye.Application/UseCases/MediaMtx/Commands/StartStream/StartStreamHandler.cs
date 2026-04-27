@@ -1,10 +1,9 @@
-﻿using GodsEye.Application.DTOs.Response;
-using GodsEye.Application.Interfaces;
+﻿using GodsEye.Application.Interfaces;
 using MediatR;
 
 namespace GodsEye.Application.UseCases.MediaMtx.Commands.StartStream
 {
-    public class StartStreamHandler : IRequestHandler<StartStreamRequest, ApiResponse<string>>
+    public class StartStreamHandler : IRequestHandler<StartStreamRequest, string>
     {
         private IMediaMtxService _mediaMtxService;
         private ICameraConnectionTesterService _cameraConnectionTesterService;
@@ -15,19 +14,19 @@ namespace GodsEye.Application.UseCases.MediaMtx.Commands.StartStream
             _cameraConnectionTesterService = cameraConnectionTesterService;
         }
 
-        public async Task<ApiResponse<string>> Handle(StartStreamRequest request, CancellationToken cancellationToken)
+        public async Task<string?> Handle(StartStreamRequest request, CancellationToken cancellationToken)
         {
             var (isValid, message) = await _cameraConnectionTesterService.TestConnectionAsync(request.RtspUrl);
 
             if (!isValid)
             {
-                return ApiResponse<string>.Fail(400, message);
+                return null;
             }
 
             var webRtcUrl = await _mediaMtxService.StartStream(request.RtspUrl);
 
 
-            return ApiResponse<string>.Ok(webRtcUrl);
+            return webRtcUrl;
         }
     }
 }

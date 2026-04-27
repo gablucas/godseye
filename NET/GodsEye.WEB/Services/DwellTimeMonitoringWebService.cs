@@ -7,17 +7,18 @@ namespace GodsEye.WEB.Services
     public class DwellTimeMonitoringWebService
     {
         private readonly HttpClient _http;
+        private readonly string _baseEndpoint = "api/dwell-time-monitoring";
 
         public DwellTimeMonitoringWebService(HttpClient http)
         {
             _http = http;
         }
 
-        public async Task<ApiResponse<IEnumerable<DwellTimeMonitoringDetailsModel>>> GetDetailsByCameraId(int cameraId)
+        public async Task<IEnumerable<DwellTimeMonitoringDetailsModel>> GetDetailsByCameraId(int cameraId)
         {
-            var result = await _http.GetAsync($"api/dwelltimemonitoring/details/{cameraId}");
+            var result = await _http.GetAsync($"{_baseEndpoint}/details/{cameraId}");
 
-            var json = await result.Content.ReadFromJsonAsync<ApiResponse<IEnumerable<DwellTimeMonitoringDetailsModel>>>();
+            var json = await result.Content.ReadFromJsonAsync<IEnumerable<DwellTimeMonitoringDetailsModel>>();
 
             return json!;
         }

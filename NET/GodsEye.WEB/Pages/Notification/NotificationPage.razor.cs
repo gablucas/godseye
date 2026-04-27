@@ -51,9 +51,9 @@ namespace GodsEye.WEB.Pages.Notification
 
             var result = await notificationGroupWebService.GetAllAsync();
 
-            if (result.Success)
+            if (result is not null)
             {
-                _logs = result.Data.ToList();
+                _logs = result.ToList();
                 _filteredLogs = _logs;
             }
 
@@ -91,13 +91,13 @@ namespace GodsEye.WEB.Pages.Notification
                 {
                     var updatedNotification = await notificationGroupWebService.GetById(notification.Id);
 
-                    if (updatedNotification.Success)
+                    if (updatedNotification is not null)
                     {
                         var index = _logs.FindIndex(x => x.Id == notification.Id);
 
                         if (index != -1)
                         {
-                            _logs[index] = updatedNotification.Data;
+                            _logs[index] = updatedNotification;
                         }
                     }
                 }

@@ -1,7 +1,4 @@
-﻿using GodsEye.Application.DTOs.Model;
-using GodsEye.Application.UseCases.AccessSchedule.Commands.CreateAccessSchedule;
-using GodsEye.Shared.Enums;
-using GodsEye.Shared.Response.AccessSchedule;
+﻿using GodsEye.Shared.Enums;
 using GodsEye.WEB.Helpers;
 using GodsEye.WEB.Model.Forms;
 using GodsEye.WEB.Services;

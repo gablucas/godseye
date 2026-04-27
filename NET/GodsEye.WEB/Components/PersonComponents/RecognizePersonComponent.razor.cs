@@ -48,7 +48,7 @@ namespace GodsEye.WEB.Components.PersonComponents
         PhotoCaptureMethodEnum? photoMethod { get; set; } = null;
         private bool shouldStartCamera;
 
-        ApiResponse<ProcedureResult?>? apiResponse { get; set; } = null;
+        ProcedureResult? apiResponse { get; set; } = null;
 
         private bool visible = false;
 
@@ -118,14 +118,14 @@ namespace GodsEye.WEB.Components.PersonComponents
             apiResponse = await PersonService.CreateRecognizeAsync(PersonRecognizeForm);
             visible = false;
 
-            if (apiResponse.Success)
+            if (apiResponse is not null)
             {
                 Snackbar.Add("Pessoa cadastrada com sucesso!", Severity.Success);
-                MudDialog.Close(DialogResult.Ok(apiResponse.Data.Id));
+                MudDialog.Close(DialogResult.Ok(apiResponse.Id));
             }
             else
             {
-                _errorMessage = apiResponse?.Error?.Message ?? "Houve um erro ao cadastrar a pessoa, tente novamente mais tarde";
+                _errorMessage = "Houve um erro ao cadastrar a pessoa, tente novamente mais tarde";
                 Snackbar.Add(_errorMessage, Severity.Error);
             }
 

@@ -11,7 +11,8 @@ class FaceModel:
             providers=[
                 "CUDAExecutionProvider",
                 "CPUExecutionProvider"
-            ]
+            ],
+            download=False
         )
         self.app.prepare(ctx_id=0)
 

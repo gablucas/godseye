@@ -42,9 +42,9 @@ namespace GodsEye.WEB.Components.SectorComponents
         protected override async Task OnInitializedAsync()
         {
             var notificationResponse = await notificationGroupService.GetAllAsync();
-            if (notificationResponse is not null && notificationResponse.Success)
+            if (notificationResponse is not null)
             {
-                _notificationGroups = notificationResponse.Data;
+                _notificationGroups = notificationResponse;
             }
         }
 
@@ -61,9 +61,9 @@ namespace GodsEye.WEB.Components.SectorComponents
         {
             var newEmailGroup = await notificationGroupService.GetById(newEmailGroupId);
 
-            if (newEmailGroup.Success)
+            if (newEmailGroup is not null)
             {
-                _notificationGroups = _notificationGroups.Append(newEmailGroup.Data).ToList();
+                _notificationGroups = _notificationGroups.Append(newEmailGroup).ToList();
 
                 CreateSectorForm.NotificationGroups = CreateSectorForm.NotificationGroups.Append(newEmailGroupId);
             }

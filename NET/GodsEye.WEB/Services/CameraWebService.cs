@@ -1,9 +1,5 @@
 ﻿using GodsEye.Application.DTOs.Model;
 using GodsEye.Application.DTOs.Response;
-using GodsEye.Application.UseCases.Camera.Commands.CreateCameraRoi;
-using GodsEye.Application.UseCases.Camera.Commands.UpdateCameraIncidentRecording;
-using GodsEye.Application.UseCases.Camera.Commands.UpdateCameraRoi;
-using GodsEye.Domain.DTOs.Result;
 using GodsEye.Shared.Response.Camera;
 using GodsEye.WEB.Model.Forms;
 using System.Net.Http.Json;
@@ -56,11 +52,11 @@ namespace GodsEye.WEB.Services
             return json!;
         }
 
-        public async Task<ApiResponse<IEnumerable<CameraLogModel>>> GetLogs(int cameraId)
+        public async Task<IEnumerable<CameraLogModel>> GetLogs(int cameraId)
         {
             var result = await _http.GetAsync($"{_baseEndpoint}/logs/{cameraId}");
 
-            var json = await result.Content.ReadFromJsonAsync<ApiResponse<IEnumerable<CameraLogModel>>>();
+            var json = await result.Content.ReadFromJsonAsync<IEnumerable<CameraLogModel>>();
 
             return json!;
         }
@@ -85,65 +81,65 @@ namespace GodsEye.WEB.Services
             return apiResponse ?? Enumerable.Empty<CameraFeatureModel>();
         }
 
-        public async Task<ApiResponse<List<CameraRoiModel>>> GetRoiByCameraId(int cameraId)
+        public async Task<List<CameraRoiResponse>> GetRoiByCameraId(int cameraId)
         {
             var result = await _http.GetAsync($"{_baseEndpoint}/roi/{cameraId}");
 
-            var json = await result.Content.ReadFromJsonAsync<ApiResponse<List<CameraRoiModel>>>();
+            var json = await result.Content.ReadFromJsonAsync<List<CameraRoiResponse>>();
 
             return json!;
         }
 
-        public async Task<ApiResponse<int>> CreateRoiAsync(CreateCameraRoiRequest cameraRoi)
+        public async Task<int> CreateRoiAsync(CameraRoiForm cameraRoi)
         {
             var result = await _http.PostAsJsonAsync($"{_baseEndpoint}/roi", cameraRoi);
 
-            var json = await result.Content.ReadFromJsonAsync<ApiResponse<int>>();
+            var json = await result.Content.ReadFromJsonAsync<int>();
 
             return json!;
         }
 
-        public async Task<ApiResponse<int>> UpdateRoiAsync(UpdateCameraRoiRequest cameraRoi)
+        public async Task<int> UpdateRoiAsync(CameraRoiForm cameraRoi)
         {
             var result = await _http.PutAsJsonAsync($"{_baseEndpoint}/roi", cameraRoi);
 
-            var json = await result.Content.ReadFromJsonAsync<ApiResponse<int>>();
+            var json = await result.Content.ReadFromJsonAsync<int>();
 
             return json!;
         }
 
-        public async Task<ApiResponse<int>> DeleteRoiAsync(int roiId)
+       public async Task<int> DeleteRoiAsync(int roiId)
         {
             var result = await _http.DeleteAsync($"{_baseEndpoint}/roi/{roiId}");
 
-            var json = await result.Content.ReadFromJsonAsync<ApiResponse<int>>();
+            var json = await result.Content.ReadFromJsonAsync<int>();
 
             return json!;
         }
 
-        public async Task<ApiResponse<CameraConfigIncidentRecordingModel>> GetConfigIncidentRecording(int cameraId)
+        public async Task<CameraIncidentRecordingForm> GetConfigIncidentRecording(int cameraId)
         {
             var result = await _http.GetAsync($"{_baseEndpoint}/config/incident-recording/{cameraId}");
 
-            var json = await result.Content.ReadFromJsonAsync<ApiResponse<CameraConfigIncidentRecordingModel>>();
+            var json = await result.Content.ReadFromJsonAsync<CameraIncidentRecordingForm>();
 
             return json!;
         }
 
-        public async Task<ApiResponse<int>> UpdateConfigIncidentRecording(UpdateCameraIncidentRecordingRequest incidentRecordingCamera)
+        public async Task<int> UpdateConfigIncidentRecording(CameraIncidentRecordingForm incidentRecordingCamera)
         {
             var result = await _http.PutAsJsonAsync($"{_baseEndpoint}/config/incident-recording", incidentRecordingCamera);
 
-            var json = await result.Content.ReadFromJsonAsync<ApiResponse<int>>();
+            var json = await result.Content.ReadFromJsonAsync<int>();
 
             return json!;
         }
 
-        public async Task<ApiResponse<CameraConfigDwellTimeMonitoringModel>> GetConfigDwellTimeMonitoring(int cameraId)
+        public async Task<CameraConfigDwellTimeMonitoringModel> GetConfigDwellTimeMonitoring(int cameraId)
         {
             var result = await _http.GetAsync($"{_baseEndpoint}/config/dwell-time-monitoring/{cameraId}");
 
-            var json = await result.Content.ReadFromJsonAsync<ApiResponse<CameraConfigDwellTimeMonitoringModel>>();
+            var json = await result.Content.ReadFromJsonAsync<CameraConfigDwellTimeMonitoringModel>();
 
             return json!;
         }
@@ -173,10 +169,9 @@ namespace GodsEye.WEB.Services
                 return false;
             }
 
-            var apiResponse =
-                await response.Content.ReadFromJsonAsync<ApiResponse<string>>();
+            var apiResponse = await response.Content.ReadFromJsonAsync<string>();
 
-            return apiResponse?.Success == true;
+            return apiResponse is not null;
         }
     }
 }

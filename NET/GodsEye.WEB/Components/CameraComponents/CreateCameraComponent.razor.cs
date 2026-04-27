@@ -71,9 +71,9 @@ namespace GodsEye.WEB.Components.CameraComponents
             }
 
             var featureResponse = await FeatureService.GetAllAsync();
-            if (featureResponse is not null && featureResponse.Success)
+            if (featureResponse is not null)
             {
-                _features = featureResponse.Data;
+                _features = featureResponse;
             }
         }
 
@@ -157,15 +157,15 @@ namespace GodsEye.WEB.Components.CameraComponents
 
             var cam = await MediaMtxWebService.StartStream(CameraForm.Connection);
 
-            if (cam is null || !cam.Success)
+            if (cam is null)
             {
                 _hasConnectionError = true;
-                _connectionErrorMessage = cam.Error.Message;
+                _connectionErrorMessage = "Hou um erro ao se conectar a camera";
                 _loadingConnection = false;
                 return;
             }
                 
-            var webRtcUrl = cam.Data;
+            var webRtcUrl = cam;
             _videoExpanded = true;
 
             await JS.InvokeVoidAsync("streamFunctions.start", "camera-player", webRtcUrl);

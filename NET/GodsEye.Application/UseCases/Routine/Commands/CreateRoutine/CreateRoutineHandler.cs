@@ -8,7 +8,7 @@ using System.Text.Json;
 
 namespace GodsEye.Application.UseCases.Routine.Commands.CreateRoutine
 {
-    public class CreateRoutineHandler : IRequestHandler<CreateRoutineRequest, ApiResponse<int>>
+    public class CreateRoutineHandler : IRequestHandler<CreateRoutineRequest, int>
     {
         private readonly IDapperContext _context;
         private readonly IRoutineQuerie _routineQuerie;
@@ -21,7 +21,7 @@ namespace GodsEye.Application.UseCases.Routine.Commands.CreateRoutine
             _notification = notification;
         }
 
-        public async Task<ApiResponse<int>> Handle(CreateRoutineRequest request, CancellationToken cancellationToken)
+        public async Task<int> Handle(CreateRoutineRequest request, CancellationToken cancellationToken)
         {
             var sql = "CALL SP_ROUTINE_CREATE_OR_UPDATE(@P_ID, @P_NAME, @P_TYPE, @P_ROUTINE_RULES_JSON)";
 
@@ -35,7 +35,7 @@ namespace GodsEye.Application.UseCases.Routine.Commands.CreateRoutine
 
             var result = await _context.QuerySingleSqlAsync<ProcedureResult>(sql, parameters, cancellationToken);
 
-            if (result.Erro == 1)
+            if (result is null)
                 throw new InvalidOperationException("Falha ao criar a pessoa no banco de dados.");
 
             var createdRoutine = await _routineQuerie.GetById(result.Id, cancellationToken);
@@ -43,7 +43,7 @@ namespace GodsEye.Application.UseCases.Routine.Commands.CreateRoutine
             if (createdRoutine is not null)
                 await _notification.SendCreatedRoutine(createdRoutine);
 
-            return ApiResponse<int>.Ok(result.Id);
+            return result.Id;
         }
     }
 }

@@ -94,9 +94,9 @@ namespace GodsEye.WEB.Components.CameraComponents
             }
 
             var featureResponse = await FeatureWebService.GetAllAsync();
-            if (featureResponse is not null && featureResponse.Success)
+            if (featureResponse is not null)
             {
-                _features = featureResponse.Data.ToList();
+                _features = featureResponse.ToList();
             }
         }
 

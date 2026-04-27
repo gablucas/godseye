@@ -43,7 +43,7 @@ namespace GodsEye.WEB.Components.PersonComponents
         private string[] errors = { };
         public PersonForm PersonForm { get; set; } = new();
 
-        ApiResponse<ProcedureResult?>? apiResponse { get; set; } = null;
+        ProcedureResult? result { get; set; } = null;
 
         private bool visible = false;
 
@@ -79,8 +79,8 @@ namespace GodsEye.WEB.Components.PersonComponents
             {
                 var personResponse = await PersonService.GetById(PersonId);
 
-                if (personResponse.Success)
-                    PersonForm = new PersonForm(personResponse.Data);
+                if (personResponse is not null)
+                    PersonForm = new PersonForm(personResponse);
             }
         }
 
@@ -154,29 +154,29 @@ namespace GodsEye.WEB.Components.PersonComponents
 
             if (PersonId == 0)
             {
-                apiResponse = await PersonService.CreateAsync(PersonForm);
+                result = await PersonService.CreateAsync(PersonForm);
 
-                if (apiResponse.Success)
+                if (result is not null)
                 {
                     Snackbar.Add("Pessoa cadastrada com sucesso!", Severity.Success);
                 }
                 else
                 {
-                    _errorMessage = apiResponse?.Error?.Message ?? "Houve um erro ao cadastrar a pessoa, tente novamente mais tarde";
+                    _errorMessage = "Houve um erro ao cadastrar a pessoa, tente novamente mais tarde";
                     Snackbar.Add(_errorMessage, Severity.Error);
                 }
             }
             else
             {
-                apiResponse = await PersonService.UpdateAsync(PersonForm);
+                result = await PersonService.UpdateAsync(PersonForm);
 
-                if (apiResponse.Success)
+                if (result is not null)
                 {
                     Snackbar.Add("Pessoa atualizada com sucesso!", Severity.Success);
                 }
                 else
                 {
-                    _errorMessage = apiResponse?.Error?.Message ?? "Houve um erro ao atualizar a pessoa, tente novamente mais tarde";
+                    _errorMessage = "Houve um erro ao atualizar a pessoa, tente novamente mais tarde";
                     Snackbar.Add(_errorMessage, Severity.Error);
                 }
             }

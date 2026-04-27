@@ -1,7 +1,4 @@
-﻿
-using GodsEye.Application.DTOs.Model;
-using GodsEye.Application.DTOs.Response;
-using GodsEye.Shared.Response.EnvironmentMonitoring;
+﻿using GodsEye.Shared.Response.EnvironmentMonitoring;
 using System.Net.Http.Json;
 
 namespace GodsEye.WEB.Services
@@ -9,6 +6,7 @@ namespace GodsEye.WEB.Services
     public class EnvironmentMonitoringWebService
     {
         private readonly HttpClient _http;
+        private readonly string _baseEndpoint = "api/environment-monitoring";
 
         public EnvironmentMonitoringWebService(HttpClient http)
         {
@@ -17,7 +15,7 @@ namespace GodsEye.WEB.Services
 
         public async Task<IEnumerable<EnvironmentMonitoringLogResponse>> GetAllLogs(int pageNumber, int pageSize)
         {
-            var result = await _http.GetAsync($"api/environmentmonitoring/log?pageNumber={pageNumber}&pageSize={pageSize}");
+            var result = await _http.GetAsync($"{_baseEndpoint}/log?pageNumber={pageNumber}&pageSize={pageSize}");
 
             var json = await result.Content.ReadFromJsonAsync<IEnumerable<EnvironmentMonitoringLogResponse>>();
 
@@ -26,7 +24,7 @@ namespace GodsEye.WEB.Services
 
         public async Task<IEnumerable<EnvironmentMonitoringLogResponse>> GetLastRegisterPerPerson()
         {
-            var result = await _http.GetAsync($"api/environmentmonitoring/log/last-per-person");
+            var result = await _http.GetAsync($"{_baseEndpoint}/log/last-per-person");
 
             var json = await result.Content.ReadFromJsonAsync<IEnumerable<EnvironmentMonitoringLogResponse>>();
 
@@ -35,7 +33,7 @@ namespace GodsEye.WEB.Services
 
         public async Task<IEnumerable<GetEnviromentMonitoringPerSectorResponse>> GetSectors()
         {
-            var result = await _http.GetAsync($"api/environmentmonitoring/sectors");
+            var result = await _http.GetAsync($"{_baseEndpoint}/sectors");
 
             var json = await result.Content.ReadFromJsonAsync<IEnumerable<GetEnviromentMonitoringPerSectorResponse>>();
 
@@ -44,7 +42,7 @@ namespace GodsEye.WEB.Services
 
         public async Task<EnvironmentMonitoringPersonResponse> GetByPersonId(int personId)
         {
-            var result = await _http.GetAsync($"api/environmentmonitoring/person/{personId}");
+            var result = await _http.GetAsync($"{_baseEndpoint}/person/{personId}");
 
             var json = await result.Content.ReadFromJsonAsync<EnvironmentMonitoringPersonResponse>();
 
@@ -53,7 +51,7 @@ namespace GodsEye.WEB.Services
 
         public async Task<bool> DeleteAllLogs()
         {
-            var result = await _http.DeleteAsync($"api/environmentmonitoring");
+            var result = await _http.DeleteAsync(_baseEndpoint);
             var json = await result.Content.ReadFromJsonAsync<bool>();
             return json!;
         }

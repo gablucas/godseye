@@ -62,12 +62,11 @@
 
         <MudDivider />
 
-        @if (apiResponse != null)
+        @if (result != null)
         {
-            if (!apiResponse.Success)
-            {
-                <MudAlert Severity="Severity.Error" Variant="Variant.Outlined">@_errorMessage</MudAlert>
-            }
+
+            <MudAlert Severity="Severity.Error" Variant="Variant.Outlined">@_errorMessage</MudAlert>
+            
         }
 
         <MudButton OnClick="Submit" Disabled=@(!success) Class="btn-submit" Variant="Variant.Filled" Color="Color.Primary">Registrar</MudButton>

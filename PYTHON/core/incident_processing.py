@@ -7,7 +7,6 @@ from datetime import datetime, timedelta
 from schemas.incident_schema import IncidentResponse, PersonSeen, IncidentRecordingUpdateRequest
 from services.clip_service import ClipService
 from services.face_recognition_service import FaceModel
-from services.face_matcher_service import FaceMatcher
 import cv2
 
 
@@ -19,9 +18,8 @@ class IncidentLoadError(Exception):
     pass
 
 class ProcessingIncident():
-    def __init__(self, clip_service: ClipService, face_matcher: FaceMatcher):
+    def __init__(self, clip_service: ClipService):
         self.clip_service = clip_service
-        self.face_matcher = face_matcher
 
     async def run(self):
         self.init_models()

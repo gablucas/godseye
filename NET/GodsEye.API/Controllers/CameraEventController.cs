@@ -1,5 +1,4 @@
 ﻿using GodsEye.Application.DTOs.Model;
-using GodsEye.Application.UseCases.IncidentRecording.Commands.CreateIncidentRecordingLog;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using System.Xml.Serialization;
@@ -45,17 +44,17 @@ namespace GodsEye.API.Controllers
             var evento = (HikvisionEventNotificationAlert)
                 serializer.Deserialize(stringReader);
 
-            var result = await _mediator.Send(new CreateIncidentRecordingLogRequest(evento.MacAddress));
+            //var result = await _mediator.Send(new CreateIncidentRecordingLogRequest(evento.MacAddress));
 
-            // DEBUG
-            Console.WriteLine($"ID Camera: {evento.ChannelID}");
-            Console.WriteLine($"Nome Camera: {evento.ChannelName}");
-            Console.WriteLine($"Tipo Evento: {evento.EventType}");
-            Console.WriteLine($"Input Port ID: {evento.InputIOPortID}");
-            Console.WriteLine($"Estado do Evento: {evento.EventState}");
-            Console.WriteLine($"Time: {evento.DateTime}");
-            Console.WriteLine($"Evento recebido: {evento.EventType}");
-            Console.WriteLine($"Input físico: {evento.InputIOPortID}");
+            //// DEBUG
+            //Console.WriteLine($"ID Camera: {evento.ChannelID}");
+            //Console.WriteLine($"Nome Camera: {evento.ChannelName}");
+            //Console.WriteLine($"Tipo Evento: {evento.EventType}");
+            //Console.WriteLine($"Input Port ID: {evento.InputIOPortID}");
+            //Console.WriteLine($"Estado do Evento: {evento.EventState}");
+            //Console.WriteLine($"Time: {evento.DateTime}");
+            //Console.WriteLine($"Evento recebido: {evento.EventType}");
+            //Console.WriteLine($"Input físico: {evento.InputIOPortID}");
 
             return Ok();
         }

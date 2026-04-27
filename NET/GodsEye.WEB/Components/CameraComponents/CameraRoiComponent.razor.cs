@@ -1,7 +1,4 @@
-﻿using GodsEye.Application.DTOs.Model;
-using GodsEye.Application.UseCases.Camera.Commands.CreateCameraRoi;
-using GodsEye.Application.UseCases.Camera.Commands.UpdateCameraRoi;
-using GodsEye.Domain.Enums;
+﻿using GodsEye.Shared.Enums;
 using GodsEye.Shared.Response.Camera;
 using GodsEye.WEB.Model.Forms;
 using GodsEye.WEB.Services;
@@ -191,7 +188,7 @@ namespace GodsEye.WEB.Components.CameraComponents
         private async Task ConfirmDrawing()
         {
             // O JS retorna um objeto completo com Width, Height e Points
-            var shapeData = await _roiJs.InvokeAsync<RoiModel>("getShapeData");
+            var shapeData = await _roiJs.InvokeAsync<RoiForm>("getShapeData");
 
             if (shapeData != null)
             {
@@ -259,7 +256,7 @@ namespace GodsEye.WEB.Components.CameraComponents
 
             var isMediaMtxOnline = await MediaMtxWebService.CheckStatus();
 
-            if (!isMediaMtxOnline.Success || !isMediaMtxOnline.Data)
+            if (!isMediaMtxOnline || !isMediaMtxOnline)
             {
                 _mediaMtxStatus = false;
                 _loadingConnection = false;
@@ -270,15 +267,15 @@ namespace GodsEye.WEB.Components.CameraComponents
 
             var cam = await MediaMtxWebService.StartStream(camera.Connection);
 
-            if (cam is null || !cam.Success)
+            if (cam is null)
             {
                 _hasConnectionError = true;
-                _connectionErrorMessage = cam.Error.Message;
+                _connectionErrorMessage = "houve um erro ao se conectar a camera";
                 _loadingConnection = false;
                 return;
             }
 
-            var webRtcUrl = cam.Data;
+            var webRtcUrl = cam;
 
             await JS.InvokeVoidAsync("streamFunctions.start", "camera-player", webRtcUrl);
 
@@ -298,18 +295,20 @@ namespace GodsEye.WEB.Components.CameraComponents
         {
             var getCameraRoi = await CameraService.GetRoiByCameraId(Id);
 
-            if (getCameraRoi == null || !getCameraRoi.Success)
+            if (getCameraRoi == null)
                 return;
 
-            foreach (var cameraRoi in getCameraRoi.Data)
+            foreach (var cameraRoi in getCameraRoi)
             {
+                var coordinates = new RoiForm() { Height = cameraRoi.Coordinates.Height, Width = cameraRoi.Coordinates.Width, Points = cameraRoi.Coordinates.Points.Select(point => new PointForm() { X = point.X, Y = point.Y }).ToList() };
+
                 if (cameraRoi.RoiType == RoiTypeEnum.FaceDetection)
                 {
                     FaceRoi = new CameraRoiForm
                     {
                         Id = cameraRoi.Id,
                         RoiType = cameraRoi.RoiType,
-                        Coordinates = cameraRoi.Coordinates,
+                        Coordinates = coordinates,
                         IsActive = cameraRoi.IsActive,
                     };
 
@@ -321,7 +320,7 @@ namespace GodsEye.WEB.Components.CameraComponents
                     {
                         Id = cameraRoi.Id,
                         RoiType = cameraRoi.RoiType,
-                        Coordinates = cameraRoi.Coordinates,
+                        Coordinates = coordinates,
                         IsActive = cameraRoi.IsActive,
                     };
                 }
@@ -343,7 +342,7 @@ namespace GodsEye.WEB.Components.CameraComponents
             // 2. Chamar API
             var deleteResult = await CameraService.DeleteRoiAsync(id);
 
-            if (deleteResult is null || !deleteResult.Success)
+            if (deleteResult == 0)
             {
                 Snackbar.Add("Erro ao excluir área.", Severity.Error);  
                 return;
@@ -372,13 +371,13 @@ namespace GodsEye.WEB.Components.CameraComponents
 
             if (SelectedRoi.Id == 0)
             {
-                var createRequest = new CreateCameraRoiRequest(Id, SelectedRoi.RoiType, SelectedRoi.Coordinates);
+                var createRequest = new CameraRoiForm() { Id = Id, RoiType = SelectedRoi.RoiType, Coordinates = SelectedRoi.Coordinates };
                 var createResult = await CameraService.CreateRoiAsync(createRequest);
                 Snackbar.Add("Área salva com sucesso.", Severity.Success);
             }
             else
             {
-                var updateRequest = new UpdateCameraRoiRequest(SelectedRoi.Id, SelectedRoi.Coordinates, SelectedRoi.IsActive);
+                var updateRequest = new CameraRoiForm() { Id = Id, RoiType = SelectedRoi.RoiType, Coordinates = SelectedRoi.Coordinates };
                 var updateResult = await CameraService.UpdateRoiAsync(updateRequest);
                 Snackbar.Add("Área atualizada com sucesso.", Severity.Success);
             }

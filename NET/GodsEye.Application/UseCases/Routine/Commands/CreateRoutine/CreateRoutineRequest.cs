@@ -1,10 +1,9 @@
-﻿using GodsEye.Application.DTOs.Response;
-using GodsEye.Domain.Enums;
+﻿using GodsEye.Domain.Enums;
 using MediatR;
 
 namespace GodsEye.Application.UseCases.Routine.Commands.CreateRoutine
 {
-    public class CreateRoutineRequest : IRequest<ApiResponse<int>>
+    public class CreateRoutineRequest : IRequest<int>
     {
         public int Id { get; set; }
         public string Name { get; set; }

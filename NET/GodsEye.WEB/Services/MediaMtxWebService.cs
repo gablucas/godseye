@@ -13,20 +13,20 @@ namespace GodsEye.WEB.Services
             _http = http;
         }
 
-        public async Task<ApiResponse<bool>> CheckStatus()
+        public async Task<bool> CheckStatus()
         {
             var response = await _http.GetAsync($"{_baseEnpoint}/status");
-            var json = await response.Content.ReadFromJsonAsync<ApiResponse<bool>>();
+            var json = await response.Content.ReadFromJsonAsync<bool>();
             return json!;
         }
 
-        public async Task<ApiResponse<string>> StartStream(string rtspUrl)
+        public async Task<string> StartStream(string rtspUrl)
         {
             var payload = new { RtspUrl = rtspUrl };
 
             var response = await _http.PostAsJsonAsync($"{_baseEnpoint}/start-stream", payload);
 
-            var json = await response.Content.ReadFromJsonAsync<ApiResponse<string>>();
+            var json = await response.Content.ReadFromJsonAsync<string>();
 
             return json!;
         }

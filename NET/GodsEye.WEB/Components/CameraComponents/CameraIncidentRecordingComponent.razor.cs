@@ -1,5 +1,4 @@
-﻿using GodsEye.Application.UseCases.Camera.Commands.UpdateCameraIncidentRecording;
-using GodsEye.WEB.Model.Forms;
+﻿using GodsEye.WEB.Model.Forms;
 using GodsEye.WEB.Services;
 using Microsoft.AspNetCore.Components;
 using MudBlazor;
@@ -37,20 +36,20 @@ namespace GodsEye.WEB.Components.CameraComponents
         {
             var camera = await CameraWebService.GetConfigIncidentRecording(Id);
 
-            if (camera.Success)
-                IncidentRecordingForm.MacAddress = camera.Data.MacAddress;
+            if (camera is not null)
+                IncidentRecordingForm.MacAddress = camera.MacAddress;
         }
    
         private async Task Submit()
         {
 
-            var updateRequest = new UpdateCameraIncidentRecordingRequest(Id, IncidentRecordingForm.MacAddress);
+            var updateRequest = new CameraIncidentRecordingForm() { CameraId = Id, MacAddress = IncidentRecordingForm.MacAddress };
 
             visible = true;
             var updateResult = await CameraWebService.UpdateConfigIncidentRecording(updateRequest);
             visible = false;
 
-            if (updateResult.Success)
+            if (updateResult > 0)
             {
                 Snackbar.Add("Camera atualizada com sucesso!", Severity.Success);
             }

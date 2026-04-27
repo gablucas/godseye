@@ -1,10 +1,9 @@
-﻿using GodsEye.Application.DTOs.Response;
-using GodsEye.Application.Interfaces;
+﻿using GodsEye.Application.Interfaces;
 using MediatR;
 
 namespace GodsEye.Application.UseCases.MediaMtx.Queries.IsOnline
 {
-    public class IsOnlineRequestHandler : IRequestHandler<IsOnlineRequest, ApiResponse<bool>>
+    public class IsOnlineRequestHandler : IRequestHandler<IsOnlineRequest, bool>
     {
         private readonly IMediaMtxService _mediaMtxService;
 
@@ -13,10 +12,10 @@ namespace GodsEye.Application.UseCases.MediaMtx.Queries.IsOnline
             _mediaMtxService = mediaMtxService;
         }
 
-        public async Task<ApiResponse<bool>> Handle(IsOnlineRequest request, CancellationToken cancellationToken)
+        public async Task<bool> Handle(IsOnlineRequest request, CancellationToken cancellationToken)
         {
             var isOnline = await _mediaMtxService.IsOnlineAsync();
-            return ApiResponse<bool>.Ok(isOnline);
+            return isOnline;
         }
     }
 }

@@ -126,7 +126,11 @@ namespace GodsEye.API.Services
 
             if (cameraFromRequest.Features.Any(x => x.Id == 1))
             {
+                if (!_godsEyeState.TryUpdateDetection(personId, cameraFromRequest.Id, identifiedAt))
+                    return;
+
                 await _mediator.Publish(new EnvironmentMonitoringNotification(cameraFromRequest.Id, personId, score, identifiedAt));
+                
 
                 //if (!_godsEyeState.TryUpdateDetection(personId, cameraFromRequest.Id, identifiedAt))
                 //{

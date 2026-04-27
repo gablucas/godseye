@@ -1,9 +1,9 @@
 ﻿using GodsEye.Application.DTOs.Response;
-using GodsEye.Application.UseCases.AccessLevel.Commands.CreateOrUpdateAccessLevel;
 using GodsEye.Domain.DTOs.Result;
 using GodsEye.Shared.Enums;
 using GodsEye.Shared.Response.AccessSchedule;
 using GodsEye.Shared.Response.Sector;
+using GodsEye.WEB.Model.Forms;
 using GodsEye.WEB.Services;
 using Microsoft.AspNetCore.Components;
 using MudBlazor;
@@ -44,7 +44,7 @@ namespace GodsEye.WEB.Components.AccessLevelComponents
         MudForm form;
         private bool success;
         private string[] errors = { };
-        public CreateOrUpdateAccessLevelRequest AccessLevelForm { get; set; } = new();
+        public AccessLevelForm AccessLevelForm { get; set; } = new();
 
         private bool _multiselectionTextChoice;
         private bool _multiselectionTextChoiceBlackList;
@@ -70,11 +70,11 @@ namespace GodsEye.WEB.Components.AccessLevelComponents
 
                 if (accessLevelResult is not null)
                 {
-                    AccessLevelForm = new CreateOrUpdateAccessLevelRequest()
+                    AccessLevelForm = new AccessLevelForm()
                     {
                         Id = accessLevelResult.Id,
                         Name = accessLevelResult.Name,
-                        Sectors = accessLevelResult.Sectors.Select(x => new SectorAccessLevelInput(x.Id, x.RuleType)).ToList(),
+                        Sectors = accessLevelResult.Sectors.Select(x => new SectorAccessLevelForm() { SectorId = x.Id, RuleType = x.RuleType}).ToList(),
                         AccessScheduleId = accessLevelResult.SectorSchedule.Id
                     };
                 }
@@ -99,7 +99,7 @@ namespace GodsEye.WEB.Components.AccessLevelComponents
         private void OnSectorsChanged(IEnumerable<int> values, AccessLevelSectorRuleEnum rule)
         {
             AccessLevelForm.Sectors.RemoveAll(x => x.RuleType == rule);
-            var newList = values.Select(id => new SectorAccessLevelInput(id, rule)).ToList();
+            var newList = values.Select(id => new SectorAccessLevelForm() { SectorId = id, RuleType = rule}).ToList();
             AccessLevelForm.Sectors.AddRange(newList);
         }
 

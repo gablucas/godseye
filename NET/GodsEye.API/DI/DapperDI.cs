@@ -24,7 +24,6 @@ namespace GodsEye.API.DI
             SqlMapper.AddTypeHandler(new JsonTypeHandler<List<FeatureCache>>());
             SqlMapper.AddTypeHandler(new JsonTypeHandler<List<AccessLevelSectorRuleCache>>());
             SqlMapper.AddTypeHandler(new JsonTypeHandler<List<AccessViolationEmailsDTO>>());
-            SqlMapper.AddTypeHandler(new JsonTypeHandler<List<EnvironmentMonitoringLogResponse>>());
             SqlMapper.AddTypeHandler(new JsonTypeHandler<List<CameraSectorResponse>>());
             SqlMapper.AddTypeHandler(new JsonTypeHandler<List<NotificationGroupResponse>>());
             SqlMapper.AddTypeHandler(new JsonTypeHandler<List<FeatureResponse>>());
@@ -38,6 +37,9 @@ namespace GodsEye.API.DI
             SqlMapper.AddTypeHandler(new JsonTypeHandler<List<EmailDTO>>());
             SqlMapper.AddTypeHandler(new JsonTypeHandler<List<SectorDTO>>());
             SqlMapper.AddTypeHandler(new JsonTypeHandler<List<AccessLevelDTO>>());
+            SqlMapper.AddTypeHandler(new JsonTypeHandler<List<GetEnviromentMonitoringPerSectorResponse>>());
+            SqlMapper.AddTypeHandler(new JsonTypeHandler<List<EnvironmentMonitoringLogResponse>>());
+            SqlMapper.AddTypeHandler(new JsonTypeHandler<List<EnvironmentMonitoringLogResponse>>());
         }
     }
 }

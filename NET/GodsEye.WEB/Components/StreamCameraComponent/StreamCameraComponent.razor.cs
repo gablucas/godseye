@@ -39,7 +39,7 @@ namespace GodsEye.WEB.Components.StreamCameraComponent
 
             var isMediaMtxOnline = await MediaMtxWebService.CheckStatus();
 
-            if (!isMediaMtxOnline.Success || !isMediaMtxOnline.Data)
+            if (!isMediaMtxOnline)
             {
                 _mediaMtxStatus = false;
                 _loadingConnection = false;
@@ -50,15 +50,15 @@ namespace GodsEye.WEB.Components.StreamCameraComponent
 
             var cam = await MediaMtxWebService.StartStream(cameraConnection);
 
-            if (cam is null || !cam.Success)
+            if (cam is null)
             {
                 _hasConnectionError = true;
-                _connectionErrorMessage = cam.Error.Message;
+                _connectionErrorMessage = "Houve um erro ao visualizar a camera";
                 _loadingConnection = false;
                 return;
             }
 
-            var webRtcUrl = cam.Data;
+            var webRtcUrl = cam;
 
             await JS.InvokeVoidAsync("streamFunctions.start", "camera-player", webRtcUrl);
 

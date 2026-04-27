@@ -44,9 +44,9 @@ namespace GodsEye.WEB.Components.Dashboard
 
             var result = await incidentRecordingWebService.GetAllLogs(1, 5);
 
-            if (result.Success)
+            if (result is not null)
             {
-                _logs = result.Data.ToList();
+                _logs = result.ToList();
                 _filteredLogs = _logs;
             }
 

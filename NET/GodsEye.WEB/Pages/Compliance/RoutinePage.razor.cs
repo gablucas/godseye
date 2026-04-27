@@ -59,9 +59,9 @@ namespace GodsEye.WEB.Pages.Compliance
 
             var routinesResult = await RoutineService.GetAllAsync();
 
-            if (routinesResult is not null && routinesResult.Success)
+            if (routinesResult is not null)
             {
-                _routines = routinesResult.Data.ToList();
+                _routines = routinesResult.ToList();
                 _filteredRoutines = _routines;
             }
 

@@ -3,26 +3,31 @@ using GodsEye.Shared.Response.Godseye;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 
-namespace GodsEye.API.Features.AccessLevel
+namespace GodsEye.API.Features.GodsEye
 {
-    public sealed record GetMonitoringDataCommand() : IRequest<IEnumerable<MonitoringDataResponse>>;
+    public sealed record GetMonitoringDataCommand() : IRequest<MonitoringDataResponse>;
 
-    internal sealed record GetMonitoringDataHandler(IDapperContext context) : IRequestHandler<GetMonitoringDataCommand, IEnumerable<MonitoringDataResponse>>
+    internal sealed record GetMonitoringDataHandler(IDapperContext context) : IRequestHandler<GetMonitoringDataCommand, MonitoringDataResponse>
     {
-        public async Task<IEnumerable<MonitoringDataResponse>> Handle(GetMonitoringDataCommand request, CancellationToken cancellationToken)
+        public async Task<MonitoringDataResponse> Handle(GetMonitoringDataCommand request, CancellationToken cancellationToken)
         {
-            return await GetMonitoringDataQuery(cancellationToken);
+            var data = await GetMonitoringDataQuery(cancellationToken);
+
+            if (data == null)
+                throw new InvalidOperationException("Não foi possível buscar os dados das cameras para o monitoramento");
+
+            return data;
         }
 
-        public async Task<IEnumerable<MonitoringDataResponse>> GetMonitoringDataQuery(CancellationToken cancellationToken)
+        public async Task<MonitoringDataResponse?> GetMonitoringDataQuery(CancellationToken cancellationToken)
         {
             var sql = "CALL SP_GODSEYE_GET_MONITORING_DATA()";
 
-            return await context.QuerySqlAsync<MonitoringDataResponse>(sql, cancellationToken);
+            return await context.QuerySingleSqlAsync<MonitoringDataResponse>(sql, new { }, cancellationToken);
         }
     }
 
-    public class GodsEyeController : IEndpoint
+    public class GodsEyeEndpoint : IEndpoint
     {
         public void MapEndpoint(WebApplication app)
         {

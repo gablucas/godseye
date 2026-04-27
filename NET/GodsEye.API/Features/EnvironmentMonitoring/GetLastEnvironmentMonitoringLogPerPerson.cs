@@ -29,7 +29,7 @@ namespace GodsEye.API.Features.EnvironmentMonitoring
     {
         public void MapEndpoint(WebApplication app)
         {
-            app.MapGet("/api/environmentmonitoring/log/last-per-person", Handle);
+            app.MapGet("/api/environment-monitoring/log/last-per-person", Handle);
         }
 
         private static async Task<IResult> Handle(

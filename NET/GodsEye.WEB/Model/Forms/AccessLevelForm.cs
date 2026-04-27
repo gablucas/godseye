@@ -1,10 +1,17 @@
-﻿namespace GodsEye.WEB.Model.Forms
+﻿using GodsEye.Shared.Enums;
+
+namespace GodsEye.WEB.Model.Forms
 {
     public class AccessLevelForm
     {
+        public int Id { get; set; }
         public string Name { get; set; }
-        public IEnumerable<int> AllowedSectors { get; set; } = new List<int>();
-        public IEnumerable<int> BlacklistSectors { get; set; } = new List<int>();
-        public int? AccessLevel { get; set; }
+        public List<SectorAccessLevelForm> Sectors { get; set; }
+        public int? AccessScheduleId { get; set; }
+    }
+    public class SectorAccessLevelForm
+    {
+        public int SectorId { get; set; }
+        public AccessLevelSectorRuleEnum RuleType { get; set; }
     }
 }

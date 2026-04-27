@@ -1,6 +1,5 @@
-﻿using GodsEye.Application.DTOs.Model;
-using GodsEye.Application.UseCases.AccessLevel.Commands.CreateOrUpdateAccessLevel;
-using GodsEye.Shared.Response.AccessLevel;
+﻿using GodsEye.Shared.Response.AccessLevel;
+using GodsEye.WEB.Model.Forms;
 using System.Net.Http.Json;
 
 namespace GodsEye.WEB.Services
@@ -15,7 +14,7 @@ namespace GodsEye.WEB.Services
             _http = http;
         }
 
-        public async Task<int> CreateOrUpdateAsync(CreateOrUpdateAccessLevelRequest accessLevel)
+        public async Task<int> CreateOrUpdateAsync(AccessLevelForm accessLevel)
         {
             var result = await _http.PostAsJsonAsync(_baseEndpoint, accessLevel);
 

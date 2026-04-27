@@ -41,8 +41,8 @@ namespace GodsEye.WEB.Components.Compliance
         {
             var result = await DwellTimeMonitoringService.GetDetailsByCameraId(Camera.Id);
 
-            if (result.Success)
-                _log = result.Data.ToList();
+            if (result is not null)
+                _log = result.ToList();
 
         }
 

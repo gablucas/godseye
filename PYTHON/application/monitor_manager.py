@@ -1,46 +1,47 @@
-from httpcore import request
-from utils.has_feature import has_feature
-from workers.camera_process import CameraProcess
 from multiprocessing import Queue, Manager
+from workers.camera_process import CameraProcess
+from workers.inference_worker import InferenceWorker
 from infrastructure.log_worker import LogWorker
+from utils.has_feature import has_feature
+
+NUM_INFERENCE_WORKERS = 2  # ajuste conforme sua VRAM
 
 class MonitorManager:
-    def __init__(self, cameras, face_matcher):
-        self.cameras = cameras
-        self.face_matcher = face_matcher
+    def __init__(self):
         self.workers = {}
         self.manager = Manager()
         self.log_queue = Queue(maxsize=2000)
         self.log_worker = LogWorker(self.log_queue)
-        self.shared_person = self.manager.dict()  # Dicionário compartilhado para associar track_id -> person_id
+        self.shared_person = self.manager.dict()
 
+        # Filas centrais compartilhadas entre todas as câmeras
+        self.inference_queue = Queue(maxsize=50)
+        self.result_queue = Queue(maxsize=200)
 
-    def start_monitoring(self):
+        # Inicia os workers de inferência
+        self.inference_workers = []
+        for _ in range(NUM_INFERENCE_WORKERS):
+            w = InferenceWorker(self.inference_queue, self.result_queue)
+            w.start()
+            self.inference_workers.append(w)
 
-        self.log_worker.start()
+    def add_camera(self, camera):
+        features = self.allowed_features(camera)
 
-        for cam in self.cameras:
-            print("##############################################################")
-            print(f"INICIANDO MONITORAMENTO DA CAMERA {cam['Id']}")
+        process = CameraProcess(
+            camera_id=camera["Id"],
+            rtsp_url=camera["Connection"],
+            sector_id=camera["SectorId"],
+            roi=camera["Roi"],
+            features=features,
+            log_queue=self.log_queue,
+            shared_person=self.shared_person,
+            inference_queue=self.inference_queue,
+            result_queue=self.result_queue,
+        )
 
-            features = self.allowed_features(cam)
-
-            print("##############################################################")
-
-            process = CameraProcess(
-                camera_id=cam["Id"],
-                rtsp_url=cam["Connection"],
-                sector_id=cam["SectorId"],
-                roi=cam["Roi"],
-                features=features,
-                face_matcher=self.face_matcher,
-                log_queue=self.log_queue,
-                shared_person=self.shared_person
-            )
-
-            process.start()
-            self.workers[cam["Id"]] = process
-
+        process.start()
+        self.workers[camera["Id"]] = process
 
     def allowed_features(self, cam):
         return {
@@ -49,57 +50,44 @@ class MonitorManager:
             "dwell_time_monitoring": has_feature(cam, 3)
         }
 
-    def stop_camera(self, camera_id):
-            # 1. Usa .pop() para remover do dicionário E pegar o processo ao mesmo tempo
-            # O segundo parametro None evita erro se o ID não existir
-            process = self.workers.pop(camera_id, None)
-
-            if process:
-                print(f"🛑 Parando Câmera {camera_id}...")
-                process.stop() # Sinaliza o evento de parada
-                
-                # 2. Join com Timeout (Segurança contra travamentos)
-                process.join(timeout=5)
-
-                # 3. Se ainda estiver vivo após 5s (travou), mata forçado
-                if process.is_alive():
-                    print(f"⚠️ Câmera {camera_id} travou no encerramento. Forçando kill...")
-                    process.terminate()
-                    process.join() # Limpa os recursos do processo morto
-                
-                print(f"✅ Câmera {camera_id} encerrada.")
-
     def stop_all(self):
-        print("🛑 Iniciando parada geral...")
-        
-        # Cria uma lista dos processos para não iterar sobre o dicionário enquanto removemos
-        # Note que aqui só sinalizamos o stop para todos PRIMEIRO (paralelismo)
-        processes_to_stop = list(self.workers.values())
+        print("🛑 Parando câmeras...")
+        processes = list(self.workers.values())
+        for p in processes:
+            p.stop()
+        for p in processes:
+            p.join(timeout=3)
+            if p.is_alive():
+                p.terminate()
+                p.join()
+        self.workers.clear()
 
-        for process in processes_to_stop:
+        # Para os InferenceWorkers com sinal None
+        print("🛑 Parando InferenceWorkers...")
+        for _ in self.inference_workers:
+            self.inference_queue.put(None)
+        for w in self.inference_workers:
+            w.join(timeout=5)
+            if w.is_alive():
+                w.terminate()
+
+        if hasattr(self, 'log_worker') and self.log_worker.is_alive():
+            self.log_worker.stop()
+            self.log_worker.join(timeout=5)
+
+        if hasattr(self, 'manager'):
+            self.manager.shutdown()
+
+        print("✅ Tudo encerrado.")
+
+    def stop_camera(self, camera_id):
+        process = self.workers.pop(camera_id, None)
+        if process:
             process.stop()
-
-        # Agora damos join em todos
-        for process in processes_to_stop:
-            process.join(timeout=3)
+            process.join(timeout=5)
             if process.is_alive():
                 process.terminate()
                 process.join()
 
-        # Limpa a referência
-        self.workers.clear()
-
-        # Para o Worker de Log
-        if hasattr(self, 'log_worker') and self.log_worker.is_alive():
-            print("🛑 Parando LogWorker")
-            self.log_worker.stop() # Certifique-se que sua classe LogWorker tem esse método
-            self.log_worker.join(timeout=5)
-            if self.log_worker.is_alive():
-                 self.log_worker.terminate()
-
-        # IMPORTANTE: Encerra o Manager para liberar memória compartilhada e sockets
-        if hasattr(self, 'manager'):
-            print("🧹 Encerrando Manager de memória compartilhada...")
-            self.manager.shutdown()
-            
-        print("✅ Monitoramento encerrado completamente.")
+    def removeCamera(self, camera_id):
+        self.stop_camera(camera_id)

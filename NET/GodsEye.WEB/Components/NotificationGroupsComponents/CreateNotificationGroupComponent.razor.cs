@@ -84,14 +84,14 @@ namespace GodsEye.WEB.Components.NotificationGroupsComponents
         private async Task Submit()
         {
             visible = true;
-            var apiResponse = await notificationGroupWebService.CreateAsync(NotificationGroupForm);
+            var result = await notificationGroupWebService.CreateAsync(NotificationGroupForm);
             visible = false;
 
-            if (apiResponse.Success)
+            if (result is not null)
             {
                 Snackbar.Add("Camera atualizada com sucesso!", Severity.Success);
                 success = false;
-                MudDialog.Close(DialogResult.Ok(apiResponse.Data.Id));
+                MudDialog.Close(DialogResult.Ok(result.Id));
             }
             else
             {

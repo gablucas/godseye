@@ -1,5 +1,4 @@
 ﻿using GodsEye.Application.DTOs.Model;
-using GodsEye.Application.DTOs.Response;
 using GodsEye.Application.UseCases.Compliance.Commands;
 using GodsEye.WEB.Services.Interfaces;
 using System.Net.Http.Json;

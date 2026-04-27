@@ -14,30 +14,18 @@ async def load_godseye_data_from_api():
     # Valida o status HTTP
     #200, 201, etc → continua
     #400, 401, 404, 500 → lança exceção automaticamente
-
     response.raise_for_status() 
     result = response.json()
 
-    if result.get("success") is not True:
-        raise GodsEyeLoadError(
-            "Não foi possível buscar os dados para monitoramento"
-        )
+    result_data = result["data"]
 
-    result_data = result.get("data")
-
-    if not result_data or "data" not in result_data:
-        raise GodsEyeLoadError(
-            "Resposta inválida da API (.NET): campo 'data' ausente"
-        )
-
-    raw_data = result_data["data"]
-
-    if isinstance(raw_data, str):
+    # Se vier como string (seu caso atual)
+    if isinstance(result_data, str):
         try:
-            raw_data = json.loads(raw_data)
+            result_data = json.loads(result_data)
         except json.JSONDecodeError:
             raise GodsEyeLoadError(
                 "Campo 'data' não é um JSON válido"
             )
 
-    return raw_data
+    return result_data

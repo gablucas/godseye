@@ -45,8 +45,8 @@ namespace GodsEye.WEB.Pages.IncidentRecording
 
             var result = await incidentRecordingWebService.GetAllLogs(1, 5);
 
-            if (result.Success)
-                _log = result.Data.ToList();
+            if (result is not null)
+                _log = result.ToList();
 
             _loading = false;
 

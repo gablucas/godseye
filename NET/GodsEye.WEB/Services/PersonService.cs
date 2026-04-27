@@ -16,47 +16,47 @@ namespace GodsEye.WEB.Services
             _http = http;
         }
 
-        public async Task<ApiResponse<ProcedureResult?>> CreateAsync(PersonForm person)
+        public async Task<ProcedureResult?> CreateAsync(PersonForm person)
         {
             var result = await _http.PostAsJsonAsync($"{_baseEndpoint}", person);
 
-            var json = await result.Content.ReadFromJsonAsync<ApiResponse<ProcedureResult?>>();
+            var json = await result.Content.ReadFromJsonAsync<ProcedureResult?>();
 
             return json!;
         }
 
-        public async Task<ApiResponse<ProcedureResult?>> UpdateAsync(PersonForm person)
+        public async Task<ProcedureResult?> UpdateAsync(PersonForm person)
         {
             var result = await _http.PutAsJsonAsync($"{_baseEndpoint}", person);
 
-            var json = await result.Content.ReadFromJsonAsync<ApiResponse<ProcedureResult?>>();
+            var json = await result.Content.ReadFromJsonAsync<ProcedureResult?>();
 
             return json!;
         }
 
-        public async Task<ApiResponse<ProcedureResult?>> CreateRecognizeAsync(PersonRecognizeForm person)
+        public async Task<ProcedureResult?> CreateRecognizeAsync(PersonRecognizeForm person)
         {
             var result = await _http.PostAsJsonAsync($"{_baseEndpoint}/recognize", person);
 
-            var json = await result.Content.ReadFromJsonAsync<ApiResponse<ProcedureResult>>();
+            var json = await result.Content.ReadFromJsonAsync<ProcedureResult>();
 
             return json;
         }
 
-        public async Task<ApiResponse<IEnumerable<PersonModel>>> GetAllAsync()
+        public async Task<IEnumerable<PersonModel>> GetAllAsync()
         {
-            var result = await _http.GetAsync($"{_baseEndpoint}");
+            var result = await _http.GetAsync(_baseEndpoint);
 
-            var json = await result.Content.ReadFromJsonAsync<ApiResponse<IEnumerable<PersonModel>>>();
+            var json = await result.Content.ReadFromJsonAsync<IEnumerable<PersonModel>>();
 
             return json!;
         }
 
-        public async Task<ApiResponse<PersonModel>> GetById(int personId)
+        public async Task<PersonModel> GetById(int personId)
         {
             var result = await _http.GetAsync($"{_baseEndpoint}/{personId}");
 
-            var json = await result.Content.ReadFromJsonAsync<ApiResponse<PersonModel>>();
+            var json = await result.Content.ReadFromJsonAsync<PersonModel>();
 
             return json!;
         }

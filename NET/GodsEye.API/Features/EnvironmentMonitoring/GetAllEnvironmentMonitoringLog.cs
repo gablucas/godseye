@@ -39,7 +39,7 @@ namespace GodsEye.API.Features.EnvironmentMonitoring
     {
         public void MapEndpoint(WebApplication app)
         {
-            app.MapGet("/api/environmentmonitoring/log", Handle);
+            app.MapGet("/api/environment-monitoring/log", Handle);
         }
 
         private static async Task<IResult> Handle(

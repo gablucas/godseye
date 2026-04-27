@@ -1,5 +1,4 @@
-﻿using GodsEye.Application.DTOs.Model;
-using GodsEye.Domain.Enums;
+﻿using GodsEye.Shared.Enums;
 
 namespace GodsEye.WEB.Model.Forms
 {
@@ -7,7 +6,22 @@ namespace GodsEye.WEB.Model.Forms
     {
         public int Id { get; set; } = 0;
         public RoiTypeEnum RoiType { get; set; }
-        public RoiModel Coordinates { get; set; } = new();
+        public RoiForm Coordinates { get; set; } = new();
         public bool IsActive { get; set; }
+    }
+
+    public class RoiForm
+    {
+        public float Width { get; set; }
+        public float Height { get; set; }
+
+        public List<PointForm> Points { get; set; } = new();
+    }
+
+    public class PointForm
+    {
+        public float X { get; set; }
+        public float Y { get; set; }
+
     }
 }

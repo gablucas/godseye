@@ -11,6 +11,7 @@ from core.initializer import initialize_monitoring
 
 async def load_godseye_with_retry(app: FastAPI):
     retry = 0
+    print("🔥 load_godseye_with_retry STARTOU")
 
     while True:
         try:
