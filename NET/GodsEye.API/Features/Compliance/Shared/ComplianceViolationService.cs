@@ -20,7 +20,7 @@ namespace GodsEye.API.Features.Compliance.Shared
                 P_LOG_ID = violation.LogId,
                 P_POLICY_ID = violation.PolicyId,
                 P_PERSON_ID = violation.PersonId,
-                P_VIOLATION_TYPE = violation.Type
+                P_VIOLATION_TYPE = violation.Type.ToString()
             };
 
             return await context.QuerySingleSqlAsync<PersonResponse>(sql, parameters, cancellationToken);

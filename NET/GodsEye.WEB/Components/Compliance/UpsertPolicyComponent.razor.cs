@@ -13,7 +13,7 @@ namespace GodsEye.WEB.Components.Compliance
         #endregion
 
         #region FORM
-        protected ComplianceRuleEnum RuleType { get; set; }
+        protected CompliancePolicyEnum RuleType { get; set; }
 
         #endregion
 

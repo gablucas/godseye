@@ -1,7 +1,7 @@
-﻿using GodsEye.API.Messages;
+﻿using GodsEye.API.RabbitMQ.Messages;
 using MassTransit;
 
-namespace GodsEye.API.Consumers
+namespace GodsEye.API.RabbitMQ.Consumers
 {
     public class ExtractedEmbeddingConsumerBatch : IConsumer<Batch<ExtractedEmbeddingEvent>>
     {

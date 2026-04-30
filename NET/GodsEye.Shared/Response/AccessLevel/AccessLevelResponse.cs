@@ -30,7 +30,7 @@ namespace GodsEye.Shared.Response.AccessLevel
         public List<AccessLevelScheduleRuleDTO> Rules { get; set; } = new();
     }
 
-    public class AccessLevelScheduleRuleDTO : IJSonTypeList
+    public class AccessLevelScheduleRuleDTO : IJSonTypeList, IJsonType
     {
         public WeekDayEnum WeekDay { get; set; }
         public TimeSpan? StartTime { get; set; }

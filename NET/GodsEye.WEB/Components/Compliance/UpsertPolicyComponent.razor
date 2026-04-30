@@ -14,19 +14,19 @@
                 <div class="inputs-container">
 
                     <MudSelect Label="Tipo de regra"
-                                T="ComplianceRuleEnum"
+                                T="CompliancePolicyEnum"
                                 @bind-Value="RuleType"
                                 Required="true"
                                 RequiredError="Selecione um setor"
                                 Variant="Variant.Outlined"
                                 Disabled="true">
-                        @foreach (var tipo in Enum.GetValues<ComplianceRuleEnum>())
+                        @foreach (var tipo in Enum.GetValues<CompliancePolicyEnum>())
                         {
-                            <MudSelectItem T="ComplianceRuleEnum" Value="@tipo">@tipo.GetDescription()</MudSelectItem>
+                            <MudSelectItem T="CompliancePolicyEnum" Value="@tipo">@tipo.GetDescription()</MudSelectItem>
                         }
                     </MudSelect>
 
-                    @if (RuleType == ComplianceRuleEnum.SECTOR_TRANSITION)
+                    @if (RuleType == CompliancePolicyEnum.SECTOR_TRANSITION)
                     {
                         <MudChip T="string" Label="true" Variant="Variant.Outlined" Color="Color.Info" Style="width: 100%; margin: 0px; margin-top: 4px; margin-bottom: 24px" Icon="@Icons.Material.Filled.LabelImportant">A regra Transição de Setor permite especificar um ou mais setores em sequencia onde a pessoa deve estar</MudChip>
                     }
@@ -35,7 +35,7 @@
 
                 <MudDivider />
 
-                @if (RuleType == ComplianceRuleEnum.SECTOR_TRANSITION)
+                @if (RuleType == CompliancePolicyEnum.SECTOR_TRANSITION)
                 {
                     <SectorTransitionRule />
                 }

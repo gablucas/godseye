@@ -6,7 +6,7 @@ namespace GodsEye.API.DTO
     {
         public int Id { get; set; }
         public string Name { get; set; }
-        public ComplianceRuleEnum Type { get; set; }
+        public CompliancePolicyEnum Type { get; set; }
         public List<RoutineRuleSectorTransitionDTO> Rules { get; set; }
     }
 

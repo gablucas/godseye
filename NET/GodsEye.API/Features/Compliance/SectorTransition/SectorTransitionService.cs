@@ -30,7 +30,7 @@ namespace GodsEye.API.Features.Compliance.SectorTransition
                     LogId = complianceLogId,
                     PolicyId = policyId,
                     PersonId = personId,
-                    Type = "ULTRAPASSOU_TEMPO_PERMITIDO"
+                    Type = ComplianceViolationEnum.EXCEEDED_ALLOWED_TIME
                 };
 
                 var result = await complianceViolationService.Create(violation, CancellationToken.None);
@@ -41,6 +41,7 @@ namespace GodsEye.API.Features.Compliance.SectorTransition
                 var notification = new ViolationAlertFeatureResponse() { Id = result.Id, Type = FeatureEnum.COMPLIANCE };
 
                 await notificationSignalR.SendAlertNotification(notification);
+                await notificationSignalR.SendCreatedComplianceViolationLog(result.Id);
             }
 
             return;

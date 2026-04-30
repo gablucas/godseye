@@ -9,6 +9,7 @@ namespace GodsEye.API.Interfaces
     {
         Task SendCreatedEnvironmentMonitoringLog(EnvironmentMonitoringDTO message);
         Task SendCreatedIncidentRecordingLog(IncidentRecordingDTO message);
+        Task SendCreatedComplianceViolationLog(int message);
         Task SendCreatedPerson(PersonResponse message);
         Task SendAlertNotification(ViolationAlertFeatureResponse message);
     }

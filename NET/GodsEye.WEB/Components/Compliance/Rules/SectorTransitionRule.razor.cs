@@ -59,7 +59,7 @@ namespace GodsEye.WEB.Components.Compliance.Rules
         {
             switch (ComplianceRuleForm.RuleType)
             {
-                case ComplianceRuleEnum.SECTOR_TRANSITION:
+                case CompliancePolicyEnum.SECTOR_TRANSITION:
                     ComplianceRuleForm.AddNewRule();
                     break;
             }

@@ -7,7 +7,7 @@ namespace GodsEye.API.Features.Compliance.SectorTransition
 {
     public class SectorTransitionStrategy(IDapperContext context, IComplianceLogService complianceLogService, IBackgroundJobClient backgroundJobs) : IComplianceStrategy
     {
-        public ComplianceRuleEnum RuleType => ComplianceRuleEnum.SECTOR_TRANSITION;
+        public CompliancePolicyEnum RuleType => CompliancePolicyEnum.SECTOR_TRANSITION;
 
         public async Task Apply(int complianceLogId, int personId, int sectorId, CompliancePolicyDTO policy, CancellationToken cancellationToken)
         {

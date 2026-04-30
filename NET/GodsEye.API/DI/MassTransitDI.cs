@@ -1,5 +1,5 @@
-﻿using GodsEye.API.Consumers;
-using GodsEye.API.Messages;
+﻿using GodsEye.API.RabbitMQ.Consumers;
+using GodsEye.API.RabbitMQ.Messages;
 using MassTransit;
 
 namespace GodsEye.API.DI

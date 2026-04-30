@@ -148,8 +148,7 @@ namespace GodsEye.API.Services
 
             if (cameraFromRequest.Features.Any(x => x.Id == 2))
             {
-                var command = new CreateComplianceLogNotification(personId, cameraFromRequest.SectorId, identifiedAt);
-                await _mediator.Publish(command, CancellationToken.None);
+                await _mediator.Publish(new CreateComplianceLogNotification(personId, cameraFromRequest.SectorId, identifiedAt), CancellationToken.None);
             }
         }
     }

@@ -30,6 +30,12 @@ namespace GodsEye.API.Services
             "CreatedIncidentRecording",
             message);
         }
+        public async Task SendCreatedComplianceViolationLog(int message)
+        {
+            await _hub.Clients.All.SendAsync(
+            "CreatedComplianceViolationRecording",
+            message);
+        }
 
         public async Task SendCreatedPerson(PersonResponse message)
         {

@@ -5,7 +5,6 @@ using GodsEye.API.Services;
 using GodsEye.Shared;
 using GodsEye.Shared.Enums;
 using GodsEye.Shared.Interfaces;
-using GodsEye.Shared.Response.AccessLevel;
 namespace GodsEye.API.DI
 {
     public static class DapperDI
@@ -14,14 +13,16 @@ namespace GodsEye.API.DI
         {
             Dapper.DefaultTypeMap.MatchNamesWithUnderscores = true;
             services.AddScoped<IDapperContext, DapperContext>();
-            RegisterJsonTypeHandlers();
 
-            SqlMapper.AddTypeHandler(new EnumTypeHandler<ComplianceRuleEnum>());
-            Dapper.DefaultTypeMap.MatchNamesWithUnderscores = true;
-            SqlMapper.AddTypeHandler(new JsonTypeHandler<List<SectorAccessLevelDTO>>());
-            SqlMapper.AddTypeHandler(new JsonTypeHandler<AccessLevelScheduleDTO>());
-            SqlMapper.AddTypeHandler(new JsonTypeHandler<AccessLevelScheduleRuleDTO>());
+            // VARCHAR TO ENUM
+            SqlMapper.AddTypeHandler(new EnumTypeHandler<CompliancePolicyEnum>());
+            SqlMapper.AddTypeHandler(new EnumTypeHandler<ComplianceViolationEnum>());
+
+            // EMBEDDIG VARBINARY(2048) TO FLOAT[]
             SqlMapper.AddTypeHandler(new FloatArrayHandler());
+
+            // JSON TO OBJECT
+            RegisterJsonTypeHandlers();
         }
 
         private static void RegisterJsonTypeHandlers()

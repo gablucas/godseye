@@ -10,15 +10,15 @@ from send_extracted_embedding import SendExtractedEmbedding
 
 embedding_sender = SendExtractedEmbedding()
 
-# time.sleep(1)
+time.sleep(1)
 
-# payload = ExtractedEmbedding (
-#     CameraId=45,
-#     Embedding=persons[0]["embedding"],
-#     IdentifiedAt=datetime.now(ZoneInfo("America/Sao_Paulo"))
-#     )
+payload = ExtractedEmbedding (
+    CameraId=45,
+    Embedding=persons[0]["embedding"],
+    IdentifiedAt=datetime.now(ZoneInfo("America/Sao_Paulo"))
+    )
 
-# embedding_sender.send_extracted_embedding(payload)
+embedding_sender.send_extracted_embedding(payload)
 
 # time.sleep(5)
 
@@ -51,24 +51,24 @@ embedding_sender = SendExtractedEmbedding()
 # embedding_sender.send_extracted_embedding(payload)
 
 
-while True:
-    SLEEP_TIME = random.uniform(0.5, 2.0)  
-    CROWD_SIZE = random.randint(1, len(persons) - 1)
-    START_PERSON_INDEX = random.randint(0, len(persons) - CROWD_SIZE)
-    CAMERA_INDEX = random.randint(0, len(cameras) - 1)
+# while True:
+#     SLEEP_TIME = random.uniform(0.5, 2.0)  
+#     CROWD_SIZE = random.randint(1, len(persons) - 1)
+#     START_PERSON_INDEX = random.randint(0, len(persons) - CROWD_SIZE)
+#     CAMERA_INDEX = random.randint(0, len(cameras) - 1)
 
-    for person in persons[START_PERSON_INDEX:START_PERSON_INDEX + CROWD_SIZE]:
-        payload = ExtractedEmbedding (
-            CameraId=cameras[CAMERA_INDEX]["id"],
-            Embedding=person["embedding"],
-            IdentifiedAt=datetime.now(ZoneInfo("America/Sao_Paulo"))
-        )
+#     for person in persons[START_PERSON_INDEX:START_PERSON_INDEX + CROWD_SIZE]:
+#         payload = ExtractedEmbedding (
+#             CameraId=cameras[CAMERA_INDEX]["id"],
+#             Embedding=person["embedding"],
+#             IdentifiedAt=datetime.now(ZoneInfo("America/Sao_Paulo"))
+#         )
 
-        embedding_sender.send_extracted_embedding(payload)
+#         embedding_sender.send_extracted_embedding(payload)
 
-        print(f' [x] Sent embedding for person {person["id"]} from camera {cameras[CAMERA_INDEX]["id"]}')
+#         print(f' [x] Sent embedding for person {person["id"]} from camera {cameras[CAMERA_INDEX]["id"]}')
 
-    time.sleep(SLEEP_TIME)
+#     time.sleep(SLEEP_TIME)
 
 
 # for camera in cameras[0:1]:

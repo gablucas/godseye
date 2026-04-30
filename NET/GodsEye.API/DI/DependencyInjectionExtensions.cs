@@ -88,7 +88,6 @@ namespace GodsEye.API.DI
             services.AddScoped<IComplianceStrategy, SectorTransitionStrategy>();
             services.AddScoped<IComplianceLogService, ComplianceLogService>();
             services.AddScoped<IComplianceViolationService, ComplianceViolationService>();
-            services.AddMediatR(cfg => cfg.RegisterServicesFromAssemblies(Assembly.GetExecutingAssembly()));
             services.AddAutoMapper(cfg => { }, Assembly.GetExecutingAssembly());
 
             services.AddScoped<IPersonQuerie, PersonQuerie>();

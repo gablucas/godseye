@@ -1,4 +1,4 @@
-﻿namespace GodsEye.API.Messages
+﻿namespace GodsEye.API.RabbitMQ.Messages
 {
     public class ExtractedEmbeddingEvent
     {

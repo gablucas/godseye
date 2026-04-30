@@ -6,6 +6,6 @@ namespace GodsEye.Shared.Response.Compliance
     {
         public int Id { get; set; }
         public string Name { get; set; }
-        public ComplianceRuleEnum Rule { get; set; }
+        public CompliancePolicyEnum Rule { get; set; }
     }
 }
