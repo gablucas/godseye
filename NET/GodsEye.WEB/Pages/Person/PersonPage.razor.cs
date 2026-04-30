@@ -1,4 +1,4 @@
-﻿using GodsEye.Application.DTOs.Model;
+﻿
 using GodsEye.Shared.Response.Person;
 using GodsEye.Shared.Response.Sector;
 using GodsEye.WEB.Services;
@@ -97,7 +97,7 @@ namespace GodsEye.WEB.Pages.Person
             _loading = false;
         }
 
-        private async Task RowClickEvent(TableRowClickEventArgs<PersonModel> args)
+        private async Task RowClickEvent(TableRowClickEventArgs<PersonResponse> args)
         {
             if (args?.Item == null)
                 return;
@@ -108,7 +108,7 @@ namespace GodsEye.WEB.Pages.Person
             await DialogWebService.OpenPersonUpdateDialog(args.Item.Id, null);
         }
 
-        private string SelectedRowClassFunc(PersonModel element, int rowNumber)
+        private string SelectedRowClassFunc(PersonResponse element, int rowNumber)
         {
             if (selectedRowNumber == rowNumber)
             {

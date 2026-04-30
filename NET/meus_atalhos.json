@@ -6,7 +6,7 @@
         "Nome": "Handler",
         "Arquivos": [
           {
-            "Caminho": "GodsEye.Application\\UseCases\\GodsEye\\Commands\\ValidateCoreRules\\ValidateCoreRulesHandler.cs",
+            "Caminho": "GodsEye.API\\UseCases\\GodsEye\\Commands\\ValidateCoreRules\\ValidateCoreRulesHandler.cs",
             "Linha": 0
           }
         ]
@@ -15,7 +15,7 @@
         "Nome": "Carregar Embedding em Memória (Cache)",
         "Arquivos": [
           {
-            "Caminho": "GodsEye.Infrastructure\\Services\\FaceMatcherService.cs",
+            "Caminho": "GodsEye.API.\Services\\FaceMatcherService.cs",
             "Linha": 0
           }
         ]
@@ -24,7 +24,7 @@
         "Nome": "DTO Embeding (Cache)",
         "Arquivos": [
           {
-            "Caminho": "GodsEye.Application\\DTOs\\Model\\PersonEmbedding.cs",
+            "Caminho": "GodsEye.API\\DTOs\\Model\\PersonEmbedding.cs",
             "Linha": 0
           }
         ]
@@ -33,27 +33,27 @@
         "Nome": "Embedding Completo",
         "Arquivos": [
           {
-            "Caminho": "GodsEye.Application\\Messages\\ExtractedEmbeddingEvent.cs",
+            "Caminho": "GodsEye.API\\Messages\\ExtractedEmbeddingEvent.cs",
             "Linha": 0
           },
           {
-            "Caminho": "GodsEye.Application\\Consumers\\ExtractedEmbeddingConsumer.cs",
+            "Caminho": "GodsEye.API\\Consumers\\ExtractedEmbeddingConsumer.cs",
             "Linha": 0
           },
           {
-            "Caminho": "GodsEye.Infrastructure\\Services\\DependencyInjectionExtensions.cs",
+            "Caminho": "GodsEye.API.\Services\\DependencyInjectionExtensions.cs",
             "Linha": 90
           },
           {
-            "Caminho": "GodsEye.Application\\DTOs\\Model\\PersonEmbedding.cs",
+            "Caminho": "GodsEye.API\\DTOs\\Model\\PersonEmbedding.cs",
             "Linha": 0
           },
           {
-            "Caminho": "GodsEye.Infrastructure\\Services\\FaceMatcherService.cs",
+            "Caminho": "GodsEye.API.\Services\\FaceMatcherService.cs",
             "Linha": 0
           },
           {
-            "Caminho": "GodsEye.Application\\UseCases\\GodsEye\\Commands\\ValidateCoreRules\\ValidateCoreRulesHandler.cs",
+            "Caminho": "GodsEye.API\\UseCases\\GodsEye\\Commands\\ValidateCoreRules\\ValidateCoreRulesHandler.cs",
             "Linha": 0
           }
         ],

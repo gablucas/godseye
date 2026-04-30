@@ -1,4 +1,5 @@
-﻿using GodsEye.Application.DTOs.Model;
+﻿
+using GodsEye.Shared.Response.Camera;
 using GodsEye.WEB.Services;
 using Microsoft.AspNetCore.Components;
 using Microsoft.JSInterop;
@@ -22,12 +23,12 @@ namespace GodsEye.WEB.Components.CameraComponents
         private IMudDialogInstance MudDialog { get; set; }
 
         [Parameter]
-        public CameraModel Camera { get; set; }
+        public CameraResponse Camera { get; set; }
 
         #region TABLE PARAMETERS
 
-        private IEnumerable<CameraLogModel> _log;
-        private MudTable<CameraLogModel> _mudTable;
+        private IEnumerable<CameraLogResponse> _log;
+        private MudTable<CameraLogResponse> _mudTable;
         bool _loading;
 
         #endregion

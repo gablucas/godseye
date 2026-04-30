@@ -1,8 +1,9 @@
 ﻿using AutoMapper;
 using FluentValidation;
 using GodsEye.API.Interfaces;
-using GodsEye.Domain.DTOs.Result;
+
 using GodsEye.Shared.Enums;
+using GodsEye.Shared.Response;
 using GodsEye.Shared.Response.Camera;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
@@ -48,7 +49,7 @@ namespace GodsEye.API.Features.Camera.Roi
             return result.Id;
         }
 
-        public async Task<ProcedureResult?> CreateCameraRoiWrite(CreateCameraRoiCommand request, CancellationToken cancellationToken)
+        public async Task<ProcedureResponse?> CreateCameraRoiWrite(CreateCameraRoiCommand request, CancellationToken cancellationToken)
         {
             var sql = "CALL SP_CAMERA_ROI_CREATE(@P_CAMERA_ID, @P_ROI_TYPE, @P_COORDINATES_JSON)";
 
@@ -59,7 +60,7 @@ namespace GodsEye.API.Features.Camera.Roi
                 P_COORDINATES_JSON = JsonSerializer.Serialize(request.Coordinates),
             };
 
-            return await context.QuerySingleSqlAsync<ProcedureResult>(sql, parameters, cancellationToken);
+            return await context.QuerySingleSqlAsync<ProcedureResponse>(sql, parameters, cancellationToken);
         }
     }
 

@@ -1,4 +1,4 @@
-﻿using GodsEye.Application.DTOs.Model;
+﻿
 using GodsEye.Shared.Response.EnvironmentMonitoring;
 using GodsEye.Shared.Response.IncidentRecording;
 using GodsEye.WEB.Components.AccessLevelComponents;
@@ -78,15 +78,6 @@ namespace GodsEye.WEB.Services
             await _dialogService.ShowAsync<CameraDataComponent>(null, parameters, _options);
         }
 
-        public async Task OpenEnvironmentMonitoring(int cameraId, IMudDialogInstance? mudDialog)
-        {
-            if (mudDialog is not null)
-                mudDialog.CancelAll();
-
-            var parameters = new DialogParameters<CameraEnvironmentMonitoringComponent> { { x => x.Id, cameraId } };
-            await _dialogService.ShowAsync<CameraEnvironmentMonitoringComponent>(null, parameters, _options);
-        }
-
         public async Task OpenIncidentRecording(int cameraId, IMudDialogInstance? mudDialog)
         {
             if (mudDialog is not null)
@@ -103,15 +94,6 @@ namespace GodsEye.WEB.Services
 
             var parameters = new DialogParameters<CameraRoiComponent> { { x => x.Id, cameraId } };
             await _dialogService.ShowAsync<CameraRoiComponent>(null, parameters, _options);
-        }
-
-        public async Task OpenDwellTimeMonitoring(int cameraId, IMudDialogInstance? mudDialog)
-        {
-            if (mudDialog is not null)
-                mudDialog.CancelAll();
-
-            var parameters = new DialogParameters<CameraDwellTimeRecordingComponent> { { x => x.Id, cameraId } };
-            await _dialogService.ShowAsync<CameraDwellTimeRecordingComponent>(null, parameters, _options);
         }
 
         #endregion

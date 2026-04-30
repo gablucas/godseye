@@ -1,7 +1,7 @@
 ﻿using AutoMapper;
 using FluentValidation;
 using GodsEye.API.Interfaces;
-using GodsEye.Domain.DTOs.Result;
+using GodsEye.Shared.Response;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 
@@ -44,7 +44,7 @@ namespace GodsEye.API.Features.Camera
             return result.Id;
         }
 
-        public async Task<ProcedureResult?> GenerateIncidentLogWrite(string macAddress, CancellationToken cancellationToken)
+        public async Task<ProcedureResponse?> GenerateIncidentLogWrite(string macAddress, CancellationToken cancellationToken)
         {
             var date = DateTime.Now;
 
@@ -56,7 +56,7 @@ namespace GodsEye.API.Features.Camera
                 P_INCIDENT_TIME = date
             };
 
-            return await context.QuerySingleSqlAsync<ProcedureResult>(sql, parameters, cancellationToken);
+            return await context.QuerySingleSqlAsync<ProcedureResponse>(sql, parameters, cancellationToken);
         }
     }
 

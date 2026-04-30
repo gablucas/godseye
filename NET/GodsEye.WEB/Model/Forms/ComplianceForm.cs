@@ -1,4 +1,4 @@
-﻿using GodsEye.Domain.Enums;
+﻿using GodsEye.Shared.Enums;
 
 namespace GodsEye.WEB.Model.Forms
 {
@@ -6,7 +6,6 @@ namespace GodsEye.WEB.Model.Forms
     {
         public int Id { get; set; }
         public string Name { get; set; }
-
         public ComplianceRuleEnum Rule { get; set; }
     }
 }

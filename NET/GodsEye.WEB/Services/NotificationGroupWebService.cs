@@ -1,6 +1,6 @@
-﻿using GodsEye.Application.DTOs.Model;
-using GodsEye.Application.DTOs.Response;
-using GodsEye.Domain.DTOs.Result;
+﻿
+using GodsEye.Shared.Response;
+using GodsEye.Shared.Response.NotificationGroups;
 using GodsEye.WEB.Model.Forms;
 using System.Net.Http.Json;
 
@@ -16,29 +16,29 @@ namespace GodsEye.WEB.Services
             _http = http;
         }
 
-        public async Task<ProcedureResult?> CreateAsync(CreateNotificationGroupForm notificationGroup)
+        public async Task<ProcedureResponse?> CreateAsync(CreateNotificationGroupForm notificationGroup)
         {
             var result = await _http.PostAsJsonAsync(_baseEndpoint, notificationGroup);
 
-            var json = await result.Content.ReadFromJsonAsync<ProcedureResult?>();
+            var json = await result.Content.ReadFromJsonAsync<ProcedureResponse?>();
 
             return json!;
         }
 
-        public async Task<NotificationGroupModel> GetById(int notificationGroupId)
+        public async Task<NotificationGroupsResponse> GetById(int notificationGroupId)
         {
             var result = await _http.GetAsync($"{_baseEndpoint}/{notificationGroupId}");
 
-            var json = await result.Content.ReadFromJsonAsync<NotificationGroupModel>();
+            var json = await result.Content.ReadFromJsonAsync<NotificationGroupsResponse>();
 
             return json!;
         }
 
-        public async Task<IEnumerable<NotificationGroupModel>> GetAllAsync()
+        public async Task<IEnumerable<NotificationGroupsResponse>> GetAllAsync()
         {
             var result = await _http.GetAsync(_baseEndpoint);
 
-            var json = await result.Content.ReadFromJsonAsync<IEnumerable<NotificationGroupModel>>();
+            var json = await result.Content.ReadFromJsonAsync<IEnumerable<NotificationGroupsResponse>>();
 
             return json!;
         }

@@ -7,15 +7,26 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Content Include="Email\Templates\AccessViolationProhibited.html">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Email\Templates\IncidentRecordingAlert.html">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+  </ItemGroup>
+
+  <ItemGroup>
     <PackageReference Include="FluentValidation" Version="12.1.1" />
     <PackageReference Include="FluentValidation.DependencyInjectionExtensions" Version="12.1.1" />
     <PackageReference Include="Hangfire.AspNetCore" Version="1.8.23" />
     <PackageReference Include="Hangfire.Core" Version="1.8.23" />
     <PackageReference Include="Hangfire.MySqlStorage" Version="2.0.3" />
+    <PackageReference Include="MailKit" Version="4.16.0" />
     <PackageReference Include="MassTransit" Version="8.5.9" />
     <PackageReference Include="MassTransit.RabbitMQ" Version="8.5.9" />
     <PackageReference Include="Microsoft.AspNetCore.SignalR" Version="1.2.9" />
     <PackageReference Include="Swashbuckle.AspNetCore" Version="6.6.2" />
+    <PackageReference Include="System.Numerics.Tensors" Version="10.0.7" />
   </ItemGroup>
 
 	<ItemGroup>
@@ -35,8 +46,6 @@
 	</ItemGroup>
 
 	<ItemGroup>
-	  <ProjectReference Include="..\GodsEye.Application\GodsEye.Application.csproj" />
-	  <ProjectReference Include="..\GodsEye.Infrastructure\GodsEye.Infrastructure.csproj" />
 	  <ProjectReference Include="..\GodsEye.Shared\GodsEye.Shared.csproj" />
 	</ItemGroup>
 </Project>

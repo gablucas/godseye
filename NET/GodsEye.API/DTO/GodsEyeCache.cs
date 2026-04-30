@@ -1,11 +1,11 @@
-﻿using GodsEye.API.Interfaces;
-using GodsEye.Domain.Enums;
+﻿using GodsEye.API.Enums;
+using GodsEye.API.Interfaces;
 using GodsEye.Shared;
-using GodsEye.Shared.Interfaces;
 using System.Text.Json.Serialization;
 
 namespace GodsEye.API.DTO
 {
+    
     public class PersonCache : IGodsEyeCache
     {
         public int Id { get; set; }
@@ -43,4 +43,5 @@ namespace GodsEye.API.DTO
         [JsonConverter(typeof(JsonStringEnumConverter))]
         public AccessLevelSectorRuleEnum RuleType { get; set; }
     }
+    
 }

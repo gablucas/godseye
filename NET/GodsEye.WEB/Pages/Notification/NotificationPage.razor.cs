@@ -1,4 +1,5 @@
-﻿using GodsEye.Application.DTOs.Model;
+﻿
+using GodsEye.Shared.Response.NotificationGroups;
 using GodsEye.WEB.Components.NotificationGroupsComponents;
 using GodsEye.WEB.Model.Forms;
 using GodsEye.WEB.Services;
@@ -20,11 +21,11 @@ namespace GodsEye.WEB.Pages.Notification
 
         #region TABLE PARAMETERS
 
-        private List<NotificationGroupModel> _logs = new();
-        private List<NotificationGroupModel> _filteredLogs = new();
+        private List<NotificationGroupsResponse> _logs = new();
+        private List<NotificationGroupsResponse> _filteredLogs = new();
 
 
-        private MudTable<NotificationGroupModel> _mudTable;
+        private MudTable<NotificationGroupsResponse> _mudTable;
         bool _loading;
         #endregion
 
@@ -75,7 +76,7 @@ namespace GodsEye.WEB.Pages.Notification
             DialogService.ShowAsync<CreateNotificationGroupComponent>("Criar grupo email", options);
         }
 
-        private async Task OpenUpdateNotificationGroup(NotificationGroupModel notification)
+        private async Task OpenUpdateNotificationGroup(NotificationGroupsResponse notification)
         {
             var options = new DialogOptions { CloseOnEscapeKey = true, FullWidth = true, MaxWidth = MaxWidth.Large };
             var parameters = new DialogParameters<UpdateNotificationGroupComponent> { { x => x.NotificationGroupModel, notification } };
@@ -110,7 +111,7 @@ namespace GodsEye.WEB.Pages.Notification
 
                     var current = _logs[index];
 
-                    var updatedNotification = new NotificationGroupModel
+                    var updatedNotification = new NotificationGroupsResponse
                     {
                         Id = current.Id,
                         Name = current.Name,

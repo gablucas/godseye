@@ -1,8 +1,9 @@
 ﻿using AutoMapper;
 using FluentValidation;
 using GodsEye.API.Interfaces;
-using GodsEye.Application.Interfaces;
-using GodsEye.Domain.DTOs.Result;
+using GodsEye.API.Interfaces;
+
+using GodsEye.Shared.Response;
 using GodsEye.Shared.Response.Person;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
@@ -59,7 +60,7 @@ namespace GodsEye.API.Features.Camera
             return 1;
         }
 
-        public async Task<ProcedureResult?> CreatePersonRecognizeWrite(int personId, string photoPath, byte[] binaryEmbedding, CancellationToken cancellationToken)
+        public async Task<ProcedureResponse?> CreatePersonRecognizeWrite(int personId, string photoPath, byte[] binaryEmbedding, CancellationToken cancellationToken)
         {
             var sql = "CALL SP_PERSON_CREATE_RECOGNIZE(@P_PERSON_ID, @P_IMAGE_PATH, @P_EMBEDDING)";
 
@@ -70,7 +71,7 @@ namespace GodsEye.API.Features.Camera
                 P_EMBEDDINGNEW = binaryEmbedding,
             };
 
-            return await context.QuerySingleSqlAsync<ProcedureResult>(sql, parameters, cancellationToken);
+            return await context.QuerySingleSqlAsync<ProcedureResponse>(sql, parameters, cancellationToken);
         }
 
         public async Task<PersonResponse?> GetById(int personId, CancellationToken cancellationToken)

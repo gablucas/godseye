@@ -1,5 +1,4 @@
-﻿using GodsEye.Application.Interfaces;
-using Microsoft.Extensions.DependencyInjection;
+﻿using Microsoft.Extensions.DependencyInjection;
 using System.Reflection;
 
 namespace GodsEye.Application.Services
@@ -8,8 +7,7 @@ namespace GodsEye.Application.Services
     {
         public static void AddAplication(this IServiceCollection services)
         {
-            services.AddMediatR(cfg => cfg.RegisterServicesFromAssemblies(Assembly.GetExecutingAssembly()));
-            services.AddAutoMapper(cfg => { }, Assembly.GetExecutingAssembly());
+            
         }
     }
 }

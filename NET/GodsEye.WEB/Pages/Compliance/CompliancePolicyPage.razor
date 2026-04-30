@@ -1,9 +1,10 @@
 ﻿@page "/compliance/politicas"
-@using GodsEye.Application.DTOs.Model
+
+@using GodsEye.Shared.Response.Compliance
 @using GodsEye.WEB.Components.Compliance
 @using GodsEye.WEB.Services
 @using GodsEye.WEB.Shared
-@inherits InfoPageBase<ComplianceWebService, CompliancePolicyDTO>
+@inherits InfoPageBase<ComplianceWebService, CompliancePolicyResponse>
 
 <PageTitle>Políticas</PageTitle>
 
@@ -27,7 +28,7 @@
             <MudButton Variant="Variant.Outlined" OnClick="() => DialogWebService.OpenCreateAsync<UpsertPolicyComponent>()">Criar política</MudButton>
         </div>
 
-        <MudTable T="CompliancePolicyDTO" @ref="mudTable" Elevation="0" Items="@_filteredItems" Hover="true" Loading="@_loading" LoadingProgressColor="Color.Info" RowClass="cursor-pointer" RowClassFunc="@SelectedRowClassFunc" OnRowClick="RowClickEvent">
+        <MudTable T="CompliancePolicyResponse" @ref="mudTable" Elevation="0" Items="@_filteredItems" Hover="true" Loading="@_loading" LoadingProgressColor="Color.Info" RowClass="cursor-pointer" RowClassFunc="@SelectedRowClassFunc" OnRowClick="RowClickEvent">
             <HeaderContent>
                 <MudTh>Politica</MudTh>
             </HeaderContent>

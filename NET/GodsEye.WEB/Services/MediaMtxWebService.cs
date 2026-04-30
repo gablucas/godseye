@@ -1,4 +1,4 @@
-﻿using GodsEye.Application.DTOs.Response;
+﻿using GodsEye.API.DTO;
 using System.Net.Http.Json;
 
 namespace GodsEye.WEB.Services

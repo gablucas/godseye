@@ -1,5 +1,5 @@
-﻿using GodsEye.Application.UseCases.MediaMtx.Commands.StartStream;
-using GodsEye.Application.UseCases.MediaMtx.Queries.IsOnline;
+﻿using GodsEye.API.UseCases.MediaMtx.Commands.StartStream;
+using GodsEye.API.UseCases.MediaMtx.Queries.IsOnline;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 

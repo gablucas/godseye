@@ -1,6 +1,5 @@
-﻿@using GodsEye.Application.DTOs.Model
+﻿@using GodsEye.Shared.Extensions
 @using GodsEye.Shared.Enums
-@using GodsEye.Domain.Extensions
 @using GodsEye.WEB.Enum
 @inject ISnackbar Snackbar
 
@@ -149,10 +148,7 @@
 
                 @if (apiResponse != null)
                 {
-                    if (!apiResponse.Success)
-                    {
-                        <MudAlert Severity="Severity.Error" Variant="Variant.Outlined">@_errorMessage</MudAlert>
-                    }
+                    <MudAlert Severity="Severity.Error" Variant="Variant.Outlined">@_errorMessage</MudAlert>
                 }
 
                 <MudButton OnClick="Submit" Disabled=@(!success) Class="btn-submit" Variant="Variant.Filled" Color="Color.Primary">@(AccessLevelForm.Id == 0 ? "Registrar" : "Atualizar")</MudButton>

@@ -1,7 +1,7 @@
 ﻿using AutoMapper;
 using FluentValidation;
 using GodsEye.API.Interfaces;
-using GodsEye.Domain.DTOs.Result;
+using GodsEye.Shared.Response;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using System.Text.Json;
@@ -45,7 +45,7 @@ namespace GodsEye.API.Features.Camera
             return result.Id;
         }
 
-        public async Task<ProcedureResult?> CreateNotificationGroupWrite(CreateNotificationGroupCommand request, CancellationToken cancellationToken)
+        public async Task<ProcedureResponse?> CreateNotificationGroupWrite(CreateNotificationGroupCommand request, CancellationToken cancellationToken)
         {
             var sql = "CALL SP_NOTIFICATION_GROUP_CREATE(@P_NAME, @P_EMAILS_JSON)";
 
@@ -55,7 +55,7 @@ namespace GodsEye.API.Features.Camera
                 P_EMAILS_JSON = JsonSerializer.Serialize(request.emails)
             };
 
-            return await context.QuerySingleSqlAsync<ProcedureResult>(sql, parameters, cancellationToken);
+            return await context.QuerySingleSqlAsync<ProcedureResponse>(sql, parameters, cancellationToken);
         }
     }
 

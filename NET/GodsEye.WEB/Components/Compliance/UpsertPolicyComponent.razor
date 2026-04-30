@@ -1,11 +1,11 @@
-﻿@using GodsEye.Application.DTOs.Model
-@using GodsEye.Domain.Enums
-@using GodsEye.Domain.Extensions
+﻿@using GodsEye.Shared.Enums
+@using GodsEye.Shared.Extensions
+@using GodsEye.Shared.Response.Compliance
 @using GodsEye.WEB.Components.Compliance.Rules
 @using GodsEye.WEB.Enum
 @using GodsEye.WEB.Services
 @inject ISnackbar Snackbar
-@inherits UpsertComponentBase<ComplianceWebService, CompliancePolicyDTO>
+@inherits UpsertComponentBase<ComplianceWebService, CompliancePolicyResponse>
 
 <MudDialog>
     <DialogContent>
@@ -18,14 +18,15 @@
                                 @bind-Value="RuleType"
                                 Required="true"
                                 RequiredError="Selecione um setor"
-                                Variant="Variant.Outlined">
+                                Variant="Variant.Outlined"
+                                Disabled="true">
                         @foreach (var tipo in Enum.GetValues<ComplianceRuleEnum>())
                         {
                             <MudSelectItem T="ComplianceRuleEnum" Value="@tipo">@tipo.GetDescription()</MudSelectItem>
                         }
                     </MudSelect>
 
-                    @if (RuleType == ComplianceRuleEnum.SectorTransition)
+                    @if (RuleType == ComplianceRuleEnum.SECTOR_TRANSITION)
                     {
                         <MudChip T="string" Label="true" Variant="Variant.Outlined" Color="Color.Info" Style="width: 100%; margin: 0px; margin-top: 4px; margin-bottom: 24px" Icon="@Icons.Material.Filled.LabelImportant">A regra Transição de Setor permite especificar um ou mais setores em sequencia onde a pessoa deve estar</MudChip>
                     }
@@ -34,7 +35,7 @@
 
                 <MudDivider />
 
-                @if (RuleType == ComplianceRuleEnum.SectorTransition)
+                @if (RuleType == ComplianceRuleEnum.SECTOR_TRANSITION)
                 {
                     <SectorTransitionRule />
                 }

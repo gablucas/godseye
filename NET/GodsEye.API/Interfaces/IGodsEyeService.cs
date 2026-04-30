@@ -1,4 +1,6 @@
-﻿using GodsEye.API.DTO;
+﻿
+
+using GodsEye.API.DTO;
 
 namespace GodsEye.API.Interfaces
 {

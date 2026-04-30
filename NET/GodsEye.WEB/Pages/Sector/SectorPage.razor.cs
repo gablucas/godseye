@@ -1,4 +1,4 @@
-﻿using GodsEye.Application.DTOs.Model;
+﻿
 using GodsEye.Shared.Response.Camera;
 using GodsEye.Shared.Response.Sector;
 using GodsEye.WEB.Services;

@@ -1,6 +1,5 @@
-﻿using GodsEye.Application.DTOs.Model;
-using GodsEye.Application.DTOs.Response;
-using GodsEye.Domain.DTOs.Result;
+﻿
+using GodsEye.Shared.Response.Feature;
 using GodsEye.Shared.Response.Sector;
 using GodsEye.WEB.Model.Forms;
 using GodsEye.WEB.Services;
@@ -48,7 +47,7 @@ namespace GodsEye.WEB.Components.CameraComponents
         private string featureError;
         public CreateCameraForm CameraForm { get; set; } = new();
         IEnumerable<SectorResponse> _sectors = Enumerable.Empty<SectorResponse>();
-        IEnumerable<FeatureModel> _features = Enumerable.Empty<FeatureModel>();
+        IEnumerable<FeatureResponse> _features = Enumerable.Empty<FeatureResponse>();
 
         private bool _hasConnectionError = false;
         private string? _connectionErrorMessage = null;

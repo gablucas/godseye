@@ -4,6 +4,7 @@ using GodsEye.API.Features.Compliance.Shared;
 using GodsEye.API.Interfaces;
 using GodsEye.API.Services;
 using GodsEye.API.Services.Queries;
+using GodsEye.API.Email;
 using Hangfire;
 using Hangfire.MySql;
 using Microsoft.AspNetCore.ResponseCompression;
@@ -59,11 +60,14 @@ namespace GodsEye.API.DI
             services.AddMediatR(cfg => cfg.RegisterServicesFromAssemblies(Assembly.GetExecutingAssembly()));
             services.AddSingleton<IFaceMatcherService, FaceMatcherService>();
             services.AddSingleton<IGodsEyeState, GodsEyeState>();
-            
 
-            services.AddScoped<IPersonQuerie, PersonQuerie>();
-            services.AddScoped<ICameraQuerie, CameraQuerie>();
-            services.AddScoped<IAccessLevelQuerie, AccessLevelQuerie>();
+            services.AddScoped<IFolderService, FolderService>();
+            services.AddScoped<ICameraConnectionTesterService, RtspCameraConnectionTesterService>();
+            services.Configure<SmtpSettings>(configuration.GetSection("SmtpSettings"));
+
+            services.AddScoped<IEmailService, MailKitEmailSender>();
+
+            
 
             // ✅ Registrar o Hangfire
             services.AddHangfire(config => config
@@ -84,6 +88,12 @@ namespace GodsEye.API.DI
             services.AddScoped<IComplianceStrategy, SectorTransitionStrategy>();
             services.AddScoped<IComplianceLogService, ComplianceLogService>();
             services.AddScoped<IComplianceViolationService, ComplianceViolationService>();
+            services.AddMediatR(cfg => cfg.RegisterServicesFromAssemblies(Assembly.GetExecutingAssembly()));
+            services.AddAutoMapper(cfg => { }, Assembly.GetExecutingAssembly());
+
+            services.AddScoped<IPersonQuerie, PersonQuerie>();
+            services.AddScoped<ICameraQuerie, CameraQuerie>();
+            services.AddScoped<IAccessLevelQuerie, AccessLevelQuerie>();
         }
     }
 }

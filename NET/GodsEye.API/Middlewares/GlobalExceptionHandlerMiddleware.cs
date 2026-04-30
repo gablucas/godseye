@@ -1,5 +1,5 @@
-﻿using GodsEye.Application.DTOs.Response;
-using GodsEye.Application.Exceptions;
+﻿using GodsEye.API.DTO;
+using GodsEye.API.Exceptions;
 using MySqlConnector;
 using System.Net;
 using System.Text.Json;
@@ -53,11 +53,14 @@ namespace GodsEye.API.Middlewares
             else
                 message = exception.Message;
 
-            var response = ApiResponse<object>.Fail(
-                (int)statusCode,
-                message,
-                _env.IsDevelopment() ? exception.StackTrace : null
-            );
+            var response = new
+            {
+                Status = (int)statusCode,
+                Message = message,
+                StackTrace = _env.IsDevelopment() ? exception.StackTrace : null
+            };
+                
+            
 
             context.Response.ContentType = "application/json";
             context.Response.StatusCode = (int)statusCode;

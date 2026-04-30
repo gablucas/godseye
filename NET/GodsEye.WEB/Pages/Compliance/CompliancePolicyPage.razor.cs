@@ -1,4 +1,5 @@
-﻿using GodsEye.Application.DTOs.Model;
+﻿
+using GodsEye.Shared.Response.Compliance;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.SignalR.Client;
 using MudBlazor;
@@ -20,7 +21,7 @@ namespace GodsEye.WEB.Pages.Compliance
 
         private string _policyNameFilter = "";
         
-        private MudTable<CompliancePolicyDTO> mudTable;
+        private MudTable<CompliancePolicyResponse> mudTable;
         private HubConnection? hubConnection;
 
         bool _loading;
@@ -39,7 +40,7 @@ namespace GodsEye.WEB.Pages.Compliance
 
 
         #region TABLE FUNCTIONS
-        private void RowClickEvent(TableRowClickEventArgs<CompliancePolicyDTO> tableRowClickEventArgs)
+        private void RowClickEvent(TableRowClickEventArgs<CompliancePolicyResponse> tableRowClickEventArgs)
         {
             //var options = new DialogOptions { CloseOnEscapeKey = true, FullWidth = true, MaxWidth = MaxWidth.Large };
             //var parameters = new DialogParameters<ComplianceRealTimeComponent> { { x => x.Camera, tableRowClickEventArgs.Item } };
@@ -47,7 +48,7 @@ namespace GodsEye.WEB.Pages.Compliance
             //DialogService.ShowAsync<ComplianceRealTimeComponent>("Compliance", parameters, options);
         }
 
-        private string SelectedRowClassFunc(CompliancePolicyDTO element, int rowNumber)
+        private string SelectedRowClassFunc(CompliancePolicyResponse element, int rowNumber)
         {
             if (selectedRowNumber == rowNumber)
             {

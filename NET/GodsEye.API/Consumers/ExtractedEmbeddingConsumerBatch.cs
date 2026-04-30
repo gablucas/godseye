@@ -1,7 +1,7 @@
-﻿using GodsEye.Application.Messages;
+﻿using GodsEye.API.Messages;
 using MassTransit;
 
-namespace GodsEye.Application.Consumers
+namespace GodsEye.API.Consumers
 {
     public class ExtractedEmbeddingConsumerBatch : IConsumer<Batch<ExtractedEmbeddingEvent>>
     {

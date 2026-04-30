@@ -1,7 +1,7 @@
-﻿using GodsEye.API.Interfaces;
-using GodsEye.Domain.DTOs.Result;
+﻿using GodsEye.API.Features.Compliance.Shared;
+using GodsEye.API.Interfaces;
+using GodsEye.Shared.Response.Person;
 using MediatR;
-using GodsEye.API.Features.Compliance.Shared;
 
 namespace GodsEye.API.Features.Compliance
 {
@@ -44,7 +44,7 @@ namespace GodsEye.API.Features.Compliance
         }
 
 
-        private async Task<ProcedureResult?> CreateComplianceLogWrite(CreateComplianceLogNotification request, CancellationToken cancellationToken)
+        private async Task<PersonResponse?> CreateComplianceLogWrite(CreateComplianceLogNotification request, CancellationToken cancellationToken)
         {
             var sql = "CALL SP_COMPLIANCE_LOG_CREATE(@P_PERSON_ID, @P_SECTOR_ID, @P_IDENTIFIED_AT)";
 
@@ -55,7 +55,7 @@ namespace GodsEye.API.Features.Compliance
                 P_IDENTIFIED_AT = request.identifiedAt
             };
 
-            var result = await context.QuerySingleSqlAsync<ProcedureResult>(sql, parameters, cancellationToken);
+            var result = await context.QuerySingleSqlAsync<PersonResponse>(sql, parameters, cancellationToken);
 
             return result;
         }

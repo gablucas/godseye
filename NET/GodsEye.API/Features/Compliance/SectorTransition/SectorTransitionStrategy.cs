@@ -1,5 +1,6 @@
 ﻿using GodsEye.API.Features.Compliance.Shared;
 using GodsEye.API.Interfaces;
+using GodsEye.Shared.Enums;
 using Hangfire;
 
 namespace GodsEye.API.Features.Compliance.SectorTransition

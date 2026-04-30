@@ -7,17 +7,17 @@
         public string? ImagePath { get; set; }
         public int Active { get; set; }
 
-        public SectorPersonDTO Sector { get; set; }
-        public AccessLevelPersonDTO AccessLevel { get; set; }
+        public SectorDTO Sector { get; set; }
+        public AccessLevelDTO AccessLevel { get; set; }
     }
 
-    public class SectorPersonDTO
+    public class SectorDTO
     {
         public int Id { get; set; }
         public string Name { get; set; }
     }
 
-    public class AccessLevelPersonDTO
+    public class AccessLevelDTO
     {
         public int Id { get; set; }
         public string Name { get; set; }

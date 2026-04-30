@@ -29,7 +29,7 @@ namespace GodsEye.API.Services.Queries
         {
             var query = "CALL SP_PERSON_GET_ALL_CACHE()";
 
-            var parameters = new {};
+            var parameters = new { };
 
             return await _context.QuerySqlAsync<PersonCache>(query, parameters, cancellationToken);
         }

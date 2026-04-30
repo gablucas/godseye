@@ -1,4 +1,5 @@
-﻿using GodsEye.Application.DTOs.Model;
+﻿
+using GodsEye.API.DTO;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using System.Xml.Serialization;

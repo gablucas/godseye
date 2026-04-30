@@ -1,5 +1,4 @@
-﻿using GodsEye.Shared.Interfaces;
-using System.ComponentModel.DataAnnotations.Schema;
+﻿using System.ComponentModel.DataAnnotations.Schema;
 
 namespace GodsEye.Shared.Response.Camera
 {
@@ -15,10 +14,10 @@ namespace GodsEye.Shared.Response.Camera
         [NotMapped]
         public bool? Status { get; set; }
 
-        public List<FeatureResponse> Features { get; set; } = new();
+        public List<FeatureCameraResponse> Features { get; set; } = new();
     }
 
-    public class FeatureResponse : IJSonTypeList
+    public class FeatureCameraResponse : IJSonTypeList
     {
         public int FeatureId { get; set; }
         public string FeatureName { get; set; }

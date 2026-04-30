@@ -2,8 +2,6 @@ using GodsEye.API.DI;
 using GodsEye.API.Hubs;
 using GodsEye.API.Interfaces;
 using GodsEye.API.Middlewares;
-using GodsEye.Application.Services;
-using GodsEye.Infrastructure.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -16,8 +14,8 @@ builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 builder.Services.AddAPI(builder.Configuration);
 builder.Services.AddDapperDI();
-builder.Services.AddInfrastructure(builder.Configuration);
-builder.Services.AddAplication();
+builder.Services.AddMediaMtxDI(builder.Configuration);
+
 
 
 // Teste Externo

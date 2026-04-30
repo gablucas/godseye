@@ -1,6 +1,5 @@
-﻿using GodsEye.Application.DTOs.Response;
-using GodsEye.Domain.DTOs.Result;
-using GodsEye.Shared.Enums;
+﻿using GodsEye.Shared.Enums;
+using GodsEye.Shared.Response;
 using GodsEye.Shared.Response.AccessLevel;
 using GodsEye.Shared.Response.Sector;
 using GodsEye.WEB.Model.Forms;
@@ -43,7 +42,7 @@ namespace GodsEye.WEB.Components.PersonComponents
         private string[] errors = { };
         public PersonForm PersonForm { get; set; } = new();
 
-        ProcedureResult? result { get; set; } = null;
+        ProcedureResponse? result { get; set; } = null;
 
         private bool visible = false;
 

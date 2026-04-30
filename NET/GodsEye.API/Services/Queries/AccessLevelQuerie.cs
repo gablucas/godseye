@@ -1,4 +1,5 @@
-﻿using GodsEye.API.DTO;
+﻿
+using GodsEye.API.DTO;
 using GodsEye.API.Interfaces;
 
 namespace GodsEye.API.Services.Queries

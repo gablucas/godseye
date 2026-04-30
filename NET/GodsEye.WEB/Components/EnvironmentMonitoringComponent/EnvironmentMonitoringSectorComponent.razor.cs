@@ -1,9 +1,7 @@
-﻿using GodsEye.Application.DTOs.Model;
-using GodsEye.Shared.Response.EnvironmentMonitoring;
+﻿using GodsEye.Shared.Response.EnvironmentMonitoring;
 using GodsEye.WEB.Services;
 using Microsoft.AspNetCore.Components;
 using MudBlazor;
-using static MudBlazor.CategoryTypes;
 
 namespace GodsEye.WEB.Components.EnvironmentMonitoringComponent
 {

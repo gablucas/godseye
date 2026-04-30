@@ -1,8 +1,9 @@
-﻿using GodsEye.Application.DTOs.Model;
-using GodsEye.Application.Interfaces;
-using GodsEye.Application.Interfaces.Queries;
+﻿
+using GodsEye.API.DTO;
+using GodsEye.API.Interfaces;
+using GodsEye.API.Services.Queries;
 
-namespace GodsEye.Infrastructure.Queries
+namespace GodsEye.API.Queries
 {
     public class AccessViolationQuerie : IAccessViolationQuerie
     {
@@ -13,7 +14,7 @@ namespace GodsEye.Infrastructure.Queries
             _context = context;
         }
 
-        public async Task<AccessViolationDetailDTO?> GetAccessViolationDetail(int personId, int sectorId, CancellationToken cancellationToken)
+        public async Task<AccessViolationDetailResponse?> GetAccessViolationDetail(int personId, int sectorId, CancellationToken cancellationToken)
         {
             var sql = "CALL SP_ACCESS_VIOLATION_GET_DETAIL(@P_PERSON_ID, @P_SECTOR_ID)";
 
@@ -23,7 +24,7 @@ namespace GodsEye.Infrastructure.Queries
                 P_SECTOR_ID = sectorId
             };
 
-            return await _context.QuerySingleSqlAsync<AccessViolationDetailDTO>(sql, parameters, cancellationToken);
+            return await _context.QuerySingleSqlAsync<AccessViolationDetailResponse>(sql, parameters, cancellationToken);
         }
     }
 }

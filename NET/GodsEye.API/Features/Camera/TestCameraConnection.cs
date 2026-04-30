@@ -1,5 +1,4 @@
 ﻿using GodsEye.API.Interfaces;
-using GodsEye.Application.Interfaces;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 

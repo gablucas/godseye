@@ -1,4 +1,5 @@
-﻿using GodsEye.Application.DTOs.Model;
+﻿
+using GodsEye.Shared.Response.Camera;
 using GodsEye.WEB.Services;
 using Microsoft.AspNetCore.Components;
 using MudBlazor;
@@ -28,7 +29,7 @@ namespace GodsEye.WEB.Components.CameraComponents
         [CascadingParameter]
         private IMudDialogInstance MudDialog { get; set; }
 
-        private List<CameraFeatureModel> _cameraFeatures = new();
+        private List<CameraFeatureResponse> _cameraFeatures = new();
 
         protected override async Task OnParametersSetAsync()
         {

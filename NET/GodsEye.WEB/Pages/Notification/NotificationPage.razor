@@ -1,7 +1,7 @@
 ﻿@page "/organizacao/emails"
+@using GodsEye.Shared.Response.NotificationGroups
 @using GodsEye.WEB.Components
 @using GodsEye.WEB.Enum
-@using GodsEye.Application.DTOs.Model;
 
 
 <PageTitle>Notificações</PageTitle>
@@ -31,7 +31,7 @@
             <MudButton Variant="Variant.Outlined" OnClick="() => DialogWebService.OpenCreateNotificationGroup(null)">Criar grupo de notificação</MudButton>
         </div>
 
-        <MudTable T="NotificationGroupModel" @ref="_mudTable" Items="@_filteredLogs" Elevation="0" Hover="true" Loading="@_loading" LoadingProgressColor="Color.Info" RowClass="cursor-pointer">
+        <MudTable T="NotificationGroupsResponse" @ref="_mudTable" Items="@_filteredLogs" Elevation="0" Hover="true" Loading="@_loading" LoadingProgressColor="Color.Info" RowClass="cursor-pointer">
             <HeaderContent>
                 <MudTh>Grupo</MudTh>
                 <MudTh>Emails</MudTh>

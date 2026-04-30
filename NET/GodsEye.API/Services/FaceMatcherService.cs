@@ -1,5 +1,4 @@
-﻿
-using GodsEye.API.DTO;
+﻿using GodsEye.API.DTO;
 using GodsEye.API.Interfaces;
 using System.Numerics.Tensors;
 

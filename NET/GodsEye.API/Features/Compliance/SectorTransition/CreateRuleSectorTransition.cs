@@ -1,7 +1,7 @@
 ﻿using AutoMapper;
 using FluentValidation;
 using GodsEye.API.Interfaces;
-using GodsEye.Domain.DTOs.Result;
+using GodsEye.Shared.Response;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using System.Text.Json;
@@ -48,7 +48,7 @@ namespace GodsEye.API.Features.Compliance.SectorTransition
             return result.Id;
         }
 
-        public async Task<ProcedureResult?> CreateRuleSectorTransitionWrite(CreateRuleSectorTransitionCommand request, CancellationToken cancellationToken)
+        public async Task<ProcedureResponse?> CreateRuleSectorTransitionWrite(CreateRuleSectorTransitionCommand request, CancellationToken cancellationToken)
         {
             var sql = "CALL SP_COMPLIANCE_RULE_SECTOR_TRANSITION_CREATE(@P_POLICY_NAME, @P_RULE_JSON)";
 
@@ -58,7 +58,7 @@ namespace GodsEye.API.Features.Compliance.SectorTransition
                 P_RULE_JSON = JsonSerializer.Serialize(request.rules)
             };
 
-            return await context.QuerySingleSqlAsync<ProcedureResult>(sql, parameters, cancellationToken);
+            return await context.QuerySingleSqlAsync<ProcedureResponse>(sql, parameters, cancellationToken);
         }
     }
 

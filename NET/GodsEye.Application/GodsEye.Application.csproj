@@ -13,7 +13,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\GodsEye.Domain\GodsEye.Domain.csproj" />
     <ProjectReference Include="..\GodsEye.Shared\GodsEye.Shared.csproj" />
   </ItemGroup>
 

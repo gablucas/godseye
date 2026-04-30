@@ -1,4 +1,6 @@
-﻿namespace GodsEye.API.Features.Compliance.Shared
+﻿using GodsEye.Shared.Enums;
+
+namespace GodsEye.API.Features.Compliance.Shared
 {
     public interface IComplianceStrategy
     {

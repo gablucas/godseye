@@ -1,7 +1,6 @@
-﻿using GodsEye.Application.DTOs.Model;
-using GodsEye.Application.DTOs.Response;
-using GodsEye.Domain.DTOs.Result;
+﻿
 using GodsEye.Shared.Response.Camera;
+using GodsEye.Shared.Response.Feature;
 using GodsEye.Shared.Response.Sector;
 using GodsEye.WEB.Model.Forms;
 using GodsEye.WEB.Services;
@@ -40,7 +39,7 @@ namespace GodsEye.WEB.Components.CameraComponents
         MudForm form;
         UpdateCameraForm CameraForm { get; set; } = new();
         IEnumerable<SectorResponse> _sectors = Enumerable.Empty<SectorResponse>();
-        IEnumerable<FeatureModel> _features = Enumerable.Empty<FeatureModel>();
+        IEnumerable<FeatureResponse> _features = Enumerable.Empty<FeatureResponse>();
 
         private bool success;
         private string[] errors = { };

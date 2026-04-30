@@ -1,4 +1,4 @@
-﻿using GodsEye.Domain.Enums;
+﻿using GodsEye.Shared.Enums;
 
 namespace GodsEye.API.DTO
 {

@@ -1,6 +1,6 @@
 ﻿using AutoMapper;
 using GodsEye.API.Interfaces;
-using GodsEye.Domain.DTOs.Result;
+using GodsEye.Shared.Response;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 
@@ -34,7 +34,7 @@ namespace GodsEye.API.Features.Camera
             return result.Id;
         }
 
-        public async Task<ProcedureResult?> UpdateCameraIncidentRecordingWrite(UpdateCameraIncidentRecordingCommand request, CancellationToken cancellationToken)
+        public async Task<ProcedureResponse?> UpdateCameraIncidentRecordingWrite(UpdateCameraIncidentRecordingCommand request, CancellationToken cancellationToken)
         {
             var sql = "CALL SP_CAMERA_CONFIG_INCIDENT_RECORDING_UPDATE(@P_CAMERA_ID, @P_MAC_ADDRESS)";
 
@@ -44,7 +44,7 @@ namespace GodsEye.API.Features.Camera
                 P_MAC_ADDRESS = request.macAddress,
             };
 
-            return await context.QuerySingleSqlAsync<ProcedureResult>(sql, parameters, cancellationToken);
+            return await context.QuerySingleSqlAsync<ProcedureResponse>(sql, parameters, cancellationToken);
         }
     }
 

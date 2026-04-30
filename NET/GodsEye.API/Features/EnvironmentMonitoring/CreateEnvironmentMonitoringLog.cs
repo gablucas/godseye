@@ -1,7 +1,8 @@
-﻿using GodsEye.API.DTO;
+﻿
+using GodsEye.API.DTO;
 using GodsEye.API.Interfaces;
-using GodsEye.Domain.DTOs.Result;
 using GodsEye.Shared;
+using GodsEye.Shared.Response;
 using MediatR;
 
 namespace GodsEye.API.Features.EnvironmentMonitoring
@@ -39,7 +40,7 @@ namespace GodsEye.API.Features.EnvironmentMonitoring
             }
         }
 
-        protected async Task<ProcedureResult?> Create(int cameraId, int personId, float score, DateTime extractedAt, CancellationToken cancellationToken)
+        protected async Task<ProcedureResponse?> Create(int cameraId, int personId, float score, DateTime extractedAt, CancellationToken cancellationToken)
         {
             var sql = "CALL SP_ENVIRONMENT_MONITORING_CREATE_LOG(@P_CAMERA_ID, @P_PERSON_ID, @P_SCORE, @P_IDENTIFY_DATE)";
 
@@ -51,7 +52,7 @@ namespace GodsEye.API.Features.EnvironmentMonitoring
                 P_IDENTIFY_DATE = extractedAt,
             };
 
-            return await context.QuerySingleSqlAsync<ProcedureResult>(sql, parameters, cancellationToken);
+            return await context.QuerySingleSqlAsync<ProcedureResponse>(sql, parameters, cancellationToken);
         }
 
         public async Task<EnvironmentMonitoringDTO?> GetById(int personId, CancellationToken cancellationToken)

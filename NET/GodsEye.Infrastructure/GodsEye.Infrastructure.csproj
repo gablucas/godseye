@@ -19,16 +19,6 @@
     <PackageReference Include="System.Numerics.Tensors" Version="10.0.5" />
   </ItemGroup>
 
-	<ItemGroup>
-		<Content Include="Email\Templates\**\*.html">
-			<CopyToOutputDirectory>Always</CopyToOutputDirectory>
-		</Content>
-	</ItemGroup>
-
-	<ItemGroup>
-	  <Content Include="Email\Templates\IncidentRecordingAlert.html" />
-	</ItemGroup>
-
   <ItemGroup>
     <ProjectReference Include="..\GodsEye.Application\GodsEye.Application.csproj" />
     <ProjectReference Include="..\GodsEye.Domain\GodsEye.Domain.csproj" />

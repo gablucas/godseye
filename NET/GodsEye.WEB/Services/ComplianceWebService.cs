@@ -1,11 +1,11 @@
-﻿using GodsEye.Application.DTOs.Model;
-using GodsEye.Application.UseCases.Compliance.Commands;
+﻿using GodsEye.Shared.Response.Compliance;
+using GodsEye.WEB.Model.Forms;
 using GodsEye.WEB.Services.Interfaces;
 using System.Net.Http.Json;
 
 namespace GodsEye.WEB.Services
 {
-    public class ComplianceWebService : IWebService<CompliancePolicyDTO>
+    public class ComplianceWebService : IWebService<CompliancePolicyResponse>
     {
         private readonly HttpClient _http;
         private readonly string _baseEndpoint = "api/compliance";
@@ -15,7 +15,7 @@ namespace GodsEye.WEB.Services
             _http = http;
         }
 
-        public async Task<int> CreateAsync(CreateSectorTransitionRuleRequest rule)
+        public async Task<int> CreateAsync(ComplianceSectorTransitionRule rule)
         {
             var result = await _http.PostAsJsonAsync($"{_baseEndpoint}/rule/sector-transitions", rule);
 
@@ -24,20 +24,20 @@ namespace GodsEye.WEB.Services
             return json!;
         }
 
-        public async Task<IEnumerable<CompliancePolicyDTO>> GetAllAsync()
+        public async Task<IEnumerable<CompliancePolicyResponse>> GetAllAsync()
         {
             var result = await _http.GetAsync(_baseEndpoint);
 
-            var json = await result.Content.ReadFromJsonAsync<IEnumerable<CompliancePolicyDTO>>();
+            var json = await result.Content.ReadFromJsonAsync<IEnumerable<CompliancePolicyResponse>>();
 
             return json!;
         }
 
-        public async Task<CompliancePolicyDTO> GetById(int id)
+        public async Task<CompliancePolicyResponse> GetById(int id)
         {
             var result = await _http.GetAsync($"{_baseEndpoint}/{id}");
 
-            var json = await result.Content.ReadFromJsonAsync<CompliancePolicyDTO>();
+            var json = await result.Content.ReadFromJsonAsync<CompliancePolicyResponse>();
 
             return json!;
         }

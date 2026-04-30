@@ -11,8 +11,4 @@
     <PackageReference Include="MediatR" Version="14.0.0" />
   </ItemGroup>
 
-  <ItemGroup>
-    <ProjectReference Include="..\GodsEye.Domain\GodsEye.Domain.csproj" />
-  </ItemGroup>
-
 </Project>

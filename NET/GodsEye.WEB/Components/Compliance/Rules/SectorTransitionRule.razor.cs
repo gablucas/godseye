@@ -1,7 +1,6 @@
 ﻿using AutoMapper;
-using GodsEye.Application.DTOs.Model;
-using GodsEye.Application.UseCases.Compliance.Commands;
-using GodsEye.Domain.Enums;
+
+using GodsEye.Shared.Enums;
 using GodsEye.Shared.Response.Sector;
 using GodsEye.WEB.Model.Forms;
 using GodsEye.WEB.Services;
@@ -60,7 +59,7 @@ namespace GodsEye.WEB.Components.Compliance.Rules
         {
             switch (ComplianceRuleForm.RuleType)
             {
-                case ComplianceRuleEnum.SectorTransition:
+                case ComplianceRuleEnum.SECTOR_TRANSITION:
                     ComplianceRuleForm.AddNewRule();
                     break;
             }
@@ -142,11 +141,11 @@ namespace GodsEye.WEB.Components.Compliance.Rules
             if (!ValidateForm())
                 return;
 
-            var request = new CreateSectorTransitionRuleRequest
+            var request = new ComplianceSectorTransitionRule
             {
-                PolicyId = ComplianceRuleForm.Id ?? 0,
-                PolicyName = ComplianceRuleForm.Name,
-                Rules = ComplianceRuleForm.Rules.Select(x => new SectorTransitionRuleDTO
+                Id = ComplianceRuleForm.Id ?? 0,
+                Name = ComplianceRuleForm.Name,
+                Rules = ComplianceRuleForm.Rules.Select(x => new RoutineRuleSectorTransitionForm
                 {
                     OrderIndex = x.OrderIndex,
                     MinTime = x.MinTime,

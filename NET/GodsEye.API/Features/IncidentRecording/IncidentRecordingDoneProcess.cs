@@ -1,8 +1,9 @@
 ﻿using AutoMapper;
 using GodsEye.API.Interfaces;
-using GodsEye.Application.Interfaces;
-using GodsEye.Domain.DTOs.Result;
-using GodsEye.Domain.ValueObjects;
+using GodsEye.API.Interfaces;
+
+using GodsEye.API.ValueObjects;
+using GodsEye.Shared.Response;
 using GodsEye.Shared.Response.IncidentRecording;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
@@ -64,7 +65,7 @@ namespace GodsEye.API.Features.IncidentRecording
             return await context.QuerySingleSqlAsync<IncidentRecordingResponse>(sql, parameters, cancellationToken);
         }
 
-        public async Task<ProcedureResult?> Update(int id, List<IncidentRecordingPersonVO> persons, string fileName, CancellationToken cancellationToken)
+        public async Task<ProcedureResponse?> Update(int id, List<IncidentRecordingPersonVO> persons, string fileName, CancellationToken cancellationToken)
         {
             var sql = "CALL SP_INCIDENT_RECORDING_UPDATE_LOG(@P_ID, @P_PERSONS_IDS_JSON, @P_FILE_NAME)";
 
@@ -75,7 +76,7 @@ namespace GodsEye.API.Features.IncidentRecording
                 P_FILE_NAME = fileName,
             };
 
-            return await context.QuerySingleSqlAsync<ProcedureResult>(sql, parameters, cancellationToken);
+            return await context.QuerySingleSqlAsync<ProcedureResponse>(sql, parameters, cancellationToken);
         }
     }
 

@@ -1,5 +1,5 @@
-﻿using GodsEye.Application.DTOs.Model;
-using GodsEye.Application.DTOs.Response;
+﻿
+using GodsEye.API.DTO;
 using GodsEye.Shared.Response.Sector;
 using GodsEye.WEB.Model.Forms;
 using System.Net.Http.Json;

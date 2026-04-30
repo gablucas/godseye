@@ -1,6 +1,5 @@
-﻿using GodsEye.Domain.Enums;
+﻿using GodsEye.API.Enums;
 using GodsEye.Shared;
-using GodsEye.Shared.Interfaces;
 using System.ComponentModel.DataAnnotations.Schema;
 
 namespace GodsEye.API.DTO

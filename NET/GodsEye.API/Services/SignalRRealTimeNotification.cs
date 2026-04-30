@@ -1,9 +1,10 @@
-﻿using GodsEye.API.Hubs;
+﻿
 using GodsEye.API.DTO;
-
-using Microsoft.AspNetCore.SignalR;
+using GodsEye.API.Hubs;
 using GodsEye.API.Interfaces;
+using GodsEye.Shared.Response;
 using GodsEye.Shared.Response.Person;
+using Microsoft.AspNetCore.SignalR;
 
 namespace GodsEye.API.Services
 {
@@ -44,7 +45,7 @@ namespace GodsEye.API.Services
             message);
         }
 
-        public async Task SendAlertNotification(int message)
+        public async Task SendAlertNotification(ViolationAlertFeatureResponse message)
         {
             await _hub.Clients.All.SendAsync(
             "AlertNotification",

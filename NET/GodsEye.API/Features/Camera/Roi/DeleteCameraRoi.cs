@@ -1,6 +1,6 @@
 ﻿using AutoMapper;
 using GodsEye.API.Interfaces;
-using GodsEye.Domain.DTOs.Result;
+using GodsEye.Shared.Response;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using System.Text.Json;
@@ -35,7 +35,7 @@ namespace GodsEye.API.Features.Camera
             return result.Id;
         }
 
-        public async Task<ProcedureResult?> DeleteCameraRoiWrite(DeleteCameraRoiCommand request, CancellationToken cancellationToken)
+        public async Task<ProcedureResponse?> DeleteCameraRoiWrite(DeleteCameraRoiCommand request, CancellationToken cancellationToken)
         {
             var sql = "CALL SP_CAMERA_ROI_DELETE(@P_CAMERA_ROI_ID)";
 
@@ -44,7 +44,7 @@ namespace GodsEye.API.Features.Camera
                 P_CAMERA_ROI_ID = request.roiId,
             };
 
-            return await context.QuerySingleSqlAsync<ProcedureResult>(sql, parameters, cancellationToken);
+            return await context.QuerySingleSqlAsync<ProcedureResponse>(sql, parameters, cancellationToken);
         }
     }
 

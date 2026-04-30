@@ -1,5 +1,5 @@
-﻿using GodsEye.Application.DTOs.Model;
-using GodsEye.Application.DTOs.Response;
+﻿
+using GodsEye.Shared.Response.Feature;
 using System.Net.Http.Json;
 
 namespace GodsEye.WEB.Services
@@ -13,10 +13,10 @@ namespace GodsEye.WEB.Services
             _http = http;
         }
 
-        public async Task<IReadOnlyCollection<FeatureModel>> GetAllAsync()
+        public async Task<IReadOnlyCollection<FeatureResponse>> GetAllAsync()
         {
             var result = await _http.GetAsync(_baseEndpoint);
-            var json = await result.Content.ReadFromJsonAsync<IReadOnlyCollection<FeatureModel>>();
+            var json = await result.Content.ReadFromJsonAsync<IReadOnlyCollection<FeatureResponse>>();
             return json!;
         }
     }

@@ -1,7 +1,7 @@
 ﻿using AutoMapper;
 using FluentValidation;
 using GodsEye.API.Interfaces;
-using GodsEye.Domain.DTOs.Result;
+using GodsEye.Shared.Response;
 using GodsEye.Shared.Response.Person;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
@@ -47,7 +47,7 @@ namespace GodsEye.API.Features.Camera
             return result.Id;
         }
 
-        public async Task<ProcedureResult?> CreatePersonWrite(CreatePersonCommand request, CancellationToken cancellationToken)
+        public async Task<ProcedureResponse?> CreatePersonWrite(CreatePersonCommand request, CancellationToken cancellationToken)
         {
             var sql = "CALL SP_PERSON_CREATE(@P_NAME, @P_MAIN_SECTOR_ID, @P_ACCESS_LEVEL_ID)";
 
@@ -58,7 +58,7 @@ namespace GodsEye.API.Features.Camera
                 P_ACCESS_LEVEL_ID = request.accessLevelId
             };
 
-            return await context.QuerySingleSqlAsync<ProcedureResult>(sql, parameters, cancellationToken);
+            return await context.QuerySingleSqlAsync<ProcedureResponse>(sql, parameters, cancellationToken);
         }
 
         public async Task<PersonResponse?> GetById(int personId, CancellationToken cancellationToken)

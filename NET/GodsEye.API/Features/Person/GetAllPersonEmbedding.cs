@@ -1,5 +1,6 @@
-﻿using GodsEye.API.Interfaces;
-using GodsEye.Application.DTOs.Model;
+﻿using GodsEye.API.DTO;
+using GodsEye.API.Interfaces;
+
 using GodsEye.Shared.Response.Person;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;

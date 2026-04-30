@@ -1,5 +1,4 @@
-﻿using GodsEye.Application.DTOs.Model;
-using GodsEye.Application.DTOs.Response;
+﻿using GodsEye.API.DTO;
 using GodsEye.Shared.Response.Camera;
 using GodsEye.WEB.Model.Forms;
 using System.Net.Http.Json;
@@ -52,33 +51,33 @@ namespace GodsEye.WEB.Services
             return json!;
         }
 
-        public async Task<IEnumerable<CameraLogModel>> GetLogs(int cameraId)
+        public async Task<IEnumerable<CameraLogResponse>> GetLogs(int cameraId)
         {
             var result = await _http.GetAsync($"{_baseEndpoint}/logs/{cameraId}");
 
-            var json = await result.Content.ReadFromJsonAsync<IEnumerable<CameraLogModel>>();
+            var json = await result.Content.ReadFromJsonAsync<IEnumerable<CameraLogResponse>>();
 
             return json!;
         }
 
-        public async Task<IEnumerable<CameraByFeatureModel>> GetByFeatureId(int featureId)
+        public async Task<IEnumerable<CameraFeatureResponse>> GetByFeatureId(int featureId)
         {
             var response = await _http.GetAsync($"{_baseEndpoint}/feature/{featureId}");
 
             var apiResponse = await response.Content
-                .ReadFromJsonAsync<IEnumerable<CameraByFeatureModel>>();
+                .ReadFromJsonAsync<IEnumerable<CameraFeatureResponse>>();
 
-            return apiResponse ?? Enumerable.Empty<CameraByFeatureModel>();
+            return apiResponse ?? Enumerable.Empty<CameraFeatureResponse>();
         }
 
-        public async Task<IEnumerable<CameraFeatureModel>> GetFeatures(int cameraId)
+        public async Task<IEnumerable<CameraFeatureResponse>> GetFeatures(int cameraId)
         {
             var response = await _http.GetAsync($"{_baseEndpoint}/active-features/{cameraId}");
 
             var apiResponse = await response.Content
-                .ReadFromJsonAsync<IEnumerable<CameraFeatureModel>>();
+                .ReadFromJsonAsync<IEnumerable<CameraFeatureResponse>>();
 
-            return apiResponse ?? Enumerable.Empty<CameraFeatureModel>();
+            return apiResponse ?? Enumerable.Empty<CameraFeatureResponse>();
         }
 
         public async Task<List<CameraRoiResponse>> GetRoiByCameraId(int cameraId)
@@ -135,14 +134,6 @@ namespace GodsEye.WEB.Services
             return json!;
         }
 
-        public async Task<CameraConfigDwellTimeMonitoringModel> GetConfigDwellTimeMonitoring(int cameraId)
-        {
-            var result = await _http.GetAsync($"{_baseEndpoint}/config/dwell-time-monitoring/{cameraId}");
-
-            var json = await result.Content.ReadFromJsonAsync<CameraConfigDwellTimeMonitoringModel>();
-
-            return json!;
-        }
 
         public async Task<bool> TesteCameraConnection(string rtspUrl)
         {

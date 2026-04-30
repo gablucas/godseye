@@ -1,5 +1,4 @@
-﻿using GodsEye.Application.DTOs.Response;
-using GodsEye.Domain.DTOs.Result;
+﻿using GodsEye.Shared.Response;
 using GodsEye.WEB.Enum;
 using GodsEye.WEB.Model.Forms;
 using GodsEye.WEB.Services;
@@ -48,7 +47,7 @@ namespace GodsEye.WEB.Components.PersonComponents
         PhotoCaptureMethodEnum? photoMethod { get; set; } = null;
         private bool shouldStartCamera;
 
-        ProcedureResult? apiResponse { get; set; } = null;
+        ProcedureResponse? apiResponse { get; set; } = null;
 
         private bool visible = false;
 

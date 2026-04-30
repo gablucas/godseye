@@ -1,8 +1,9 @@
 ﻿using AutoMapper;
 using FluentValidation;
 using GodsEye.API.Interfaces;
-using GodsEye.Domain.DTOs.Result;
+
 using GodsEye.Shared.Enums;
+using GodsEye.Shared.Response;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 
@@ -47,7 +48,7 @@ namespace GodsEye.API.Features.Camera
             return result.Id;
         }
 
-        public async Task<ProcedureResult?> CreateAccessScheduleWrite(CreateAccessScheduleCommand request, CancellationToken cancellationToken)
+        public async Task<ProcedureResponse?> CreateAccessScheduleWrite(CreateAccessScheduleCommand request, CancellationToken cancellationToken)
         {
             var sql = "CALL SP_ACCESS_SCHEDULE_CREATE_OR_UPDATE(@P_ID, @P_NAME, @P_IS_ACTIVE, @P_RULES_JSON)";
 
@@ -59,7 +60,7 @@ namespace GodsEye.API.Features.Camera
                 P_RULES_JSON = request.rules
             };
 
-            return await context.QuerySingleSqlAsync<ProcedureResult>(sql, parameters, cancellationToken);
+            return await context.QuerySingleSqlAsync<ProcedureResponse>(sql, parameters, cancellationToken);
         }
     }
 

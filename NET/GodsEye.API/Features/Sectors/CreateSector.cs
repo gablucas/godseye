@@ -1,7 +1,8 @@
 ﻿using AutoMapper;
 using FluentValidation;
 using GodsEye.API.Interfaces;
-using GodsEye.Domain.DTOs.Result;
+
+using GodsEye.Shared.Response;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using System.Text.Json;
@@ -47,7 +48,7 @@ namespace GodsEye.API.Features.Sectors
             return result.Id;
         }
 
-        private async Task<ProcedureResult?> CreateSectorWrite(CreateSectorCommand request, CancellationToken cancellationToken)
+        private async Task<ProcedureResponse?> CreateSectorWrite(CreateSectorCommand request, CancellationToken cancellationToken)
         {
             var sql = "CALL SP_SECTOR_CREATE(@P_NAME, @P_NOTIFICATION_GROUP_JSON)";
 
@@ -57,7 +58,7 @@ namespace GodsEye.API.Features.Sectors
                 P_NOTIFICATION_GROUP_JSON = JsonSerializer.Serialize(request.NotificationGroups)
             };
 
-            return await context.QuerySingleSqlAsync<ProcedureResult>(sql, parameters, cancellationToken);
+            return await context.QuerySingleSqlAsync<ProcedureResponse>(sql, parameters, cancellationToken);
         }
     }
 

@@ -1,4 +1,5 @@
-﻿using GodsEye.Application.DTOs.Model;
+﻿
+using GodsEye.Shared.Response.NotificationGroups;
 using GodsEye.WEB.Model.Forms;
 using GodsEye.WEB.Services;
 using Microsoft.AspNetCore.Components;
@@ -34,7 +35,7 @@ namespace GodsEye.WEB.Components.SectorComponents
 
         #endregion
 
-        IEnumerable<NotificationGroupModel> _notificationGroups = Enumerable.Empty<NotificationGroupModel>();
+        IEnumerable<NotificationGroupsResponse> _notificationGroups = Enumerable.Empty<NotificationGroupsResponse>();
 
         [CascadingParameter]
         private IMudDialogInstance MudDialog { get; set; }

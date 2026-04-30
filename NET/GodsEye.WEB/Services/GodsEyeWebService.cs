@@ -1,5 +1,7 @@
-﻿using GodsEye.Application.DTOs.Model;
-using GodsEye.Application.DTOs.Response;
+﻿
+using GodsEye.API.DTO;
+using GodsEye.API.DTOs.Response;
+using GodsEye.Shared.Response.Camera;
 using System.Net.Http.Json;
 
 namespace GodsEye.WEB.Services
@@ -14,7 +16,7 @@ namespace GodsEye.WEB.Services
             _http = http;
         }
 
-        public async Task<CameraPreviewResponse> StartStream(CameraModel camera)
+        public async Task<CameraPreviewResponse> StartStream(CameraResponse camera)
         {
             var result = await _http.PostAsJsonAsync($"{_baseEndpoint}/start-stream", camera);
 

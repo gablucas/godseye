@@ -1,7 +1,6 @@
-﻿using GodsEye.Application.DTOs.Response;
-using GodsEye.Domain.DTOs.Result;
-using GodsEye.Shared.Enums;
+﻿using GodsEye.Shared.Enums;
 using GodsEye.Shared.Response.AccessSchedule;
+using GodsEye.Shared.Response.Person;
 using GodsEye.Shared.Response.Sector;
 using GodsEye.WEB.Model.Forms;
 using GodsEye.WEB.Services;
@@ -49,7 +48,7 @@ namespace GodsEye.WEB.Components.AccessLevelComponents
         private bool _multiselectionTextChoice;
         private bool _multiselectionTextChoiceBlackList;
 
-        ApiResponse<ProcedureResult?>? apiResponse { get; set; } = null;
+        PersonResponse? apiResponse { get; set; } = null;
 
         private bool visible = false;
 

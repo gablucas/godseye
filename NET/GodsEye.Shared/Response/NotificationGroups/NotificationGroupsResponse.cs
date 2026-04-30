@@ -1,6 +1,4 @@
-﻿using GodsEye.Shared.Interfaces;
-
-namespace GodsEye.Shared.Response.NotificationGroups
+﻿namespace GodsEye.Shared.Response.NotificationGroups
 {
     public class NotificationGroupsResponse : IJSonTypeList
     {

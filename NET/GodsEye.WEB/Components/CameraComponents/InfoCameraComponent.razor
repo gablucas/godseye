@@ -1,4 +1,5 @@
-﻿@using GodsEye.Application.DTOs.Model
+﻿@using GodsEye.Shared.Response.Camera
+
 
 <MudDialog>
     <TitleContent>
@@ -39,7 +40,7 @@
             </MudItem>
 
             <MudItem xs="12">
-                <MudTable T="CameraLogModel" Elevation="0" @ref="_mudTable" Items="@_log" Hover="true" Loading="@_loading" LoadingProgressColor="Color.Info" RowClass="cursor-pointer">
+                <MudTable T="CameraLogResponse" Elevation="0" @ref="_mudTable" Items="@_log" Hover="true" Loading="@_loading" LoadingProgressColor="Color.Info" RowClass="cursor-pointer">
                     <HeaderContent>
                         <MudTh>Setor</MudTh>
                         <MudTh>Data/Hora</MudTh>

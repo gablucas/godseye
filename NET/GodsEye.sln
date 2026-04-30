@@ -5,12 +5,6 @@ VisualStudioVersion = 18.2.11415.280
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GodsEye.API", "GodsEye.API\GodsEye.API.csproj", "{D6F170DF-FEFE-5396-954F-54690F15F38A}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GodsEye.Application", "GodsEye.Application\GodsEye.Application.csproj", "{3187EFF8-0306-3471-BDF9-DE896AD28483}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GodsEye.Domain", "GodsEye.Domain\GodsEye.Domain.csproj", "{0E262031-AB6C-B1AA-5C01-17F1061B2996}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GodsEye.Infrastructure", "GodsEye.Infrastructure\GodsEye.Infrastructure.csproj", "{8EF78100-04FC-B854-CBB0-DE5DBFA60283}"
-EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GodsEye.WEB", "GodsEye.WEB\GodsEye.WEB.csproj", "{7D3077EF-0DEB-490C-EB16-0ABE9F63ECE1}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Itens de Solução", "Itens de Solução", "{EECE7113-AC54-4A4A-90AF-7BEE2279FFBE}"
@@ -30,18 +24,6 @@ Global
 		{D6F170DF-FEFE-5396-954F-54690F15F38A}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{D6F170DF-FEFE-5396-954F-54690F15F38A}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{D6F170DF-FEFE-5396-954F-54690F15F38A}.Release|Any CPU.Build.0 = Release|Any CPU
-		{3187EFF8-0306-3471-BDF9-DE896AD28483}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{3187EFF8-0306-3471-BDF9-DE896AD28483}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{3187EFF8-0306-3471-BDF9-DE896AD28483}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{3187EFF8-0306-3471-BDF9-DE896AD28483}.Release|Any CPU.Build.0 = Release|Any CPU
-		{0E262031-AB6C-B1AA-5C01-17F1061B2996}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{0E262031-AB6C-B1AA-5C01-17F1061B2996}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{0E262031-AB6C-B1AA-5C01-17F1061B2996}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{0E262031-AB6C-B1AA-5C01-17F1061B2996}.Release|Any CPU.Build.0 = Release|Any CPU
-		{8EF78100-04FC-B854-CBB0-DE5DBFA60283}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{8EF78100-04FC-B854-CBB0-DE5DBFA60283}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{8EF78100-04FC-B854-CBB0-DE5DBFA60283}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{8EF78100-04FC-B854-CBB0-DE5DBFA60283}.Release|Any CPU.Build.0 = Release|Any CPU
 		{7D3077EF-0DEB-490C-EB16-0ABE9F63ECE1}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{7D3077EF-0DEB-490C-EB16-0ABE9F63ECE1}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{7D3077EF-0DEB-490C-EB16-0ABE9F63ECE1}.Release|Any CPU.ActiveCfg = Release|Any CPU

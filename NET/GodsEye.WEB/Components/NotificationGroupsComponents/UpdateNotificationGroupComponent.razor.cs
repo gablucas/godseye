@@ -1,4 +1,4 @@
-﻿using GodsEye.Application.DTOs.Model;
+﻿using GodsEye.Shared.Response.NotificationGroups;
 using GodsEye.WEB.Model.Forms;
 using GodsEye.WEB.Services;
 using Microsoft.AspNetCore.Components;
@@ -18,7 +18,7 @@ namespace GodsEye.WEB.Components.NotificationGroupsComponents
         public int Id { get; set; }
 
         [Parameter]
-        public NotificationGroupModel NotificationGroupModel { get; set; }
+        public NotificationGroupsResponse NotificationGroupModel { get; set; }
 
         #region FORM
 

@@ -1,4 +1,4 @@
-﻿using GodsEye.Domain.Enums;
+﻿using GodsEye.Shared.Enums;
 using Microsoft.AspNetCore.Components;
 using MudBlazor;
 
@@ -18,6 +18,13 @@ namespace GodsEye.WEB.Components.Compliance
         #endregion
 
         #region LIFETIME FUNCTIONS
+        protected override async Task OnParametersSetAsync()
+        {
+            var policy = await Service.GetById(Id);
+
+            if (policy != null)
+                RuleType = policy.Rule;
+        }
 
         #endregion
 

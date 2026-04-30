@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using GodsEye.API.Interfaces;
-using GodsEye.Domain.DTOs.Result;
+using GodsEye.Shared.Response;
+using GodsEye.Shared.Response.Person;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using System.Text.Json;
@@ -36,7 +37,7 @@ namespace GodsEye.API.Features.Camera
             return result.Id;
         }
 
-        public async Task<ProcedureResult?> UpdateCameraWrite(UpdateCameraCommand request, CancellationToken cancellationToken)
+        public async Task<ProcedureResponse?> UpdateCameraWrite(UpdateCameraCommand request, CancellationToken cancellationToken)
         {
             var sql = "CALL SP_CAMERA_UPDATE(@P_CAMERA_ID, @P_NAME, @P_CONNECTION, @P_SECTOR_ID, @P_FEATURES_JSON)";
 
@@ -50,7 +51,7 @@ namespace GodsEye.API.Features.Camera
 
             };
 
-            return await context.QuerySingleSqlAsync<ProcedureResult>(sql, parameters, cancellationToken);
+            return await context.QuerySingleSqlAsync<ProcedureResponse>(sql, parameters, cancellationToken);
         }
     }
 

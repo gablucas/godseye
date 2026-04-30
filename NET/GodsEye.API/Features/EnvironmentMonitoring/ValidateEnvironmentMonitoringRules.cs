@@ -1,5 +1,5 @@
 ﻿using GodsEye.Shared;
-using GodsEye.Domain.Enums;
+using GodsEye.API.Enums;
 using MediatR;
 using GodsEye.API.Interfaces;
 

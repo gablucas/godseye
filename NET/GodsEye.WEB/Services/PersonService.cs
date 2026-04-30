@@ -1,4 +1,4 @@
-﻿using GodsEye.Domain.DTOs.Result;
+﻿using GodsEye.Shared.Response;
 using GodsEye.Shared.Response.Person;
 using GodsEye.WEB.Model.Forms;
 using System.Net.Http.Json;
@@ -15,29 +15,29 @@ namespace GodsEye.WEB.Services
             _http = http;
         }
 
-        public async Task<ProcedureResult?> CreateAsync(PersonForm person)
+        public async Task<ProcedureResponse?> CreateAsync(PersonForm person)
         {
             var result = await _http.PostAsJsonAsync($"{_baseEndpoint}", person);
 
-            var json = await result.Content.ReadFromJsonAsync<ProcedureResult?>();
+            var json = await result.Content.ReadFromJsonAsync<ProcedureResponse?>();
 
             return json!;
         }
 
-        public async Task<ProcedureResult?> UpdateAsync(PersonForm person)
+        public async Task<ProcedureResponse?> UpdateAsync(PersonForm person)
         {
             var result = await _http.PutAsJsonAsync($"{_baseEndpoint}", person);
 
-            var json = await result.Content.ReadFromJsonAsync<ProcedureResult?>();
+            var json = await result.Content.ReadFromJsonAsync<ProcedureResponse?>();
 
             return json!;
         }
 
-        public async Task<ProcedureResult?> CreateRecognizeAsync(PersonRecognizeForm person)
+        public async Task<ProcedureResponse?> CreateRecognizeAsync(PersonRecognizeForm person)
         {
             var result = await _http.PostAsJsonAsync($"{_baseEndpoint}/recognize", person);
 
-            var json = await result.Content.ReadFromJsonAsync<ProcedureResult>();
+            var json = await result.Content.ReadFromJsonAsync<ProcedureResponse>();
 
             return json;
         }
