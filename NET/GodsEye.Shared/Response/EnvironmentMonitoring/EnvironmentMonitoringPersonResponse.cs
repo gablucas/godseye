@@ -1,4 +1,6 @@
-﻿namespace GodsEye.Shared.Response.EnvironmentMonitoring
+﻿using GodsEye.Shared.Interfaces;
+
+namespace GodsEye.Shared.Response.EnvironmentMonitoring
 {
     public class EnvironmentMonitoringPersonResponse
     {
@@ -7,7 +9,7 @@
         public List<EnvironmentMonitoringPersonLogResponse> Logs { get; set; } = new();
     }
 
-    public class EnvironmentMonitoringPersonLogResponse
+    public class EnvironmentMonitoringPersonLogResponse : IJSonTypeList
     {
         public int SectorId { get; set; }
         public string SectorName { get; set; }

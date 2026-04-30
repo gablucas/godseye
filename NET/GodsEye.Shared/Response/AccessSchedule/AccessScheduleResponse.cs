@@ -2,7 +2,7 @@
 
 namespace GodsEye.Shared.Response.AccessSchedule
 {
-    public class AccessScheduleResponse
+    public class AccessScheduleResponse : IJSonTypeList
     {
         public int Id { get; set; }
         public string Name { get; set; }
@@ -11,7 +11,7 @@ namespace GodsEye.Shared.Response.AccessSchedule
         public List<AccessScheduleRuleDTO> Rules { get; set; } = new();
     }
 
-    public class AccessScheduleRuleDTO
+    public class AccessScheduleRuleDTO : IJSonTypeList
     {
         public int Id { get; set; }
         public WeekDayEnum WeekDay { get; set; }

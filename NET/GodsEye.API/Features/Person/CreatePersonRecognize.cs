@@ -36,13 +36,15 @@ namespace GodsEye.API.Features.Camera
         public async Task<int> Handle(CreatePersonRecognizeCommand request, CancellationToken cancellationToken)
         {
             var embedding = await godsEye.GenerateEmbedding(request.photo);
-            var jsonEmbedding = JsonSerializer.Serialize(embedding);
+
+            byte[] binaryEmbedding = new byte[embedding.Length * sizeof(float)];
+            Buffer.BlockCopy(embedding, 0, binaryEmbedding, 0, binaryEmbedding.Length);
 
             var fileName = $"{Guid.NewGuid()}.jpg";
 
             var photoPath = folderService.GeneratePersonPhotoPath(fileName);
 
-            var result = await CreatePersonRecognizeWrite(request.personId, photoPath, jsonEmbedding, cancellationToken);
+            var result = await CreatePersonRecognizeWrite(request.personId, photoPath, binaryEmbedding, cancellationToken);
 
             if (result.Erro == 1)
                 throw new InvalidOperationException("Falha ao criar a pessoa no banco de dados.");
@@ -57,7 +59,7 @@ namespace GodsEye.API.Features.Camera
             return 1;
         }
 
-        public async Task<ProcedureResult?> CreatePersonRecognizeWrite(int personId, string photoPath, string jsonEmbedding, CancellationToken cancellationToken)
+        public async Task<ProcedureResult?> CreatePersonRecognizeWrite(int personId, string photoPath, byte[] binaryEmbedding, CancellationToken cancellationToken)
         {
             var sql = "CALL SP_PERSON_CREATE_RECOGNIZE(@P_PERSON_ID, @P_IMAGE_PATH, @P_EMBEDDING)";
 
@@ -65,7 +67,7 @@ namespace GodsEye.API.Features.Camera
             {
                 P_PERSON_ID = personId,
                 P_IMAGE_PATH = photoPath,
-                P_EMBEDDING = jsonEmbedding,
+                P_EMBEDDINGNEW = binaryEmbedding,
             };
 
             return await context.QuerySingleSqlAsync<ProcedureResult>(sql, parameters, cancellationToken);

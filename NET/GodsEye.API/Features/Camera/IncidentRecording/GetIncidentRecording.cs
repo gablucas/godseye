@@ -33,7 +33,7 @@ namespace GodsEye.API.Features.Camera.IncidentRecording
         }
     }
 
-    public class GetIncidentRecordingEndpoint : IEndpoint
+    public class CameraEndpoint : IEndpoint
     {
         public void MapEndpoint(WebApplication app)
         {

@@ -9,7 +9,7 @@ from services.face_recognition_service import FaceModel
 from services.monitoring_service import validate_monitoring_data
 from services.face_matcher_service import FaceMatcher
 from infrastructure.logger import LogSender
-from application.monitor_manager import MonitorManager
+from Features.monitor_manager import MonitorManager
 
 from infrastructure.recorder_registry import start_recorder
 from core.video_cleanup import cleanup_old_videos

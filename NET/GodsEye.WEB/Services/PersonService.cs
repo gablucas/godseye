@@ -1,6 +1,5 @@
-﻿using GodsEye.Application.DTOs.Model;
-using GodsEye.Application.DTOs.Response;
-using GodsEye.Domain.DTOs.Result;
+﻿using GodsEye.Domain.DTOs.Result;
+using GodsEye.Shared.Response.Person;
 using GodsEye.WEB.Model.Forms;
 using System.Net.Http.Json;
 
@@ -43,20 +42,20 @@ namespace GodsEye.WEB.Services
             return json;
         }
 
-        public async Task<IEnumerable<PersonModel>> GetAllAsync()
+        public async Task<IEnumerable<PersonResponse>> GetAllAsync()
         {
             var result = await _http.GetAsync(_baseEndpoint);
 
-            var json = await result.Content.ReadFromJsonAsync<IEnumerable<PersonModel>>();
+            var json = await result.Content.ReadFromJsonAsync<IEnumerable<PersonResponse>>();
 
             return json!;
         }
 
-        public async Task<PersonModel> GetById(int personId)
+        public async Task<PersonResponse> GetById(int personId)
         {
             var result = await _http.GetAsync($"{_baseEndpoint}/{personId}");
 
-            var json = await result.Content.ReadFromJsonAsync<PersonModel>();
+            var json = await result.Content.ReadFromJsonAsync<PersonResponse>();
 
             return json!;
         }

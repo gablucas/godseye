@@ -16,7 +16,7 @@ namespace GodsEye.API.Features.AccessLevel
 
         public async Task<IEnumerable<PersonResponse>> GetAllPersonQuery(CancellationToken cancellationToken)
         {
-            var sql = "CALL SP_ACCESS_LEVEL_GET_ALL()";
+            var sql = "CALL SP_PERSON_GET_ALL()";
 
             return await context.QuerySqlAsync<PersonResponse>(sql, cancellationToken);
         }

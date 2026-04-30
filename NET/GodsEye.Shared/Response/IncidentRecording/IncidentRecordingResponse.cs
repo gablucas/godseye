@@ -2,7 +2,7 @@
 
 namespace GodsEye.Shared.Response.IncidentRecording
 {
-    public class IncidentRecordingResponse
+    public class IncidentRecordingResponse : IJSonTypeList
     {
         public int Id { get; set; }
         public string? Sector { get; set; }
@@ -11,10 +11,10 @@ namespace GodsEye.Shared.Response.IncidentRecording
         public IncidentStatusEnum Status { get; set; }
         public string? FileName { get; set; }
 
-        public List<IncidentRecordingPersonDTO> Persons { get; set; } = new();
+        public List<IncidentRecordingPersonResponse> Persons { get; set; } = new();
     }
 
-    public class IncidentRecordingPersonDTO
+    public class IncidentRecordingPersonResponse : IJSonTypeList
     {
         public int Id { get; set; }
         public string Name { get; set; }

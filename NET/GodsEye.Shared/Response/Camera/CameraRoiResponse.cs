@@ -1,4 +1,5 @@
 ﻿using GodsEye.Shared.Enums;
+using GodsEye.Shared.Interfaces;
 
 namespace GodsEye.Shared.Response.Camera
 {
@@ -11,7 +12,7 @@ namespace GodsEye.Shared.Response.Camera
         public bool IsActive { get; set; }
     }
 
-    public class RoiDTO
+    public class RoiDTO : IJsonType
     {
         public float Width { get; set; }
         public float Height { get; set; }
@@ -19,7 +20,7 @@ namespace GodsEye.Shared.Response.Camera
         public List<PointDTO> Points { get; set; } = new();
     }
 
-    public class PointDTO
+    public class PointDTO : IJSonTypeList
     {
         public float X { get; set; }
         public float Y { get; set; }

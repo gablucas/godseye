@@ -3,6 +3,7 @@ using GodsEye.API.DTO;
 
 using Microsoft.AspNetCore.SignalR;
 using GodsEye.API.Interfaces;
+using GodsEye.Shared.Response.Person;
 
 namespace GodsEye.API.Services
 {
@@ -29,7 +30,7 @@ namespace GodsEye.API.Services
             message);
         }
 
-        public async Task SendCreatedPerson(PersonDTO message)
+        public async Task SendCreatedPerson(PersonResponse message)
         {
             await _hub.Clients.All.SendAsync(
             "CreatedPerson",

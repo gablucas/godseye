@@ -32,7 +32,7 @@ namespace GodsEye.API.Features.Sectors
         }
     }
 
-    public class GetAccessScheduleByIdEndpoint : IEndpoint
+    public class AccessScheduleEndpoint : IEndpoint
     {
         public void MapEndpoint(WebApplication app)
         {

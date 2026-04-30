@@ -22,26 +22,29 @@ BEGIN
     )
 
     -- SETORES - Com e sem pessoas
-    SELECT
-        S.ID   AS SectorId,
-        S.NAME AS SectorName,
-        COUNT(P.ID) AS TotalPerson,
-        CASE
-            WHEN COUNT(P.ID) = 0 THEN NULL
-            ELSE JSON_ARRAYAGG(
-                JSON_OBJECT(
-                    'PersonId', P.ID,
-                    'Person', P.NAME,
-                    'PersonPhoto', P.IMAGE_PATH,
-                    'IdentifiedAt', DATE_FORMAT(PST.LastSeen, '%Y-%m-%dT%H:%i:%s')
-                )
-            )
-        END AS EnvironmentMonitoringLog
-    FROM SECTOR S
-    LEFT JOIN CAMERA C ON C.SECTOR_ID = S.ID
-    LEFT JOIN PeopleSeenToday PST ON PST.CAMERA_ID = C.ID
-    LEFT JOIN PERSON P ON P.ID = PST.PERSON_ID
-    GROUP BY S.ID, S.NAME
+	SELECT
+		S.ID   AS SectorId,
+		S.NAME AS SectorName,
+		COUNT(P.ID) AS TotalPerson,
+		CASE
+			WHEN COUNT(P.ID) = 0 THEN NULL
+			ELSE JSON_ARRAYAGG(
+				CASE                              -- ← ADICIONA ISSO
+					WHEN P.ID IS NULL THEN NULL
+					ELSE JSON_OBJECT(
+						'PersonId', P.ID,
+						'Person', P.NAME,
+						'PersonPhoto', P.IMAGE_PATH,
+						'IdentifiedAt', DATE_FORMAT(PST.LastSeen, '%Y-%m-%dT%H:%i:%s')
+					)
+				END                               -- ← FECHA AQUI
+			)
+		END AS EnvironmentMonitoringLog
+	FROM SECTOR S
+	LEFT JOIN CAMERA C ON C.SECTOR_ID = S.ID
+	LEFT JOIN PeopleSeenToday PST ON PST.CAMERA_ID = C.ID
+	LEFT JOIN PERSON P ON P.ID = PST.PERSON_ID
+	GROUP BY S.ID, S.NAME
 
     UNION ALL
 
@@ -57,7 +60,7 @@ BEGIN
                     'PersonId', P.ID,
                     'Person', P.NAME,
                     'PersonPhoto', P.IMAGE_PATH,
-                    'CreatedAt', NULL -- Não foi visto hoje, então data é NULL
+                    'IdentifiedAt', NULL -- Não foi visto hoje, então data é NULL
                 )
             )
         END AS EnvironmentMonitoringLog

@@ -1,4 +1,5 @@
 ﻿using GodsEye.Application.DTOs.Model;
+using GodsEye.Shared.Response;
 using GodsEye.WEB.Helpers;
 using GodsEye.WEB.Services;
 using Microsoft.AspNetCore.Components;
@@ -106,11 +107,11 @@ namespace GodsEye.WEB.Layout
 
             SignalR.Create("https://localhost:7010/createdDataHub");
 
-            SignalR.On<int>(
+            SignalR.On<ViolationAlertFeatureResponse>(
                 "AlertNotification",
                 quantity =>
                 {
-                    _alertCounter += quantity;
+                    _alertCounter += 1;
 
                     InvokeAsync(StateHasChanged);
                 });

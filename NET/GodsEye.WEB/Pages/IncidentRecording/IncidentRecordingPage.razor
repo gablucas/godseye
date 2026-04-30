@@ -1,5 +1,5 @@
 ﻿@page "/captura-de-incidentes/tempo-real"
-@using GodsEye.Application.DTOs.Model
+@using GodsEye.Shared.Response.IncidentRecording
 
 <div class="page-container">
 
@@ -12,7 +12,7 @@
             <h1>Registro de incidencia</h1>
         </div>
 
-        <MudTable T="IncidentRecordingModel" @ref="mudTable" Items="@_log" Hover="true" Elevation="0" Loading="@_loading" LoadingProgressColor="Color.Info" RowClass="cursor-pointer" RowClassFunc="@SelectedRowClassFunc" OnRowClick="RowClickEvent">
+        <MudTable T="IncidentRecordingResponse" @ref="mudTable" Items="@_log" Hover="true" Elevation="0" Loading="@_loading" LoadingProgressColor="Color.Info" RowClass="cursor-pointer" RowClassFunc="@SelectedRowClassFunc" OnRowClick="RowClickEvent">
             <HeaderContent>
                 <MudTh>Setor</MudTh>
                 <MudTh>Data/Hora do Incidente</MudTh>

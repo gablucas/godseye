@@ -10,7 +10,7 @@ from api.stream import router as stream_router
 from api.clip import router as clip_router
 from api.video import router as video_router
 
-from application.monitor_manager import MonitorManager
+from Features.monitor_manager import MonitorManager
 from core.godseyedata import GodsEyeData
 from core.video_index import VideoIndex
 from contextlib import asynccontextmanager

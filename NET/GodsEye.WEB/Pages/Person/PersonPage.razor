@@ -1,5 +1,5 @@
 ﻿@page "/organizacao/pessoas";
-@using GodsEye.Application.DTOs.Model
+@using GodsEye.Shared.Response.Person
 @using GodsEye.WEB.Helpers
 @inject ISnackbar Snackbar
 
@@ -45,7 +45,7 @@
 
             <MudButton Variant="Variant.Outlined" OnClick="() => DialogWebService.OpenCreatePerson(CreatePersonCallback)">Criar pessoa</MudButton>
         </div>
-        <MudTable T="PersonModel" @ref="mudTable" Elevation="0" Items="@_filteredPersons" Hover="true" Loading="@_loading" LoadingProgressColor="Color.Info" RowClass="cursor-pointer">
+        <MudTable T="PersonResponse" @ref="mudTable" Elevation="0" Items="@_filteredPersons" Hover="true" Loading="@_loading" LoadingProgressColor="Color.Info" RowClass="cursor-pointer">
             <HeaderContent>
                 <MudTh>Foto</MudTh>
                 <MudTh>Nome</MudTh>

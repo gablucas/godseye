@@ -11,9 +11,9 @@ using System.Text.Json;
 
 namespace GodsEye.API.Features.IncidentRecording
 {
-    public sealed record UpdateIncidentRecordingLogRequest(int incidentId, List<IncidentRecordingPersonDTO> persons, string fileName);
+    public sealed record UpdateIncidentRecordingLogRequest(int incidentId, List<IncidentRecordingPersonResponse> persons, string fileName);
 
-    internal sealed record UpdateIncidentRecordingLogCommand(int incidentId, List<IncidentRecordingPersonDTO> persons, string fileName) : IRequest<int>;
+    internal sealed record UpdateIncidentRecordingLogCommand(int incidentId, List<IncidentRecordingPersonResponse> persons, string fileName) : IRequest<int>;
     
     internal sealed class UpdateIncidentRecordingLogMapper : Profile
     {

@@ -22,7 +22,7 @@ namespace GodsEye.API.Features.AccessLevel
         }
     }
 
-    public class GetAllAccessScheduleEndpoint : IEndpoint
+    public class AccessScheduleEndpoint : IEndpoint
     {
         public void MapEndpoint(WebApplication app)
         {

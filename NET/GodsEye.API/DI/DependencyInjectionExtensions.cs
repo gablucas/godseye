@@ -1,7 +1,11 @@
 ﻿using FluentValidation;
+using GodsEye.API.Features.Compliance.SectorTransition;
+using GodsEye.API.Features.Compliance.Shared;
 using GodsEye.API.Interfaces;
 using GodsEye.API.Services;
 using GodsEye.API.Services.Queries;
+using Hangfire;
+using Hangfire.MySql;
 using Microsoft.AspNetCore.ResponseCompression;
 using System.Reflection;
 
@@ -61,7 +65,25 @@ namespace GodsEye.API.DI
             services.AddScoped<ICameraQuerie, CameraQuerie>();
             services.AddScoped<IAccessLevelQuerie, AccessLevelQuerie>();
 
+            // ✅ Registrar o Hangfire
+            services.AddHangfire(config => config
+            .SetDataCompatibilityLevel(CompatibilityLevel.Version_180)
+            .UseSimpleAssemblyNameTypeSerializer()
+            .UseRecommendedSerializerSettings()
+            .UseStorage(new MySqlStorage(
+                configuration.GetConnectionString("HangfireConnection"),
+                new MySqlStorageOptions
+                {
+                    TablesPrefix = "Hangfire_"
+                }
+            )));
 
+            // ✅ Adicionar o servidor de processamento
+            services.AddHangfireServer();
+
+            services.AddScoped<IComplianceStrategy, SectorTransitionStrategy>();
+            services.AddScoped<IComplianceLogService, ComplianceLogService>();
+            services.AddScoped<IComplianceViolationService, ComplianceViolationService>();
         }
     }
 }

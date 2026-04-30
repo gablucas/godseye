@@ -6,7 +6,7 @@ using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using System.Text.Json;
 
-namespace GodsEye.API.Features.Camera
+namespace GodsEye.API.Features.Compliance.SectorTransition
 {
     public sealed record CreateRuleSectorTransitionRequest(int policyId, string policyName, List<SectorTransitionRuleDTO> rules);
 

@@ -1,5 +1,6 @@
 ﻿using GodsEye.API.DTO;
 using GodsEye.API.Interfaces;
+using GodsEye.Shared.Response.Person;
 
 namespace GodsEye.API.Services.Queries
 {
@@ -12,7 +13,7 @@ namespace GodsEye.API.Services.Queries
             _context = context;
         }
 
-        public async Task<PersonDTO?> GetById(int personId, CancellationToken cancellationToken)
+        public async Task<PersonResponse?> GetById(int personId, CancellationToken cancellationToken)
         {
             var query = "CALL SP_PERSON_GET_BY_ID(@P_PERSON_ID)";
 
@@ -21,7 +22,7 @@ namespace GodsEye.API.Services.Queries
                 P_PERSON_ID = personId,
             };
 
-            return await _context.QuerySingleSqlAsync<PersonDTO>(query, parameters, cancellationToken);
+            return await _context.QuerySingleSqlAsync<PersonResponse>(query, parameters, cancellationToken);
         }
 
         public async Task<IEnumerable<PersonCache>> GetAllCache(CancellationToken cancellationToken)

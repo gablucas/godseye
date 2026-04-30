@@ -90,6 +90,8 @@ class CameraProcess(Process):
                 if now - self.last_run < frame_interval:
                     continue
 
+                print(f"🎥 Câmera {self.camera_id} — processando frame (target FPS: {self.target_fps:.1f})")
+
                 self.last_run = now
 
                 # Envia frame para o InferenceWorker (descarta se fila cheia)
@@ -155,11 +157,12 @@ class CameraProcess(Process):
                 continue
 
             faces = data["faces"]
-            if not faces:
+            if not faces or len(faces) == 0:
                 continue
 
             emb = self._get_embedding(faces, data["box"])
-            if emb is None:
+            
+            if emb is None or len(emb) != 512:
                 continue
 
             self.processed_tracks.add(track_id)

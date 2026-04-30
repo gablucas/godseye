@@ -37,7 +37,7 @@ namespace GodsEye.WEB.Components.Dashboard
 
             var result = await environmentMonitoringService.GetSectors();
 
-            if (result is null)
+            if (result is not null)
             {
                 _logs = result.ToList();
             }

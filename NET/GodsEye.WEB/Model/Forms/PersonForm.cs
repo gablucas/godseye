@@ -1,4 +1,4 @@
-﻿using GodsEye.Application.DTOs.Model;
+﻿using GodsEye.Shared.Response.Person;
 
 namespace GodsEye.WEB.Model.Forms
 {
@@ -9,7 +9,7 @@ namespace GodsEye.WEB.Model.Forms
 
         }
 
-        public PersonForm(PersonModel person)
+        public PersonForm(PersonResponse person)
         {
             Id = person.Id;
             Name = person.Name;

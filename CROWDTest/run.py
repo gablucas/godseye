@@ -10,10 +10,10 @@ from send_extracted_embedding import SendExtractedEmbedding
 
 embedding_sender = SendExtractedEmbedding()
 
-# time.sleep(5)
+# time.sleep(1)
 
 # payload = ExtractedEmbedding (
-#     CameraId=51,
+#     CameraId=45,
 #     Embedding=persons[0]["embedding"],
 #     IdentifiedAt=datetime.now(ZoneInfo("America/Sao_Paulo"))
 #     )

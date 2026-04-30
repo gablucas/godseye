@@ -1,5 +1,4 @@
-﻿using GodsEye.Application.DTOs.Model;
-using GodsEye.Application.DTOs.Response;
+﻿using GodsEye.Shared.Response.IncidentRecording;
 using System.Net.Http.Json;
 
 namespace GodsEye.WEB.Services
@@ -14,11 +13,11 @@ namespace GodsEye.WEB.Services
             _http = http;
         }
 
-        public async Task<IEnumerable<IncidentRecordingModel>> GetAllLogs(int pageNumber, int pageSize)
+        public async Task<IEnumerable<IncidentRecordingResponse>> GetAllLogs(int pageNumber, int pageSize)
         {
             var result = await _http.GetAsync($"{_baseEndpoint}?pageNumber={pageNumber}&pageSize={pageSize}");
 
-            var json = await result.Content.ReadFromJsonAsync<IEnumerable<IncidentRecordingModel>>();
+            var json = await result.Content.ReadFromJsonAsync<IEnumerable<IncidentRecordingResponse>>();
 
             return json!;
         }

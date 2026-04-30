@@ -1,4 +1,4 @@
-﻿using GodsEye.Application.DTOs.Model;
+﻿using GodsEye.Shared.Response.IncidentRecording;
 using Microsoft.AspNetCore.Components;
 using Microsoft.JSInterop;
 using MudBlazor;
@@ -11,7 +11,7 @@ namespace GodsEye.WEB.Components.IncidentRecordingComponents
         public IJSRuntime JS { get; set; }
 
         [Parameter]
-        public IncidentRecordingModel IncidentRecording { get; set; }
+        public IncidentRecordingResponse IncidentRecording { get; set; }
 
         [CascadingParameter]
         private IMudDialogInstance MudDialog { get; set; }

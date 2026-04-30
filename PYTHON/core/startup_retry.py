@@ -36,8 +36,3 @@ async def load_godseye_with_retry(app: FastAPI):
 
         except GodsEyeLoadError as e:
             print(f"❌ Erro lógico da API: {e}")
-            break
-
-        except Exception as e:
-            print("🔥 Erro inesperado no startup:", e)
-            await asyncio.sleep(10)

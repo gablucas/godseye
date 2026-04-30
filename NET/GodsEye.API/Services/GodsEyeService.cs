@@ -1,5 +1,6 @@
 ﻿using GodsEye.API.DTO;
 using GodsEye.API.Exceptions;
+using GodsEye.API.Features.Compliance;
 using GodsEye.API.Interfaces;
 using GodsEye.Shared;
 using MediatR;
@@ -124,19 +125,30 @@ namespace GodsEye.API.Services
         public async Task HandleFeatures(CameraCache cameraFromRequest, int personId, float score, DateTime identifiedAt)
         {
 
-            if (cameraFromRequest.Features.Any(x => x.Id == 1))
+            //if (cameraFromRequest.Features.Any(x => x.Id == 1))
+            //{
+            //    if (!_godsEyeState.TryUpdateDetection(personId, cameraFromRequest.Id, identifiedAt))
+            //        return;
+
+            //    await _mediator.Publish(new EnvironmentMonitoringNotification(cameraFromRequest.Id, personId, score, identifiedAt));
+
+
+            //    if (!_godsEyeState.TryUpdateDetection(personId, cameraFromRequest.Id, identifiedAt))
+            //    {
+            //        await _mediator.Send(new CreateEnvironmentMonitoringLogRequest(cameraFromRequest.Id, personId, score, identifiedAt));
+            //        await _mediator.Send(new CheckAccessViolationRequest(cameraFromRequest.Id, personId, identifiedAt));
+            //    }
+            //}
+
+            if (cameraFromRequest.Features.Any(x => x.Id == 1) && _godsEyeState.TryUpdateDetection(personId, cameraFromRequest.Id, identifiedAt))
             {
-                if (!_godsEyeState.TryUpdateDetection(personId, cameraFromRequest.Id, identifiedAt))
-                    return;
-
                 await _mediator.Publish(new EnvironmentMonitoringNotification(cameraFromRequest.Id, personId, score, identifiedAt));
-                
+            }
 
-                //if (!_godsEyeState.TryUpdateDetection(personId, cameraFromRequest.Id, identifiedAt))
-                //{
-                //    await _mediator.Send(new CreateEnvironmentMonitoringLogRequest(cameraFromRequest.Id, personId, score, identifiedAt));
-                //    await _mediator.Send(new CheckAccessViolationRequest(cameraFromRequest.Id, personId, identifiedAt));
-                //} 
+            if (cameraFromRequest.Features.Any(x => x.Id == 2))
+            {
+                var command = new CreateComplianceLogNotification(personId, cameraFromRequest.SectorId, identifiedAt);
+                await _mediator.Publish(command, CancellationToken.None);
             }
         }
     }

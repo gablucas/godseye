@@ -1,4 +1,5 @@
 ﻿using GodsEye.Shared.Enums;
+using GodsEye.Shared.Interfaces;
 
 namespace GodsEye.Shared.Response.AccessLevel
 {
@@ -14,14 +15,14 @@ namespace GodsEye.Shared.Response.AccessLevel
         public DateTime UpdatedAt { get; set; }
     }
 
-    public class SectorAccessLevelDTO
+    public class SectorAccessLevelDTO : IJSonTypeList
     {
         public int Id { get; set; }
         public string Name { get; set; }
         public AccessLevelSectorRuleEnum RuleType { get; set; }
     }
 
-    public class AccessLevelScheduleDTO
+    public class AccessLevelScheduleDTO : IJsonType
     {
         public int Id { get; set; }
         public string Name { get; set; }
@@ -29,7 +30,7 @@ namespace GodsEye.Shared.Response.AccessLevel
         public List<AccessLevelScheduleRuleDTO> Rules { get; set; } = new();
     }
 
-    public class AccessLevelScheduleRuleDTO
+    public class AccessLevelScheduleRuleDTO : IJSonTypeList
     {
         public WeekDayEnum WeekDay { get; set; }
         public TimeSpan? StartTime { get; set; }

@@ -1,4 +1,6 @@
 ﻿using GodsEye.Domain.Enums;
+using GodsEye.Shared;
+using GodsEye.Shared.Interfaces;
 using System.ComponentModel.DataAnnotations.Schema;
 
 namespace GodsEye.API.DTO
@@ -16,7 +18,7 @@ namespace GodsEye.API.DTO
         public List<IncidentRecordingPersonDTO> Persons { get; set; } = new();
     }
 
-    public class IncidentRecordingPersonDTO
+    public class IncidentRecordingPersonDTO : IJSonTypeList
     {
         public int Id { get; set; }
         public string Name { get; set; }

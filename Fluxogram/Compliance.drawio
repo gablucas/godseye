@@ -1,0 +1,98 @@
+<mxfile host="app.diagrams.net">
+  <diagram name="Página-1" id="qJVpSAGxivEw0s1PE2Rc">
+    <mxGraphModel dx="2571" dy="1413" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="827" pageHeight="1169" math="0" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+        <mxCell id="GD012FLyp9moH2s1HAq4-12" edge="1" parent="1" source="GD012FLyp9moH2s1HAq4-1" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="280" y="560" />
+              <mxPoint x="280" y="480" />
+            </Array>
+            <mxPoint x="320" y="480" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="GD012FLyp9moH2s1HAq4-1" parent="1" style="rounded=1;whiteSpace=wrap;html=1;" value="Scanner biometrico registra a pessoa" vertex="1">
+          <mxGeometry height="80" width="160" x="80" y="520" as="geometry" />
+        </mxCell>
+        <mxCell id="GD012FLyp9moH2s1HAq4-11" edge="1" parent="1" source="GD012FLyp9moH2s1HAq4-3" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=0;entryY=0.5;entryDx=0;entryDy=0;" target="GD012FLyp9moH2s1HAq4-10">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="GD012FLyp9moH2s1HAq4-3" parent="1" style="rounded=1;whiteSpace=wrap;html=1;" value="Camera identifica pessoa" vertex="1">
+          <mxGeometry height="80" width="160" x="80" y="360" as="geometry" />
+        </mxCell>
+        <mxCell id="GD012FLyp9moH2s1HAq4-15" edge="1" parent="1" source="GD012FLyp9moH2s1HAq4-10" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=0;entryY=0.5;entryDx=0;entryDy=0;" target="GD012FLyp9moH2s1HAq4-14">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="GD012FLyp9moH2s1HAq4-10" parent="1" style="rounded=1;whiteSpace=wrap;html=1;" value="Identifica as features da camera" vertex="1">
+          <mxGeometry height="80" width="160" x="320" y="440" as="geometry" />
+        </mxCell>
+        <mxCell id="GD012FLyp9moH2s1HAq4-29" edge="1" parent="1" source="GD012FLyp9moH2s1HAq4-14" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=0;entryY=0.5;entryDx=0;entryDy=0;" target="GD012FLyp9moH2s1HAq4-28">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="880" y="400" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="GD012FLyp9moH2s1HAq4-30" connectable="0" parent="GD012FLyp9moH2s1HAq4-29" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];" value="Compliance" vertex="1">
+          <mxGeometry relative="1" x="0.1087" y="-1" as="geometry">
+            <mxPoint as="offset" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="GD012FLyp9moH2s1HAq4-14" parent="1" style="rhombus;whiteSpace=wrap;html=1;" value="Features" vertex="1">
+          <mxGeometry height="80" width="160" x="800" y="440" as="geometry" />
+        </mxCell>
+        <mxCell id="GD012FLyp9moH2s1HAq4-7" parent="1" style="rounded=1;whiteSpace=wrap;html=1;" value="Envia dados da pessoa, setor e horario de identificação via notificação" vertex="1">
+          <mxGeometry height="80" width="160" x="560" y="440" as="geometry" />
+        </mxCell>
+        <mxCell id="GD012FLyp9moH2s1HAq4-31" edge="1" parent="1" source="GD012FLyp9moH2s1HAq4-28" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="1280" y="400" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="GD012FLyp9moH2s1HAq4-28" parent="1" style="rounded=1;whiteSpace=wrap;html=1;" value="Envia dados da pessoa, setor e horario de identificação via notificação" vertex="1">
+          <mxGeometry height="80" width="160" x="1040" y="360" as="geometry" />
+        </mxCell>
+        <mxCell id="GD012FLyp9moH2s1HAq4-33" edge="1" parent="1" source="GD012FLyp9moH2s1HAq4-32" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="1520" y="400" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="GD012FLyp9moH2s1HAq4-32" parent="1" style="rounded=1;whiteSpace=wrap;html=1;" value="Registra o log do compliance" vertex="1">
+          <mxGeometry height="80" width="160" x="1280" y="360" as="geometry" />
+        </mxCell>
+        <mxCell id="GD012FLyp9moH2s1HAq4-38" edge="1" parent="1" source="GD012FLyp9moH2s1HAq4-34" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=0;entryY=0.5;entryDx=0;entryDy=0;" target="GD012FLyp9moH2s1HAq4-37">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="GD012FLyp9moH2s1HAq4-34" parent="1" style="rounded=1;whiteSpace=wrap;html=1;" value="Busca as regras de compliance daquele setor" vertex="1">
+          <mxGeometry height="80" width="160" x="1520" y="360" as="geometry" />
+        </mxCell>
+        <mxCell id="GD012FLyp9moH2s1HAq4-41" edge="1" parent="1" source="GD012FLyp9moH2s1HAq4-37" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=0;entryY=0.5;entryDx=0;entryDy=0;" target="GD012FLyp9moH2s1HAq4-40">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="1840" y="320" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="GD012FLyp9moH2s1HAq4-42" connectable="0" parent="GD012FLyp9moH2s1HAq4-41" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];" value="Sequencia de setores" vertex="1">
+          <mxGeometry relative="1" x="0.2478" y="-1" as="geometry">
+            <mxPoint as="offset" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="GD012FLyp9moH2s1HAq4-37" parent="1" style="rhombus;whiteSpace=wrap;html=1;" value="Regras de compliance" vertex="1">
+          <mxGeometry height="80" width="160" x="1760" y="360" as="geometry" />
+        </mxCell>
+        <mxCell id="GD012FLyp9moH2s1HAq4-40" parent="1" style="rounded=1;whiteSpace=wrap;html=1;" value="Busca as regras de compliance daquele setor" vertex="1">
+          <mxGeometry height="80" width="160" x="2000" y="280" as="geometry" />
+        </mxCell>
+        <mxCell id="GD012FLyp9moH2s1HAq4-44" parent="1" style="rounded=1;whiteSpace=wrap;html=1;" value="Busca os logs da pessoa" vertex="1">
+          <mxGeometry height="80" width="160" x="2240" y="280" as="geometry" />
+        </mxCell>
+        <mxCell id="GD012FLyp9moH2s1HAq4-46" parent="1" style="rhombus;whiteSpace=wrap;html=1;" value="Validação das regras de transição de setores" vertex="1">
+          <mxGeometry height="80" width="160" x="2481" y="280" as="geometry" />
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>

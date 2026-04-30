@@ -1,5 +1,6 @@
 ﻿using GodsEye.Application.DTOs.Model;
 using GodsEye.Shared.Response.EnvironmentMonitoring;
+using GodsEye.Shared.Response.IncidentRecording;
 using GodsEye.WEB.Components.AccessLevelComponents;
 using GodsEye.WEB.Components.AccessSchedule;
 using GodsEye.WEB.Components.CameraComponents;
@@ -121,7 +122,7 @@ namespace GodsEye.WEB.Services
             return await _dialogService.ShowAsync<EnvironmentMonitoringSectorComponent>(null, parameters, _options);
         }
 
-        public async Task OpenIncidentRecording(IncidentRecordingModel incidentRecording)
+        public async Task OpenIncidentRecording(IncidentRecordingResponse incidentRecording)
         {
             var parameters = new DialogParameters<InfoIncidentRecordingComponent> { { x => x.IncidentRecording, incidentRecording } };
 

@@ -65,7 +65,7 @@ namespace GodsEye.API.Features.Camera
         }
     }
 
-    public class CreateCameraEnpoint : IEndpoint
+    public class CameraEndpoint : IEndpoint
     {
         public void MapEndpoint(WebApplication app)
         {

@@ -1,4 +1,5 @@
 ﻿using GodsEye.Application.DTOs.Model;
+using GodsEye.Shared.Response.Person;
 using GodsEye.Shared.Response.Sector;
 using GodsEye.WEB.Services;
 using Microsoft.AspNetCore.Components;
@@ -26,9 +27,9 @@ namespace GodsEye.WEB.Pages.Person
 
         #region TABLE PARAMETERS
 
-        private MudTable<PersonModel> mudTable;
-        List<PersonModel> _persons = new();
-        IEnumerable<PersonModel> _filteredPersons = Enumerable.Empty<PersonModel>();
+        private MudTable<PersonResponse> mudTable;
+        List<PersonResponse> _persons = new();
+        IEnumerable<PersonResponse> _filteredPersons = Enumerable.Empty<PersonResponse>();
         private int selectedRowNumber = -1;
 
         #endregion
@@ -36,7 +37,7 @@ namespace GodsEye.WEB.Pages.Person
         #region TABLE FILTERS
         private string _personNameFilter = "";
 
-        private List<SectorResponse> _sectors = new();
+        private List<GodsEye.Shared.Response.Sector.SectorResponse> _sectors = new();
         private IEnumerable<string> _selectedSectors { get; set; } = new HashSet<string>() { };
 
         private string _personFilter = "";
@@ -76,7 +77,7 @@ namespace GodsEye.WEB.Pages.Person
 
             SignalR.Create("https://localhost:7010/createdDataHub");
 
-            SignalR.On<PersonModel>(
+            SignalR.On<PersonResponse>(
                 "CreatedPerson",
                 person =>
                 {

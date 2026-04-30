@@ -31,7 +31,7 @@ namespace GodsEye.API.Features.Person
     {
         public void MapEndpoint(WebApplication app)
         {
-            app.MapGet("/api/person", Handle);
+            app.MapGet("/api/person/embedding", Handle);
         }
 
         private static async Task<IResult> Handle(

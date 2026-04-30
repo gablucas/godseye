@@ -6,20 +6,8 @@
         public string Name { get; set; }
         public int Active { get; set; }
 
-        public List<CameraSectorResponse> Cameras { get; set; } = new();
+        public List<LookupResponse> Cameras { get; set; } = new();
 
-        public List<NotificationGroupResponse> NotificationGroups { get; set; } = new();
-    }
-
-    public class CameraSectorResponse
-    {
-        public int Id { get; set; }
-        public string Name { get; set; }
-    }
-
-    public class NotificationGroupResponse
-    {
-        public int Id { get; set; }
-        public string Name { get; set; }
+        public List<LookupResponse> NotificationGroups { get; set; } = new();
     }
 }

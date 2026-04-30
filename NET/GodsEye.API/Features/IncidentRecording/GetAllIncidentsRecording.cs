@@ -24,7 +24,7 @@ namespace GodsEye.API.Features.AccessLevel
                 P_PAGE_NUMBER = request.pageNumber,
             };
 
-            return await context.QuerySqlAsync<IncidentRecordingResponse>(sql, cancellationToken);
+            return await context.QuerySqlAsync<IncidentRecordingResponse>(sql, parameters, cancellationToken);
         }
     }
 

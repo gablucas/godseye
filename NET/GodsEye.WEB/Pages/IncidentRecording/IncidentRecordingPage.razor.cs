@@ -1,4 +1,5 @@
 ﻿using GodsEye.Application.DTOs.Model;
+using GodsEye.Shared.Response.IncidentRecording;
 using GodsEye.WEB.Components.IncidentRecordingComponents;
 using GodsEye.WEB.Services;
 using Microsoft.AspNetCore.Components;
@@ -23,8 +24,8 @@ namespace GodsEye.WEB.Pages.IncidentRecording
 
         #region TABLE PARAMETERS
 
-        private List<IncidentRecordingModel> _log = new();
-        private MudTable<IncidentRecordingModel> mudTable;
+        private List<IncidentRecordingResponse> _log = new();
+        private MudTable<IncidentRecordingResponse> mudTable;
         private HubConnection? hubConnection;
         bool _loading;
         private int? selectedId = null;
@@ -52,7 +53,7 @@ namespace GodsEye.WEB.Pages.IncidentRecording
 
             SignalR.Create("https://localhost:7010/createdDataHub");
 
-            SignalR.On<IncidentRecordingModel>(
+            SignalR.On<IncidentRecordingResponse>(
                 "CreatedIncidentRecording",
                 log =>
                 {
@@ -74,7 +75,7 @@ namespace GodsEye.WEB.Pages.IncidentRecording
 
 
         #region TABLE FUNCTIONS
-        private void RowClickEvent(TableRowClickEventArgs<IncidentRecordingModel> tableRowClickEventArgs)
+        private void RowClickEvent(TableRowClickEventArgs<IncidentRecordingResponse> tableRowClickEventArgs)
         {
             var options = new DialogOptions { CloseOnEscapeKey = true, FullWidth = true, MaxWidth = MaxWidth.Large };
             var parameters = new DialogParameters<InfoIncidentRecordingComponent> { { x => x.IncidentRecording, tableRowClickEventArgs.Item } };
@@ -82,7 +83,7 @@ namespace GodsEye.WEB.Pages.IncidentRecording
             DialogService.ShowAsync<InfoIncidentRecordingComponent>("Registro de incidentes", parameters, options);
         }
 
-        private string SelectedRowClassFunc(IncidentRecordingModel element, int rowNumber)
+        private string SelectedRowClassFunc(IncidentRecordingResponse element, int rowNumber)
         {
             if (selectedRowNumber == rowNumber)
             {

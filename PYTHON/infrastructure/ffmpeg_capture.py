@@ -38,7 +38,7 @@ def ffmpeg_capture(
     if features.get("environment_monitoring", False) or features.get("dwell_time_monitoring", False):
         command += [
             "-map", "0:v",
-            "-vf", f"fps={fps},scale={width}:-2",
+            "-vf", f"scale={width}:{height}",
             "-f", "rawvideo",
             "-pix_fmt", "bgr24",
             "pipe:1"

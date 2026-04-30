@@ -1,4 +1,5 @@
 ﻿using GodsEye.Application.DTOs.Model;
+using GodsEye.Shared.Response.IncidentRecording;
 using GodsEye.Shared.Response.Sector;
 using GodsEye.WEB.Services;
 using Microsoft.AspNetCore.Components;
@@ -25,8 +26,8 @@ namespace GodsEye.WEB.Components.Dashboard
         public DialogWebService DialogWebService { get; set; }
 
 
-        private List<IncidentRecordingModel> _logs = new();
-        private List<IncidentRecordingModel> _filteredLogs = new();
+        private List<IncidentRecordingResponse> _logs = new();
+        private List<IncidentRecordingResponse> _filteredLogs = new();
 
         private List<SectorResponse> _sector = new();
         private int _selectedSector = 0;
@@ -61,7 +62,7 @@ namespace GodsEye.WEB.Components.Dashboard
 
             SignalR.Create("https://localhost:7010/createdDataHub");
 
-            SignalR.On<IncidentRecordingModel>(
+            SignalR.On<IncidentRecordingResponse>(
                 "CreatedIncidentRecording",
                 log =>
                 {

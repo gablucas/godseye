@@ -1,6 +1,8 @@
-﻿namespace GodsEye.Shared.Response.EnvironmentMonitoring
+﻿using GodsEye.Shared.Interfaces;
+
+namespace GodsEye.Shared.Response.EnvironmentMonitoring
 {
-    public class GetEnviromentMonitoringPerSectorResponse 
+    public class GetEnviromentMonitoringPerSectorResponse : IJSonTypeList
     {
         public int SectorId { get; set; }
         public string SectorName { get; set; }

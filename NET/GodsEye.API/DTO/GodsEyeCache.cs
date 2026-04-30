@@ -1,5 +1,7 @@
 ﻿using GodsEye.API.Interfaces;
 using GodsEye.Domain.Enums;
+using GodsEye.Shared;
+using GodsEye.Shared.Interfaces;
 using System.Text.Json.Serialization;
 
 namespace GodsEye.API.DTO
@@ -23,7 +25,7 @@ namespace GodsEye.API.DTO
         public List<FeatureCache> Features { get; set; }
     }
 
-    public class FeatureCache
+    public class FeatureCache : IJSonTypeList
     {
         public int Id { get; set; }
     }
@@ -35,7 +37,7 @@ namespace GodsEye.API.DTO
 
     }
 
-    public class AccessLevelSectorRuleCache
+    public class AccessLevelSectorRuleCache : IJSonTypeList
     {
         public int Id { get; set; }
         [JsonConverter(typeof(JsonStringEnumConverter))]
