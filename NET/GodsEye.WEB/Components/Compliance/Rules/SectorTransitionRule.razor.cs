@@ -1,5 +1,4 @@
 ﻿using AutoMapper;
-
 using GodsEye.Shared.Enums;
 using GodsEye.Shared.Response.Sector;
 using GodsEye.WEB.Model.Forms;
@@ -29,14 +28,28 @@ namespace GodsEye.WEB.Components.Compliance.Rules
 
         protected override async Task OnInitializedAsync()
         {
-            var sectorsResponse = await SectorService.GetAllAsync();
-            if (sectorsResponse is not null)
+            _sectors = await SectorService.GetAllAsync();
+
+            if (Id > 0)
             {
-                _sectors = sectorsResponse;
+                var sectorTransitionRule = await ComplianceWebService.GetSectorTransitionById(Id);
+                if (sectorTransitionRule is not null)
+                {
+                    ComplianceRuleForm.PolicyName = sectorTransitionRule.PolicyName;
+
+                    foreach (var rule in sectorTransitionRule.Rules)
+                    {
+                        var newRule = new RoutineRuleSectorTransitionForm() { OrderIndex = rule.OrderIndex, SectorId = rule.SectorId, MinTime = rule.MinTime, MaxTime = rule.MaxTime };
+                        ComplianceRuleForm.Rules.Add(newRule);
+                    }
+                }
             }
         }
 
         #region PARAMETERS
+
+        [Parameter]
+        public int Id { get; set; }
 
         #endregion
 
@@ -67,6 +80,9 @@ namespace GodsEye.WEB.Components.Compliance.Rules
 
         protected void ChangeRulePosition(RoutineRuleSectorTransitionForm rule, string type)
         {
+            if (Id > 0)
+                return;
+
             var index = ComplianceRuleForm.Rules.IndexOf(rule);
 
             if (type == "UP" && index > 0)
@@ -86,6 +102,9 @@ namespace GodsEye.WEB.Components.Compliance.Rules
 
         protected void DeleteRule(RoutineRuleSectorTransitionForm rule)
         {
+            if (Id > 0)
+                return;
+
             ComplianceRuleForm.Rules.Remove(rule);
             ReorderRules();
         }
@@ -143,8 +162,8 @@ namespace GodsEye.WEB.Components.Compliance.Rules
 
             var request = new ComplianceSectorTransitionRule
             {
-                Id = ComplianceRuleForm.Id ?? 0,
-                Name = ComplianceRuleForm.Name,
+                PolicyId = ComplianceRuleForm.PolicyId ?? 0,
+                PolicyName = ComplianceRuleForm.PolicyName,
                 Rules = ComplianceRuleForm.Rules.Select(x => new RoutineRuleSectorTransitionForm
                 {
                     OrderIndex = x.OrderIndex,

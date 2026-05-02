@@ -19,7 +19,7 @@
                                 Required="true"
                                 RequiredError="Selecione um setor"
                                 Variant="Variant.Outlined"
-                                Disabled="true">
+                                ReadOnly=@(Id > 0)>
                         @foreach (var tipo in Enum.GetValues<CompliancePolicyEnum>())
                         {
                             <MudSelectItem T="CompliancePolicyEnum" Value="@tipo">@tipo.GetDescription()</MudSelectItem>
@@ -37,7 +37,7 @@
 
                 @if (RuleType == CompliancePolicyEnum.SECTOR_TRANSITION)
                 {
-                    <SectorTransitionRule />
+                    <SectorTransitionRule Id="Id" />
                 }
 
                 <MudOverlay Visible="visible" LightBackground="true" Absolute="true">

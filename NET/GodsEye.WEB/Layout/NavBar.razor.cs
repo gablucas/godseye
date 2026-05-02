@@ -62,8 +62,6 @@ namespace GodsEye.WEB.Layout
                 Items =
                 {
                     new() { Title = "Tempo real", Url = "/monitoramento-de-ambientes/tempo-real" },
-                    new() { Title = "Relatórios", Url = "/monitoramento-de-ambientes/relatorios" },
-                    new() { Title = "Configurações", Url = "/monitoramento-de-ambientes/configuracao" }
                 }
             },
 
@@ -75,8 +73,6 @@ namespace GodsEye.WEB.Layout
                 Items =
                 {
                     new() { Title = "Tempo real", Url = "/captura-de-incidentes/tempo-real" },
-                    new() { Title = "Relatórios", Url = "/captura-de-incidentes/relatorios" },
-                    new() { Title = "Configurações", Url = "/captura-de-incidentes/configuracoes" }
                 }
             },
 
@@ -84,11 +80,10 @@ namespace GodsEye.WEB.Layout
             {
                 Key = "compliance",
                 Title = "Compliance",
-                Icon = Icons.Material.Filled.Timer,
+                Icon = Icons.Material.Filled.Policy,
                 Items =
                 {
-                    new() { Title = "Tempo real", Url = "/compliance/tempo-real" },
-                    new() { Title = "Relatórios", Url = "/compliance/relatorios" },
+                    new() { Title = "Violações", Url = "/compliance/violacoes" },
                     new() { Title = "Politicas", Url = "/compliance/politicas" }
                 }
             },

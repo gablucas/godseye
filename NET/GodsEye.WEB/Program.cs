@@ -25,6 +25,7 @@ builder.Services.AddScoped<AccessScheduleWebService>();
 builder.Services.AddScoped<AccessLevelWebService>();
 
 builder.Services.AddScoped<ComplianceWebService>();
+builder.Services.AddScoped<ComplianceViolationWebService>();
 builder.Services.AddScoped<NewDialogWebService>();
 
 builder.Services.AddAutoMapper(cfg => { }, Assembly.GetExecutingAssembly());

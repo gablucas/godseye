@@ -4,11 +4,11 @@ using GodsEye.Shared.Response.Person;
 
 namespace GodsEye.API.Services.Queries
 {
-    public class PersonQuerie : IPersonQuerie
+    public class PersonQuery : IPersonQuery
     {
         private readonly IDapperContext _context;
 
-        public PersonQuerie(IDapperContext context)
+        public PersonQuery(IDapperContext context)
         {
             _context = context;
         }

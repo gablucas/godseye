@@ -2,7 +2,7 @@
 
 namespace GodsEye.API.Interfaces
 {
-    public interface ICameraQuerie
+    public interface ICameraQuery
     {
         Task<IEnumerable<CameraCache>> GetAllCache(CancellationToken cancellationToken);
     }

@@ -2,6 +2,7 @@ using GodsEye.API.DI;
 using GodsEye.API.Hubs;
 using GodsEye.API.Interfaces;
 using GodsEye.API.Middlewares;
+using Hangfire;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -43,6 +44,7 @@ using (var scope = app.Services.CreateScope())
     await godsEyeState.InitializeAsync();
 }
 
+app.UseHangfireDashboard();
 
 app.UseResponseCompression();
 

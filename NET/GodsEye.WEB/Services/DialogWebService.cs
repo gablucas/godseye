@@ -18,7 +18,7 @@ namespace GodsEye.WEB.Services
     public class DialogWebService
     {
         private readonly IDialogService _dialogService;
-        private readonly DialogOptions _options = new DialogOptions { CloseOnEscapeKey = true, FullWidth = false, MaxWidth = MaxWidth.False, NoHeader = true };
+        private readonly DialogOptions _options = new DialogOptions { CloseOnEscapeKey = true, FullWidth = true, MaxWidth = MaxWidth.False, NoHeader = true };
 
         public DialogWebService(IDialogService dialogService)
         {

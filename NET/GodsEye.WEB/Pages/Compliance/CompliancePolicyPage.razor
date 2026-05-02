@@ -1,5 +1,6 @@
 ﻿@page "/compliance/politicas"
 
+@using GodsEye.Shared.Extensions
 @using GodsEye.Shared.Response.Compliance
 @using GodsEye.WEB.Components.Compliance
 @using GodsEye.WEB.Services
@@ -31,9 +32,11 @@
         <MudTable T="CompliancePolicyResponse" @ref="mudTable" Elevation="0" Items="@_filteredItems" Hover="true" Loading="@_loading" LoadingProgressColor="Color.Info" RowClass="cursor-pointer" RowClassFunc="@SelectedRowClassFunc" OnRowClick="RowClickEvent">
             <HeaderContent>
                 <MudTh>Politica</MudTh>
+                <MudTh>Tipo</MudTh>
             </HeaderContent>
             <RowTemplate>
                 <MudTd @onclick="() => DialogWebService.OpenHandleAsync<UpsertPolicyComponent>(context.Id)" DataLabel="ComplianceName">@context.Name</MudTd>
+                <MudTd @onclick="() => DialogWebService.OpenHandleAsync<UpsertPolicyComponent>(context.Id)" DataLabel="ComplianceName">@context.Rule.GetDescription()</MudTd>
             </RowTemplate>
         </MudTable>
     </div>

@@ -3,11 +3,11 @@ using GodsEye.API.Interfaces;
 
 namespace GodsEye.API.Services.Queries
 {
-    public class CameraQuerie : ICameraQuerie
+    public class CameraQuery : ICameraQuery
     {
         private readonly IDapperContext _context;
 
-        public CameraQuerie(IDapperContext context)
+        public CameraQuery(IDapperContext context)
         {
             _context = context;
         }

@@ -1,0 +1,12 @@
+﻿@using GodsEye.Shared.Response
+
+@typeparam T where T : IBaseResponse
+
+<div class="option">
+    <MudSelect T="string" SelectedValuesChanged="OnFilterOptionChanged" SelectedValues="SelectedItems" MultiSelection="true" SelectAll="true" SelectAllText="Selecionar tudo" MultiSelectionTextFunc="@(new Func<List<string>, string>(GetMultiSelectionText))" Label="@Label" Variant="Variant.Outlined" Margin="Margin.Dense" Clearable="true">
+        @foreach (var item in items)
+        {
+            <MudSelectItem T="string" Value="@item.Id.ToString()">@item.Name</MudSelectItem>
+        }
+    </MudSelect>
+</div>

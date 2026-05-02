@@ -1,26 +1,46 @@
 ﻿using GodsEye.API.Features.Compliance.Shared;
-using GodsEye.API.Interfaces;
 using GodsEye.Shared.Enums;
+using GodsEye.Shared.Response.Compliance;
 using Hangfire;
 
 namespace GodsEye.API.Features.Compliance.SectorTransition
 {
-    public class SectorTransitionStrategy(IDapperContext context, IComplianceLogService complianceLogService, IBackgroundJobClient backgroundJobs) : IComplianceStrategy
+    public class SectorTransitionStrategy(
+        IComplianceLogService complianceLogService, 
+        IBackgroundJobClient backgroundJobs,
+        ISectorTransitionQuery sectorTransitionQuery
+
+        ) : IComplianceStrategy
     {
         public CompliancePolicyEnum RuleType => CompliancePolicyEnum.SECTOR_TRANSITION;
 
         public async Task Apply(int complianceLogId, int personId, int sectorId, CompliancePolicyDTO policy, CancellationToken cancellationToken)
         {
-            var rules = await GetRules(policy.Id, cancellationToken);
+            var sectorTransitionRules = await sectorTransitionQuery.GetRuleById(policy.Id, cancellationToken);
             var logs = await complianceLogService.GetByPersonId(personId, cancellationToken);
 
-            var currentRule = rules.FirstOrDefault(x => x.SectorId == sectorId);
+            var currentRule = sectorTransitionRules.Rules.FirstOrDefault(x => x.SectorId == sectorId);
 
             if (currentRule is null)
                 return;
 
-            var activeLog = logs.FirstOrDefault(x => x.SectorId == sectorId && x.ExitedAt is null && x.Id != complianceLogId);
-            if (activeLog is not null)
+            var logIsDone = logs.FirstOrDefault(x => x.SectorId == sectorId && x.PersonId == personId && x.ExitedAt.HasValue && x.Id == complianceLogId);
+            if (logIsDone is not null)
+            {
+                var nextRule = sectorTransitionRules.Rules.FirstOrDefault(x => x.OrderIndex == (currentRule.OrderIndex + 1));
+
+                if (nextRule is not null)
+                {
+                    backgroundJobs.Schedule<SectorTransitionService>(
+                    s => s.ValidateNextSector(complianceLogId, policy.Id, personId, logIsDone, nextRule.SectorId),
+                    TimeSpan.FromMinutes(1));
+                }
+
+                return;
+            }
+
+            var hasOtherActiveLog = logs.FirstOrDefault(x => x.SectorId == sectorId && x.PersonId == personId && x.ExitedAt is null && x.Id != complianceLogId);
+            if (hasOtherActiveLog is not null)
                 return;
 
             if (currentRule.OrderIndex == 1)
@@ -29,20 +49,20 @@ namespace GodsEye.API.Features.Compliance.SectorTransition
                 return;
             }
 
-            var previousRules = rules
+            var previousRules = sectorTransitionRules.Rules
                 .Where(x => x.OrderIndex < currentRule.OrderIndex)
                 .OrderBy(x => x.OrderIndex)
                 .ToList();
 
-            var firstSectorRule = rules.First(x => x.OrderIndex == 1);
+            var firstRule = sectorTransitionRules.Rules.First(x => x.OrderIndex == 1);
 
             var cycleStart = logs
-                .Where(x => x.SectorId == firstSectorRule.SectorId && x.ExitedAt is not null)
+                .Where(x => x.SectorId == firstRule.SectorId && x.ExitedAt is not null)
                 .OrderByDescending(x => x.ExitedAt)
-                .FirstOrDefault()?.ExitedAt ?? DateTime.MinValue;
+                .FirstOrDefault()?.EnteredAt ?? DateTime.MinValue;
 
             var currentCycleLogs = logs
-                .Where(x => x.EnteredAt > cycleStart)
+                .Where(x => x.EnteredAt >= cycleStart)
                 .ToList();
 
             var passedAllPrevious = previousRules.All(rule =>
@@ -55,22 +75,25 @@ namespace GodsEye.API.Features.Compliance.SectorTransition
             await ScheduleCheck(complianceLogId, personId, policy, currentRule);
         }
 
-        private async Task ScheduleCheck(int complianceLogId, int personId, CompliancePolicyDTO policy, SectorTransitionDTO rule)
+        private async Task ScheduleCheck(int complianceLogId, int personId, CompliancePolicyDTO policy, SectorTransitionRuleResponse rule)
         {
-            backgroundJobs.Schedule<SectorTransitionService>(
-                s => s.Execute(complianceLogId, policy.Id, personId),
-                TimeSpan.FromMinutes(rule.MaxTime));
-        }
+            if (rule.MinTime.HasValue)
+            {
+                var minTime = rule.MinTime.Value;
 
-        public async Task<IEnumerable<SectorTransitionDTO>> GetRules(int policyId, CancellationToken cancellationToken)
-        {
-            var sql = "CALL SP_COMPLIANCE_RULE_SECTOR_TRANSITION_GET_BY_POLICY_ID(@P_POLICY_ID)";
+                backgroundJobs.Schedule<SectorTransitionService>(
+                s => s.ValidateMinTime(complianceLogId, policy.Id, personId, minTime),
+                TimeSpan.FromMinutes(minTime));
+            }
 
-            var rules = await context.QuerySqlAsync<SectorTransitionDTO>(
-            sql, new { P_POLICY_ID = policyId }, cancellationToken);
+            if (rule.MaxTime.HasValue)
+            {
+                var maxTime = rule.MaxTime.Value;
 
-            return rules;
+                backgroundJobs.Schedule<SectorTransitionService>(
+                s => s.ValidateMaxTime(complianceLogId, policy.Id, personId),
+                TimeSpan.FromMinutes(maxTime));
+            }
         }
     }
-
 }

@@ -4,11 +4,11 @@ using GodsEye.API.Interfaces;
 
 namespace GodsEye.API.Services.Queries
 {
-    public class AccessLevelQuerie : IAccessLevelQuerie
+    public class AccessLevelQuery : IAccessLevelQuery
     {
         private readonly IDapperContext _context;
 
-        public AccessLevelQuerie(IDapperContext context)
+        public AccessLevelQuery(IDapperContext context)
         {
             _context = context;
         }

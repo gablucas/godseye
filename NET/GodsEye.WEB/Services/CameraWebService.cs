@@ -1,5 +1,4 @@
-﻿using GodsEye.API.DTO;
-using GodsEye.Shared.Response.Camera;
+﻿using GodsEye.Shared.Response.Camera;
 using GodsEye.WEB.Model.Forms;
 using System.Net.Http.Json;
 

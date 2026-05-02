@@ -42,20 +42,51 @@ namespace GodsEye.WEB.Services
             return json!;
         }
 
-        public async Task<ComplianceViolationResponse> GetViolationById(int id)
-        {
-            var result = await _http.GetAsync($"{_baseEndpoint}/violation/{id}");
-
-            var json = await result.Content.ReadFromJsonAsync<ComplianceViolationResponse>();
-
-            return json!;
-        }
+        
 
         public async Task<IEnumerable<ComplianceViolationResponse>> GetAllViolationsAsync()
         {
             var result = await _http.GetAsync($"{_baseEndpoint}/violation");
 
             var json = await result.Content.ReadFromJsonAsync<IEnumerable<ComplianceViolationResponse>>();
+
+            return json!;
+        }
+
+        public async Task<SectorTransitionResponse> GetSectorTransitionById(int id)
+        {
+            var result = await _http.GetAsync($"{_baseEndpoint}/sector-transition/{id}");
+
+            var json = await result.Content.ReadFromJsonAsync<SectorTransitionResponse>();
+
+            return json!;
+        }
+    }
+
+    public class ComplianceViolationWebService : IWebService<ComplianceViolationResponse>
+    {
+        private readonly HttpClient _http;
+        private readonly string _baseEndpoint = "api/compliance/violation";
+
+        public ComplianceViolationWebService(HttpClient http)
+        {
+            _http = http;
+        }
+
+        public async Task<IEnumerable<ComplianceViolationResponse>> GetAllAsync()
+        {
+            var result = await _http.GetAsync($"{_baseEndpoint}");
+
+            var json = await result.Content.ReadFromJsonAsync<IEnumerable<ComplianceViolationResponse>>();
+
+            return json!;
+        }
+
+        public async Task<ComplianceViolationResponse> GetById(int id)
+        {
+            var result = await _http.GetAsync($"{_baseEndpoint}/{id}");
+
+            var json = await result.Content.ReadFromJsonAsync<ComplianceViolationResponse>();
 
             return json!;
         }

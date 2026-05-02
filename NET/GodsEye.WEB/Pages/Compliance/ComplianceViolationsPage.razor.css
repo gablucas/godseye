@@ -1,0 +1,40 @@
+﻿.violations-bar {
+    display: flex;
+    justify-content: start;
+    gap: 4px;
+    background: #f3f4f6; /* era: radial-gradient dark */
+    padding: 8px !important;
+    border-radius: 9px;
+    margin-top: 12px;
+    margin-bottom: 12px;
+    border: 0.5px solid #e5e7eb; /* borda sutil no lugar do gradiente */
+}
+
+.violations-bar .item {
+    display: flex;
+    gap: 8px;
+    align-items: center;
+    cursor: pointer;
+    padding: 18px;
+    border-radius: 8px !important;
+    color: #6b7280; /* era: #a3a3a3 */
+    font-weight: 500;
+    font-size: 14px;
+    background: transparent;
+    border: 1px solid transparent;
+    transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+}
+
+.violations-bar .item:hover {
+    color: #111827; /* era: #ffffff */
+    background: #ffffff; /* era: rgba(white, 0.08) + backdrop-filter */
+    border: 1px solid #e5e7eb; /* era: rgba(white, 0.15) */
+}
+
+.violations-bar .item.selected {
+    color: #1d4ed8; /* era: #ffffff sobre fundo azul escuro */
+    background: #eff6ff; /* era: linear-gradient azul escuro */
+    border: 1px solid #bfdbfe;
+    border-bottom-color: #dbeafe; /* manteve a assimetria de bordas */
+    border-right-color: #dbeafe;
+}

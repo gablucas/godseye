@@ -38,7 +38,12 @@ class YoloWorker(Process):
         self.yolo_queue.put(None)
 
     def run(self):
-        yolo = YOLO("models/yolo11m.pt").to("cuda")
+        base_dir = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+        model_path = os.path.join(base_dir, "models", "yolov11m-face.pt")
+
+        print(f"[YOLO] Iniciando YoloWorker para câmera {self.camera_id}")
+        yolo = YOLO(model_path).to("cuda")
+        print(f"[YOLO] Modelo carregado para câmera {self.camera_id}")
 
         # ✅ NOVO: controla tempo do último envio por track
         sent_to_face = {}  # track_id -> timestamp
@@ -102,15 +107,28 @@ class YoloWorker(Process):
                 #     continue
 
                 # ✅ NOVO: só envia se passou tempo suficiente
-                last_sent = sent_to_face.get(track_id)
+                # last_sent = sent_to_face.get(track_id)
 
-                if last_sent is not None and (now - last_sent) < RETRY_INTERVAL:
-                    continue
+                # if last_sent is not None and (now - last_sent) < RETRY_INTERVAL:
+                #     continue
 
                 x1, y1, x2, y2 = [int(v) for v in boxes[i]]
 
                 h, w = frame.shape[:2]
 
+                # Calcular margem (ex: 20% do tamanho da face)
+                face_w = x2 - x1
+                face_h = y2 - y1
+                margin_x = int(face_w * 0.2)  # 20% de margem horizontal
+                margin_y = int(face_h * 0.2)  # 20% de margem vertical
+
+                # Expandir com margem
+                x1 = x1 - margin_x
+                y1 = y1 - margin_y
+                x2 = x2 + margin_x
+                y2 = y2 + margin_y
+
+                # Clamp para não sair do frame
                 x1 = max(0, x1)
                 y1 = max(0, y1)
                 x2 = min(w, x2)
@@ -123,6 +141,8 @@ class YoloWorker(Process):
 
                 if crop.size == 0:
                     continue
+
+                print(f"👤 Câmera {self.camera_id} enviando crop para FaceWorker — track_id {track_id}, crop shape {crop.shape}")
 
                 # Extrai ROI de face (RoiType=1) para esta câmera, se existir
                 face_roi = None
@@ -139,11 +159,11 @@ class YoloWorker(Process):
                         crop_height = crop.shape[0]  # altura
                         crop_width = crop.shape[1]   # largura
 
-                        print(f"COMPRIMENTO DO ROI {face_roi['min_width']}");
-                        print(f"COMPRIMENTO DO CROP {crop_width}");
+                        # print(f"COMPRIMENTO DO ROI {face_roi['min_width']}");
+                        # print(f"COMPRIMENTO DO CROP {crop_width}");
 
-                        if crop_width < face_roi["min_width"]:
-                            continue
+                        # if crop_width < face_roi["min_width"]:
+                        #     continue
 
 
                 try:

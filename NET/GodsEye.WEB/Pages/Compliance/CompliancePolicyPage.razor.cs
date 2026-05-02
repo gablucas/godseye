@@ -37,8 +37,6 @@ namespace GodsEye.WEB.Pages.Compliance
             new("Políticas", href: null, disabled: true)
         ];
 
-
-
         #region TABLE FUNCTIONS
         private void RowClickEvent(TableRowClickEventArgs<CompliancePolicyResponse> tableRowClickEventArgs)
         {

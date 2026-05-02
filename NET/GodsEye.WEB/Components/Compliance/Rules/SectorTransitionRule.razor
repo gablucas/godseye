@@ -4,11 +4,13 @@
 
     <div class="inputs-container">
         <MudTextField Label="Nome da política"
-                      @bind-Value="ComplianceRuleForm.Name"
+                      @bind-Value="ComplianceRuleForm.PolicyName"
                       Required="true"
                       RequiredError="O nome da rotina é obrigatório"
                       T="string"
-                      For="@(() => ComplianceRuleForm.Name)" Variant="Variant.Outlined" />
+                      For="@(() => ComplianceRuleForm.PolicyName)" Variant="Variant.Outlined"
+                      ReadOnly=@(Id > 0)
+                      />
  
         <div class="rules">
             @foreach (var routine in ComplianceRuleForm.Rules.OrderBy(x => x.OrderIndex))
@@ -29,7 +31,8 @@
                                     Required="true"
                                     Validation="@( (int? value) => ValidateSector(routine, value) )"
                                     Label="Setor"
-                                    Variant="Variant.Outlined">
+                                    Variant="Variant.Outlined"
+                                    ReadOnly=@(Id > 0)>
 
                             @foreach (var sector in _sectors)
                             {
@@ -44,25 +47,32 @@
                         <MudButton Style="height: 56px; margin-top: 8px" OnClick="() => DialogWebService.OpenCreateSector()" Variant="Variant.Outlined">Criar novo setor</MudButton>
                     </div>
 
-                    <MudNumericField @bind-Value="routine.MinTime" Label="Tempo mínimo" Variant="Variant.Outlined" Adornment="Adornment.End" AdornmentText="minutos" Min="0" HideSpinButtons="true" />
-                    <MudNumericField @bind-Value="routine.MaxTime" Label="Tempo máximo" Variant="Variant.Outlined" Adornment="Adornment.End" AdornmentText="minutos" Min="0" Max="59" HideSpinButtons="true" />
+                    <MudNumericField @bind-Value="routine.MinTime" Label="Tempo mínimo" Variant="Variant.Outlined" Adornment="Adornment.End" AdornmentText="minutos" Min="0" HideSpinButtons="true" ReadOnly=@(Id > 0) />
+                    <MudNumericField @bind-Value="routine.MaxTime" Label="Tempo máximo" Variant="Variant.Outlined" Adornment="Adornment.End" AdornmentText="minutos" Min="0" Max="59" HideSpinButtons="true" ReadOnly=@(Id > 0) />
 
 
                     <MudIcon Class="delete" @onclick=@(() => DeleteRule(routine)) Icon="@Icons.Material.Filled.Delete" />
                 </div>
-                
             }
-            <MudButton Variant="Variant.Outlined" OnClick=AddNewRule>
-                <MudIcon Icon="@Icons.Material.Rounded.Add" />
-                <span>Adicionar nova regra</span>
-            </MudButton>
+
+            @if (Id == 0)
+            {
+                <MudButton Variant="Variant.Outlined" OnClick=AddNewRule>
+                    <MudIcon Icon="@Icons.Material.Rounded.Add" />
+                    <span>Adicionar nova regra</span>
+                </MudButton>
+            }
+            
 
         </div>
     </div>
 
     <MudDivider />
 
-    <MudButton OnClick="Submit" Class="btn-submit" Variant="Variant.Filled" Color="Color.Primary">Registrar</MudButton>
+    @if (Id == 0)
+    {
+        <MudButton OnClick="Submit" Class="btn-submit" Variant="Variant.Filled" Color="Color.Primary">Registrar</MudButton>
+    }
 
     <MudOverlay Visible="visible" LightBackground="true" Absolute="true">
         <MudProgressCircular Color="Color.Default" Indeterminate="true" />

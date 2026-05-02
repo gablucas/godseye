@@ -1,12 +1,13 @@
 ﻿using FluentValidation;
+using GodsEye.API.Email;
 using GodsEye.API.Features.Compliance.SectorTransition;
 using GodsEye.API.Features.Compliance.Shared;
 using GodsEye.API.Interfaces;
 using GodsEye.API.Services;
 using GodsEye.API.Services.Queries;
-using GodsEye.API.Email;
 using Hangfire;
 using Hangfire.MySql;
+using Hangfire.Redis.StackExchange;
 using Microsoft.AspNetCore.ResponseCompression;
 using System.Reflection;
 
@@ -58,41 +59,40 @@ namespace GodsEye.API.DI
             services.AddValidatorsFromAssemblyContaining<IApiMarker>();
             services.AddAutoMapper(cfg => { }, Assembly.GetExecutingAssembly());
             services.AddMediatR(cfg => cfg.RegisterServicesFromAssemblies(Assembly.GetExecutingAssembly()));
-            services.AddSingleton<IFaceMatcherService, FaceMatcherService>();
-            services.AddSingleton<IGodsEyeState, GodsEyeState>();
-
-            services.AddScoped<IFolderService, FolderService>();
-            services.AddScoped<ICameraConnectionTesterService, RtspCameraConnectionTesterService>();
             services.Configure<SmtpSettings>(configuration.GetSection("SmtpSettings"));
-
             services.AddScoped<IEmailService, MailKitEmailSender>();
 
-            
 
-            // ✅ Registrar o Hangfire
+
             services.AddHangfire(config => config
             .SetDataCompatibilityLevel(CompatibilityLevel.Version_180)
             .UseSimpleAssemblyNameTypeSerializer()
             .UseRecommendedSerializerSettings()
-            .UseStorage(new MySqlStorage(
-                configuration.GetConnectionString("HangfireConnection"),
-                new MySqlStorageOptions
-                {
-                    TablesPrefix = "Hangfire_"
-                }
-            )));
+            .UseRedisStorage("localhost:6379", new RedisStorageOptions
+            {
+                Prefix = "hangfire:",
+                ExpiryCheckInterval = TimeSpan.FromHours(1),
+                InvisibilityTimeout = TimeSpan.FromMinutes(30)
+            }));
 
-            // ✅ Adicionar o servidor de processamento
-            services.AddHangfireServer();
+            services.AddHangfireServer(options =>
+            {
+                options.WorkerCount = 20; // pode aumentar sem medo, Redis aguenta
+            });
 
+            services.AddScoped<IFolderService, FolderService>();
+            services.AddScoped<ICameraConnectionTesterService, RtspCameraConnectionTesterService>();
+
+            services.AddSingleton<IFaceMatcherService, FaceMatcherService>();
+            services.AddSingleton<IGodsEyeState, GodsEyeState>();
             services.AddScoped<IComplianceStrategy, SectorTransitionStrategy>();
             services.AddScoped<IComplianceLogService, ComplianceLogService>();
             services.AddScoped<IComplianceViolationService, ComplianceViolationService>();
-            services.AddAutoMapper(cfg => { }, Assembly.GetExecutingAssembly());
 
-            services.AddScoped<IPersonQuerie, PersonQuerie>();
-            services.AddScoped<ICameraQuerie, CameraQuerie>();
-            services.AddScoped<IAccessLevelQuerie, AccessLevelQuerie>();
+            services.AddScoped<IPersonQuery, PersonQuery>();
+            services.AddScoped<ICameraQuery, CameraQuery>();
+            services.AddScoped<IAccessLevelQuery, AccessLevelQuery>();
+            services.AddScoped<ISectorTransitionQuery, SectorTransitionQuery>();
         }
     }
 }

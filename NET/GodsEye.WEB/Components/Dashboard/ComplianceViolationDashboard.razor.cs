@@ -10,7 +10,7 @@ namespace GodsEye.WEB.Components.Dashboard
     public partial class ComplianceViolationDashboard
     {
         [Inject]
-        public ComplianceWebService complianceWebService { get; set; }
+        public ComplianceViolationWebService complianceViolationWebService { get; set; }
 
         [Inject]
         public SignalRService SignalR { get; set; }
@@ -36,7 +36,7 @@ namespace GodsEye.WEB.Components.Dashboard
         {
             _loading = true;
 
-            var result = await complianceWebService.GetAllViolationsAsync();
+            var result = await complianceViolationWebService.GetAllAsync();
 
             if (result is not null)
             {
@@ -52,7 +52,7 @@ namespace GodsEye.WEB.Components.Dashboard
                 "CreatedComplianceViolationRecording",
                 async complianceViolationId =>
                 {
-                    var complianceViolation = await complianceWebService.GetViolationById(complianceViolationId);
+                    var complianceViolation = await complianceViolationWebService.GetById(complianceViolationId);
 
                     if (complianceViolation == null)
                         return;

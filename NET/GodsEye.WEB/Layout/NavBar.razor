@@ -41,7 +41,7 @@
         <NavLink href="/alertas"
                  class=@(SelectedMenu("/alertas") ? "selected" : _alertCounter > 0 ? "alert-notification" : "")
                  @onclick="() => _alertCounter = 0">
-            <MudIcon Icon="@Icons.Material.Filled.ReportProblem" />
+            <MudIcon Icon="@Icons.Material.Filled.NotificationImportant" />
             Alertas
 
             @if (!SelectedMenu("/alertas") && _alertCounter > 0)

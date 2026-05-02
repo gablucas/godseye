@@ -2,7 +2,7 @@
 
 namespace GodsEye.API.Interfaces
 {
-    public interface IAccessLevelQuerie
+    public interface IAccessLevelQuery
     {
         Task<IEnumerable<AccessLevelCache>> GetAllCache(CancellationToken cancellationToken);
     }

@@ -20,10 +20,13 @@ namespace GodsEye.WEB.Components.Compliance
         #region LIFETIME FUNCTIONS
         protected override async Task OnParametersSetAsync()
         {
-            var policy = await Service.GetById(Id);
+            if (Id > 0)
+            {
+                var policy = await Service.GetById(Id);
 
-            if (policy != null)
-                RuleType = policy.Rule;
+                if (policy != null)
+                    RuleType = policy.Rule;
+            }
         }
 
         #endregion
@@ -34,6 +37,8 @@ namespace GodsEye.WEB.Components.Compliance
         private IMudDialogInstance MudDialog { get; set; }
 
         #endregion
+
+
 
         async Task Submit()
         {

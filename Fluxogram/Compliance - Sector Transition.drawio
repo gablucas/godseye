@@ -1,0 +1,122 @@
+<mxfile host="app.diagrams.net">
+  <diagram name="Página-1" id="qJVpSAGxivEw0s1PE2Rc">
+    <mxGraphModel dx="3535" dy="2073" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="827" pageHeight="1169" math="0" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+        <mxCell id="uzXIrAXCHWQTgdVrfsjA-24" edge="1" parent="1" source="uzXIrAXCHWQTgdVrfsjA-25" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="280" y="560" />
+              <mxPoint x="280" y="480" />
+            </Array>
+            <mxPoint x="320" y="480" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="uzXIrAXCHWQTgdVrfsjA-25" parent="1" style="rounded=1;whiteSpace=wrap;html=1;" value="Scanner biometrico registra a pessoa" vertex="1">
+          <mxGeometry height="80" width="160" x="80" y="520" as="geometry" />
+        </mxCell>
+        <mxCell id="uzXIrAXCHWQTgdVrfsjA-26" edge="1" parent="1" source="uzXIrAXCHWQTgdVrfsjA-27" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=0;entryY=0.5;entryDx=0;entryDy=0;" target="uzXIrAXCHWQTgdVrfsjA-29">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="uzXIrAXCHWQTgdVrfsjA-27" parent="1" style="rounded=1;whiteSpace=wrap;html=1;" value="Camera identifica pessoa" vertex="1">
+          <mxGeometry height="80" width="160" x="80" y="360" as="geometry" />
+        </mxCell>
+        <mxCell id="uzXIrAXCHWQTgdVrfsjA-28" edge="1" parent="1" source="uzXIrAXCHWQTgdVrfsjA-29" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=0;entryY=0.5;entryDx=0;entryDy=0;" target="uzXIrAXCHWQTgdVrfsjA-32">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="uzXIrAXCHWQTgdVrfsjA-29" parent="1" style="rounded=1;whiteSpace=wrap;html=1;" value="Identifica as features da camera" vertex="1">
+          <mxGeometry height="80" width="160" x="320" y="440" as="geometry" />
+        </mxCell>
+        <mxCell id="uzXIrAXCHWQTgdVrfsjA-30" edge="1" parent="1" source="uzXIrAXCHWQTgdVrfsjA-32" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=0;entryY=0.5;entryDx=0;entryDy=0;" target="uzXIrAXCHWQTgdVrfsjA-35">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="880" y="400" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="uzXIrAXCHWQTgdVrfsjA-31" connectable="0" parent="uzXIrAXCHWQTgdVrfsjA-30" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];" value="Compliance" vertex="1">
+          <mxGeometry relative="1" x="0.1087" y="-1" as="geometry">
+            <mxPoint as="offset" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="uzXIrAXCHWQTgdVrfsjA-32" parent="1" style="rhombus;whiteSpace=wrap;html=1;" value="Features" vertex="1">
+          <mxGeometry height="80" width="160" x="800" y="440" as="geometry" />
+        </mxCell>
+        <mxCell id="uzXIrAXCHWQTgdVrfsjA-33" parent="1" style="rounded=1;whiteSpace=wrap;html=1;" value="Envia dados da pessoa, setor e horario de identificação via notificação" vertex="1">
+          <mxGeometry height="80" width="160" x="560" y="440" as="geometry" />
+        </mxCell>
+        <mxCell id="uzXIrAXCHWQTgdVrfsjA-34" edge="1" parent="1" source="uzXIrAXCHWQTgdVrfsjA-35" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="1280" y="400" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="uzXIrAXCHWQTgdVrfsjA-35" parent="1" style="rounded=1;whiteSpace=wrap;html=1;" value="Envia dados da pessoa, setor e horario de identificação via notificação" vertex="1">
+          <mxGeometry height="80" width="160" x="1040" y="360" as="geometry" />
+        </mxCell>
+        <mxCell id="uzXIrAXCHWQTgdVrfsjA-36" edge="1" parent="1" source="uzXIrAXCHWQTgdVrfsjA-37" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="1520" y="400" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="uzXIrAXCHWQTgdVrfsjA-37" parent="1" style="rounded=1;whiteSpace=wrap;html=1;" value="Registra o log do compliance" vertex="1">
+          <mxGeometry height="80" width="160" x="1280" y="360" as="geometry" />
+        </mxCell>
+        <mxCell id="uzXIrAXCHWQTgdVrfsjA-38" edge="1" parent="1" source="uzXIrAXCHWQTgdVrfsjA-39" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=0;entryY=0.5;entryDx=0;entryDy=0;" target="uzXIrAXCHWQTgdVrfsjA-42">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="uzXIrAXCHWQTgdVrfsjA-39" parent="1" style="rounded=1;whiteSpace=wrap;html=1;" value="Busca as regras de compliance daquele setor" vertex="1">
+          <mxGeometry height="80" width="160" x="1520" y="360" as="geometry" />
+        </mxCell>
+        <mxCell id="uzXIrAXCHWQTgdVrfsjA-40" edge="1" parent="1" source="uzXIrAXCHWQTgdVrfsjA-42" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=0;entryY=0.5;entryDx=0;entryDy=0;" target="uzXIrAXCHWQTgdVrfsjA-43">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="1840" y="320" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="uzXIrAXCHWQTgdVrfsjA-41" connectable="0" parent="uzXIrAXCHWQTgdVrfsjA-40" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];" value="Sequencia de setores" vertex="1">
+          <mxGeometry relative="1" x="0.2478" y="-1" as="geometry">
+            <mxPoint as="offset" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="uzXIrAXCHWQTgdVrfsjA-42" parent="1" style="rhombus;whiteSpace=wrap;html=1;" value="Regras de compliance" vertex="1">
+          <mxGeometry height="80" width="160" x="1760" y="360" as="geometry" />
+        </mxCell>
+        <mxCell id="uzXIrAXCHWQTgdVrfsjA-46" edge="1" parent="1" source="uzXIrAXCHWQTgdVrfsjA-43" style="edgeStyle=none;curved=1;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=0;entryY=0.5;entryDx=0;entryDy=0;fontSize=12;startSize=8;endSize=8;" target="uzXIrAXCHWQTgdVrfsjA-44">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="uzXIrAXCHWQTgdVrfsjA-43" parent="1" style="rounded=1;whiteSpace=wrap;html=1;" value="Busca as regras de compliance daquele setor" vertex="1">
+          <mxGeometry height="80" width="160" x="2000" y="280" as="geometry" />
+        </mxCell>
+        <mxCell id="uzXIrAXCHWQTgdVrfsjA-47" edge="1" parent="1" source="uzXIrAXCHWQTgdVrfsjA-44" style="edgeStyle=none;curved=1;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=0;entryY=0.5;entryDx=0;entryDy=0;fontSize=12;startSize=8;endSize=8;" target="uzXIrAXCHWQTgdVrfsjA-45">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="uzXIrAXCHWQTgdVrfsjA-44" parent="1" style="rounded=1;whiteSpace=wrap;html=1;" value="Busca os logs da pessoa" vertex="1">
+          <mxGeometry height="80" width="160" x="2240" y="280" as="geometry" />
+        </mxCell>
+        <mxCell id="uzXIrAXCHWQTgdVrfsjA-49" edge="1" parent="1" source="uzXIrAXCHWQTgdVrfsjA-45" style="edgeStyle=none;curved=1;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=0;entryY=0.5;entryDx=0;entryDy=0;fontSize=12;startSize=8;endSize=8;" target="uzXIrAXCHWQTgdVrfsjA-48">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="uzXIrAXCHWQTgdVrfsjA-45" parent="1" style="rhombus;whiteSpace=wrap;html=1;" value="Busca a regra atual com base no setor" vertex="1">
+          <mxGeometry height="80" width="160" x="2481" y="280" as="geometry" />
+        </mxCell>
+        <mxCell id="uzXIrAXCHWQTgdVrfsjA-53" edge="1" parent="1" source="uzXIrAXCHWQTgdVrfsjA-48" style="edgeStyle=none;curved=1;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=0.5;entryY=0;entryDx=0;entryDy=0;fontSize=12;startSize=8;endSize=8;" target="uzXIrAXCHWQTgdVrfsjA-51">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="uzXIrAXCHWQTgdVrfsjA-48" parent="1" style="rhombus;whiteSpace=wrap;html=1;" value="Verifica se o log daquela sessão já esta completo (entra e saida)" vertex="1">
+          <mxGeometry height="80" width="160" x="2720" y="280" as="geometry" />
+        </mxCell>
+        <mxCell id="uzXIrAXCHWQTgdVrfsjA-55" edge="1" parent="1" source="uzXIrAXCHWQTgdVrfsjA-51" style="edgeStyle=none;curved=1;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=0.5;entryY=0;entryDx=0;entryDy=0;fontSize=12;startSize=8;endSize=8;" target="uzXIrAXCHWQTgdVrfsjA-54">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="uzXIrAXCHWQTgdVrfsjA-51" parent="1" style="rhombus;whiteSpace=wrap;html=1;" value="Verifica a próxima regra" vertex="1">
+          <mxGeometry height="80" width="160" x="2720" y="440" as="geometry" />
+        </mxCell>
+        <mxCell id="uzXIrAXCHWQTgdVrfsjA-54" parent="1" style="rounded=1;whiteSpace=wrap;html=1;" value="Busca os logs da pessoa" vertex="1">
+          <mxGeometry height="80" width="160" x="2720" y="600" as="geometry" />
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>

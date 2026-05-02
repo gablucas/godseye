@@ -1,6 +1,8 @@
 import pika
-import json # Use o json padrão do python ou o do pydantic se preferir
-from extracted_embedding import ExtractedEmbedding
+import json
+
+from app.extracted_embedding import ExtractedEmbedding # Use o json padrão do python ou o do pydantic se preferir
+
 
 class SendExtractedEmbedding:
 

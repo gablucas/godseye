@@ -37,8 +37,8 @@ namespace GodsEye.WEB.Pages.Person
         #region TABLE FILTERS
         private string _personNameFilter = "";
 
-        private List<GodsEye.Shared.Response.Sector.SectorResponse> _sectors = new();
-        private IEnumerable<string> _selectedSectors { get; set; } = new HashSet<string>() { };
+        private List<SectorResponse> _sectors = new();
+        private HashSet<string> _selectedSectors { get; set; } = new HashSet<string>();
 
         private string _personFilter = "";
 
@@ -142,6 +142,8 @@ namespace GodsEye.WEB.Pages.Person
             ApplyFilters();
         }
 
+        
+
         private string GetMultiSelectionText(List<string> selectedValues)
         {
             return $"{selectedValues.Count} setor{(selectedValues.Count > 1 ? "es foram selecionados" : " foi selecionado")}";
@@ -165,8 +167,8 @@ namespace GodsEye.WEB.Pages.Person
         {
             _filteredPersons = _persons
                 .Where(x =>
-                    (string.IsNullOrWhiteSpace(_personNameFilter) || x.Name.Contains(_personNameFilter, StringComparison.OrdinalIgnoreCase))
-                    //(_selectedSectors.Count() == 0 || x.Sectors.Any(s => _selectedSectors.ToList().Contains(s.SectorId.ToString())))
+                    (string.IsNullOrWhiteSpace(_personNameFilter) || x.Name.Contains(_personNameFilter, StringComparison.OrdinalIgnoreCase)) &&
+                    (_selectedSectors.Count == 0 || _selectedSectors.Contains(x.Sector.Id.ToString()))
                 ).ToList();
         }
     }

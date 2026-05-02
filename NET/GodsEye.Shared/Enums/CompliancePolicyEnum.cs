@@ -6,5 +6,8 @@ namespace GodsEye.Shared.Enums
     {
         [Display(Name = "Transição de setores")]
         SECTOR_TRANSITION,
+
+        [Display(Name = "EPI - Capacete")]
+        EPI_HELMET,
     }
 }

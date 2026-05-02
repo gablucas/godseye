@@ -1,6 +1,6 @@
 ﻿namespace GodsEye.Shared.Response.Sector
 {
-    public class SectorResponse
+    public class SectorResponse : IBaseResponse
     {
         public int Id { get; set; }
         public string Name { get; set; }

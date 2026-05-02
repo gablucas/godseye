@@ -1,0 +1,13 @@
+﻿@using GodsEye.Shared.Extensions
+@using GodsEye.Shared.Response
+
+@typeparam TEnum where TEnum : struct, System.Enum
+
+<div class="option">
+    <MudSelect T="TEnum" SelectedValuesChanged="OnFilterOptionChanged" SelectedValues="SelectedItems" MultiSelection="true" SelectAll="true" SelectAllText="Selecionar tudo" MultiSelectionTextFunc="@(new Func<List<string>, string>(GetMultiSelectionText))" Label="@Label" Variant="Variant.Outlined" Margin="Margin.Dense" Clearable="true">
+        @foreach (var item in Enum.GetValues<TEnum>())
+        {
+            <MudSelectItem T="TEnum" Value="@item">@item.GetDescription()</MudSelectItem>
+        }
+    </MudSelect>
+</div>

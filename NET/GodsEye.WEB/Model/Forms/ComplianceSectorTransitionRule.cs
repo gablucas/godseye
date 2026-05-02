@@ -4,8 +4,8 @@ namespace GodsEye.WEB.Model.Forms
 {
     public class ComplianceSectorTransitionRule
     {
-        public int? Id { get; set; }
-        public string Name { get; set; }
+        public int? PolicyId { get; set; }
+        public string PolicyName { get; set; }
         public CompliancePolicyEnum RuleType { get; set; } = CompliancePolicyEnum.SECTOR_TRANSITION;
 
         public List<RoutineRuleSectorTransitionForm> Rules { get; set; } = new();

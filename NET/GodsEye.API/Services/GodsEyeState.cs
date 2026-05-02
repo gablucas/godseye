@@ -21,9 +21,9 @@ namespace GodsEye.API.Services
         {
             using var scope = _scopeFactory.CreateScope();
 
-            var personQuery = scope.ServiceProvider.GetRequiredService<IPersonQuerie>();
-            var cameraQuery = scope.ServiceProvider.GetRequiredService<ICameraQuerie>();
-            var accessLevelQuery = scope.ServiceProvider.GetRequiredService<IAccessLevelQuerie>();
+            var personQuery = scope.ServiceProvider.GetRequiredService<IPersonQuery>();
+            var cameraQuery = scope.ServiceProvider.GetRequiredService<ICameraQuery>();
+            var accessLevelQuery = scope.ServiceProvider.GetRequiredService<IAccessLevelQuery>();
 
             // Agora rodará livremente sem travar threads
             var persons = await personQuery.GetAllCache(CancellationToken.None);
