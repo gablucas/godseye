@@ -1,4 +1,4 @@
-﻿.notification-menu {
+﻿.page-menu {
     display: flex;
     justify-content: space-between;
     border: 1px solid var(--gray-050);

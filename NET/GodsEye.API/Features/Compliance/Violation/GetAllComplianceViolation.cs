@@ -5,20 +5,13 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace GodsEye.API.Features.Compliance.Violation
 {
-    public sealed record GetAllComplianceViolationCommand() : IRequest<IEnumerable<ComplianceViolationResponse>>;
+    public sealed record GetAllComplianceViolationCommand(int pageNumber, int pageSize) : IRequest<IEnumerable<ComplianceViolationResponse>>;
 
-    internal sealed class GetAllComplianceViolationHandler(IDapperContext context) : IRequestHandler<GetAllComplianceViolationCommand, IEnumerable<ComplianceViolationResponse>>
+    internal sealed class GetAllComplianceViolationHandler(IComplianceViolationQuery complianceViolationQuery) : IRequestHandler<GetAllComplianceViolationCommand, IEnumerable<ComplianceViolationResponse>>
     {
         public async Task<IEnumerable<ComplianceViolationResponse>> Handle(GetAllComplianceViolationCommand request, CancellationToken cancellationToken)
         {
-            return await GetAllComplianceViolationQuery(cancellationToken);
-        }
-
-        public async Task<IEnumerable<ComplianceViolationResponse>> GetAllComplianceViolationQuery(CancellationToken cancellationToken)
-        {
-            var sql = "CALL SP_COMPLIANCE_VIOLATION_GET_ALL()";
-
-            return await context.QuerySqlAsync<ComplianceViolationResponse>(sql, new { }, cancellationToken);
+            return await complianceViolationQuery.GetAllComplianceViolationQuery(request.pageNumber, request.pageSize, cancellationToken);
         }
     }
 
@@ -30,10 +23,11 @@ namespace GodsEye.API.Features.Compliance.Violation
         }
 
         private static async Task<IResult> Handle(
+            [AsParameters] GetAllComplianceViolationCommand request,
             [FromServices] IMediator mediator,
             CancellationToken cancellationToken)
         {
-            var response = await mediator.Send(new GetAllComplianceViolationCommand(), cancellationToken);
+            var response = await mediator.Send(request, cancellationToken);
             return Results.Ok(response);
         }
     }

@@ -5,6 +5,7 @@ using GodsEye.Shared.Response.Sector;
 using GodsEye.WEB.Services;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.SignalR.Client;
+using Microsoft.JSInterop;
 using MudBlazor;
 
 namespace GodsEye.WEB.Pages.Compliance
@@ -21,6 +22,9 @@ namespace GodsEye.WEB.Pages.Compliance
         [Inject]
         public SectorWebService SectorService { get; set; }
 
+        [Inject]
+        public IJSRuntime JS { get; set; }
+
         #endregion
 
         #region TABLE PARAMETERS
@@ -35,8 +39,9 @@ namespace GodsEye.WEB.Pages.Compliance
 
         #region TABLE FILTERS
 
-        private string _personNameFilter = "";
+        private bool showFilters = false;
 
+        private string _personNameFilter = "";
 
         private List<SectorResponse> _sectors = new();
         private HashSet<string> _selectedSectors { get; set; } = new HashSet<string>();
@@ -120,5 +125,12 @@ namespace GodsEye.WEB.Pages.Compliance
         }
 
         #endregion
+
+        private async Task DownloadPDF()
+        {
+            var url = await Service.GetViolationPDF();
+
+            await JS.InvokeVoidAsync("downloadFile", url, "relatorio.pdf");
+        }
     }
 }

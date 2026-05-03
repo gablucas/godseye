@@ -31,14 +31,28 @@
             </div>
         </div>
 
-        <div class="notification-menu">
+        <div class="page-menu">
+            <MudButton OnClick="() => showFilters = !showFilters">
+                <MudIcon Icon=@(showFilters ? Icons.Material.Outlined.FilterAltOff : Icons.Material.Outlined.FilterAlt) />
+                <span>Filtros</span>
+            </MudButton>
+
+            <MudButton OnClick="DownloadPDF">
+                <MudIcon Icon="@Icons.Material.Outlined.PictureAsPdf" />
+                <span>Baixar Relatório</span>
+            </MudButton>
+        </div>
+
+        @if (showFilters) 
+        {
             <div class="filters">
                 <InputFilterComponent @bind-TypedValue="_personNameFilter" ApplyFilterCallback="ApplyFilters" Label="Pessoa" />
-                <SelectFilterEnumComponent TEnum="CompliancePolicyEnum" ApplyFilterCallback="ApplyFilters"  @bind-SelectedItems="_selectedPoliciesType" Label="Tipo de politicas"  />
+                <SelectFilterEnumComponent TEnum="CompliancePolicyEnum" ApplyFilterCallback="ApplyFilters" @bind-SelectedItems="_selectedPoliciesType" Label="Tipo de politicas" />
                 <SelectFilterComponent T="SectorResponse" Items="_sectors" @bind-SelectedItems="_selectedSectors" ApplyFilterCallback="ApplyFilters" Label="Setores" />
                 <SelectFilterEnumComponent TEnum="ComplianceViolationEnum" ApplyFilterCallback="ApplyFilters" @bind-SelectedItems="_selectedViolationType" Label="Tipo de Violação" />
             </div>
-        </div>
+        }
+        
 
         @if (_selectedMenu is null)
         {
@@ -66,25 +80,23 @@
             <MudTable T="ComplianceViolationResponse" @ref="mudTable" Elevation="0" Items="@_filteredItems" Hover="true" Loading="@_loading" LoadingProgressColor="Color.Info" RowClass="cursor-pointer" RowClassFunc="@SelectedRowClassFunc" OnRowClick="RowClickEvent">
                 <HeaderContent>
                     <MudTh>Pessoa</MudTh>
-                    <MudTh>Data entrada</MudTh>
                     <MudTh>Política</MudTh>
-                    <MudTh>Data saída</MudTh>
                     <MudTh>Tipo de violação</MudTh>
                     <MudTh>Setor</MudTh>
+                    <MudTh>Data entrada</MudTh>
+                    <MudTh>Data saída</MudTh>
                     <MudTh>Data do registro</MudTh>
                 </HeaderContent>
                 <RowTemplate>
                     <MudTd DataLabel="PersonName">@context.PersonName</MudTd>
-                    <MudTd DataLabel="EnteredAt">@(context.EnteredAt != null ? context.EnteredAt : "Sem registro de entrada")</MudTd>
-                    <MudTd DataLabel="ExitedAt">@(context.ExitedAt != null ? context.ExitedAt : "Sem registro de saída")</MudTd>
                     <MudTd DataLabel="PolicyName">@context.PolicyName</MudTd>
                     <MudTd DataLabel="ViolationType">@context.ViolationType.GetDescription()</MudTd>
                     <MudTd DataLabel="SectorName">@context.SectorName</MudTd>
+                    <MudTd DataLabel="EnteredAt">@(context.EnteredAt != null ? context.EnteredAt : "Sem registro de entrada")</MudTd>
+                    <MudTd DataLabel="ExitedAt">@(context.ExitedAt != null ? context.ExitedAt : "Sem registro de saída")</MudTd>
                     <MudTd DataLabel="CreatedAt">@context.CreatedAt</MudTd>
                 </RowTemplate>
             </MudTable>
         }
-
-        
     </div>
 </div>

@@ -36,7 +36,7 @@ namespace GodsEye.WEB.Components.Dashboard
         {
             _loading = true;
 
-            var result = await complianceViolationWebService.GetAllAsync();
+            var result = await complianceViolationWebService.GetAllAsync(1, 5);
 
             if (result is not null)
             {

@@ -40,7 +40,7 @@ namespace GodsEye.WEB.Shared
 
         protected virtual async Task<IEnumerable<TModel>?> LoadDataAsync()
         {
-            return await Service.GetAllAsync();
+            return await Service.GetAllAsync(1, 30);
         }
 
         protected virtual Task OnBeforeLoad()

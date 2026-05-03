@@ -24,7 +24,7 @@ namespace GodsEye.WEB.Services
             return json!;
         }
 
-        public async Task<IEnumerable<CompliancePolicyResponse>> GetAllAsync()
+        public async Task<IEnumerable<CompliancePolicyResponse>> GetAllAsync(int pageNumber, int pageSize)
         {
             var result = await _http.GetAsync(_baseEndpoint);
 
@@ -42,16 +42,15 @@ namespace GodsEye.WEB.Services
             return json!;
         }
 
-        
+        //public async Task<IEnumerable<ComplianceViolationResponse>> GetAllViolationsAsync()
+        //{
+        //    var result = await _http.GetAsync($"{_baseEndpoint}/violation");
 
-        public async Task<IEnumerable<ComplianceViolationResponse>> GetAllViolationsAsync()
-        {
-            var result = await _http.GetAsync($"{_baseEndpoint}/violation");
+        //    var json = await result.Content.ReadFromJsonAsync<IEnumerable<ComplianceViolationResponse>>();
 
-            var json = await result.Content.ReadFromJsonAsync<IEnumerable<ComplianceViolationResponse>>();
+        //    return json!;
+        //}
 
-            return json!;
-        }
 
         public async Task<SectorTransitionResponse> GetSectorTransitionById(int id)
         {
@@ -73,9 +72,9 @@ namespace GodsEye.WEB.Services
             _http = http;
         }
 
-        public async Task<IEnumerable<ComplianceViolationResponse>> GetAllAsync()
+        public async Task<IEnumerable<ComplianceViolationResponse>> GetAllAsync(int pageNumber, int pageSize)
         {
-            var result = await _http.GetAsync($"{_baseEndpoint}");
+            var result = await _http.GetAsync($"{_baseEndpoint}?pageNumber={pageNumber}&pageSize={pageSize}");
 
             var json = await result.Content.ReadFromJsonAsync<IEnumerable<ComplianceViolationResponse>>();
 
@@ -89,6 +88,18 @@ namespace GodsEye.WEB.Services
             var json = await result.Content.ReadFromJsonAsync<ComplianceViolationResponse>();
 
             return json!;
+        }
+
+        public async Task<string> GetViolationPDF()
+        {
+            var result = await _http.GetAsync($"{_baseEndpoint}/report");
+
+            var bytes = await result.Content.ReadAsByteArrayAsync();
+
+            var base64 = Convert.ToBase64String(bytes);
+            var url = $"data:application/pdf;base64,{base64}";
+
+            return url;
         }
     }
 }

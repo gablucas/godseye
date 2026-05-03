@@ -2,6 +2,7 @@
 using GodsEye.API.Email;
 using GodsEye.API.Features.Compliance.SectorTransition;
 using GodsEye.API.Features.Compliance.Shared;
+using GodsEye.API.Features.Compliance.Violation;
 using GodsEye.API.Interfaces;
 using GodsEye.API.Services;
 using GodsEye.API.Services.Queries;
@@ -9,6 +10,7 @@ using Hangfire;
 using Hangfire.MySql;
 using Hangfire.Redis.StackExchange;
 using Microsoft.AspNetCore.ResponseCompression;
+using QuestPDF.Infrastructure;
 using System.Reflection;
 
 namespace GodsEye.API.DI
@@ -24,6 +26,8 @@ namespace GodsEye.API.DI
                 opts.MimeTypes = ResponseCompressionDefaults.MimeTypes.Concat(
                     ["application/octet-stream"]);
             });
+
+            QuestPDF.Settings.License = LicenseType.Community;
 
             services.AddHttpClient<IGodsEyeService, GodsEyeService>((sp, client) =>
             {
@@ -93,6 +97,8 @@ namespace GodsEye.API.DI
             services.AddScoped<ICameraQuery, CameraQuery>();
             services.AddScoped<IAccessLevelQuery, AccessLevelQuery>();
             services.AddScoped<ISectorTransitionQuery, SectorTransitionQuery>();
+            services.AddScoped<IComplianceViolationQuery, ComplianceViolationQuery>();
+            
         }
     }
 }

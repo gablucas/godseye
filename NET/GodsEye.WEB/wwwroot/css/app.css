@@ -240,7 +240,7 @@ button {
     font-weight: 500;
 }
 
-.notification-menu {
+.page-menu {
     display: grid;
     grid-template-columns: 1fr auto;
     justify-content: space-between;

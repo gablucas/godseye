@@ -26,6 +26,7 @@
     <PackageReference Include="MassTransit" Version="8.5.9" />
     <PackageReference Include="MassTransit.RabbitMQ" Version="8.5.9" />
     <PackageReference Include="Microsoft.AspNetCore.SignalR" Version="1.2.9" />
+    <PackageReference Include="QuestPDF" Version="2026.2.4" />
     <PackageReference Include="Swashbuckle.AspNetCore" Version="6.6.2" />
     <PackageReference Include="System.Numerics.Tensors" Version="10.0.7" />
   </ItemGroup>

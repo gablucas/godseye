@@ -55,7 +55,6 @@ namespace GodsEye.WEB.Components.Compliance.Rules
 
         #region LIFETIME FUNCTIONS
 
-
         #endregion
 
         #region FORM
