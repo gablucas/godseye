@@ -23,7 +23,7 @@
                 <MudTh>Nome</MudTh>
             </HeaderContent>
             <RowTemplate>
-                <MudTd DataLabel="Foto"><MudImage Height="140" Style="border-radius: 7px" src=@($"https://localhost:7010/{context.PersonPhoto}") /></MudTd>
+                <MudTd DataLabel="Foto"><MudImage Height="140" Style="border-radius: 7px" src=@($"{Configuration["ApiUrl"]}/{context.PersonPhoto}") /></MudTd>
                 <MudTd DataLabel="Nome">@context.Person</MudTd>
             </RowTemplate>
         </MudTable>

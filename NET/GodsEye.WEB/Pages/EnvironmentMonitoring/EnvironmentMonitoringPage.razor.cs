@@ -25,6 +25,9 @@ namespace GodsEye.WEB.Pages.EnvironmentMonitoring
         [Inject]
         public DialogWebService DialogWebService { get; set; }
 
+        [Inject]
+        public IConfiguration Configuration { get; set; }
+
         #region TABLE PARAMETERS
 
         private List<EnvironmentMonitoringLogResponse> _logs = new();
@@ -83,7 +86,7 @@ namespace GodsEye.WEB.Pages.EnvironmentMonitoring
                 
             _loading = false;
 
-            SignalR.Create("https://localhost:7010/createdDataHub");
+            SignalR.Create($"{Configuration["ApiUrl"]}/createdDataHub");
 
             SignalR.On<EnvironmentMonitoringLogResponse>(
                 "CreatedEnvironmentMonitoring",

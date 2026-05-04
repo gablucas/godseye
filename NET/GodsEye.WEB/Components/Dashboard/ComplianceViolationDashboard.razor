@@ -21,7 +21,7 @@
         @foreach (var log in _filteredLogs)
         {
             <div class="info-row">
-                <img src="@($"https://localhost:7010/{log.PersonPhoto}")" @onclick="() => DialogWebService.OpenPersonUpdateDialog(log.PersonId, null)" />
+                <img src="@($"{Configuration["ApiUrl"]}/{log.PersonPhoto}")" @onclick="() => DialogWebService.OpenPersonUpdateDialog(log.PersonId, null)" />
                 <span class="primary">@log.PersonName</span>
                 <span class="secondary">@log.ViolationType.GetDescription()</span>
                 <span class="secondary">@log.PolicyType.GetDescription()</span>

@@ -25,6 +25,9 @@ namespace GodsEye.WEB.Components.Dashboard
         [Inject]
         public DialogWebService DialogWebService { get; set; }
 
+        [Inject]
+        public IConfiguration Configuration { get; set; }
+
 
         private List<IncidentRecordingResponse> _logs = new();
         private List<IncidentRecordingResponse> _filteredLogs = new();
@@ -60,7 +63,7 @@ namespace GodsEye.WEB.Components.Dashboard
 
             _loading = false;
 
-            SignalR.Create("https://localhost:7010/createdDataHub");
+            SignalR.Create($"{Configuration["ApiUrl"]}/createdDataHub");
 
             SignalR.On<IncidentRecordingResponse>(
                 "CreatedIncidentRecording",

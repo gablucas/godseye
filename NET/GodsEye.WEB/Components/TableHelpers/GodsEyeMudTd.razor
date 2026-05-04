@@ -1,0 +1,34 @@
+﻿@typeparam T where T : notnull
+
+<MudTd DataLabel="@DataLabel">
+    <MudMenu ActivationEvent="@MouseEvent.LeftClick" Dense="true">
+        <ActivatorContent>
+            @if ((Type == IGodsEyeMudTdTypeEnum.TEXT && Value.Equals(FilterText)) || 
+                 (Type == IGodsEyeMudTdTypeEnum.HASHSET && FilterList.Contains(Value)))
+            {
+                <MudBadge Color="Color.Primary" Dot="true">
+                    <span>@Label</span>
+                </MudBadge>
+            }
+            else
+            {
+                <span>@Label</span>
+            }
+        </ActivatorContent>
+        <ChildContent>
+            @if ((Type == IGodsEyeMudTdTypeEnum.TEXT && Value.Equals(FilterText)) || 
+                 (Type == IGodsEyeMudTdTypeEnum.HASHSET && FilterList.Contains(Value)))
+            {
+                <MudMenuItem Icon="@Icons.Material.Outlined.FilterAltOff" Label="Remover filtro" @onclick="() => OnFilterOptionChanged(default)" />
+            }
+            else
+            {
+                <MudMenuItem Icon="@Icons.Material.Outlined.FilterAlt" Label="Filtrar" @onclick="() => OnFilterOptionChanged(Value)" />
+            }
+
+            <MudDivider />
+
+            <MudMenuItem Icon="@Icons.Material.Filled.RemoveRedEye" Label="Encontrar" />
+        </ChildContent>
+    </MudMenu>
+</MudTd>

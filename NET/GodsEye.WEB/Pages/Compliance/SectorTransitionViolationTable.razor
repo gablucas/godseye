@@ -1,0 +1,125 @@
+﻿@using GodsEye.Shared.Enums
+@using GodsEye.Shared.Extensions
+@using GodsEye.Shared.Response.Compliance
+@using GodsEye.Shared.Response.Sector
+@using GodsEye.WEB.Components.FilterComponents
+@using GodsEye.WEB.Services
+@using GodsEye.WEB.Shared
+@using GodsEye.WEB.Components.TableHelpers
+
+@inherits InfoPageBase<ComplianceViolationWebService, ComplianceViolationResponse>
+
+<div class="page-menu">
+    <MudButton OnClick="() => showFilters = !showFilters">
+        <MudIcon Icon=@(showFilters ? Icons.Material.Outlined.FilterAltOff : Icons.Material.Outlined.FilterAlt) />
+        <div>
+            <span>Filtros</span>
+
+            @if (_filterCounter > 0)
+            {
+                <span class="filter-counter">@_filterCounter</span>
+            }
+        </div>
+    </MudButton>
+
+    @if (_filterCounter > 0)
+    {
+        <MudButton OnClick="CleanFilters">
+            <MudIcon Icon="@Icons.Material.Outlined.DeleteSweep" />
+            <span>Limpar Filtros</span>
+        </MudButton>
+    }
+
+    <MudButton OnClick="DownloadPDF">
+        <MudIcon Icon="@Icons.Material.Outlined.PictureAsPdf" />
+        <span>Baixar Relatório</span>
+    </MudButton>
+
+    <MudButton OnClick="() => _dense = !_dense">
+        @if (!_dense)
+        {
+            <MudIcon Icon="@Icons.Material.Outlined.Compress" />
+            <span>Contrair</span>
+        }
+        else
+        {
+            <MudIcon Icon="@Icons.Material.Outlined.Expand" />
+            <span>Expandir</span>
+        }
+    </MudButton>
+</div>
+
+@if (showFilters) 
+{
+    <div class="filters">
+        <InputFilterComponent @bind-TypedValue="_personNameFilter" ApplyFilterCallback="ApplyFilters" Label="Pessoa" />
+        <SelectFilterEnumComponent TEnum="CompliancePolicyEnum" ApplyFilterCallback="ApplyFilters" @bind-SelectedItems="_selectedPoliciesType" Label="Tipo de politicas" />
+        <SelectFilterComponent T="SectorResponse" Items="_sectors" @bind-SelectedItems="_selectedSectors" ApplyFilterCallback="ApplyFilters" Label="Setores" />
+        <SelectFilterEnumComponent TEnum="ComplianceViolationEnum" ApplyFilterCallback="ApplyFilters" @bind-SelectedItems="_selectedViolationType" Label="Tipo de Violação" />
+    </div>
+}
+
+
+<MudTable T="ComplianceViolationResponse" @ref="mudTable" Elevation="0" Items="@_filteredItems" Hover="true" Loading="@_loading" LoadingProgressColor="Color.Info" RowClass="cursor-pointer" RowClassFunc="@SelectedRowClassFunc" OnRowClick="RowClickEvent">
+    <HeaderContent>
+        <MudTh>Pessoa</MudTh>
+        <MudTh>Política</MudTh>
+        <MudTh>Tipo de violação</MudTh>
+        <MudTh>Setor</MudTh>
+        <MudTh>Detalhes</MudTh>
+        <MudTh>Data entrada</MudTh>
+        <MudTh>Data saída</MudTh>
+    </HeaderContent>
+    <RowTemplate>
+        <GodsEyeMudTd Type="IGodsEyeMudTdTypeEnum.TEXT" T="string" DataLabel="PersonName" Label="@context.PersonName" Value="@context.PersonName" @bind-FilterText="_personNameFilter" ApplyFilterCallback="ApplyFilters" />
+        <MudTd DataLabel="PolicyName">@context.PolicyName</MudTd>
+        <GodsEyeMudTd Type="IGodsEyeMudTdTypeEnum.HASHSET" T="ComplianceViolationEnum" DataLabel="ViolationType" Label="@context.ViolationType.GetDescription()" Value="@context.ViolationType" @bind-FilterList="_selectedViolationType" ApplyFilterCallback="ApplyFilters" />
+        <GodsEyeMudTd Type="IGodsEyeMudTdTypeEnum.HASHSET" T="string" DataLabel="SectorName" Label="@context.SectorName" Value="@context.SectorId.ToString()" @bind-FilterList="_selectedSectors" ApplyFilterCallback="ApplyFilters" />
+
+        @if (context.ViolationType == ComplianceViolationEnum.BELOW_MINIMUM_TIME)
+        {
+            <MudTd DataLabel="CreatedAt">
+                @if (context.EnteredAt != null && context.ExitedAt != null)
+                {
+                    var duration = context.ExitedAt.Value - context.EnteredAt.Value;
+                    @($"{(int)duration.TotalHours}h {duration.Minutes}m {duration.Seconds}s")
+                }
+                else
+                {
+                    <span>Sem registro</span>
+                }
+            </MudTd>
+        }
+        else if (context.ViolationType == ComplianceViolationEnum.EXCEEDED_ALLOWED_TIME)
+        {
+            <MudTd DataLabel="Exceeded">
+                @if (context.EnteredAt != null && context.ExitedAt != null)
+                {
+                    var duration = context.ExitedAt.Value - context.EnteredAt.Value;
+                    var maxTimeSector = transitionRules.First(str => str.PolicyId == context.PolicyId).Rules.First(r => r.SectorId == context.SectorId).MaxTime;
+                    var exceededTime = duration - TimeSpan.FromMinutes(maxTimeSector ?? 0);
+
+                    @exceededTime.ToString()
+                }
+                else
+                {
+                    <span>Sem registro</span>
+                }
+            </MudTd>
+        }
+        else if (context.ViolationType == ComplianceViolationEnum.DID_NOT_ENTER_NEXT_SECTOR_IN_TIME)
+        {
+            var rules = transitionRules.First(x => x.PolicyId == context.PolicyId).Rules;
+            var logSectorIndex = rules.First(x => x.SectorId == context.SectorId).OrderIndex;
+            var nextSectorId = rules.First(x => x.OrderIndex == logSectorIndex + 1).SectorId;
+
+            <MudTd DataLabel="NextSector">
+                <span>@_sectors.First(s => s.Id == nextSectorId).Name</span>
+            </MudTd>
+                        
+        }
+        <MudTd DataLabel="EnteredAt">@(context.EnteredAt != null ? context.EnteredAt : "Sem registro de entrada")</MudTd>
+        <MudTd DataLabel="ExitedAt">@(context.ExitedAt != null ? context.ExitedAt : "Sem registro de saída")</MudTd>
+
+    </RowTemplate>
+</MudTable>

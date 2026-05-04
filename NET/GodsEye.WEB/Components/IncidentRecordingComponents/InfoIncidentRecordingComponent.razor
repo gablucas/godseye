@@ -22,7 +22,7 @@
                 @foreach (var person in IncidentRecording.Persons.OrderBy(x => x.SeenAt))
                 {
                     <div class="person-card">
-                        <MudImage src=@($"https://localhost:7010/{person.ImagePath}") Height="160" Style="border-radius: 7px" />
+                        <MudImage src=@($"{Configuration["ApiUrl"]}/{person.ImagePath}") Height="160" Style="border-radius: 7px" />
 
                         <MudPaper Width="300px" Height="160px" Class="d-flex flex-column" Elevation="0" Outlined="true">
                             <MudList T="string" Class="d-flex flex-column flex-grow-1">

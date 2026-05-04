@@ -12,6 +12,9 @@ namespace GodsEye.WEB.Layout
         [Inject]
         public SignalRService SignalR { get; set; }
 
+        [Inject]
+        public IConfiguration Configuration { get; set; }
+
         private string _openGroup;
         private int _alertCounter;
 
@@ -100,7 +103,7 @@ namespace GodsEye.WEB.Layout
         protected override async Task OnInitializedAsync()
         {
 
-            SignalR.Create("https://localhost:7010/createdDataHub");
+            SignalR.Create($"{Configuration["ApiUrl"]}/createdDataHub");
 
             SignalR.On<ViolationAlertFeatureResponse>(
                 "AlertNotification",

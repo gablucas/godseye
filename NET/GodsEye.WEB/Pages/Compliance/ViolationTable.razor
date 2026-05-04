@@ -1,0 +1,86 @@
+﻿@using GodsEye.Shared.Enums
+@using GodsEye.Shared.Extensions
+@using GodsEye.Shared.Response.Compliance
+@using GodsEye.Shared.Response.Sector
+@using GodsEye.WEB.Components.FilterComponents
+@using GodsEye.WEB.Services
+@using GodsEye.WEB.Shared
+@using GodsEye.WEB.Components.TableHelpers
+
+@inherits InfoPageBase<ComplianceViolationWebService, ComplianceViolationResponse>
+
+<div class="page-menu">
+    <MudButton OnClick="() => showFilters = !showFilters">
+        <MudIcon Icon=@(showFilters ? Icons.Material.Outlined.FilterAltOff : Icons.Material.Outlined.FilterAlt) />
+        <div>
+            <span>Filtros</span>
+
+            @if (_filterCounter > 0)
+            {
+                <span class="filter-counter">@_filterCounter</span>
+            }
+        </div>
+    </MudButton>
+
+    @if (_filterCounter > 0)
+    {
+        <MudButton OnClick="CleanFilters">
+            <MudIcon Icon="@Icons.Material.Outlined.DeleteSweep" />
+            <span>Limpar Filtros</span>
+        </MudButton>
+    }
+
+    <MudButton OnClick="DownloadPDF">
+        <MudIcon Icon="@Icons.Material.Outlined.PictureAsPdf" />
+        <span>Baixar Relatório</span>
+    </MudButton>
+
+    <MudButton OnClick="() => _dense = !_dense">
+        
+        @if (!_dense) 
+        {
+            <MudIcon Icon="@Icons.Material.Outlined.Compress" />
+            <span>Contrair</span>
+        }
+        else
+        {
+            <MudIcon Icon="@Icons.Material.Outlined.Expand" />    
+            <span>Expandir</span>
+        }
+        
+    </MudButton>
+
+</div>
+
+@if (showFilters) 
+{
+    <div class="filters">
+        <InputFilterComponent @bind-TypedValue="_personNameFilter" ApplyFilterCallback="ApplyFilters" Label="Pessoa" />
+        <SelectFilterEnumComponent TEnum="CompliancePolicyEnum" ApplyFilterCallback="ApplyFilters" @bind-SelectedItems="_selectedPoliciesType" Label="Tipo de politicas" />
+        <SelectFilterComponent T="SectorResponse" Items="_sectors" @bind-SelectedItems="_selectedSectors" ApplyFilterCallback="ApplyFilters" Label="Setores" />
+        <SelectFilterEnumComponent TEnum="ComplianceViolationEnum" ApplyFilterCallback="ApplyFilters" @bind-SelectedItems="_selectedViolationType" Label="Tipo de Violação" />
+    </div>
+}
+
+
+<MudTable T="ComplianceViolationResponse" Dense="_dense" @ref="mudTable" Elevation="0" Items="@_filteredItems" Hover="true" Loading="@_loading" LoadingProgressColor="Color.Info" RowClass="cursor-pointer" RowClassFunc="@SelectedRowClassFunc" OnRowClick="RowClickEvent">
+    <HeaderContent>
+        <MudTh Style="display: flex; gap: 4px; align-items: center;">
+            @* <MudCheckBox Size="Size.Small" T="bool" ValueChanged="@(isChecked => HandlerPDFColumns(isChecked, "pessoa"))" /> *@
+            <span>Pessoa</span>
+        </MudTh>
+        <MudTh>Política</MudTh>
+        <MudTh>Tipo de policita</MudTh>
+        <MudTh>Tipo de violação</MudTh>
+        <MudTh>Setor</MudTh>
+        <MudTh>Data do registro</MudTh>
+    </HeaderContent>
+    <RowTemplate>
+        <GodsEyeMudTd Type="IGodsEyeMudTdTypeEnum.TEXT" T=string DataLabel="PersonName" Label="@context.PersonName" Value="@context.PersonName" @bind-FilterText="_personNameFilter" ApplyFilterCallback="ApplyFilters" />
+        <MudTd DataLabel="PolicyName">@context.PolicyName</MudTd>
+        <GodsEyeMudTd Type="IGodsEyeMudTdTypeEnum.HASHSET" T="CompliancePolicyEnum" DataLabel="PolicyType" Label="@context.PolicyType.GetDescription()" Value="@context.PolicyType" @bind-FilterList="_selectedPoliciesType" ApplyFilterCallback="ApplyFilters" />
+        <GodsEyeMudTd Type="IGodsEyeMudTdTypeEnum.HASHSET" T="ComplianceViolationEnum" DataLabel="ViolationType" Label="@context.ViolationType.GetDescription()" Value="@context.ViolationType" @bind-FilterList="_selectedViolationType" ApplyFilterCallback="ApplyFilters" />
+        <GodsEyeMudTd Type="IGodsEyeMudTdTypeEnum.HASHSET" T="string" DataLabel="SectorName" Label="@context.SectorName" Value="@context.SectorId.ToString()" @bind-FilterList="_selectedSectors" ApplyFilterCallback="ApplyFilters" />
+        <MudTd DataLabel="CreatedAt">@context.CreatedAt</MudTd>
+    </RowTemplate>
+</MudTable>

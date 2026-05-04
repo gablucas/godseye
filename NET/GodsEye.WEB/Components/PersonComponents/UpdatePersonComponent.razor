@@ -6,7 +6,7 @@
             <PersonBarComponent Pagina="dados" PersonId="PersonId" />
 
             <div>
-                <MudImage Height="240" Style="border-radius: 7px" src=@(ImageHelper.HasPersonImage(_personLogs.PersonPhoto)) />
+                <MudImage Height="240" Style="border-radius: 7px" src=@(ImageHelper.HasPersonImage(Configuration["ApiUrl"], _personLogs.PersonPhoto)) />
                 <CreateOrUpdatePersonComponent PersonId="PersonId" />
             </div>
         </div>

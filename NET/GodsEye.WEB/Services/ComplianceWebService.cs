@@ -42,21 +42,21 @@ namespace GodsEye.WEB.Services
             return json!;
         }
 
-        //public async Task<IEnumerable<ComplianceViolationResponse>> GetAllViolationsAsync()
-        //{
-        //    var result = await _http.GetAsync($"{_baseEndpoint}/violation");
-
-        //    var json = await result.Content.ReadFromJsonAsync<IEnumerable<ComplianceViolationResponse>>();
-
-        //    return json!;
-        //}
-
-
         public async Task<SectorTransitionResponse> GetSectorTransitionById(int id)
         {
             var result = await _http.GetAsync($"{_baseEndpoint}/sector-transition/{id}");
 
             var json = await result.Content.ReadFromJsonAsync<SectorTransitionResponse>();
+
+            return json!;
+        }
+
+        // TEMPORARIO
+        public async Task<IEnumerable<SectorTransitionResponse>> GetAllSectorTransition()
+        {
+            var result = await _http.GetAsync($"{_baseEndpoint}/sector-transition");
+
+            var json = await result.Content.ReadFromJsonAsync<IEnumerable<SectorTransitionResponse>>();
 
             return json!;
         }
@@ -93,6 +93,18 @@ namespace GodsEye.WEB.Services
         public async Task<string> GetViolationPDF()
         {
             var result = await _http.GetAsync($"{_baseEndpoint}/report");
+
+            var bytes = await result.Content.ReadAsByteArrayAsync();
+
+            var base64 = Convert.ToBase64String(bytes);
+            var url = $"data:application/pdf;base64,{base64}";
+
+            return url;
+        }
+
+        public async Task<string> GetTransitionViolationPDF()
+        {
+            var result = await _http.GetAsync($"{_baseEndpoint}/report/sector-transition");
 
             var bytes = await result.Content.ReadAsByteArrayAsync();
 

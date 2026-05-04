@@ -10,6 +10,9 @@ namespace GodsEye.WEB.Components.PersonComponents
         [Inject]
         public EnvironmentMonitoringWebService EnvironmentMonitoringWebService { get; set; }
 
+        [Inject]
+        public IConfiguration Configuration { get; set; }
+
         [CascadingParameter]
         private IMudDialogInstance MudDialog { get; set; }
 

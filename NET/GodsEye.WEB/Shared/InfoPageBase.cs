@@ -16,8 +16,8 @@ namespace GodsEye.WEB.Shared
 
         protected bool _loading;
 
-        protected IEnumerable<TModel> _items = new List<TModel>();
-        protected IEnumerable<TModel> _filteredItems = Enumerable.Empty<TModel>();
+        protected List<TModel> _items = new();
+        protected List<TModel> _filteredItems = new();
 
         protected override async Task OnInitializedAsync()
         {

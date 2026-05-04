@@ -21,7 +21,7 @@
                 @* <MudTh>Ver detalhes</MudTh> *@
             </HeaderContent>
             <RowTemplate>
-                @* <MudTd DataLabel="PersonPhoto"><MudImage Height="160" Style="border-radius: 7px" src=@($"https://localhost:7010/{context.PersonPhoto}") /></MudTd>
+                @* <MudTd DataLabel="PersonPhoto"><MudImage Height="160" Style="border-radius: 7px" src=@($"{Configuration["ApiUrl"]}/{context.PersonPhoto}") /></MudTd>
         <MudTd DataLabel="Person">@context.Person</MudTd> *@
                 <MudTd DataLabel="Name">@context.Sector</MudTd>
                 <MudTd DataLabel="IncidentTime">@context.IncidentTime</MudTd>

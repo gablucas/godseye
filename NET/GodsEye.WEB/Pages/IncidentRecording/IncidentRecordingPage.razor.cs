@@ -22,6 +22,9 @@ namespace GodsEye.WEB.Pages.IncidentRecording
         [Inject]
         public IDialogService DialogService { get; set; }
 
+        [Inject]
+        public IConfiguration Configuration { get; set; }
+
         #region TABLE PARAMETERS
 
         private List<IncidentRecordingResponse> _log = new();
@@ -51,7 +54,7 @@ namespace GodsEye.WEB.Pages.IncidentRecording
 
             _loading = false;
 
-            SignalR.Create("https://localhost:7010/createdDataHub");
+            SignalR.Create($"{Configuration["ApiUrl"]}/createdDataHub");
 
             SignalR.On<IncidentRecordingResponse>(
                 "CreatedIncidentRecording",

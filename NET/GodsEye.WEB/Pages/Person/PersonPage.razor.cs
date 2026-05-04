@@ -25,6 +25,9 @@ namespace GodsEye.WEB.Pages.Person
         [Inject]
         public IDialogService DialogService { get; set; }
 
+        [Inject]
+        public IConfiguration Configuration { get; set; }
+
         #region TABLE PARAMETERS
 
         private MudTable<PersonResponse> mudTable;
@@ -75,7 +78,7 @@ namespace GodsEye.WEB.Pages.Person
                 _sectors = sectorsRequest.ToList();
 
 
-            SignalR.Create("https://localhost:7010/createdDataHub");
+            SignalR.Create($"{Configuration["ApiUrl"]}/createdDataHub");
 
             SignalR.On<PersonResponse>(
                 "CreatedPerson",

@@ -54,7 +54,7 @@
                 <MudTh Style="text-align: center">Status</MudTh>
             </HeaderContent>
             <RowTemplate>
-                <MudTd DataLabel="Foto" @onclick="() => DialogWebService.OpenPersonUpdateDialog(context.Id, null)"><MudImage Height="140" Style="border-radius: 7px" src=@(ImageHelper.HasPersonImage(context.ImagePath)) /></MudTd>
+                <MudTd DataLabel="Foto" @onclick="() => DialogWebService.OpenPersonUpdateDialog(context.Id, null)"><MudImage Height="140" Style="border-radius: 7px" src=@(ImageHelper.HasPersonImage(Configuration["ApiUrl"], context.ImagePath)) /></MudTd>
                 <MudTd DataLabel="Nome" @onclick="() => DialogWebService.OpenPersonUpdateDialog(context.Id, null)">@context.Name</MudTd>
                 <MudTd DataLabel="Setor">@context.Sector.Name</MudTd>
                 <MudTd DataLabel="NivelAcesso">@context.AccessLevel.Name</MudTd>

@@ -26,3 +26,17 @@ appendfsync everysec
 
 // MediaMTX
 //RabbitMQ
+
+// PUBLICANDO O PROJETO PARA TESTES
+
+// Entrar na pasta API e pelo CMD executar
+dotnet publish -c Release --self-contained true -r win-x64 -o ./publish/api
+
+// Entrar na pasta WEB Blazor e pelo CMD executar
+dotnet publish -c Release -o ./publish/blazor
+
+// Executar via CMD para poder rodar o projeto WEB Blazor
+dotnet tool install -g dotnet-serve
+
+// Ir na pasta do projeto e executar
+dotnet serve -d ./wwwroot

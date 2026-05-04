@@ -3,6 +3,7 @@ using GodsEye.API.DTO;
 using GodsEye.API.Hubs;
 using GodsEye.API.Interfaces;
 using GodsEye.Shared.Response;
+using GodsEye.Shared.Response.Compliance;
 using GodsEye.Shared.Response.Person;
 using Microsoft.AspNetCore.SignalR;
 
@@ -33,7 +34,7 @@ namespace GodsEye.API.Services
         public async Task SendCreatedComplianceViolationLog(int message)
         {
             await _hub.Clients.All.SendAsync(
-            "CreatedComplianceViolationRecording",
+            "CreatedComplianceViolation",
             message);
         }
 

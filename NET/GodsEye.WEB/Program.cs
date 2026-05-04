@@ -35,7 +35,9 @@ builder.Services.AddMudServices();
 //builder.Services.AddScoped(sp =>
 //    new HttpClient { BaseAddress = new Uri("https://rccjh4sr-7010.brs.devtunnels.ms") });
 
+var apiUrl = builder.Configuration["ApiUrl"];
+
 builder.Services.AddScoped(sp =>
-    new HttpClient { BaseAddress = new Uri("https://localhost:7010") });
+    new HttpClient { BaseAddress = new Uri(apiUrl) });
 
 await builder.Build().RunAsync();

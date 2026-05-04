@@ -1,0 +1,4 @@
+﻿span:hover {
+    transition: .3s all;
+    font-weight: 600;
+}

@@ -11,6 +11,7 @@
     {
         public int Id { get; set; }
         public int SectorId { get; set; }
+        public string SectorName { get; set; }
         public int OrderIndex { get; set; }
         public int? MinTime { get; set; }
         public int? MaxTime { get; set; }

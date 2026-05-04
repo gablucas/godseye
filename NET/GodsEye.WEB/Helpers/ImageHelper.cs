@@ -2,11 +2,11 @@
 {
     public static class ImageHelper
     {
-        public static string HasPersonImage(string? Image)
+        public static string HasPersonImage(string? url, string? Image)
         {
             if (Image is not null)
             {
-                return $"https://localhost:7010/{Image}";
+                return $"{url}/{Image}";
             }
             else
             {

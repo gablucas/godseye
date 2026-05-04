@@ -20,7 +20,7 @@
         @foreach (var log in _filteredLogs)
         {
             <div class="info-row">
-                <img src="@($"https://localhost:7010/{log.PersonPhoto}")" @onclick="() => DialogWebService.OpenPersonUpdateDialog(log.PersonId, null)" />
+                <img src="@($"{Configuration["ApiUrl"]}/{log.PersonPhoto}")" @onclick="() => DialogWebService.OpenPersonUpdateDialog(log.PersonId, null)" />
                 <span class="person" @onclick="() => DialogWebService.OpenPersonUpdateDialog(log.PersonId, null)">@log.Person</span>
                 <span class="sector">@log.Sector</span>
                 <span class="date">@log.IdentifiedAt</span>

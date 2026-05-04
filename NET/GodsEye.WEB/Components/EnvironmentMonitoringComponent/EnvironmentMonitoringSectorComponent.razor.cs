@@ -13,6 +13,9 @@ namespace GodsEye.WEB.Components.EnvironmentMonitoringComponent
         [Inject]
         public DialogWebService DialogWebService { get; set; }
 
+        [Inject]
+        public IConfiguration Configuration { get; set; }
+
         #region TABLE PARAMETERS
 
         [CascadingParameter]

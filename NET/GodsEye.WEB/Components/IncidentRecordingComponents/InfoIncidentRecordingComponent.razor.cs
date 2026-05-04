@@ -10,6 +10,9 @@ namespace GodsEye.WEB.Components.IncidentRecordingComponents
         [Inject]
         public IJSRuntime JS { get; set; }
 
+        [Inject]
+        public IConfiguration Configuration { get; set; }
+
         [Parameter]
         public IncidentRecordingResponse IncidentRecording { get; set; }
 

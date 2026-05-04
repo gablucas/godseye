@@ -51,7 +51,7 @@ namespace GodsEye.API.DI
                 options.AddPolicy("Default", policy =>
                 {
                     policy
-                        .WithOrigins("https://localhost:7198")
+                        .WithOrigins("https://localhost:7198", "http://localhost:8080")
                         .AllowAnyHeader()
                         .AllowAnyMethod()
                         .AllowCredentials();
