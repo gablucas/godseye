@@ -19,9 +19,6 @@ namespace GodsEye.WEB.Components.CameraComponents
         [Inject]
         SectorWebService SectorWebService { get; set; }
 
-        [Inject]
-        FeatureWebService FeatureWebService { get; set; }
-
         #endregion
 
         #region PARAMS
@@ -39,7 +36,6 @@ namespace GodsEye.WEB.Components.CameraComponents
         MudForm form;
         UpdateCameraForm CameraForm { get; set; } = new();
         IEnumerable<SectorResponse> _sectors = Enumerable.Empty<SectorResponse>();
-        IEnumerable<FeatureResponse> _features = Enumerable.Empty<FeatureResponse>();
 
         private bool success;
         private string[] errors = { };
@@ -69,7 +65,6 @@ namespace GodsEye.WEB.Components.CameraComponents
                     Id = camera.Id,
                     Name = camera.Name,
                     Connection = camera.Connection,
-                    Features = camera.Features.Select(x => x.FeatureId),
                     SectorId = camera.SectorId.ToString()
                 };
             }
@@ -91,35 +86,7 @@ namespace GodsEye.WEB.Components.CameraComponents
             {
                 _sectors = response;
             }
-
-            var featureResponse = await FeatureWebService.GetAllAsync();
-            if (featureResponse is not null)
-            {
-                _features = featureResponse.ToList();
-            }
         }
-
-        private void OnFeatureToggled(int featureId, bool isChecked)
-        {
-
-            var list = CameraForm.Features.ToList();
-
-            if (isChecked)
-            {
-                if (!list.Contains(featureId))
-                    list.Add(featureId);
-            }
-            else
-            {
-                list.Remove(featureId);
-            }
-
-            CameraForm.Features = list;
-
-            //ValidateFeatures();
-        }
-
-        
 
         private async Task Submit()
         {

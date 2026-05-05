@@ -36,15 +36,15 @@ namespace GodsEye.API.Features.EnvironmentMonitoring
     {
         public void MapEndpoint(WebApplication app)
         {
-            app.MapGet("/api/environment-monitoring/person", Handle);
+            app.MapGet("/api/environment-monitoring/person/{personId}", Handle);
         }
 
         private static async Task<IResult> Handle(
-            [AsParameters] GetEnvironmentMonitoringLogsByPersonIdRequest request,
+            [FromRoute] int personId,
             [FromServices] IMediator mediator,
             CancellationToken cancellationToken)
         {
-            var response = await mediator.Send(request, cancellationToken);
+            var response = await mediator.Send(new GetEnvironmentMonitoringLogsByPersonIdRequest(personId), cancellationToken);
             return Results.Ok(response);
         }
     }

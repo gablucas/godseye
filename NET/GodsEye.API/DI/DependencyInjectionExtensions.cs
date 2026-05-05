@@ -2,6 +2,7 @@
 using GodsEye.API.Email;
 using GodsEye.API.Features.Compliance.SectorTransition;
 using GodsEye.API.Features.Compliance.Shared;
+using GodsEye.API.Features.Compliance.Shared.Query;
 using GodsEye.API.Features.Compliance.Violation;
 using GodsEye.API.Interfaces;
 using GodsEye.API.Services;
@@ -91,7 +92,7 @@ namespace GodsEye.API.DI
             services.AddSingleton<IGodsEyeState, GodsEyeState>();
             services.AddScoped<IComplianceStrategy, SectorTransitionStrategy>();
             services.AddScoped<IComplianceLogService, ComplianceLogService>();
-            services.AddScoped<IComplianceViolationService, ComplianceViolationService>();
+            services.AddScoped<IComplianceViolationService, ComplianceViolationWrite>();
 
             services.AddScoped<IPersonQuery, PersonQuery>();
             services.AddScoped<ICameraQuery, CameraQuery>();

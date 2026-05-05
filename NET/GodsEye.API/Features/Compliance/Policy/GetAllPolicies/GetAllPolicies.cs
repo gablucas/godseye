@@ -3,13 +3,13 @@ using GodsEye.Shared.Response.Compliance;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 
-namespace GodsEye.API.Features.AccessLevel
+namespace GodsEye.API.Features.Compliance.Policy.GetAll
 {
-    public sealed record GetAllComplianceCommand() : IRequest<IEnumerable<CompliancePolicyResponse>>;
+    public sealed record GetAllCompliancePoliciesQuery() : IRequest<IEnumerable<CompliancePolicyResponse>>;
 
-    internal sealed record GetAllComplianceHandler(IDapperContext context) : IRequestHandler<GetAllComplianceCommand, IEnumerable<CompliancePolicyResponse>>
+    internal sealed record GetAllCompliancePoliciesHandler(IDapperContext context) : IRequestHandler<GetAllCompliancePoliciesQuery, IEnumerable<CompliancePolicyResponse>>
     {
-        public async Task<IEnumerable<CompliancePolicyResponse>> Handle(GetAllComplianceCommand request, CancellationToken cancellationToken)
+        public async Task<IEnumerable<CompliancePolicyResponse>> Handle(GetAllCompliancePoliciesQuery request, CancellationToken cancellationToken)
         {
             return await GetAllComplianceQuery(cancellationToken);
         }
@@ -34,7 +34,7 @@ namespace GodsEye.API.Features.AccessLevel
             CancellationToken cancellationToken
             )
         {
-            var response = await mediator.Send(new GetAllComplianceCommand(), cancellationToken);
+            var response = await mediator.Send(new GetAllCompliancePoliciesQuery(), cancellationToken);
             return Results.Ok(response);
         }
     }

@@ -6,7 +6,7 @@ using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using QuestPDF.Fluent;
 
-namespace GodsEye.API.Features.Compliance.Violation
+namespace GodsEye.API.Features.Compliance.Violation.GetReportPDF
 {
     public sealed record GetComplianceViolationPDFReportCommand() : IRequest<byte[]>;
 

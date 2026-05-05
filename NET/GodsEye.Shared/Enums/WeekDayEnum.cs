@@ -1,28 +1,28 @@
-﻿using System.ComponentModel;
+﻿using System.ComponentModel.DataAnnotations;
 
 namespace GodsEye.Shared.Enums
 {
     public enum WeekDayEnum
     {
-        [Description("Segunda-feira")]
+        [Display(Name = "Segunda-feira")]
         Monday = 0,
 
-        [Description("Terça-feira")]
+        [Display(Name = "Terça-feira")]
         Tuesday = 1,
 
-        [Description("Quarta-feira")]
+        [Display(Name = "Quarta-feira")]
         Wednesday = 2,
 
-        [Description("Quinta-feira")]
+        [Display(Name = "Quinta-feira")]
         Thursday = 3,
 
-        [Description("Sexta-feira")]
+        [Display(Name = "Sexta-feira")]
         Friday = 4,
 
-        [Description("Sábado")]
+        [Display(Name = "Sábado")]
         Saturday = 5,
 
-        [Description("Domingo")]
+        [Display(Name = "Domingo")]
         Sunday = 6
     }
 }

@@ -55,56 +55,10 @@
                             Color="Color.Success">Testar conexão</MudButton>
                     </div>
 
-
-                        
-
                 </div>
-
-                <div class="feature-container">
-                    <MudDivider />
-
-                    <MudText Typo="Typo.h6">Funcionalidades</MudText>
-                    <MudText Typo="Typo.body2" Class="mb-4 mud-text-secondary"> Selecione no mínimo uma funcionalidade para esta camera</MudText>
-
-                    @foreach (var feature in _features)
-                    {
-                        <div class="feature">
-                            <MudCheckBox T="bool"
-                                         Value="@(CameraForm.Features.Contains(feature.Id))"
-                                         ValueChanged="@((bool isChecked) => OnFeatureToggled(feature.Id, isChecked))"
-                                         Label="@feature.Name"
-                                         Color="Color.Primary"
-                                         Dense="true" />
-
-                            <MudText Typo="Typo.body2" Class="mud-text-secondary">
-                                @feature.Description
-                            </MudText>
-                        </div>
-                    }
-                </div>
-
-                @* @if (!string.IsNullOrEmpty(featureError))
-                {
-                    <MudText Color="Color.Error" Typo="Typo.caption">
-                        @featureError
-                    </MudText>
-                } *@
 
 
                 <MudButton OnClick="Submit" Disabled=@(!success) Style="grid-column: 1/-1" Class="btn-submit" Variant="Variant.Filled" Color="Color.Primary">Atualizar</MudButton>
-                @* <MudButton OnClick="Submit" Disabled=@(!success || !ValidateFeatures()) Class="btn-submit" Variant="Variant.Filled" Color="Color.Primary">Atualizar</MudButton> *@
-
-                @* @if (apiResponse is not null)
-                {
-                    if (apiResponse.Success)
-                    {
-                        <MudAlert Severity="Severity.Success" Variant="Variant.Outlined">Camera atualizada com sucesso</MudAlert>
-                    }
-                    else
-                    {
-                        <MudAlert Severity="Severity.Error" Variant="Variant.Outlined">Houve um erro ao atualizar a camera, tente novamente mais tarde</MudAlert>
-                    }
-                } *@
 
                 <MudOverlay Visible="visible" LightBackground="true" Absolute="true">
                     <MudProgressCircular Color="Color.Default" Indeterminate="true" />

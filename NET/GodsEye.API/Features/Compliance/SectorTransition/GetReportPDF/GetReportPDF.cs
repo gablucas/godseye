@@ -1,4 +1,5 @@
-﻿using GodsEye.API.Features.Compliance.SectorTransition;
+﻿using GodsEye.API.Features.Compliance.Shared.Query;
+using GodsEye.API.Features.Compliance.Violation;
 using GodsEye.API.Interfaces;
 using GodsEye.API.Reports.TableReport;
 using GodsEye.Shared.Enums;
@@ -8,7 +9,7 @@ using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using QuestPDF.Fluent;
 
-namespace GodsEye.API.Features.Compliance.Violation
+namespace GodsEye.API.Features.Compliance.SectorTransition.GetReportPDF
 {
     public sealed record GetSectorTransitionViolationReportPDFCommand() : IRequest<byte[]>;
 

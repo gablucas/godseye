@@ -3,7 +3,7 @@ using GodsEye.Shared.Response.Compliance;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 
-namespace GodsEye.API.Features.Sectors
+namespace GodsEye.API.Features.Compliance.Log.GetById
 {
     public sealed record GetComplianceByIdCommand(int id) : IRequest<CompliancePolicyResponse>;
 

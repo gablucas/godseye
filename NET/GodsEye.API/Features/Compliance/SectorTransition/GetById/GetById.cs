@@ -1,9 +1,10 @@
-﻿using GodsEye.API.Interfaces;
+﻿using GodsEye.API.Features.Compliance.Shared.Query;
+using GodsEye.API.Interfaces;
 using GodsEye.Shared.Response.Compliance;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 
-namespace GodsEye.API.Features.Compliance.SectorTransition
+namespace GodsEye.API.Features.Compliance.SectorTransition.GetById
 {
     public sealed record GetSectorTransitionByIdCommand(int id) : IRequest<SectorTransitionResponse>;
 
@@ -20,7 +21,7 @@ namespace GodsEye.API.Features.Compliance.SectorTransition
         }
     }
 
-    public class GetSectorTransitionByIdEndpoint : IEndpoint
+    public class SectroTransitionController : IEndpoint
     {
         public void MapEndpoint(WebApplication app)
         {

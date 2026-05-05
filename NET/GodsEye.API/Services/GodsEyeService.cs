@@ -1,7 +1,7 @@
 ﻿
 using GodsEye.API.DTO;
 using GodsEye.API.Exceptions;
-using GodsEye.API.Features.Compliance;
+using GodsEye.API.Features.Compliance.Log.CreateLogNotification;
 using GodsEye.API.Interfaces;
 using GodsEye.Shared;
 using MediatR;

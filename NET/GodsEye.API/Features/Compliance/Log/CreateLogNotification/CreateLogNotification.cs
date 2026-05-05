@@ -3,7 +3,7 @@ using GodsEye.API.Interfaces;
 using GodsEye.Shared.Response.Person;
 using MediatR;
 
-namespace GodsEye.API.Features.Compliance
+namespace GodsEye.API.Features.Compliance.Log.CreateLogNotification
 {
     internal sealed record CreateComplianceLogNotification(int personId, int sectorId, DateTime identifiedAt) : INotification;
 

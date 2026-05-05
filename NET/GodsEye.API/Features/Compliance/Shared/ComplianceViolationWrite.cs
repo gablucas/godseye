@@ -9,7 +9,7 @@ namespace GodsEye.API.Features.Compliance.Shared
         Task<PersonResponse?> Create(ComplianceViolationDTO violation, CancellationToken cancellationToken);
     }
 
-    public class ComplianceViolationService(IDapperContext context) : IComplianceViolationService
+    public class ComplianceViolationWrite(IDapperContext context) : IComplianceViolationService
     {
         public async Task<PersonResponse?> Create(ComplianceViolationDTO violation, CancellationToken cancellationToken)
         {

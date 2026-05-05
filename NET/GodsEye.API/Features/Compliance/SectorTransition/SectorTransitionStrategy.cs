@@ -1,4 +1,5 @@
 ﻿using GodsEye.API.Features.Compliance.Shared;
+using GodsEye.API.Features.Compliance.Shared.Query;
 using GodsEye.Shared.Enums;
 using GodsEye.Shared.Response.Compliance;
 using Hangfire;

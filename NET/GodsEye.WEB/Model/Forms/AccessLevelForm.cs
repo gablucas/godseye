@@ -6,7 +6,7 @@ namespace GodsEye.WEB.Model.Forms
     {
         public int Id { get; set; }
         public string Name { get; set; }
-        public List<SectorAccessLevelForm> Sectors { get; set; }
+        public List<SectorAccessLevelForm> Sectors { get; set; } = new();
         public int? AccessScheduleId { get; set; }
     }
     public class SectorAccessLevelForm

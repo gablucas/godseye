@@ -20,9 +20,6 @@ namespace GodsEye.WEB.Components.CameraComponents
         SectorWebService SectorService { get; set; }
 
         [Inject]
-        FeatureWebService FeatureService { get; set; }
-
-        [Inject]
         MediaMtxWebService MediaMtxWebService { get; set; }
 
         [Inject]
@@ -44,10 +41,8 @@ namespace GodsEye.WEB.Components.CameraComponents
         MudForm form;
         private bool success;
         private string[] errors = { };
-        private string featureError;
         public CreateCameraForm CameraForm { get; set; } = new();
         IEnumerable<SectorResponse> _sectors = Enumerable.Empty<SectorResponse>();
-        IEnumerable<FeatureResponse> _features = Enumerable.Empty<FeatureResponse>();
 
         private bool _hasConnectionError = false;
         private string? _connectionErrorMessage = null;
@@ -68,45 +63,8 @@ namespace GodsEye.WEB.Components.CameraComponents
             {
                 _sectors = response;
             }
-
-            var featureResponse = await FeatureService.GetAllAsync();
-            if (featureResponse is not null)
-            {
-                _features = featureResponse;
-            }
         }
 
-        private void OnFeatureToggled(int featureId, bool isChecked)
-        {
-
-            var list = CameraForm.Features.ToList();
-
-            if (isChecked)
-            {
-                if (!list.Contains(featureId))
-                    list.Add(featureId);
-            }
-            else
-            {
-                list.Remove(featureId);
-            }
-
-            CameraForm.Features = list;
-
-            ValidateFeatures();
-        }
-
-        private bool ValidateFeatures()
-        {
-            if (CameraForm.Features == null || !CameraForm.Features.Any())
-            {
-                featureError = "Selecione pelo menos uma funcionalidade";
-                success = false;
-            }
-
-            featureError = null;
-            return true;
-        }
 
         private void BackToRegister()
         {
@@ -115,9 +73,6 @@ namespace GodsEye.WEB.Components.CameraComponents
 
         private async Task Submit()
         {
-            if (!ValidateFeatures())
-                return;
-
             visible = true;
             apiResponse = await CameraService.CreateAsync(CameraForm);
             visible = false;

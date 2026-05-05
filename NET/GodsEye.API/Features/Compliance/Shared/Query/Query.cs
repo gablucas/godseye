@@ -1,7 +1,7 @@
 ﻿using GodsEye.API.Interfaces;
 using GodsEye.Shared.Response.Compliance;
 
-namespace GodsEye.API.Features.Compliance.SectorTransition
+namespace GodsEye.API.Features.Compliance.Shared.Query
 {
 
     public interface ISectorTransitionQuery
