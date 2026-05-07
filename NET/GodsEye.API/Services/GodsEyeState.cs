@@ -9,7 +9,7 @@ namespace GodsEye.API.Services
     {
         private readonly IServiceScopeFactory _scopeFactory;
         private readonly ConcurrentDictionary<int, PersonCache> _persons = new();
-        private readonly ConcurrentDictionary<int, CameraCache> _cameras = new();
+        private readonly ConcurrentDictionary<int, DeviceCache> _cameras = new();
         private readonly ConcurrentDictionary<int, AccessLevelCache> _accessLevels = new();
 
         public GodsEyeState(IServiceScopeFactory scopeFactory)
@@ -42,7 +42,7 @@ namespace GodsEye.API.Services
         }
 
         public PersonCache? GetPersonById(int id) => GetItem(_persons, id);
-        public CameraCache? GetCameraById(int id) => GetItem(_cameras, id);
+        public DeviceCache? GetCameraById(int id) => GetItem(_cameras, id);
         public AccessLevelCache? GetAccessLevelById(int id) => GetItem(_accessLevels, id);
 
         private List<T> GetList<T>(ConcurrentDictionary<int, T> dictionary) where T : IGodsEyeCache
@@ -51,7 +51,7 @@ namespace GodsEye.API.Services
         }
 
         public List<PersonCache> GetPersons() => GetList(_persons);
-        public List<CameraCache> GetCameras() => GetList(_cameras);
+        public List<DeviceCache> GetCameras() => GetList(_cameras);
         public List<AccessLevelCache> GetAccessLevel() => GetList(_accessLevels);
 
 
@@ -61,7 +61,7 @@ namespace GodsEye.API.Services
         }
 
         public void UpserPerson(PersonCache person) => Upsert(_persons, person);
-        public void UpsertCamera(CameraCache camera) => Upsert(_cameras, camera);
+        public void UpsertCamera(DeviceCache camera) => Upsert(_cameras, camera);
         public void UpserAccessLevel(AccessLevelCache accessLevel) => Upsert(_accessLevels, accessLevel);
 
 
@@ -74,26 +74,26 @@ namespace GodsEye.API.Services
         public void RemoveCamera(int id) => Remove(_cameras, id);
         public void RemoveAccessLevel(int id) => Remove(_accessLevels, id);
 
-        public bool TryUpdateDetection(int personId, int cameraId, DateTime identifiedAt)
+        public bool TryUpdateDetection(int personId, int deviceId, DateTime identifiedAt)
         {
             if (!_persons.TryGetValue(personId, out var person)) return false;
-            if (!_cameras.TryGetValue(cameraId, out var currentCamera)) return false;
+            if (!_cameras.TryGetValue(deviceId, out var currentCamera)) return false;
             
             lock (person.SyncRoot)
             {
-                var currentSector = currentCamera.SectorId;
+                var currentSector = currentCamera.DestinationSectorId;
 
                 // Se nunca foi vista, atualiza e retorna true
                 if (person.LastSeen == null)
                 {
                     person.LastSeen = identifiedAt;
-                    person.LastCameraId = cameraId;
+                    person.LastDeviceId = deviceId;
                     return true;
                 }
 
                 // Busca a última câmera para comparar setores
-                _cameras.TryGetValue(person.LastCameraId ?? 0, out var lastCamera);
-                var lastSector = lastCamera?.SectorId;
+                _cameras.TryGetValue(person.LastDeviceId ?? 0, out var lastCamera);
+                var lastSector = lastCamera?.DestinationSectorId;
 
                 // Lógica de descarte por setor (se for o mesmo setor, ignora a detecção)
                 if (lastSector == currentSector)
@@ -105,7 +105,7 @@ namespace GodsEye.API.Services
 
                 // Se chegou aqui, mudou de setor
                 person.LastSeen = identifiedAt;
-                person.LastCameraId = cameraId;
+                person.LastDeviceId = deviceId;
                 return true;
             }
         }

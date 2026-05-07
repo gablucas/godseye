@@ -98,7 +98,7 @@ namespace GodsEye.WEB.Services
 
         #endregion
 
-        public async Task<IDialogReference?> OpenEnvironmentMonitoringSectorDialog(List<EnvironmentMonitoringLogResponse> logs)
+        public async Task<IDialogReference?> OpenEnvironmentMonitoringSectorDialog(List<EnvironmentMonitoringResponse> logs)
         {
             var parameters = new DialogParameters<EnvironmentMonitoringSectorComponent> { { x => x.EnvironmentMonitoringLog, logs } };
             return await _dialogService.ShowAsync<EnvironmentMonitoringSectorComponent>(null, parameters, _options);
@@ -127,9 +127,10 @@ namespace GodsEye.WEB.Services
             }
         }
 
-        public async Task OpenCreateSector(Func<int, Task>? callback = null)
+        public async Task OpenCreateSector(int? parentId = null, Func<int, Task>? callback = null)
         {
-            var dialog = await _dialogService.ShowAsync<CreateSectorComponent>("Criar setor", _options);
+            var parameters = new DialogParameters<CreateSectorComponent> { { x => x.ParentId, parentId } };
+            var dialog = await _dialogService.ShowAsync<CreateSectorComponent>("Criar setor", parameters, _options);
 
             var result = await dialog.Result;
 

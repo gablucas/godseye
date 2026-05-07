@@ -59,26 +59,6 @@ namespace GodsEye.WEB.Services
             return json!;
         }
 
-        public async Task<IEnumerable<CameraFeatureResponse>> GetByFeatureId(int featureId)
-        {
-            var response = await _http.GetAsync($"{_baseEndpoint}/feature/{featureId}");
-
-            var apiResponse = await response.Content
-                .ReadFromJsonAsync<IEnumerable<CameraFeatureResponse>>();
-
-            return apiResponse ?? Enumerable.Empty<CameraFeatureResponse>();
-        }
-
-        public async Task<IEnumerable<CameraFeatureResponse>> GetFeatures(int cameraId)
-        {
-            var response = await _http.GetAsync($"{_baseEndpoint}/active-features/{cameraId}");
-
-            var apiResponse = await response.Content
-                .ReadFromJsonAsync<IEnumerable<CameraFeatureResponse>>();
-
-            return apiResponse ?? Enumerable.Empty<CameraFeatureResponse>();
-        }
-
         public async Task<List<CameraRoiResponse>> GetRoiByCameraId(int cameraId)
         {
             var result = await _http.GetAsync($"{_baseEndpoint}/roi/{cameraId}");

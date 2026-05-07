@@ -1,0 +1,29 @@
+﻿@using GodsEye.Shared.Response.Sector
+@using GodsEye.WEB.Services
+
+
+<MudTreeViewItem Text="@Item.Name" Value="@Item.Id">
+    @if (Item.Children != null && Item.Children.Any())
+    {
+        @foreach (var filho in Item.Children)
+        {
+            <div class="sector-tree">
+                <SectorNode Item="filho" />
+                <MudButton Variant="Variant.Outlined" Style="margin-left: 32px;" OnClick="() => DialogWebService.OpenCreateSector(filho.Id)">Criar Setor</MudButton>
+            </div>
+        }
+    }
+</MudTreeViewItem>
+
+
+@code {
+    [Inject]
+    public DialogWebService DialogWebService { get; set; }
+
+    [Inject]
+    public IDialogService DialogService { get; set; }
+
+
+    [Parameter]
+    public SectorResponse Item { get; set; }
+}

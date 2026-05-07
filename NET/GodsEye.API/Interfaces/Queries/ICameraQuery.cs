@@ -4,6 +4,6 @@ namespace GodsEye.API.Interfaces
 {
     public interface ICameraQuery
     {
-        Task<IEnumerable<CameraCache>> GetAllCache(CancellationToken cancellationToken);
+        Task<IEnumerable<DeviceCache>> GetAllCache(CancellationToken cancellationToken);
     }
 }

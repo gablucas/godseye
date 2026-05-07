@@ -12,7 +12,7 @@ namespace GodsEye.API.Features.EnvironmentMonitoring
             var person = godEyeState.GetPersonById(notification.PersonId);
             if (person is null) return;
 
-            var camera = godEyeState.GetCameraById(notification.CameraId);
+            var camera = godEyeState.GetCameraById(notification.DeviceId);
             if (camera is null) return;
 
             if (person.AccessLevelId is null) return;
@@ -20,7 +20,7 @@ namespace GodsEye.API.Features.EnvironmentMonitoring
             var accessLevel = godEyeState.GetAccessLevelById(person.AccessLevelId.Value);
             if (accessLevel is null) return;
 
-            var sectorRule = accessLevel.Sectors?.FirstOrDefault(x => x.Id == camera.SectorId);
+            var sectorRule = accessLevel.Sectors?.FirstOrDefault(x => x.Id == camera.DestinationSectorId);
             if (sectorRule is null) return;
 
 

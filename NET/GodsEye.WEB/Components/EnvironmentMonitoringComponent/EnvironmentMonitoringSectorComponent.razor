@@ -17,7 +17,7 @@
         </div>
 
 
-        <MudTable T="EnvironmentMonitoringLogResponse" @ref="mudTable" Elevation="0" Items="@_filteredEnvironmentMonitoringLog" Hover="true" Loading="@_loading" LoadingProgressColor="Color.Info" RowClass="cursor-pointer" RowClassFunc="@SelectedRowClassFunc" OnRowClick="RowClickEvent">
+        <MudTable T="EnvironmentMonitoringResponse" @ref="mudTable" Elevation="0" Items="@_filteredEnvironmentMonitoringLog" Hover="true" Loading="@_loading" LoadingProgressColor="Color.Info" RowClass="cursor-pointer" RowClassFunc="@SelectedRowClassFunc" OnRowClick="RowClickEvent">
             <HeaderContent>
                 <MudTh>Foto</MudTh>
                 <MudTh>Nome</MudTh>

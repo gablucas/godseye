@@ -10,7 +10,7 @@ using System.Text.Json;
 
 namespace GodsEye.API.Features.Camera
 {
-    public sealed record CreateOrUpdateAccessLevelRequest(int id, string name, List<SectorAccessLevelInput> sectors, int? accessScheduleId);
+    public sealed record CreateOrUpdateAccessLevelRequest(int? id, string name, List<SectorAccessLevelInput> sectors, int? accessScheduleId);
     public sealed record SectorAccessLevelInput(int sectorId, AccessLevelSectorRuleEnum ruleType);
 
     public class CreateOrUpdateAccessLevelValidator : AbstractValidator<CreateOrUpdateAccessLevelRequest>
@@ -18,11 +18,10 @@ namespace GodsEye.API.Features.Camera
         public CreateOrUpdateAccessLevelValidator()
         {
             RuleFor(camera => camera.name).NotEmpty();
-            RuleFor(camera => camera.sectors).NotEmpty();
         }
     }
 
-    internal sealed record CreateOrUpdateAccessLevelCommand(int id, string name, List<SectorAccessLevelInput> sectors, int? accessScheduleId) : IRequest<int>;
+    internal sealed record CreateOrUpdateAccessLevelCommand(int? id, string name, List<SectorAccessLevelInput> sectors, int? accessScheduleId) : IRequest<int>;
 
     internal sealed class CreateOrUpdateAccessLevelMapper : Profile
     {

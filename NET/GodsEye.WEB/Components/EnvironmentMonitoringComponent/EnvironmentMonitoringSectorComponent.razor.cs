@@ -22,11 +22,11 @@ namespace GodsEye.WEB.Components.EnvironmentMonitoringComponent
         private IMudDialogInstance MudDialog { get; set; }
 
         [Parameter]
-        public List<EnvironmentMonitoringLogResponse> EnvironmentMonitoringLog { get; set; } = new();
+        public List<EnvironmentMonitoringResponse> EnvironmentMonitoringLog { get; set; } = new();
 
-        private MudTable<EnvironmentMonitoringLogResponse> mudTable;
+        private MudTable<EnvironmentMonitoringResponse> mudTable;
 
-        IEnumerable<EnvironmentMonitoringLogResponse> _filteredEnvironmentMonitoringLog = Enumerable.Empty<EnvironmentMonitoringLogResponse>();
+        IEnumerable<EnvironmentMonitoringResponse> _filteredEnvironmentMonitoringLog = Enumerable.Empty<EnvironmentMonitoringResponse>();
         private int selectedRowNumber = -1;
 
         #endregion
@@ -45,7 +45,7 @@ namespace GodsEye.WEB.Components.EnvironmentMonitoringComponent
                 _filteredEnvironmentMonitoringLog = EnvironmentMonitoringLog.ToList();
         }
 
-        private async Task RowClickEvent(TableRowClickEventArgs<EnvironmentMonitoringLogResponse> args)
+        private async Task RowClickEvent(TableRowClickEventArgs<EnvironmentMonitoringResponse> args)
         {
             if (args?.Item == null)
                 return;
@@ -58,7 +58,7 @@ namespace GodsEye.WEB.Components.EnvironmentMonitoringComponent
             var dialog = await DialogWebService.OpenPersonUpdateDialog(args.Item.PersonId, null);
         }
 
-        private string SelectedRowClassFunc(EnvironmentMonitoringLogResponse element, int rowNumber)
+        private string SelectedRowClassFunc(EnvironmentMonitoringResponse element, int rowNumber)
         {
             if (selectedRowNumber == rowNumber)
             {

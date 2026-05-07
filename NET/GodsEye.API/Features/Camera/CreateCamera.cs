@@ -8,7 +8,7 @@ using System.Text.Json;
 
 namespace GodsEye.API.Features.Camera
 {
-    public sealed record CreateCameraRequest(string name, string? connection, int sectorId, IEnumerable<int> features);
+    public sealed record CreateCameraRequest(string name, string? connection, int sectorId);
 
     public class CreateCameraValidator : AbstractValidator<CreateCameraRequest>
     {
@@ -16,13 +16,10 @@ namespace GodsEye.API.Features.Camera
         {
             RuleFor(camera => camera.name).NotEmpty();
             RuleFor(camera => camera.sectorId).NotEmpty();
-            RuleFor(camera => camera.features)
-                .NotEmpty()
-                .ForEach(rule => rule.GreaterThan(0));
         }
     }
 
-    internal sealed record CreateCameraCommand(string name, string? connection, int sectorId, IEnumerable<int> features) : IRequest<int>;
+    internal sealed record CreateCameraCommand(string name, string? connection, int sectorId) : IRequest<int>;
 
     internal sealed class CreateCameraMapper : Profile
     {
@@ -50,14 +47,13 @@ namespace GodsEye.API.Features.Camera
 
         public async Task<ProcedureResponse?> CreateCameraWrite(CreateCameraCommand request, CancellationToken cancellationToken)
         {
-            var sql = "CALL SP_CAMERA_CREATE(@P_NAME, @P_CONNECTION, @P_SECTOR_ID, @P_FEATURES_JSON)";
+            var sql = "CALL SP_CAMERA_CREATE(@P_NAME, @P_CONNECTION, @P_SECTOR_ID)";
 
             var parameters = new
             {
                 P_NAME = request.name,
                 P_CONNECTION = request.connection,
-                P_SECTOR_ID = request.sectorId,
-                P_FEATURES_JSON = JsonSerializer.Serialize(request.features)
+                P_SECTOR_ID = request.sectorId
 
             };
 

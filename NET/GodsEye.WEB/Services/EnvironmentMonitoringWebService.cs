@@ -13,20 +13,20 @@ namespace GodsEye.WEB.Services
             _http = http;
         }
 
-        public async Task<IEnumerable<EnvironmentMonitoringLogResponse>> GetAllLogs(int pageNumber, int pageSize)
+        public async Task<IEnumerable<EnvironmentMonitoringResponse>> GetAllLogs(int pageNumber, int pageSize)
         {
             var result = await _http.GetAsync($"{_baseEndpoint}/log?pageNumber={pageNumber}&pageSize={pageSize}");
 
-            var json = await result.Content.ReadFromJsonAsync<IEnumerable<EnvironmentMonitoringLogResponse>>();
+            var json = await result.Content.ReadFromJsonAsync<IEnumerable<EnvironmentMonitoringResponse>>();
 
             return json!;
         }
 
-        public async Task<IEnumerable<EnvironmentMonitoringLogResponse>> GetLastRegisterPerPerson()
+        public async Task<IEnumerable<EnvironmentMonitoringResponse>> GetLastRegisterPerPerson()
         {
             var result = await _http.GetAsync($"{_baseEndpoint}/log/last-per-person");
 
-            var json = await result.Content.ReadFromJsonAsync<IEnumerable<EnvironmentMonitoringLogResponse>>();
+            var json = await result.Content.ReadFromJsonAsync<IEnumerable<EnvironmentMonitoringResponse>>();
 
             return json!;
         }

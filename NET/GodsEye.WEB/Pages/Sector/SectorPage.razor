@@ -1,4 +1,5 @@
 ﻿@page "/organizacao/setores";
+@using GodsEye.WEB.Components.SectorComponents
 @inject ISnackbar Snackbar
 
 <PageTitle>Setores</PageTitle>
@@ -15,62 +16,23 @@
             <p>Aqui você encontra uma lista de setores cadastrados em seu sistema</p>
         </div>
 
-        <div class="page-menu">
-            <div class="filters">
-                <div class="option">
-                    <MudTextField @bind-Value="_sectorNameFilter" TextChanged="ApplyFilters" Immediate="true" Label="Setor" Variant="Variant.Outlined" Margin="Margin.Dense" Clearable="true" />
+
+        <MudTreeView T="int"
+                        Hover="true"
+                        Dense="true"
+                        ReadOnly>
+
+            @foreach (var sector in _sectors)
+            {
+                <div class="sector-tree-main">
+                    <SectorNode Item="sector" />
+                    <MudButton Variant="Variant.Outlined" Style="margin-left: 32px;" OnClick="() => DialogWebService.OpenCreateSector(sector.Id)">Criar Setor</MudButton>
                 </div>
+            }
 
-                <div class="option">
-                    <MudSelect T="string" SelectedValuesChanged="OnCamerasChanged" SelectedValues="_selectedCameras" MultiSelection="true" SelectAll="true" SelectAllText="Selecionar tudo" MultiSelectionTextFunc="@(new Func<List<string>, string>(GetMultiSelectionText))" Label="Cameras" Variant="Variant.Outlined" Margin="Margin.Dense" Clearable="true">
-                        @foreach (var camera in _camerasFilter)
-                        {
-                            <MudSelectItem T="string" Value="@camera.Id.ToString()">@camera.Name</MudSelectItem>
-                        }
-                    </MudSelect>
-                </div>
-            </div>
+            <MudButton Variant="Variant.Outlined" OnClick="() => DialogWebService.OpenCreateSector()">Criar Setor</MudButton>
+        </MudTreeView>
 
-            <MudButton Variant="Variant.Outlined" OnClick="() => DialogWebService.OpenCreateSector(CreateSectorCallback)">Criar Setor</MudButton>
-        </div>
-
-        <MudTable Items="@_filteredSectors" Hover="true" Loading="@_loading" Elevation="0" LoadingProgressColor="Color.Info">
-            <HeaderContent>
-                <MudTh>Nome</MudTh>
-                <MudTh>Cameras vinculadas</MudTh>
-                <MudTh>Grupos de notificação</MudTh>
-            </HeaderContent>
-            <RowTemplate>
-                <MudTd DataLabel="Name">@context.Name</MudTd>
-                <MudTd DataLabel="Cameras">
-                    @if (context.Cameras.Count > 0)
-                    {
-                        foreach (var cam in context.Cameras)
-                        {
-                            <MudChip Color="Color.Info" T="string">@cam.Name</MudChip>
-                        }
-                    } 
-                    else
-                    {
-                        <MudChip T="string">Sem cameras</MudChip>
-                    }
-                </MudTd>
-                <MudTd DataLabel="NotificationGroups">
-                    @if (context.NotificationGroups.Count > 0)
-                    {
-                        foreach (var notificationGroup in context.NotificationGroups)
-                        {
-                            <MudChip Color="Color.Info" T="string">@notificationGroup.Name</MudChip>
-                        }
-                    }
-                    else
-                    {
-                        <MudChip T="string">Sem grupo</MudChip>
-                    }
-                </MudTd>
-
-            </RowTemplate>
-        </MudTable>
     </div>
 
     

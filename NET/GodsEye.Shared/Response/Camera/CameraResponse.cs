@@ -6,6 +6,7 @@ namespace GodsEye.Shared.Response.Camera
     {
         public int Id { get; set; }
         public string Name { get; set; }
+        public int DeviceId { get; set; }
         public string? Connection { get; set; }
         public int? SectorId { get; set; }
         public string? SectorName { get; set; }
@@ -13,14 +14,5 @@ namespace GodsEye.Shared.Response.Camera
 
         [NotMapped]
         public bool? Status { get; set; }
-
-        public List<FeatureCameraResponse> Features { get; set; } = new();
     }
-
-    public class FeatureCameraResponse : IJSonTypeList
-    {
-        public int FeatureId { get; set; }
-        public string FeatureName { get; set; }
-    }
-
 }

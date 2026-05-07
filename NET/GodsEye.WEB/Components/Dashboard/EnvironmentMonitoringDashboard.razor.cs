@@ -29,8 +29,8 @@ namespace GodsEye.WEB.Components.Dashboard
         public IConfiguration Configuration { get; set; }
 
 
-        private List<EnvironmentMonitoringLogResponse> _logs = new();
-        private List<EnvironmentMonitoringLogResponse> _filteredLogs = new();
+        private List<EnvironmentMonitoringResponse> _logs = new();
+        private List<EnvironmentMonitoringResponse> _filteredLogs = new();
 
         private List<SectorResponse> _sector = new();
         private int _selectedSector = 0;
@@ -65,7 +65,7 @@ namespace GodsEye.WEB.Components.Dashboard
 
             SignalR.Create($"{Configuration["ApiUrl"]}/createdDataHub");
 
-            SignalR.On<EnvironmentMonitoringLogResponse>(
+            SignalR.On<EnvironmentMonitoringResponse>(
                 "CreatedEnvironmentMonitoring",
                 log =>
                 {

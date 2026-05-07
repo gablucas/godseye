@@ -1,5 +1,4 @@
 ﻿
-using GodsEye.Shared.Response.Feature;
 using GodsEye.Shared.Response.Sector;
 using GodsEye.WEB.Model.Forms;
 using GodsEye.WEB.Services;

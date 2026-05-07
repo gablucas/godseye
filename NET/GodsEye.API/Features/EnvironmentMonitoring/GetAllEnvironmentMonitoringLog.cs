@@ -6,12 +6,12 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace GodsEye.API.Features.EnvironmentMonitoring
 {
-    public sealed record GetAllEnvironmentMonitoringLogsRequest(int pageNumber, int pageSize) : IRequest<IEnumerable<EnvironmentMonitoringLogResponse>>;
+    public sealed record GetAllEnvironmentMonitoringLogsRequest(int pageNumber, int pageSize) : IRequest<IEnumerable<EnvironmentMonitoringResponse>>;
 
-    internal sealed class GetAllEnvironmentMonitoringLogsHandler(IDapperContext context) : IRequestHandler<GetAllEnvironmentMonitoringLogsRequest, IEnumerable<EnvironmentMonitoringLogResponse>>
+    internal sealed class GetAllEnvironmentMonitoringLogsHandler(IDapperContext context) : IRequestHandler<GetAllEnvironmentMonitoringLogsRequest, IEnumerable<EnvironmentMonitoringResponse>>
     {
 
-        public async Task<IEnumerable<EnvironmentMonitoringLogResponse>> Handle(GetAllEnvironmentMonitoringLogsRequest request, CancellationToken cancellationToken)
+        public async Task<IEnumerable<EnvironmentMonitoringResponse>> Handle(GetAllEnvironmentMonitoringLogsRequest request, CancellationToken cancellationToken)
         {
             var result = await GetAll(request.pageNumber, request.pageSize, CancellationToken.None);
 
@@ -21,9 +21,9 @@ namespace GodsEye.API.Features.EnvironmentMonitoring
             return result;
         }
 
-        public async Task<IEnumerable<EnvironmentMonitoringLogResponse>> GetAll(int pageNumber, int pageSize, CancellationToken cancellationToken)
+        public async Task<IEnumerable<EnvironmentMonitoringResponse>> GetAll(int pageNumber, int pageSize, CancellationToken cancellationToken)
         {
-            var query = "CALL SP_ENVIRONMENT_MONITORING_GET_ALL_LOGS(@P_PAGE_NUMBER, @P_PAGE_SIZE)";
+            var query = "CALL SP_ENVIRONMENT_MONITORING_GET_ALL(@P_PAGE_NUMBER, @P_PAGE_SIZE)";
 
             var parameters = new
             {
@@ -31,7 +31,7 @@ namespace GodsEye.API.Features.EnvironmentMonitoring
                 P_PAGE_SIZE = pageSize,
             };
 
-            return await context.QuerySqlAsync<EnvironmentMonitoringLogResponse>(query, parameters, cancellationToken);
+            return await context.QuerySqlAsync<EnvironmentMonitoringResponse>(query, parameters, cancellationToken);
         }
     }
 
@@ -39,7 +39,7 @@ namespace GodsEye.API.Features.EnvironmentMonitoring
     {
         public void MapEndpoint(WebApplication app)
         {
-            app.MapGet("/api/environment-monitoring/log", Handle);
+            app.MapGet("/api/environment-monitoring", Handle);
         }
 
         private static async Task<IResult> Handle(

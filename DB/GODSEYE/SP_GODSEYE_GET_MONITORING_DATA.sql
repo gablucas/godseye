@@ -1,32 +1,13 @@
 CREATE DEFINER=`root`@`localhost` PROCEDURE `SP_GODSEYE_GET_MONITORING_DATA`()
 BEGIN
     SELECT JSON_OBJECT(
-		'Persons', (
-			SELECT JSON_ARRAYAGG(
-				JSON_OBJECT (
-					'Id', P.ID,
-                    'Embedding', P.EMBEDDING
-                )
-            )
-            FROM PERSON P
-            WHERE P.EMBEDDING IS NOT NULL
-    ),
 		'Cameras', (
 			SELECT JSON_ARRAYAGG(
 				JSON_OBJECT(
 					'Id', C.ID,
 					'Connection', C.Connection,
+                    'DeviceId', C.DEVICE_ID,
                     'SectorId', C.SECTOR_ID,
-                    'Features', (SELECT JSON_ARRAYAGG(
-						JSON_OBJECT(
-							'Id', F.ID,
-                            'Name', F.Name
-                        )
-                    ) 
-                    FROM FEATURE F
-                    INNER JOIN CAMERA_FEATURE CF ON CF.FEATURE_ID = F.ID AND CF.IS_ACTIVE = 1
-                    WHERE CF.CAMERA_ID = C.ID
-                    ),
                     'Roi', (
 						SELECT JSON_ARRAYAGG(
 							JSON_OBJECT(

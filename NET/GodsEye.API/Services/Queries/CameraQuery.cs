@@ -12,13 +12,13 @@ namespace GodsEye.API.Services.Queries
             _context = context;
         }
 
-        public async Task<IEnumerable<CameraCache>> GetAllCache(CancellationToken cancellationToken)
+        public async Task<IEnumerable<DeviceCache>> GetAllCache(CancellationToken cancellationToken)
         {
-            var query = "CALL SP_CAMERA_GET_ALL_CACHE()";
+            var query = "CALL SP_DEVICE_GET_ALL_CACHE()";
 
             var parameters = new { };
 
-            return await _context.QuerySqlAsync<CameraCache>(query, parameters, cancellationToken);
+            return await _context.QuerySqlAsync<DeviceCache>(query, parameters, cancellationToken);
         }
     }
 }

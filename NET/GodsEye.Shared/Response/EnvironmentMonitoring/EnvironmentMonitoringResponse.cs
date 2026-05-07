@@ -2,7 +2,7 @@
 
 namespace GodsEye.Shared.Response.EnvironmentMonitoring
 {
-    public sealed record EnvironmentMonitoringLogResponse : IJSonTypeList
+    public sealed record EnvironmentMonitoringResponse : IJSonTypeList
     {
         public int PersonId { get; set; }
         public string Person { get; set; }

@@ -38,13 +38,13 @@ BEGIN
     WHERE ACCESS_SCHEDULE_ID = P_ID;
 
 	INSERT INTO ACCESS_SCHEDULE_RULE (ACCESS_SCHEDULE_ID, WEEKDAY, START_TIME, END_TIME)
-	SELECT P_ID, jt.weekday, jt.start_time, jt.end_time
+	SELECT P_ID, jt.weekday, jt.Start_Time, jt.End_Time
 	FROM JSON_TABLE(
 		P_RULES_JSON, 
 		'$[*]' COLUMNS (
-			weekday int PATH '$.WeekDay',
-			start_time TIME PATH '$.StartTime',
-			end_time TIME PATH '$.EndTime'
+			Weekday int PATH '$.weekDay',
+			Start_Time TIME PATH '$.startTime',
+			End_Time TIME PATH '$.endTime'
 		)
 	) jt;
 

@@ -66,9 +66,16 @@ namespace GodsEye.WEB.Components.AccessSchedule
                 _selectedWeekDays.Remove(day);
             }
             else
+
             {
                 _selectedWeekDays.Add(day);
-                AddNewRule(day);
+
+                var selectedDay = _accessScheduleForm.Rules.Where(x => x.WeekDay == day).ToList();
+
+                if (selectedDay.Count() == 0)
+                {
+                    AddNewRule(day);
+                }
             }
         }
 
@@ -193,8 +200,7 @@ namespace GodsEye.WEB.Components.AccessSchedule
         {
             var selectedDay = _accessScheduleForm.Rules.Where(x => x.WeekDay == day).ToList();
 
-            if (selectedDay.Count() == 0)
-            {
+
                 _accessScheduleForm.Rules.Add(
                 new ScheduleRuleDTO()
                 {
@@ -202,7 +208,7 @@ namespace GodsEye.WEB.Components.AccessSchedule
                     StartTime = TimeSpan.Zero,
                     EndTime = TimeSpan.Zero
                 });
-            }
+            
         }
 
         private void RemoveRule(WeekDayEnum day, ScheduleRuleDTO rule)

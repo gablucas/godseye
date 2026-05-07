@@ -178,8 +178,7 @@ namespace GodsEye.WEB.Pages.Camera
                 .Where(x =>
                     (string.IsNullOrWhiteSpace(_cameraNameFilter) || x.Name.Contains(_cameraNameFilter, StringComparison.OrdinalIgnoreCase)) &&
                     (string.IsNullOrWhiteSpace(_conectionNameFilter) || (x.Connection ?? "").Contains(_conectionNameFilter, StringComparison.OrdinalIgnoreCase) &&
-                    (_selectedSectors.Count() == 0 || _selectedSectors.Contains(x.SectorId.ToString()))) &&
-                    (string.IsNullOrWhiteSpace(_featuresNameFilter) || x.Features.Any(y => y.FeatureName.Contains(_featuresNameFilter, StringComparison.OrdinalIgnoreCase)))
+                    (_selectedSectors.Count() == 0 || _selectedSectors.Contains(x.SectorId.ToString())))
                 ).ToList();
         }
     }

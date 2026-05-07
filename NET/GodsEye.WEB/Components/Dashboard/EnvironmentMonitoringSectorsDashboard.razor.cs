@@ -47,7 +47,7 @@ namespace GodsEye.WEB.Components.Dashboard
 
             SignalR.Create($"{Configuration["ApiUrl"]}/createdDataHub");
 
-            SignalR.On<EnvironmentMonitoringLogResponse>(
+            SignalR.On<EnvironmentMonitoringResponse>(
                 "CreatedEnvironmentMonitoring",
                 log =>
                 {
@@ -62,7 +62,7 @@ namespace GodsEye.WEB.Components.Dashboard
                         if (log.SectorId == x.SectorId)
                         {
                             x.TotalPerson += 1;
-                            x.EnvironmentMonitoringLog.Add(new EnvironmentMonitoringLogResponse()
+                            x.EnvironmentMonitoringLog.Add(new EnvironmentMonitoringResponse()
                             {
                                 PersonId = log.PersonId,
                                 Person = log.Person,

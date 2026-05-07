@@ -13,7 +13,7 @@ namespace GodsEye.API.Features.EnvironmentMonitoring
         {
             try
             {
-                var result = await Create(notification.CameraId, notification.PersonId, notification.Score, notification.IdentifiedAt, CancellationToken.None);
+                var result = await Create(notification.DeviceId, notification.PersonId, notification.Score, notification.IdentifiedAt, CancellationToken.None);
 
                 if (result is null || result.Erro == 1)
                     throw new InvalidOperationException("Falha ao registrar log no banco de dados");
@@ -40,13 +40,13 @@ namespace GodsEye.API.Features.EnvironmentMonitoring
             }
         }
 
-        protected async Task<ProcedureResponse?> Create(int cameraId, int personId, float score, DateTime extractedAt, CancellationToken cancellationToken)
+        protected async Task<ProcedureResponse?> Create(int deviceId, int personId, float score, DateTime extractedAt, CancellationToken cancellationToken)
         {
-            var sql = "CALL SP_ENVIRONMENT_MONITORING_CREATE_LOG(@P_CAMERA_ID, @P_PERSON_ID, @P_SCORE, @P_IDENTIFY_DATE)";
+            var sql = "CALL SP_ENVIRONMENT_MONITORING_CREATE(@P_DEVICE_ID, @P_PERSON_ID, @P_SCORE, @P_IDENTIFY_DATE)";
 
             var parameters = new
             {
-                P_CAMERA_ID = cameraId,
+                P_DEVICE_ID = deviceId,
                 P_PERSON_ID = personId,
                 P_SCORE = score,
                 P_IDENTIFY_DATE = extractedAt,
@@ -57,7 +57,7 @@ namespace GodsEye.API.Features.EnvironmentMonitoring
 
         public async Task<EnvironmentMonitoringDTO?> GetById(int personId, CancellationToken cancellationToken)
         {
-            var sql = "CALL SP_ENVIRONMENT_MONITORING_GET_LOG_BY_ID(@P_ID)";
+            var sql = "CALL SP_ENVIRONMENT_MONITORING_GET_BY_ID(@P_ID)";
 
             var parameteres = new
             {

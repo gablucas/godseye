@@ -40,7 +40,7 @@ namespace GodsEye.WEB.Pages.Sector
         private string _personNameFilter = "";
 
         private List<CameraResponse> _camerasFilter = new();
-        private IEnumerable<string> _selectedCameras { get; set; } = new HashSet<string>() { };
+        private IEnumerable<string> _selectedDevices { get; set; } = new HashSet<string>() { };
 
         private string _personFilter = "";
 
@@ -62,8 +62,10 @@ namespace GodsEye.WEB.Pages.Sector
 
             if (sectorsResult is not null)
             {
-                _sectors = sectorsResult.ToList();
-                _filteredSectors = _sectors;
+                var sector = sectorsResult.ToList();
+                var lookupSectors = sector.ToLookup(x => x.ParentId);
+
+                _sectors = BuildTree(null, lookupSectors);
             }
 
             var camerasRequest = await cameraService.GetAllAsync();
@@ -72,6 +74,19 @@ namespace GodsEye.WEB.Pages.Sector
 
 
             _loading = false;
+        }
+
+        private List<SectorResponse> BuildTree(int? parentId, ILookup<int?, SectorResponse> lookup)
+        {
+            return lookup[parentId]
+                .Select(x => new SectorResponse
+                {
+                    Id = x.Id,
+                    Name = x.Name,
+                    ParentId = x.ParentId,
+                    Children = BuildTree(x.Id, lookup) // 🔁 recursão
+                })
+                .ToList();
         }
 
         private async Task CreateSectorCallback(int sectorId)
@@ -87,7 +102,7 @@ namespace GodsEye.WEB.Pages.Sector
 
         private void OnCamerasChanged(IEnumerable<string> values)
         {
-            _selectedCameras = values.ToHashSet();
+            _selectedDevices = values.ToHashSet();
             ApplyFilters();
         }
 
@@ -100,8 +115,8 @@ namespace GodsEye.WEB.Pages.Sector
         {
             _filteredSectors = _sectors
                 .Where(x =>
-                    (string.IsNullOrWhiteSpace(_sectorNameFilter) || x.Name.Contains(_sectorNameFilter, StringComparison.OrdinalIgnoreCase)) &&
-                    (_selectedCameras.Count() == 0 || x.Cameras.Any(c => _selectedCameras.ToList().Contains(c.Id.ToString())))
+                    (string.IsNullOrWhiteSpace(_sectorNameFilter) || x.Name.Contains(_sectorNameFilter, StringComparison.OrdinalIgnoreCase)) 
+                    //&& (_selectedDevices.Count() == 0 || x.Devices.Any(c => _selectedDevices.ToList().Contains(c.Id.ToString())))
                 ).ToList();
         }
     }

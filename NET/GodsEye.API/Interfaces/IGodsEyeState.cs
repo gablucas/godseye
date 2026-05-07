@@ -6,15 +6,15 @@ namespace GodsEye.API.Interfaces
     {
         Task InitializeAsync();
         List<PersonCache> GetPersons();
-        List<CameraCache> GetCameras();
+        List<DeviceCache> GetCameras();
         List<AccessLevelCache> GetAccessLevel();
 
-        CameraCache? GetCameraById(int cameraId);
+        DeviceCache? GetCameraById(int cameraId);
         PersonCache? GetPersonById(int personId);
         AccessLevelCache? GetAccessLevelById(int id);
 
         void UpserPerson(PersonCache person);
-        void UpsertCamera(CameraCache camera);
+        void UpsertCamera(DeviceCache camera);
         void UpserAccessLevel(AccessLevelCache accessLevel);
 
         void RemovePerson(int id);

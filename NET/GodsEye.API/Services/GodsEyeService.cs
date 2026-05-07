@@ -119,11 +119,13 @@ namespace GodsEye.API.Services
             if (personId == 0 || cameraFromRequest is null)
                 return;
 
-            await HandleFeatures(cameraFromRequest, personId, score, identifiedAt);
-
+            if (_godsEyeState.TryUpdateDetection(personId, cameraFromRequest.Id, identifiedAt))
+            {
+                await _mediator.Publish(new EnvironmentMonitoringNotification(cameraFromRequest.Id, personId, score, identifiedAt));
+            }
         }
 
-        public async Task HandleFeatures(CameraCache cameraFromRequest, int personId, float score, DateTime identifiedAt)
+        public async Task HandleFeatures(DeviceCache cameraFromRequest, int personId, float score, DateTime identifiedAt)
         {
 
             //if (cameraFromRequest.Features.Any(x => x.Id == 1))
@@ -141,15 +143,12 @@ namespace GodsEye.API.Services
             //    }
             //}
 
-            if (cameraFromRequest.Features.Any(x => x.Id == 1) && _godsEyeState.TryUpdateDetection(personId, cameraFromRequest.Id, identifiedAt))
-            {
-                await _mediator.Publish(new EnvironmentMonitoringNotification(cameraFromRequest.Id, personId, score, identifiedAt));
-            }
+            
 
-            if (cameraFromRequest.Features.Any(x => x.Id == 2))
-            {
-                await _mediator.Publish(new CreateComplianceLogNotification(personId, cameraFromRequest.SectorId, identifiedAt), CancellationToken.None);
-            }
+            //if (cameraFromRequest.Features.Any(x => x.Id == 2))
+            //{
+            //    await _mediator.Publish(new CreateComplianceLogNotification(personId, cameraFromRequest.SectorId, identifiedAt), CancellationToken.None);
+            //}
         }
     }
 }

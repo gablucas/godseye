@@ -9,7 +9,7 @@ using System.Text.Json;
 
 namespace GodsEye.API.Features.Sectors
 {
-    public sealed record CreateSectorRequest(string Name, IEnumerable<int> NotificationGroups);
+    public sealed record CreateSectorRequest(string Name, int? ParentId, IEnumerable<int> NotificationGroups);
 
     public class CreateSectorValidator : AbstractValidator<CreateSectorRequest>
     {
@@ -22,7 +22,7 @@ namespace GodsEye.API.Features.Sectors
         }
     }
 
-    internal sealed record CreateSectorCommand(string Name, IEnumerable<int> NotificationGroups) : IRequest<int>;
+    internal sealed record CreateSectorCommand(string Name, int? ParentId, IEnumerable<int> NotificationGroups) : IRequest<int>;
 
     internal sealed class CreateSectorMapper : Profile
     {
@@ -50,11 +50,12 @@ namespace GodsEye.API.Features.Sectors
 
         private async Task<ProcedureResponse?> CreateSectorWrite(CreateSectorCommand request, CancellationToken cancellationToken)
         {
-            var sql = "CALL SP_SECTOR_CREATE(@P_NAME, @P_NOTIFICATION_GROUP_JSON)";
+            var sql = "CALL SP_SECTOR_CREATE(@P_NAME, @P_PARENT_ID, @P_NOTIFICATION_GROUP_JSON)";
 
             var parameters = new
             {
                 P_NAME = request.Name,
+                P_PARENT_ID = request.ParentId,
                 P_NOTIFICATION_GROUP_JSON = JsonSerializer.Serialize(request.NotificationGroups)
             };
 

@@ -6,23 +6,23 @@ using GodsEye.Shared.Enums;
 using GodsEye.Shared.Response;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
+using System.Text.Json;
 
 namespace GodsEye.API.Features.Camera
 {
-    public sealed record CreateAccessScheduleRequest(int id, string name, bool isActive, List<scheduleRuleDTO> rules);
-    public sealed record scheduleRuleDTO(int id, WeekDayEnum weekDay, TimeSpan? startTime, TimeSpan? endTime);
+    public sealed record CreateAccessScheduleRequest(int? id, string name, bool isActive, List<ScheduleRuleDTO> rules);
+    public sealed record ScheduleRuleDTO(int? id, WeekDayEnum weekDay, TimeSpan? startTime, TimeSpan? endTime);
 
     public class CreateAccessScheduleValidator : AbstractValidator<CreateAccessScheduleRequest>
     {
         public CreateAccessScheduleValidator()
         {
             RuleFor(camera => camera.name).NotEmpty();
-            RuleFor(camera => camera.isActive).NotEmpty();
             RuleFor(camera => camera.rules).NotEmpty();
         }
     }
 
-    internal sealed record CreateAccessScheduleCommand(int id, string name, bool isActive, List<scheduleRuleDTO> rules) : IRequest<int>;
+    internal sealed record CreateAccessScheduleCommand(int? id, string name, bool isActive, List<ScheduleRuleDTO> rules) : IRequest<int>;
 
     internal sealed class CreateAccessScheduleMapper : Profile
     {
@@ -57,7 +57,7 @@ namespace GodsEye.API.Features.Camera
                 P_ID = request.id,
                 P_NAME = request.name,
                 P_IS_ACTIVE = request.isActive,
-                P_RULES_JSON = request.rules
+                P_RULES_JSON = JsonSerializer.Serialize(request.rules)
             };
 
             return await context.QuerySingleSqlAsync<ProcedureResponse>(sql, parameters, cancellationToken);

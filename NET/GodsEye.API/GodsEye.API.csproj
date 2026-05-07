@@ -7,6 +7,10 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="Features\Camera\GetCamerasByFeatureId.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
     <Content Include="Email\Templates\AccessViolationProhibited.html">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>

@@ -30,11 +30,11 @@ namespace GodsEye.WEB.Pages.EnvironmentMonitoring
 
         #region TABLE PARAMETERS
 
-        private List<EnvironmentMonitoringLogResponse> _logs = new();
-        private List<EnvironmentMonitoringLogResponse> _filteredLogs = new();
+        private List<EnvironmentMonitoringResponse> _logs = new();
+        private List<EnvironmentMonitoringResponse> _filteredLogs = new();
 
 
-        private MudTable<EnvironmentMonitoringLogResponse> _mudTable;
+        private MudTable<EnvironmentMonitoringResponse> _mudTable;
         private HubConnection? hubConnection;
         bool _loading;
         #endregion
@@ -88,7 +88,7 @@ namespace GodsEye.WEB.Pages.EnvironmentMonitoring
 
             SignalR.Create($"{Configuration["ApiUrl"]}/createdDataHub");
 
-            SignalR.On<EnvironmentMonitoringLogResponse>(
+            SignalR.On<EnvironmentMonitoringResponse>(
                 "CreatedEnvironmentMonitoring",
                 log =>
                 {

@@ -37,6 +37,9 @@ namespace GodsEye.WEB.Components.SectorComponents
 
         IEnumerable<NotificationGroupsResponse> _notificationGroups = Enumerable.Empty<NotificationGroupsResponse>();
 
+        [Parameter]
+        public int? ParentId { get; set; }
+
         [CascadingParameter]
         private IMudDialogInstance MudDialog { get; set; }
 
@@ -73,6 +76,7 @@ namespace GodsEye.WEB.Components.SectorComponents
         private async Task Submit()
         {
             visible = true;
+            CreateSectorForm.ParentId = ParentId;
             var result = await sectorService.CreateAsync(CreateSectorForm);
             visible = false;
 

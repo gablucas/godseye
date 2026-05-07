@@ -51,7 +51,6 @@
                 <col />
                 <col style="width: 20%" />
                 <col style="width: 20%" />
-                <col style="width: 20%"/>
              </ColGroup>
             
             <HeaderContent>
@@ -59,7 +58,6 @@
                 <MudTh>Conexão</MudTh>
                 <MudTh Style="text-align:center">Status</MudTh>
                 <MudTh Style="text-align:center">Setor</MudTh>
-                <MudTh>Funcionalidades</MudTh>
             </HeaderContent>
             <RowTemplate>
                 <MudTd DataLabel="Name">@context.Name</MudTd>
@@ -68,21 +66,6 @@
                     <MudChip Label="true" Class=@(context.Status == null ? "chip-warning" : context.Status == true ? "chip-success" : "chip-error") Size="Size.Medium" T="string" Text="@(context.Status == null ? "Verificando..." : context.Status == true ? "Online" : "Offline")" />
                 </MudTd>
                 <MudTd DataLabel="Setor Vinculado" Style="text-align:center">@context.SectorName</MudTd>
-
-                <MudTd Class="funcs" DataLabel="Funcionalidades">
-                    @if (context.Features.Count > 0)
-                    {
-                        foreach (var feature in context.Features)
-                        {
-                            <MudChip T="string" Label="true" Class="chip-neutral" Size="Size.Small" Text="@feature.FeatureName" />
-                            
-                        }
-                    }
-                    else
-                    {
-                        <MudChip T="string" Label="true" Class="chip-neutral" Size="Size.Small" Text="Nenhuma funcionalidade" />
-                    }
-                </MudTd>
             </RowTemplate>
         </MudTable>
 

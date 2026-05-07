@@ -2,5 +2,5 @@
 
 namespace GodsEye.Shared
 {
-    public sealed record EnvironmentMonitoringNotification(int CameraId, int PersonId, float Score, DateTime IdentifiedAt) : INotification;
+    public sealed record EnvironmentMonitoringNotification(int DeviceId, int PersonId, float Score, DateTime IdentifiedAt) : INotification;
 }

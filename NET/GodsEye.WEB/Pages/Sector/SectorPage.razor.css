@@ -1,1 +1,23 @@
-﻿
+﻿::deep .mud-treeview {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+::deep .sector-tree-main {
+    border: 1px solid #808080;
+    border-radius: 7px;
+    padding-bottom: 12px;
+}
+
+::deep .sector-tree {
+    border: 1px solid #808080;
+    border-radius: 7px;
+    margin-bottom: 12px;
+    padding-bottom: 12px;
+}
+
+
+::deep .mud-treeview-item-content {
+    padding: 12px;
+}

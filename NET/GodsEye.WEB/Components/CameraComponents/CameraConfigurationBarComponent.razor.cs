@@ -28,18 +28,5 @@ namespace GodsEye.WEB.Components.CameraComponents
 
         [CascadingParameter]
         private IMudDialogInstance MudDialog { get; set; }
-
-        private List<CameraFeatureResponse> _cameraFeatures = new();
-
-        protected override async Task OnParametersSetAsync()
-        {
-            var result = await cameraService.GetFeatures(Id);
-            _cameraFeatures = result.ToList();
-        }
-
-        private bool HasFeature(int featureId)
-        {
-            return _cameraFeatures.Any(x => x.Id == featureId);
-        }
     }
 }

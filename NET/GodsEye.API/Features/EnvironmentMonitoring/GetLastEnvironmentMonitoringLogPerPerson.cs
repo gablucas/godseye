@@ -5,23 +5,23 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace GodsEye.API.Features.EnvironmentMonitoring
 {
-    public sealed record GetLastEnvironmentMonitoringLogPerPersonRequest() : IRequest<IEnumerable<EnvironmentMonitoringLogResponse>>;
+    public sealed record GetLastEnvironmentMonitoringLogPerPersonRequest() : IRequest<IEnumerable<EnvironmentMonitoringResponse>>;
 
-    internal sealed class GetLastEnvironmentMonitoringLogPerPersonHandler(IDapperContext context) : IRequestHandler<GetLastEnvironmentMonitoringLogPerPersonRequest, IEnumerable<EnvironmentMonitoringLogResponse>>
+    internal sealed class GetLastEnvironmentMonitoringLogPerPersonHandler(IDapperContext context) : IRequestHandler<GetLastEnvironmentMonitoringLogPerPersonRequest, IEnumerable<EnvironmentMonitoringResponse>>
     {
 
-        public async Task<IEnumerable<EnvironmentMonitoringLogResponse>> Handle(GetLastEnvironmentMonitoringLogPerPersonRequest request, CancellationToken cancellationToken)
+        public async Task<IEnumerable<EnvironmentMonitoringResponse>> Handle(GetLastEnvironmentMonitoringLogPerPersonRequest request, CancellationToken cancellationToken)
         {
             var result = await GetLastRegisterPerPerson(cancellationToken);
 
             return result;
         }
 
-        protected async Task<IEnumerable<EnvironmentMonitoringLogResponse>> GetLastRegisterPerPerson(CancellationToken cancellationToken)
+        protected async Task<IEnumerable<EnvironmentMonitoringResponse>> GetLastRegisterPerPerson(CancellationToken cancellationToken)
         {
             var query = "CALL SP_ENVIRONMENT_MONITORING_GET_LAST_REGISTER_PER_PERSON()";
 
-            return await context.QuerySqlAsync<EnvironmentMonitoringLogResponse>(query, cancellationToken);
+            return await context.QuerySqlAsync<EnvironmentMonitoringResponse>(query, cancellationToken);
         }
     }
 
